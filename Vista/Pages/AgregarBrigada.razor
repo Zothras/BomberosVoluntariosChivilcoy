@@ -1,5 +1,66 @@
-﻿<h3>AgregarBrigada</h3>
+﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
+@page "/bomberos/AgregarBrigada"
+
+<h3>AgregarBrigada</h3>
+<input type="text" @bind="NombreBrigada">Cargar brigada nueva</input>
+<button type="submit" class="btn btn-primary" @onclick="CargarBrigada">Cargar</button>
+<br />
+<input type="text" @bind="BrigadaEliminar">Eliminar brigada</input>
+<button type="submit" class="btn btn-primary" @onclick="EliminarBrigada">Eliminar</button>
+
+@if (brigadas is not null && brigadas.Count() > 0)
+{
+    @foreach (Brigada b in brigadas)
+    {
+                <p>Las brigadas son: @b.Nombre</p>
+
+    }
+
+}
 
 @code {
+    //metodos ABM brigada
+    public string NombreBrigada { get; set; }
+    public string BrigadaEliminar { get; set; }
+    public Brigada EliminarAux { get; set; }
+    public Brigada[]? brigadas;
 
+    //cargar una brigada nueva
+    public async Task CargarBrigada()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        var BrigadaNueva = new Brigada
+            {
+                Nombre = NombreBrigada
+            };
+        context.Brigadas.Add(BrigadaNueva);
+        context.SaveChanges();
+
+    }
+    //eliminar una brigada
+    public async Task EliminarBrigada()
+    {
+
+        using var context = DbFactory.CreateDbContext();
+
+        foreach (Brigada b in brigadas)
+        {
+            if (b.Nombre == BrigadaEliminar)
+            {
+                EliminarAux = b;
+            }
+
+        }
+        context.Brigadas.Remove(EliminarAux);
+        context.SaveChanges();
+
+    }
+    //Guarda en un array los datos de brigada para luego ser mostrados
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = DbFactory.CreateDbContext();
+
+        brigadas = await db.Brigadas.ToArrayAsync();
+    }
 }
