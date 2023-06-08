@@ -10,6 +10,12 @@
         <BSButton id="button-center" Color="BSColor.Danger">Agregar Bombero +</BSButton>
     </a>
 </BSContainer>
+<br/>
+<BSContainer id="agregar-bombero">
+    <a @onclick="@(() => { navigationManager.NavigateTo($"/bomberos/AgregarBrigada"); })">
+        <BSButton id="button-center" Color="BSColor.Danger">Agregar Brigada +</BSButton>
+    </a>
+</BSContainer>
 
 @code {
 
