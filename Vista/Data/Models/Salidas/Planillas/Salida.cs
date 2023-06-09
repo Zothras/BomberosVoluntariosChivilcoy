@@ -10,9 +10,8 @@ namespace Vista.Data.Models.Salidas.Planillas
     {
         public int SalidaId { get; set; }
 
-        public DateOnly Fecha { get; set; }
-        public TimeOnly HoraSalida { get; set; }
-        public TimeOnly HoraLlegada { get; set; }
+        public DateTime FechaSalida { get; set; }
+        public DateTime FechaLLegada { get; set; }
         public int KmSalida { get; set; }
         public int KmLlegada { get; set; }
         public int NumeroParte { get; set; }
@@ -29,15 +28,12 @@ namespace Vista.Data.Models.Salidas.Planillas
         [StringLength(255)]
         public string? Depto { get; set; }
         public TipoZona TipoZona { get; set; }
-        [Required, StringLength(255)]
+        
         public string NombreSolicitante { get; set; }
-        [Required, StringLength(255)]
         public string ApellidoSolicitante { get; set; }
-        [Required, StringLength(255)]
         public string DniSolicitante { get; set; }
-        [Required, StringLength(255)]
         public string TelefonoSolicitante { get; set; }
-        [StringLength(255)]
+        
         public string? Receptor { get; set; }
 
         public int? ReceptorId { get; set; }
