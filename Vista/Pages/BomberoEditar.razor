@@ -136,8 +136,8 @@ else
 
     public class BomberosViewModel
     {
-        public DateOnly FechaNacimiento { get; set; }
-        public DateOnly FechaAceptacion { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public DateTime FechaAceptacion { get; set; }
         [Required, StringLength(255)]
         public string Nombre { get; set; }
         [Required, StringLength(255)]
@@ -150,7 +150,7 @@ else
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
-        public DateOnly? VencimientoRegistro { get; set; }
+        public DateTime? VencimientoRegistro { get; set; }
         public TipoSexo Sexo { get; set; }
         [Required, StringLength(255)]
         public string Direccion { get; set; }
@@ -159,7 +159,7 @@ else
         [Required, StringLength(255)]
         public string Documento { get; set; }
         [Required, StringLength(255)]
-        public string GrupoSanguineo { get; set; }
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]

@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration["ConnectionString"];
-if (string.IsNullOrEmpty(connectionString))
-{
-    connectionString = "server=localhost;user=root;password=;database=bomberos";    
-}
+//if (string.IsNullOrEmpty(connectionString))
+//{
+//    connectionString = "server=localhost;user=root;password=;database=bomberos";    
+//}
 
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 

@@ -6,7 +6,7 @@ namespace Vista.Data.Models.Personales
     public class Persona
     {
         public int PersonaId { get; set; }
-        public DateOnly FechaNacimiento { get; set; }
+        public DateTime FechaNacimiento { get; set; }
         public TipoSexo Sexo { get; set; }
         [Required, StringLength(255)]
         public string Nombre { get; set; }
@@ -19,9 +19,7 @@ namespace Vista.Data.Models.Personales
         [Required, StringLength(255)]
         public string Documento { get; set; }
         [Required, StringLength(255)]
-        public string Email { get; set; }
-        [Required, StringLength(255)]
-        public string GrupoSanguineo { get; set; }
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]

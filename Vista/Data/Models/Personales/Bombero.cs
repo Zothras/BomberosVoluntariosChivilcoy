@@ -14,7 +14,7 @@ namespace Vista.Data.Models.Personales
         public int NumeroLegajo { get; set; }
         public EstadoBombero Estado { get; set; } 
         public TipoDotaciones Dotacion { get; set; }
-        public DateOnly FechaAceptacion { get; set; }
+        public DateTime FechaAceptacion { get; set; }
         public EscalafonJerarquico Grado { get; set; }
         [StringLength(255)]
         public string? Resolucion1 { get; set; }
@@ -29,7 +29,7 @@ namespace Vista.Data.Models.Personales
         [StringLength(255)]
         public string? Resolucion6 { get; set; }
         public bool Chofer { get; set; }
-        public DateOnly? VencimientoRegistro { get; set; }
+        public DateTime? VencimientoRegistro { get; set; }
 
         public List<Firma> Firmas { get; set; }
 

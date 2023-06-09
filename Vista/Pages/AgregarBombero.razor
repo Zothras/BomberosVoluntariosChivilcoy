@@ -74,13 +74,13 @@
                         </BSContainer>
                         <label id="texto">Dotacion:</label>
                         <br>
-                        @*<select @bind="bomberoView.Dotacion">
+                        <select @bind="bomberoView.Dotacion">
                             <option selected value="0">-Seleccione una dotacion-</option>
                             <option value="@TipoDotaciones.uno">@TipoDotaciones.uno</option>
                             <option value=" @TipoDotaciones.dos">@TipoDotaciones.dos</option>
                             <option value=" @TipoDotaciones.tres">@TipoDotaciones.tres</option>
                             <option value=" @TipoDotaciones.cuatro">@TipoDotaciones.cuatro</option>
-                        </select>*@
+                        </select>
                 
                             <BSCol Column="4">
                                 <InputSelect @bind-Value="bomberoView.Dotacion">
@@ -124,7 +124,7 @@
                         </BSContainer>
                         <label id="texto">Numero de legajo:</label>
                         <br>
-                        <input id="estilo" type="number" @bind="bomberoView.NumeroLegajo" />
+                    <InputNumber id="estilo" type="number" @bind-Value="bomberoView.NumeroLegajo" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
@@ -136,7 +136,7 @@
                         </BSContainer>
                         <label id="texto"> Direccion:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Direccion" />
+                    <InputText id="estilo" type="text" @bind-Value="bomberoView.Direccion" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
@@ -313,8 +313,8 @@
 
     public class BomberosViewModel
     {
-        public DateOnly FechaNacimiento { get; set; }
-        public DateOnly FechaAceptacion { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public DateTime FechaAceptacion { get; set; }
         [Required, StringLength(255)]
         public string Nombre { get; set; }
         [Required, StringLength(255)]
@@ -326,7 +326,7 @@
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
-        public DateOnly? VencimientoRegistro { get; set; }
+        public DateTime? VencimientoRegistro { get; set; }
         public TipoSexo Sexo { get; set; }
         [Required, StringLength(255)]
         public string Direccion { get; set; }
@@ -335,7 +335,7 @@
         [Required, StringLength(255)]
         public string Documento { get; set; }
         [Required, StringLength(255)]
-        public string GrupoSanguineo { get; set; }
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]
@@ -452,7 +452,6 @@
                         Profesion = bomberoView.Profesion,
                         NivelEstudios = bomberoView.NivelEstudios,
                         FechaAceptacion = bomberoView.FechaAceptacion,
-                        Email = contactoView.Email,
                         Contacto = new()
                         {
                             TelefonoCel = contactoView.TelefonoCel,
