@@ -26,6 +26,7 @@ builder.Services.AddDbContextFactory<BomberosDbContext>(
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazorStrap();
+builder.Services.AddAntDesign();
 
 var app = builder.Build();
 
