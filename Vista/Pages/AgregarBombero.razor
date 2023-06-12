@@ -1,5 +1,7 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
 @page "/bomberos/agregar"
 <style>
     #crear-bombero {
@@ -28,8 +30,234 @@
         Font-Weight: bold;
     }
 </style>
+
+
+    
 @if (bomberoView is not null)
 {
+    <EditForm Model="@bomberoView" OnSubmit="CrearBombero">
+        <InputFile OnChange="SubirFoto" />
+        <br>
+        <br>
+        <label id="texto">Nombre:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Nombre" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Apellido:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Apellido" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Dotacion:</label>
+        <br>
+        <InputSelect @bind-Value="bomberoView.Dotacion">
+            <option selected value="0">-Seleccione una dotacion-</option>
+            <option value="@TipoDotaciones.uno">@TipoDotaciones.uno</option>
+            <option value=" @TipoDotaciones.dos">@TipoDotaciones.dos</option>
+            <option value=" @TipoDotaciones.tres">@TipoDotaciones.tres</option>
+            <option value=" @TipoDotaciones.cuatro">@TipoDotaciones.cuatro</option>
+        </InputSelect>
+        @*<label id="texto">Brigada:</label>
+        <br>
+        @if (brigadas is not null && brigadas.Count() > 0)
+        {
+            <InputSelect @bind-Value="@brigadaView.Nombre">
+                <option selected value="0">-Seleccione una brigada-</option>
+                @foreach (Brigada b in brigadas)
+                {
+                    <option value="@b.Nombre">@b.Nombre</option>
+                }
+            </InputSelect>
+        }*@
+        <label id="texto">DNI:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Documento" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Fecha de nacimiento:</label>
+        <br>
+        <InputDate id="estilo" @bind-Value="bomberoView.FechaNacimiento" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Numero de legajo:</label>
+        <br>
+        <InputNumber id="estilo" @bind-Value="bomberoView.NumeroLegajo" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Fecha de aceptacion:</label>
+        <br>
+        <InputDate id="estilo" @bind-Value="bomberoView.FechaAceptacion" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Nº de IOMA:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.NumeroIoma" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Lugar de nacimiento:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.LugarNacimiento" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Grupo sanguineo:</label>
+        <br>
+        <InputSelect id="estilo" @bind-Value="bomberoView.GrupoSanguineo">
+            <option selected value="0">-Seleccione una dotacion-</option>
+            <option value="@TipoGrupoSanguineo.ABNegativo">@TipoGrupoSanguineo.ABNegativo</option>
+            <option value="@TipoGrupoSanguineo.ABPositivo">@TipoGrupoSanguineo.ABPositivo</option>
+            <option value="@TipoGrupoSanguineo.ANegativo">@TipoGrupoSanguineo.ANegativo</option>
+            <option value="@TipoGrupoSanguineo.APositivo">@TipoGrupoSanguineo.APositivo</option>
+            <option value="@TipoGrupoSanguineo.BNegativo">@TipoGrupoSanguineo.BNegativo</option>
+            <option value="@TipoGrupoSanguineo.BPositivo">@TipoGrupoSanguineo.BPositivo</option>
+            <option value="@TipoGrupoSanguineo.ONegativo">@TipoGrupoSanguineo.ONegativo</option>
+            <option value="@TipoGrupoSanguineo.OPositivo">@TipoGrupoSanguineo.OPositivo</option>
+        </InputSelect>
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Observaciones:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Observaciones" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Profesion:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Profesion" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Nivel de estudios:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.NivelEstudios" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Resulucion 1:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Resolucion1" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Resulucion 2:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Resolucion2" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Resulucion 3:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Resolucion3" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Resulucion 4:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Resolucion4" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Resulucion 5:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Resolucion5" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Resulucion 6:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="bomberoView.Resolucion6" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <InputCheckbox @bind-Value="bomberoView.Chofer" />
+        @if (bomberoView.Chofer)
+        {
+            <label id="texto">Es chofer</label>
+            <br>
+            <InputDate id="estilo" @bind-Value="bomberoView.VencimientoRegistro" />
+        }
+        @if (!bomberoView.Chofer)
+        {
+            <label id="texto">No es chofer</label>
+        }
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <InputSelect @bind-Value="bomberoView.Grado" id="estilo">
+            <option selected value="0">-Seleccione una Grado-</option>
+            <option value=" @EscalafonJerarquico.ComandanteGeneral">Comandante General</option>
+            <option value=" @EscalafonJerarquico.ComandanteMayor">Comandante Mayor</option>
+            <option value=" @EscalafonJerarquico.Comandante">Comandante</option>
+            <option value=" @EscalafonJerarquico.SubComandante">Sub Comandante</option>
+            <option value=" @EscalafonJerarquico.OficialAuxiliarDotacion">Oficial Auxiliar De Dotacion</option>
+            <option value=" @EscalafonJerarquico.OficialAuxiliarEscuadra">Oficial Auxiliar De Escuadra</option>
+            <option value=" @EscalafonJerarquico.OficialAuxiliar">Oficial Auxiliar</option>
+            <option value=" @EscalafonJerarquico.SubOficialAyudanteMayor">Sub Oficial Ayudante Mayor</option>
+            <option value=" @EscalafonJerarquico.SubOficialAyudantePrincipal">Sub Oficial Ayudante Principal</option>
+            <option value=" @EscalafonJerarquico.SubOficialAyudantePrimera">Sub Oficial Ayudante De Primera</option>
+            <option value=" @EscalafonJerarquico.SubOficialAyudante">Sub Oficial Ayudante</option>
+            <option value=" @EscalafonJerarquico.SuboficialSubAyudante">Sub Oficial Sub Ayudante</option>
+            <option value=" @EscalafonJerarquico.SegundoAyudante">2ºdo Ayudante</option>
+            <option value=" @EscalafonJerarquico.Bombero">Bombero</option>
+            <option value=" @EscalafonJerarquico.Aspirante">Aspirante</option>
+        </InputSelect>
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <InputSelect @bind-Value="bomberoView.Estado" id="estilo">
+            <option selected value="0">-Seleccione una Estado-</option>
+            <option value="@EstadoBombero.Reserva">Reserva</option>
+            <option value="@EstadoBombero.ComisionDirectiva">Comision Directiva</option>
+            <option value="@EstadoBombero.CuerpoActivo">Cuerpo Activo</option>
+        </InputSelect>
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+
+        <InputSelect @bind-Value="bomberoView.Sexo">
+            <option selected value="0">-Seleccione una Sexo-</option>
+            <option value="@TipoSexo.Hombre">Masculino</option>
+            <option value="@TipoSexo.Mujer">Femenino</option>
+            <option value="@TipoSexo.Otro">Otro</option>
+        </InputSelect>
+       @* <label id="texto">Telefono celular:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="contactoView.TelefonoCel" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Telefono fijo:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="contactoView.TelefonoFijo" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Telefono laboral:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="contactoView.TelefonoLaboral" />
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <label id="texto">Email:</label>
+        <br>
+        <InputText id="estilo" @bind-Value="contactoView.Email" />*@
+
+        <BSContainer id="blancoA">
+
+        </BSContainer>
+        <button type="submit" id="crear-bombero">Agregar bombero</button>
+    </EditForm>
+}
+    @*
     <BSContainer id="Estilo">
         <BSContainer id="blancoA">
 
@@ -49,7 +277,7 @@
             </BSCol>
         </BSRow>
 
-        <EditForm Model="@bomberoView">
+        <EditForm Model="@bomberoView" OnSubmit="CrearBombero">
             <BSRow>
             
                     <BSCol Column="2">
@@ -57,30 +285,30 @@
                     </BSCol>
                     <BSCol Column="4">
                 
-                        <InputFile OnChange="SubirFoto" />
+                        @*<InputFile OnChange="SubirFoto" />
                         <br>
                         <br>
                         <label id="texto">Nombre:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Nombre" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Nombre"  />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Apellido:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Apellido" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Apellido" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Dotacion:</label>
                         <br>
-                        <select @bind="bomberoView.Dotacion">
+                        <InputSelect @bind-Value="bomberoView.Dotacion">
                             <option selected value="0">-Seleccione una dotacion-</option>
                             <option value="@TipoDotaciones.uno">@TipoDotaciones.uno</option>
                             <option value=" @TipoDotaciones.dos">@TipoDotaciones.dos</option>
                             <option value=" @TipoDotaciones.tres">@TipoDotaciones.tres</option>
                             <option value=" @TipoDotaciones.cuatro">@TipoDotaciones.cuatro</option>
-                        </select>
+                        </InputSelect>
                 
                             <BSCol Column="4">
                                 <InputSelect @bind-Value="bomberoView.Dotacion">
@@ -95,129 +323,139 @@
                         <BSContainer id="blancoA">
 
                         </BSContainer>
-                        <label id="texto">Brigada:</label>
+                        @*<label id="texto">Brigada:</label>
                         <br>
                         @if (brigadas is not null && brigadas.Count() > 0)
                         {
-                            <select @bind="brigadaView.Nombre">
+                            <InputSelect @bind-Value="@brigadaView.Nombre">
                                 <option selected value="0">-Seleccione una brigada-</option>
                                 @foreach (Brigada b in brigadas)
                                 {
                                     <option value="@b.Nombre">@b.Nombre</option>
                                 }
-                            </select>
+                            </InputSelect>
                         }
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">DNI:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Documento" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Documento" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Fecha de nacimiento:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.FechaNacimiento" />
+                        <InputDate id="estilo" @bind-Value="bomberoView.FechaNacimiento" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Numero de legajo:</label>
                         <br>
-                    <InputNumber id="estilo" type="number" @bind-Value="bomberoView.NumeroLegajo" />
+                        <InputNumber id="estilo" @bind-Value="bomberoView.NumeroLegajo" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Fecha de aceptacion:</label>
                         <br>
-                        <input id="estilo" type="date" @bind="bomberoView.FechaAceptacion" />
+                        <InputText id="estilo" @bind="bomberoView.FechaAceptacion" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto"> Direccion:</label>
                         <br>
-                    <InputText id="estilo" type="text" @bind-Value="bomberoView.Direccion" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Direccion" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Nº de IOMA:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.NumeroIoma" />
+                        <InputText id="estilo" @bind-Value="bomberoView.NumeroIoma" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Lugar de nacimiento:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.LugarNacimiento" />
+                        <InputText id="estilo" @bind-Value="bomberoView.LugarNacimiento" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Grupo sanguineo:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.GrupoSanguineo" />
+                        <InputSelect id="estilo" @bind-Value="bomberoView.GrupoSanguineo">
+                            <option selected value="0">-Seleccione una dotacion-</option>
+                        <option value="@TipoGrupoSanguineo.ABNegativo">@TipoGrupoSanguineo.ABNegativo</option>
+                        <option value="@TipoGrupoSanguineo.ABPositivo">@TipoGrupoSanguineo.ABPositivo</option>
+                            <option value="@TipoGrupoSanguineo.ANegativo">1</option>
+                            <option value="@TipoGrupoSanguineo.APositivo">1</option>
+                            <option value="@TipoGrupoSanguineo.BNegativo">1</option>
+                            <option value="@TipoGrupoSanguineo.BPositivo">1</option>
+                            <option value="@TipoGrupoSanguineo.ONegativo">1</option>
+                            <option value="@TipoGrupoSanguineo.OPositivo">1</option>
+                        </InputSelect>
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Observaciones:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Observaciones" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Observaciones" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Profesion:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Profesion" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Profesion" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Nivel de estudios:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.NivelEstudios" />
+                        <InputText id="estilo" @bind-Value="bomberoView.NivelEstudios" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Resulucion 1:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Resolucion1" />
+                        <InputText id="estilo" @bind.Value="bomberoView.Resolucion1" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Resulucion 2:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Resolucion2" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Resolucion2" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Resulucion 3:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Resolucion3" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Resolucion3" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Resulucion 4:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Resolucion4" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Resolucion4" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Resulucion 5:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Resolucion5" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Resolucion5" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Resulucion 6:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="bomberoView.Resolucion6" />
+                        <InputText id="estilo" @bind-Value="bomberoView.Resolucion6" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
-                        <input type="checkbox" @bind="bomberoView.Chofer" />
+                        <InputCheckbox @bind-Value="bomberoView.Chofer" />
                         @if (bomberoView.Chofer)
                         {
                         <label id="texto">Es chofer</label>
                         <br>
-                        <input id="estilo" type="date" @bind="bomberoView.VencimientoRegistro" />
+                        <InputDate id="estilo" @bind-Value="bomberoView.VencimientoRegistro" />
                         }
                         @if (!bomberoView.Chofer)
                         {
@@ -246,11 +484,11 @@
                         <BSContainer id="blancoA">
 
                         </BSContainer>
-                        <selec @bind="bomberoView.Estado">
+                        <InputSelect @bind-Value="bomberoView.Estado">
                             <option value="@EstadoBombero.Reserva">Reserva</option>
                             <option value="@EstadoBombero.ComisionDirectiva">Comision Directiva</option>
                             <option value="@EstadoBombero.CuerpoActivo">Cuerpo Activo</option>
-                        </selec>
+                        </InputSelect>
                         <BSContainer id="blancoA">
 
                         </BSContainer>
@@ -265,32 +503,32 @@
                         </BSContainer>
                     </BSCol>
                     <BSCol Column="4">
-                        <label id="texto">Telefono celular:</label>
+                       @* <label id="texto">Telefono celular:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="contactoView.TelefonoCel" />
+                        <InputText id="estilo" @bind-Value="contactoView.TelefonoCel" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Telefono fijo:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="contactoView.TelefonoFijo" />
+                        <InputText id="estilo" @bind-Value="contactoView.TelefonoFijo" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Telefono laboral:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="contactoView.TelefonoLaboral" />
+                        <InputText id="estilo" @bind-Value="contactoView.TelefonoLaboral" />
                         <BSContainer id="blancoA">
 
                         </BSContainer>
                         <label id="texto">Email:</label>
                         <br>
-                        <input id="estilo" type="text" @bind="contactoView.Email" />
+                        <InputText id="estilo" @bind-Value="contactoView.Email" />
 
                         <BSContainer id="blancoA">
 
                         </BSContainer>
-                        <button id="crear-bombero" @onclick="CrearBombero">Agregar bombero</button>
+                        <button type="submit" id="crear-bombero" >Agregar bombero</button>
 
                     </BSCol>
                     <BSCol Column="2">
@@ -302,7 +540,7 @@
         </EditForm>
     </BSContainer>
     
-}
+}*@
 <BSContainer id="blancoA">
 
 </BSContainer>
