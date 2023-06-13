@@ -1,6 +1,7 @@
 ﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject NavigationManager navigationManager
 @page "/moviles/agregar"
+@using AntDesign;
 <style>
     #crear-movil{
         background-color: #C43A3A;
@@ -145,7 +146,7 @@
     <BSContainer id="blancoA">
 
     </BSContainer>
-    <button id="crear-movil" @onclick="SubirMovil">Crear movil</button>
+        <Button Type="@ButtonType.Primary" Loading @onclick="SubirMovil">Crear Movil</Button>
         </BSCol>
         <BSCol Column="2">
 

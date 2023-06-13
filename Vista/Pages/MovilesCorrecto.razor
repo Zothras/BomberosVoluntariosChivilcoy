@@ -47,23 +47,35 @@
                                     <BSButton id="button-center" Color="BSColor.Danger">Ver Información</BSButton>
                                 </a>
                                 </div>
+                                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
+                                   <Button><Icon Type="edit" Theme="outline" />Editar Movil</Button>
+                                </a>
+                                
+                                
+                                <Button OnClick="()=> EliminarMovil(m.VehiculoId)"><Icon Type="delete" Theme="outline" />Borra Movil</Button>
+                                
+                                
                             </BSCard>
+
                         </BSCard>
                     </BSContainer>
                 </BSCol>
+                
             }
+            
         </BSRow>
     </BSContainer>
 }
 else
 {
-    <h5>No hay moviles</h5>
+    <h5>No hay moviles, carge uno porfavor</h5>
 }
-<BSContainer id="agregar-movil">
+<Divider>
     <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
-        <BSButton id="button-center" Color="BSColor.Danger">Agregar Movil +</BSButton>
+        <Button Type="@ButtonType.Primary">Agregar Movil</Button>
     </a>
-</BSContainer>
+</Divider>
+
 
 @code {
     public Movil[]? moviles;
@@ -90,6 +102,21 @@ else
 
         return src;
     }
+    public async void EliminarMovil(int id)
+    {
+
+        using var context = DbFactory.CreateDbContext();
+        Movil? MovilAeliminnar = await context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
+        if (MovilAeliminnar is not null)
+        {
+            context.Remove(MovilAeliminnar);
+        }
+        await context.SaveChangesAsync();
+        //NumeroMovil.NumeroMovil = string.Empty;
+        moviles = await context.Moviles.ToArrayAsync();
+        StateHasChanged();
+    }
+    
 }
 
 
