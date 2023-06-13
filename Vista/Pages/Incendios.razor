@@ -2,7 +2,7 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/incendios"
 
-<select @bind="salidaView.Tipo">
+<select @bind="salidaIncendiosView.Tipo">
     <option value="@TipoIncendio.Aeronaves">Aeronaves</option>
     <option value="@TipoIncendio.Clinica">Clinicas</option>
     <option value="@TipoIncendio.Comercios">Comercios</option>
@@ -17,71 +17,77 @@
     <option value="@TipoIncendio.Otro">Otro</option>
 </select>
 <label>Descripcion:</label>
-<input type="text" @bind="salidaView.Descripcion" />
+<input type="text" @bind="salidaIncendiosView.Descripcion" />
 <br>
-<label>@salidaView.Fecha</label>
+<label>@salidaIncendiosView.Fecha</label>
 <br>
 <label>Hora salida y hora de llegada:</label>
-<input type="time" @bind="salidaView.HoraSalida" />
-<input type="time" @bind="salidaView.HoraLlegada" />
+<input type="time" @bind="salidaIncendiosView.HoraSalida" />
+<input type="time" @bind="salidaIncendiosView.HoraLlegada" />
 <br>
 <label>Km salida:</label>
-<input type="number" @bind="salidaView.KmSalida" />
+<input type="number" @bind="salidaIncendiosView.KmSalida" />
 <br>
 <label>Km llegada:</label>
-<input type="number" @bind="salidaView.KmLLegada" />
+<input type="number" @bind="salidaIncendiosView.KmLLegada" />
 <br>
 <label>Nº parte:</label>
-<input type="number" @bind="salidaView.NumeroParte" />
+<input type="number" @bind="salidaIncendiosView.NumeroParte" />
 <br>
 <label>Calle / ruta:</label>
-<input type="text" @bind="salidaView.CalleORuta" />
+<input type="text" @bind="salidaIncendiosView.CalleORuta" />
 <br>
 <label>Numero / kilometro:</label>
-<input type="number" @bind="salidaView.NumeroOKilometro" />
+<input type="number" @bind="salidaIncendiosView.NumeroOKilometro" />
 <br>
 <label>Entre calles:</label>
-<input type="text" @bind="salidaView.EntreCalles" />
+<input type="text" @bind="salidaIncendiosView.EntreCalles" />
 <br>
 <label>Piso nº:</label>
-<input type="number" @bind="salidaView.PisoNumero" />
+<input type="number" @bind="salidaIncendiosView.PisoNumero" />
 <br>
 <label>Depto:</label>
-<input type="text" @bind="salidaView.Depto" />
+<input type="text" @bind="salidaIncendiosView.Depto" />
 <br>
 <label>Tipo zona:</label>
-<select @bind="salidaView.TipoZona">
+<select @bind="salidaIncendiosView.TipoZona">
     <option value="@TipoZona.Rural">Rural</option>
     <option value="@TipoZona.Urbana">Urbana</option>
 </select>
 <br>
 <label>Nombre solicitante:</label>
-<input type="text" @bind="salidaView.NombreSolicitante" />
+<input type="text" @bind="salidaIncendiosView.NombreSolicitante" />
 <br>
 <label>Apellido solicitante:</label>
-<input type="text" @bind="salidaView.ApellidoSolicitante" />
+<input type="text" @bind="salidaIncendiosView.ApellidoSolicitante" />
 <br>
 <label>DNI solicitante:</label>
-<input type="text" @bind="salidaView.DniSolicitante" />
+<input type="text" @bind="salidaIncendiosView.DniSolicitante" />
 <br>
 <label>Telefono solicitante:</label>
-<input type="text" @bind="salidaView.TelefonoSolicitante" />
+<input type="text" @bind="salidaIncendiosView.TelefonoSolicitante" />
 <br>
 <label>Receptor:</label>
-<input type="text" @bind="salidaView.Receptor" />
+<input type="text" @bind="salidaIncendiosView.Receptor" />
 <br>
 <label>Deteccion automatica:</label>
-<input type="checkbox" @bind="salidaView.DeteccionAutomaticaId" />
+<input type="checkbox" @bind="salidaIncendiosView.DeteccionAutomaticaId" />
 <br>
 <label>hidrante:</label>
-<input type="text" @bind="salidaView.Hidrante" />
+<select @bind="salidaIncendiosView.Hidrante">
+    <option value="@salidaIncendiosView.Hidrante">Si</option>
+    <option value="@salidaIncendiosView.Hidrante">No</option>
+</select>
 <br>
 <label>Extintor:</label>
-<input type="text" @bind="salidaView.Extintor" />
+<select @bind="salidaIncendiosView.Extintor">
+    <option value="@salidaIncendiosView.Extintor">Si</option>
+    <option value="@salidaIncendiosView.Extintor">No</option>
+</select>
 <br>
-@if (salidaView.Tipo == TipoIncendio.Embarcaiones)
+@if (salidaIncendiosView.Tipo == TipoIncendio.Embarcaiones)
 {
-    <select @bind="salidaView.TipoLugarSiniestroEmbarcacion">
+    <select @bind="salidaIncendiosView.TipoLugarSiniestroEmbarcacion">
         <option value="@TipoLugarSiniestroEmbarcacion.Baliza">Baliza</option>
         <option value="@TipoLugarSiniestroEmbarcacion.Boya">Boya</option>
         <option value="@TipoLugarSiniestroEmbarcacion.Canal">Canal</option>
@@ -93,30 +99,30 @@
         <option value="@TipoLugarSiniestroEmbarcacion.Otro">Otro</option>
     </select>
     <br>
-    @if (salidaView.TipoLugarSiniestroEmbarcacion == TipoLugarSiniestroEmbarcacion.Otro)
+    @if (salidaIncendiosView.TipoLugarSiniestroEmbarcacion == TipoLugarSiniestroEmbarcacion.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugarDeSiniestroEmbarcacion" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugarDeSiniestroEmbarcacion" />
         <br>
     }
 }
-<select @bind="salidaView.TipoEvacuacion">
+<select @bind="salidaIncendiosView.TipoEvacuacion">
     <option value="@TipoEvacuacion.EvacuacionParcial">Parcial</option>
     <option value="@TipoEvacuacion.EvacuacionTotal">Total</option>
     <option value="@TipoEvacuacion.NoEvacuo">No se evacuo</option>
 </select>
 <br>
 <label>Tipo de superficie:</label>
-<select @bind="salidaView.TipoSuperficieAfectada">
+<select @bind="salidaIncendiosView.TipoSuperficieAfectada">
     <option value="@TipoSuperficie.Hectareas">Hectareas</option>
     <option value="@TipoSuperficie.Km">Km</option>
     <option value="@TipoSuperficie.Metros">Metros</option>
 </select>
 <label>Detalle superficie:</label>
-<input type="text" @bind="salidaView.OtroLugarDeSiniestroEmbarcacion" />
+<input type="text" @bind="salidaIncendiosView.OtroLugarDeSiniestroEmbarcacion" />
 <br>
 <label>Causa:</label>
-<select @bind="salidaView.SuperficieAfectadaCausa">
+<select @bind="salidaIncendiosView.SuperficieAfectadaCausa">
     <option value="@TipoCausaIncendio.Desconocidas">Desconocidas</option>
     <option value="@TipoCausaIncendio.Internacional">Internacional</option>
     <option value="@TipoCausaIncendio.Natural">Natural</option>
@@ -124,21 +130,21 @@
 </select>
 <br>
 <label>Tipo de abertura:</label>
-<select @bind="salidaView.TipoAbertura">
+<select @bind="salidaIncendiosView.TipoAbertura">
     <option value="@TipoIncendioAbertura.AceroHierro">Acero / Hierro</option>
     <option value="@TipoIncendioAbertura.Aluminio">Aluminio</option>
     <option value="@TipoIncendioAbertura.Madera">Madera</option>
     <option value="@TipoIncendioAbertura.Plastica">Plastica</option>
     <option value="@TipoIncendioAbertura.Otro">Otro</option>
 </select>
-@if (salidaView.TipoAbertura == TipoIncendioAbertura.Otro)
+@if (salidaIncendiosView.TipoAbertura == TipoIncendioAbertura.Otro)
 {
     <label>Otro:</label>
-    <input type="text" @bind="salidaView.OtraAbertura" />
+    <input type="text" @bind="salidaIncendiosView.OtraAbertura" />
 }
 <br>
 <label>Tipo de techo:</label>
-<select @bind="salidaView.TipoTecho">
+<select @bind="salidaIncendiosView.TipoTecho">
     <option value="@TipoIncendioTecho.ChapaCarton">Chapa / carton</option>
     <option value="@TipoIncendioTecho.ChapaMetalica">Chapa metalica</option>
     <option value="@TipoIncendioTecho.MaderaPaja">Madera / paja</option>
@@ -146,15 +152,15 @@
     <option value="@TipoIncendioTecho.Yeso">Yeso</option>
     <option value="@TipoIncendioTecho.Otro">Otro</option>
 </select>
-@if (salidaView.TipoTecho == TipoIncendioTecho.Otro)
+@if (salidaIncendiosView.TipoTecho == TipoIncendioTecho.Otro)
 {
     <label>Otro:</label>
-    <input type="text" @bind="salidaView.OtroTecho" />
+    <input type="text" @bind="salidaIncendiosView.OtroTecho" />
     <br>
 }
-@if (salidaView.Tipo == TipoIncendio.Comercios)
+@if (salidaIncendiosView.Tipo == TipoIncendio.Comercios)
 {
-    <select @bind="salidaView.TipoLugarComercio">
+    <select @bind="salidaIncendiosView.TipoLugarComercio">
         <option value="@TipoLugarComercioIncendio.Bar">Bar</option>
         <option value="@TipoLugarComercioIncendio.Cine">Cine</option>
         <option value="@TipoLugarComercioIncendio.RestauranteLocalDeComida">Resto / lugar de comida</option>
@@ -163,16 +169,16 @@
         <option value="@TipoLugarComercioIncendio.Otro">Otro</option>
     </select>
     <br>
-    @if (salidaView.TipoLugarComercio == TipoLugarComercioIncendio.Otro)
+    @if (salidaIncendiosView.TipoLugarComercio == TipoLugarComercioIncendio.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugar" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugar" />
         <br>
     }
 }
-@if (salidaView.Tipo == TipoIncendio.EstablecimientoEducativo)
+@if (salidaIncendiosView.Tipo == TipoIncendio.EstablecimientoEducativo)
 {
-    <select @bind="salidaView.TipoLugarEstablecimientoEducativo">
+    <select @bind="salidaIncendiosView.TipoLugarEstablecimientoEducativo">
         <option value="@TipoIncendioEstablecimientoEducativo.EscuelaPrimaria">Escuela primaria</option>
         <option value="@TipoIncendioEstablecimientoEducativo.EscuelaSecundaria">Escuela secundaria</option>
         <option value="@TipoIncendioEstablecimientoEducativo.Jardin">Jardin</option>
@@ -182,31 +188,31 @@
 
     </select>
     <br>
-    @if (salidaView.TipoLugarEstablecimientoEducativo == TipoIncendioEstablecimientoEducativo.Otro)
+    @if (salidaIncendiosView.TipoLugarEstablecimientoEducativo == TipoIncendioEstablecimientoEducativo.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugar" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugar" />
         <br>
     }
 }
-@if (salidaView.Tipo == TipoIncendio.EstablecimientoPublico)
+@if (salidaIncendiosView.Tipo == TipoIncendio.EstablecimientoPublico)
 {
-    <select @bind="salidaView.TipoLugarEstablecimientoPublico">
+    <select @bind="salidaIncendiosView.TipoLugarEstablecimientoPublico">
         <option value="@TipoIncendioEstablecimientoPublico.Ministerio">Ministerio</option>
         <option value="@TipoIncendioEstablecimientoPublico.OficinaPublica">Oficina publica</option>
         <option value="@TipoIncendioEstablecimientoPublico.Otro">Otro</option>
     </select>
     <br>
-    @if (salidaView.TipoLugarEstablecimientoPublico == TipoIncendioEstablecimientoPublico.Otro)
+    @if (salidaIncendiosView.TipoLugarEstablecimientoPublico == TipoIncendioEstablecimientoPublico.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugar" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugar" />
         <br>
     }
 }
-@if (salidaView.Tipo == TipoIncendio.Forestal)
+@if (salidaIncendiosView.Tipo == TipoIncendio.Forestal)
 {
-    <select @bind="salidaView.TipoLugarForestal">
+    <select @bind="salidaIncendiosView.TipoLugarForestal">
         <option value="@TipoIncendioForestal.ArbustalOMatorral">Arbustal / matorral</option>
         <option value="@TipoIncendioForestal.Basural">Basural</option>
         <option value="@TipoIncendioForestal.Bosque">Bosque</option>
@@ -220,16 +226,16 @@
         <option value="@TipoIncendioForestal.Otro">Otro</option>
     </select>
     <br>
-    @if (salidaView.TipoLugarForestal == TipoIncendioForestal.Otro)
+    @if (salidaIncendiosView.TipoLugarForestal == TipoIncendioForestal.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugar" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugar" />
         <br>
     }
 }
-@if (salidaView.Tipo == TipoIncendio.Hospital || salidaView.Tipo == TipoIncendio.Clinica)
+@if (salidaIncendiosView.Tipo == TipoIncendio.Hospital || salidaIncendiosView.Tipo == TipoIncendio.Clinica)
 {
-    <select @bind="salidaView.TipoLugarHospitalYClinicas">
+    <select @bind="salidaIncendiosView.TipoLugarHospitalYClinicas">
         <option value="@TipoIncendioHospitalesYClinicas.CentroDeSalud">Centro de salud</option>
         <option value="@TipoIncendioHospitalesYClinicas.ClinicaPrivada">Clinica privada</option>
         <option value="@TipoIncendioHospitalesYClinicas.HospitalPublico">Hospital publico</option>
@@ -238,16 +244,16 @@
         <option value="@TipoIncendioHospitalesYClinicas.Otro">Otro</option>
     </select>
     <br>
-    @if (salidaView.TipoLugarHospitalYClinicas == TipoIncendioHospitalesYClinicas.Otro)
+    @if (salidaIncendiosView.TipoLugarHospitalYClinicas == TipoIncendioHospitalesYClinicas.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugar" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugar" />
         <br>
     }
 }
-@if (salidaView.Tipo == TipoIncendio.Industria)
+@if (salidaIncendiosView.Tipo == TipoIncendio.Industria)
 {
-    <select @bind="salidaView.TipoLugarIndustria">
+    <select @bind="salidaIncendiosView.TipoLugarIndustria">
         <option value="@TipoIncendioIndustria.Alimentacion">Alimentacion</option>
         <option value="@TipoIncendioIndustria.Automotriz">Automotriz</option>
         <option value="@TipoIncendioIndustria.Metalurgica">Metalurgica</option>
@@ -257,16 +263,16 @@
         <option value="@TipoIncendioIndustria.Otro">Otro</option>
     </select>
     <br>
-    @if (salidaView.TipoLugarIndustria == TipoIncendioIndustria.Otro)
+    @if (salidaIncendiosView.TipoLugarIndustria == TipoIncendioIndustria.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugar" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugar" />
         <br>
     }
 }
-@if (salidaView.Tipo == TipoIncendio.Vivienda)
+@if (salidaIncendiosView.Tipo == TipoIncendio.Vivienda)
 {
-    <select @bind="salidaView.TipoLugarVivienda">
+    <select @bind="salidaIncendiosView.TipoLugarVivienda">
         <option value="@TipoIncendioVivienda.Casa">Casa</option>
         <option value="@TipoIncendioVivienda.Casilla">Casilla</option>
         <option value="@TipoIncendioVivienda.Depto">Depto</option>
@@ -275,36 +281,36 @@
         <option value="@TipoIncendioVivienda.Otro">Otro</option>
     </select>
     <br>
-    @if (salidaView.TipoLugarVivienda == TipoIncendioVivienda.Otro)
+    @if (salidaIncendiosView.TipoLugarVivienda == TipoIncendioVivienda.Otro)
     {
         <label>Otro:</label>
-        <input type="text" @bind="salidaView.OtroLugar" />
+        <input type="text" @bind="salidaIncendiosView.OtroLugar" />
         <br>
     }
 }
-@if (salidaView.Tipo == TipoIncendio.Comercios || salidaView.Tipo == TipoIncendio.EstablecimientoEducativo || salidaView.Tipo == TipoIncendio.EstablecimientoPublico || salidaView.Tipo == TipoIncendio.Hospital || salidaView.Tipo == TipoIncendio.Clinica || salidaView.Tipo == TipoIncendio.Industria || salidaView.Tipo == TipoIncendio.Vivienda)
+@if (salidaIncendiosView.Tipo == TipoIncendio.Comercios || salidaIncendiosView.Tipo == TipoIncendio.EstablecimientoEducativo || salidaIncendiosView.Tipo == TipoIncendio.EstablecimientoPublico || salidaIncendiosView.Tipo == TipoIncendio.Hospital || salidaIncendiosView.Tipo == TipoIncendio.Clinica || salidaIncendiosView.Tipo == TipoIncendio.Industria || salidaIncendiosView.Tipo == TipoIncendio.Vivienda)
 {
     <label>Nombre establecimiento:</label>
-    <input type="text" @bind="salidaView.NombreEstablecimiento" />
+    <input type="text" @bind="salidaIncendiosView.NombreEstablecimiento" />
     <br>
     <label>Cantidad pisos afectados:</label>
-    <input type="number" @bind="salidaView.CantidadPisos" />
+    <input type="number" @bind="salidaIncendiosView.CantidadPisos" />
     <br>
-    @for (int i = 0; i == salidaView.CantidadPisos; i++)
+    @for (int i = 0; i == salidaIncendiosView.CantidadPisos; i++)
     {
         <label>Piso afectado:</label>
-        <input type="number" @bind="salidaView.PisoAfectado" />
+        <input type="number" @bind="salidaIncendiosView.PisoAfectado" />
         <br>
     }
     <label>Cantidad ambientes:</label>
-    <input type="number" @bind="salidaView.CantidadAmbientes" />
+    <input type="number" @bind="salidaIncendiosView.CantidadAmbientes" />
     <br>
 }
 <button @onclick="SubirSalida">Subir planilla</button>
 
 @code {
 
-    public class SalidaViewModel
+    public class SalidaIncendiosViewModel
     {
         public TipoIncendio Tipo { get; set; }
         [Required, StringLength(255)]
@@ -369,17 +375,71 @@
         public int? CantidadAmbientes { get; set; }
     }
 
-    public SalidaViewModel salidaView { get; set; } = new();
+    public SalidaIncendiosViewModel salidaIncendiosView { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        salidaView.Fecha = DateTime.Now;
+        salidaIncendiosView.Fecha = DateTime.Now;
     }
 
     public async void SubirSalida()
     {
         using var db = await DbFactory.CreateDbContextAsync();
+        if (salidaIncendiosView is not null)
+        {
+            Salida? numeroParte = await db.Set<Incendio>().Where(m => m.NumeroParte == salidaIncendiosView.NumeroParte).SingleOrDefaultAsync();
+            if (numeroParte is null)
+            {
+                Incendio salidaIncendio = new Incendio()
+                {
+                    Tipo = salidaIncendiosView.Tipo,
+                    Descripcion = salidaIncendiosView.Descripcion,
+                    FechaSalida = salidaIncendiosView.HoraSalida,
+                    FechaLLegada = salidaIncendiosView.HoraLlegada,
+                    KmSalida = salidaIncendiosView.KmSalida,
+                    KmLlegada = salidaIncendiosView.KmLLegada,
+                    NumeroParte = salidaIncendiosView.NumeroParte,
+                    CalleORuta = salidaIncendiosView.CalleORuta,
+                    NumeroOKilometro = salidaIncendiosView.NumeroOKilometro,
+                    EntreCalles = salidaIncendiosView.EntreCalles,
+                    PisoNumero = salidaIncendiosView.PisoNumero,
+                    Depto = salidaIncendiosView.Depto,
+                    TipoZona = salidaIncendiosView.TipoZona,
+                    NombreSolicitante = salidaIncendiosView.NombreSolicitante,
+                    ApellidoSolicitante = salidaIncendiosView.ApellidoSolicitante,
+                    DniSolicitante = salidaIncendiosView.DniSolicitante,
+                    TelefonoSolicitante = salidaIncendiosView.TelefonoSolicitante,
+                    Receptor = salidaIncendiosView.Receptor,
+                    DeteccionAutomaticaId= salidaIncendiosView.DeteccionAutomaticaId,
+                    Extintor = salidaIncendiosView.Extintor,
+                    Hidrante = salidaIncendiosView.Hidrante,
+                    TipoLugarSiniestroEmbarcacion = salidaIncendiosView.TipoLugarSiniestroEmbarcacion,
+                    OtroLugarDeSiniestroEmbarcacion= salidaIncendiosView.OtroLugarDeSiniestroEmbarcacion,
+                    TipoEvacuacion = salidaIncendiosView.TipoEvacuacion,
+                    TipoSuperficieAfectada = salidaIncendiosView.TipoSuperficieAfectada,
+                    DetalleSuperficieAfectadaIncendio = salidaIncendiosView.DetalleSuperficieAfectadaIncendio,
+                    SuperficieAfectadaCausa = salidaIncendiosView.SuperficieAfectadaCausa,
+                    TipoAbertura = salidaIncendiosView.TipoAbertura,
+                    OtraAbertura= salidaIncendiosView.OtraAbertura,
+                    TipoTecho = salidaIncendiosView.TipoTecho,
+                    OtroTecho = salidaIncendiosView.OtroTecho,
+                    OtroLugar = salidaIncendiosView.OtroLugar,
+                    NombreEstablecimiento = salidaIncendiosView.NombreEstablecimiento,
+                    CantidadPisos = salidaIncendiosView.CantidadPisos,
+                    PisoAfectado = salidaIncendiosView.PisoAfectado,
+                    CantidadAmbientes = salidaIncendiosView.CantidadAmbientes
+                };
+                    db.Set<Salida>().Add(salidaIncendio);
+                    await db.SaveChangesAsync();
+                    salidaIncendiosView = new();
+                    StateHasChanged();
 
+             
+
+            }
+        }
+        
+        
 
     }
 }
