@@ -3,31 +3,79 @@
 @page "/salidas"
 
 <br />
-<br />
-<br />
-<br />
-<br />
-<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios"); })">Incendios</button>
-<br />
-<br />
-<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">Factores climatiacos</button>
-<br />
-<br />
-<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">Materiales peligrosos</button>
-<br />
-<br />
-<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/servicios"); })">Servicios</button>
-<br />
-<br />
-<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">Accidentes</button>
-<br />
-<br />
-<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates"); })">Rescates</button>
-<br />
-<br />
-<br />
-<br />
-<br />
+<div style="display: flex; justify-content: center;align-items: center; flex-direction: column; width: 80%;height: calc(100vh - 5em);">
+    <Collapse DefaultActiveKey="@(new[]{"1"})" Bordered="false" Style="width: 100%;">
+        <Panel Header="Incendios" Key="1">
+            <Collapse Bordered="false" Style="margin-left: 2em;">
+                <AntList DataSource="@dataIncendios" TItem="BasicItem">
+                    <ListItem OnClick="()=>ItemClick(context.Incendios)">
+                        <a Style="width: 100%;display: flex;align-content:flex-start;" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios"); })">
+                            <ListItemMeta>
+                                <TitleTemplate>
+                                    @context.Incendios
+                                </TitleTemplate>
+                            </ListItemMeta>
+                        </a>
+                    </ListItem>
+                </AntList>
+            </Collapse>
+        </Panel>
+        <Panel Header="Factores climaticos" Key="2">
+            <Collapse Bordered="false" Style="margin-left: 2em;">
+                <AntList DataSource="@dataFactoresClimaticos" TItem="BasicItem">
+                    <ListItem OnClick="()=>ItemClick(context.FactoresClimaticos)">
+                        <Button Style="width: 100%;display: flex;align-content:flex-start;" @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
+                            <ListItemMeta>
+                                <TitleTemplate>
+                                    @context.FactoresClimaticos
+                                </TitleTemplate>
+                            </ListItemMeta>
+                        </Button>
+                    </ListItem>
+                </AntList>
+            </Collapse>
+            @*<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">Factores climatiacos</button>*@
+        </Panel>
+        <Panel Header="Materiales peligrosos" Key="3">
+            <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">Materiales peligrosos</button>
+        </Panel>
+        <Panel Header="Servicios" Key="4">
+            <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/servicios"); })">Servicios</button>
+        </Panel>
+        <Panel Header="Accidentes" Key="5">
+            <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">Accidentes</button>
+        </Panel>
+        <Panel Header="Rescates" Key="6">
+            <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates"); })">Rescates</button>
+        </Panel>
+    </Collapse>
+</div>
+
 @code {
 
+    public class BasicItem
+    {
+        public string Incendios { get; set; }
+        public string FactoresClimaticos { get; set; }
+    }
+
+    public List<BasicItem> dataIncendios = new List<BasicItem>
+    {
+        new BasicItem { Incendios = "Incendio tipo 1"},
+        new BasicItem { Incendios = "Incendio tipo 2"},
+        new BasicItem { Incendios = "Incendio tipo 3"},
+        new BasicItem { Incendios = "Incendio tipo 4"},
+    };
+    public List<BasicItem> dataFactoresClimaticos = new List<BasicItem>
+    {
+        new BasicItem { FactoresClimaticos = "FactoresClimaticos tipo 1"},
+        new BasicItem { FactoresClimaticos = "FactoresClimaticos tipo 2"},
+        new BasicItem { FactoresClimaticos = "FactoresClimaticos tipo 3"},
+        new BasicItem { FactoresClimaticos = "FactoresClimaticos tipo 4"},
+    };
+
+    public void ItemClick(string title)
+    {
+        Console.WriteLine($"item was clicked: {title}");
+    }
 }

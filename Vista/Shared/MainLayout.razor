@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IconService iconService
+@inject NavigationManager navigationManager
 
 <PageTitle> Bomberos Chivilcoy</PageTitle>
 
@@ -39,7 +40,6 @@
         </div>*@
     </Header>
     <Layout>
-        
             <div style="height: 100%;width: 200px;z-index: 100;position: fixed;">
                 
                     <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;"
@@ -79,17 +79,30 @@
                                     <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
                                 </ChildContent>
                             </MenuItem>
-                            @*<SubMenu Key="sub1" TitleTemplate=@sub1Title>
-                            <MenuItem Key="5">
-                            <IconTemplate>
-                            <IconFont Type="icon-csharp" />
-                            </IconTemplate>
-                            <ChildContent>Option 5</ChildContent>
-                            </MenuItem>
-                            <MenuItem Key="6">Option 6</MenuItem>
-                            <MenuItem Key="7">Option 7</MenuItem>
-                            <MenuItem Key="8">Option 8</MenuItem>
-                            </SubMenu>*@
+                            <SubMenu Key="sub1" TitleTemplate=@sub1Title Style="background-color: rgb(230, 230, 230);">
+                                <div style="background-color: rgb(230, 230, 230); color: black;">
+                                    <MenuItem Key="5" Style="background-color: rgb(230, 230, 230);">
+                                        <ChildContent>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios"); })">Incendios</a>
+                                        </ChildContent>
+                                    </MenuItem>
+                                    <MenuItem Key="6">
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">Factores climatiacos</a>
+                                    </MenuItem>
+                                    <MenuItem Key="7">
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">Materiales peligrosos</a>
+                                    </MenuItem>
+                                    <MenuItem Key="8">
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/servicios"); })">Servicios</a>
+                                    </MenuItem>
+                                    <MenuItem Key="9">
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">Accidentes</a>
+                                    </MenuItem>
+                                    <MenuItem Key="10">
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates"); })">Rescates</a>
+                                    </MenuItem>
+                                </div>
+                            </SubMenu>
                         <Sider Style="margin-top:5em; background-color: transparent;">
                            
                         </Sider>
@@ -98,10 +111,10 @@
             </div>
         
         
-        <Content Style="margin-top: 5em;margin-left: 80px;position: relative;height: 100%; background: rgb(200,200,200);">
-            <Divider>
+        <Content Style="margin-top: 5em;margin-left: 80px;position: relative; background: rgb(200,200,200);height: 200%;">
+            <div style="margin: 0 20px 0 20px;display: flex; justify-content: center; align-items: center;flex-direction:column;">
                 @Body
-            </Divider>
+            </div>
 
 
             @*AGREGAR FOOTER POR PAGINA
@@ -116,6 +129,7 @@
                 </BSContainer>
             </Footer>*@
         </Content>
+        
     </Layout>
     
 </Layout>
@@ -126,8 +140,8 @@
 
     RenderFragment sub1Title =
     @<span>
-        <Icon Type="mail" Theme="outline"></Icon>
-        <span>Navigation One</span>
+        <i class="fa-solid fa-fire-extinguisher" style="color: #263040;"></i>
+        <span class="nav-item"><a style="color: black;" class="nav-link" href="salidas">Salidas</a></span>
     </span>;
 
     void ToggleCollapsed()
