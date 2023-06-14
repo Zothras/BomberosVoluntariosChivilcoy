@@ -1,7 +1,67 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/materiales-peligrosos"
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+@using Vista.Data.ViewModels.MaterialesPeligrosos;
 
-@code {
+<Form Loading="loading" Model="@modelMateriales"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Tipo material">
+        <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
+    </FormItem>
+    <FormItem Label="Descripcion">
+        <Input @bind-Value="@modelMateriales.Descripcion" />
+    </FormItem>
+    <FormItem Label="Cuerpo Parteticipantes">
+        <Input @bind-Value="@modelMateriales.CuerpoParticipante" />
+    </FormItem>
+    <FormItem Label="Tipo material">
+        <Input @bind-Value="@modelMateriales.Descripcion" />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Input @bind-Value="@modelMateriales.Descripcion" />
+    </FormItem>
 
+
+
+
+
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+<div style="margin-top: 16px">
+    Loading state：
+    <Switch Checked=loading OnChange=toggle />
+</div>
+@code
+{
+
+
+    private MaterialPeligrosoViewModels modelMateriales = new ();
+
+
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(modelMateriales)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelMateriales)}");
+    }
+
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    
 }
+

@@ -19,7 +19,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Data\ViewModels\" />
 		<Folder Include="wwwroot\Imagenes\" />
 		<Folder Include="wwwroot\Moviles\" />
 	</ItemGroup>
