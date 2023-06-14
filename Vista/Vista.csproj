@@ -9,13 +9,17 @@
 
 	<ItemGroup>
 	  <Compile Remove="Areas\**" />
+	  <Compile Remove="Data\ViewModel\**" />
 	  <Content Remove="Areas\**" />
+	  <Content Remove="Data\ViewModel\**" />
 	  <EmbeddedResource Remove="Areas\**" />
+	  <EmbeddedResource Remove="Data\ViewModel\**" />
 	  <None Remove="Areas\**" />
+	  <None Remove="Data\ViewModel\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Data\ViewModel\" />
+		<Folder Include="Data\ViewModels\" />
 		<Folder Include="wwwroot\Imagenes\" />
 		<Folder Include="wwwroot\Moviles\" />
 	</ItemGroup>
