@@ -22,25 +22,21 @@
 </BSContainer>*@
 
 <Table @ref="table"
-       TItem="WeatherForecast"
-       DataSource="@forecasts"
+       TItem="BomberosViewModel"
+       DataSource="@bomberosVM"
        Total="_total"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        @bind-SelectedRows="selectedRows"
        OnChange="OnChange">
-    <Selection Key="@(context.Id.ToString())" />
-    <PropertyColumn Property="c=>c.Id" Sortable />
-    <PropertyColumn Property="c=>c.Date" Format="yyyy-MM-dd" Sortable />
-    <PropertyColumn Property="c=>c.TemperatureC" Sortable />
-    <PropertyColumn Title="Temp. (F)" Property="c=>c.TemperatureF" />
-    <PropertyColumn Title="Hot" Property="c=>c.Hot">
-        <Switch @bind-Value="@context.Hot"></Switch>
-    </PropertyColumn>
-    <PropertyColumn Property="c=>c.Summary" Sortable />
+    <Selection Key="@(context.NumeroLegajo.ToString())" />
+    <PropertyColumn Property="c=>c.NumeroLegajo" Sortable />
+    <PropertyColumn Property="c=>c.Nombre" Sortable />
+    <PropertyColumn Property="c=>c.Apellido" Sortable />
+    <PropertyColumn Property="c=>c.Grado" Sortable />
     <ActionColumn Title="Action">
         <Space>
-            <SpaceItem><Button Danger OnClick="()=>Delete(context.Id)">Delete</Button></SpaceItem>
+            <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
                 </Space>
                 </ActionColumn>
                 </Table>
@@ -56,7 +52,7 @@
 
     @foreach (var selected in selectedRows)
     {
-        <Tag @key="selected.Id" Closable OnClose="e=>RemoveSelection(selected.Id)">@selected.Id - @selected.Summary</Tag>
+        <Tag @key="selected.NumeroLegajo" Closable OnClose="e=>RemoveSelection(selected.NumeroLegajo)">@selected.NumeroLegajo - @selected.NumeroLegajo</Tag>
     }
 }
 
@@ -65,10 +61,10 @@
 
 
 @code {
+    BomberosViewModel[] bomberosVM;
+    Bombero[]? bomberos;
 
-    WeatherForecast[] forecasts;
-
-    IEnumerable<WeatherForecast> selectedRows;
+    IEnumerable<BomberosViewModel> selectedRows;
     ITable table;
 
     int _pageIndex = 1;
@@ -77,132 +73,111 @@
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await GetForecastAsync(1, 50);
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        bomberos = await db.Bomberos.ToArrayAsync();
+        bomberosVM = await GetForecastAsync(1, 50);
         _total = 50;
     }
 
-    public class WeatherForecast
-    {
-        public int Id { get; set; }
-
-        [DisplayName("Date")]
-        public DateTime? Date { get; set; }
-
-        [DisplayName("Temp. (C)")]
-        public int TemperatureC { get; set; }
-
-        [DisplayName("Summary")]
-        public string Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-        public bool Hot { get; set; }
-    }
-
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-  };
-
-    public async Task OnChange(QueryModel<WeatherForecast> queryModel)
+    private async Task OnChange(QueryModel<BomberosViewModel> queryModel)
     {
         Console.WriteLine(JsonSerializer.Serialize(queryModel));
     }
 
-    public Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
+    private Task<BomberosViewModel[]> GetForecastAsync(int pageIndex, int pageSize)
     {
+
         var rng = new Random();
         return Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index =>
         {
-            var temperatureC = rng.Next(-20, 55);
-            return new WeatherForecast
+            return new BomberosViewModel
                 {
-                    Id = index,
-                    Date = DateTime.Now.AddDays(index),
-                    TemperatureC = temperatureC,
-                    Summary = Summaries[rng.Next(Summaries.Length)],
-                    Hot = temperatureC > 30,
+                    NumeroLegajo = bomberos[index].NumeroLegajo,
+                    Nombre = bomberos[index].Nombre,
+                    Apellido = bomberos[index].Apellido,
+                    Grado = bomberos[index].Grado,
                 };
         }).ToArray());
     }
 
     public void RemoveSelection(int id)
     {
-        var selected = selectedRows.Where(x => x.Id != id);
+        var selected = selectedRows.Where(x => x.NumeroLegajo != id);
         selectedRows = selected;
     }
 
     private void Delete(int id)
     {
-        forecasts = forecasts.Where(x => x.Id != id).ToArray();
-        _total = forecasts.Length;
+        bomberosVM = bomberosVM.Where(x => x.NumeroLegajo != id).ToArray();
+        _total = bomberosVM.Length;
     }
 
 
-    //[Parameter]
-    //public int? BomberoId { get; set; }
+    [Parameter]
+    public int? BomberoId { get; set; }
 
-    //private class BomberosViewModel
-    //{
-    //    public DateTime FechaNacimiento { get; set; }
-    //    public DateTime FechaAceptacion { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string Nombre { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string Apellido { get; set; }
-    //    public EstadoBombero Estado { get; set; }
-    //    public int NumeroLegajo { get; set; }
-    //    public EscalafonJerarquico Grado { get; set; }
-    //    public TipoDotaciones Dotacion { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string Brigada { get; set; }
-    //    public bool Chofer { get; set; }
-    //    public DateTime? VencimientoRegistro { get; set; }
-    //    public TipoSexo Sexo { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string Direccion { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string LugarNacimiento { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string Documento { get; set; }
-    //    [Required, StringLength(255)]
-    //    public TipoGrupoSanguineo GrupoSanguineo { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string Observaciones { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string Profesion { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string NivelEstudios { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string NumeroIoma { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? Resolucion1 { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? Resolucion2 { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? Resolucion3 { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? Resolucion4 { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? Resolucion5 { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? Resolucion6 { get; set; }
-    //    //Contacto-------------------------------
-    //    [Required, StringLength(255)]
-    //    public string? TelefonoCel { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? TelefonoLaboral { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? TelefonoFijo { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string? Email { get; set; }
-    //    //Imagen-------------------------------
-    //    public string Base64 { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string TipoImagen { get; set; }
-    //    [Required, StringLength(255)]
-    //    public string NombreImagen { get; set; }
-    //    //Brigada-------------------------------
-    //    public string NombreBrigada { get; set; }
-    //}
+    private class BomberosViewModel
+    {
+        public DateTime FechaNacimiento { get; set; }
+        public DateTime FechaAceptacion { get; set; }
+        [Required, StringLength(255)]
+        public string Nombre { get; set; }
+        [Required, StringLength(255)]
+        public string Apellido { get; set; }
+        public EstadoBombero Estado { get; set; }
+        public int NumeroLegajo { get; set; }
+        public EscalafonJerarquico Grado { get; set; }
+        public TipoDotaciones Dotacion { get; set; }
+        [Required, StringLength(255)]
+        public string Brigada { get; set; }
+        public bool Chofer { get; set; }
+        public DateTime? VencimientoRegistro { get; set; }
+        public TipoSexo Sexo { get; set; }
+        [Required, StringLength(255)]
+        public string Direccion { get; set; }
+        [Required, StringLength(255)]
+        public string LugarNacimiento { get; set; }
+        [Required, StringLength(255)]
+        public string Documento { get; set; }
+        [Required, StringLength(255)]
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
+        [Required, StringLength(255)]
+        public string Observaciones { get; set; }
+        [Required, StringLength(255)]
+        public string Profesion { get; set; }
+        [Required, StringLength(255)]
+        public string NivelEstudios { get; set; }
+        [Required, StringLength(255)]
+        public string NumeroIoma { get; set; }
+        [Required, StringLength(255)]
+        public string? Resolucion1 { get; set; }
+        [Required, StringLength(255)]
+        public string? Resolucion2 { get; set; }
+        [Required, StringLength(255)]
+        public string? Resolucion3 { get; set; }
+        [Required, StringLength(255)]
+        public string? Resolucion4 { get; set; }
+        [Required, StringLength(255)]
+        public string? Resolucion5 { get; set; }
+        [Required, StringLength(255)]
+        public string? Resolucion6 { get; set; }
+        ////Contacto-------------------------------
+        //[Required, StringLength(255)]
+        //public string? TelefonoCel { get; set; }
+        //[Required, StringLength(255)]
+        //public string? TelefonoLaboral { get; set; }
+        //[Required, StringLength(255)]
+        //public string? TelefonoFijo { get; set; }
+        //[Required, StringLength(255)]
+        //public string? Email { get; set; }
+        ////Imagen-------------------------------
+        //public string Base64 { get; set; }
+        //[Required, StringLength(255)]
+        //public string TipoImagen { get; set; }
+        //[Required, StringLength(255)]
+        //public string NombreImagen { get; set; }
+        ////Brigada-------------------------------
+        //public string NombreBrigada { get; set; }
+    }
 }
