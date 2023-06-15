@@ -19,7 +19,7 @@ namespace Vista.Data.Models.Personales
         [Required, StringLength(255)]
         public string Documento { get; set; }
         [Required, StringLength(255)]
-        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
+        public string GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]

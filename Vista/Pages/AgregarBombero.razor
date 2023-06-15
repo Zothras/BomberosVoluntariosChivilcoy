@@ -86,7 +86,9 @@
         <FormItem Label="DNI" >
             <Input @bind-Value="@bomberoView.Documento"/>
         </FormItem>
-
+        <FormItem Label="Direccion" >
+            <Input @bind-Value="@bomberoView.Direccion"/>
+        </FormItem>
          <FormItem Label="Dotaciones" >
             <EnumSelect TEnum="TipoDotaciones" @bind-Value="@bomberoView.Dotacion"/>
         </FormItem>
@@ -107,6 +109,10 @@
         <FormItem Label="Lugar de nacimiento" >
             <Input @bind-Value="@bomberoView.LugarNacimiento"/>
         </FormItem>
+
+        @*<FormItem Label="Grupo Sanguineo" >
+                <Input @bind-Value="@bomberoView.GrupoSanguineo"/>
+        </FormItem>*@
 
         <FormItem Label="Dotaciones" >
             <EnumSelect TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoView.GrupoSanguineo"/>
@@ -359,7 +365,7 @@
                         Resolucion4 = bomberoView.Resolucion4,
                         Resolucion5 = bomberoView.Resolucion5,
                         Resolucion6 = bomberoView.Resolucion6,
-                        GrupoSanguineo = bomberoView.GrupoSanguineo,
+                        GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo),
                         Estado = bomberoView.Estado,
                         Chofer = bomberoView.Chofer,
                         VencimientoRegistro = bomberoView.VencimientoRegistro,
