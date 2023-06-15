@@ -9,7 +9,7 @@
             <Collapse Bordered="false" Style="margin-left: 2em;">
                 <AntList DataSource="@dataIncendios" TItem="BasicItem">
                     <ListItem OnClick="()=>ItemClick(context.Incendios)">
-                        <a Style="width: 100%;display: flex;align-content:flex-start;" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios"); })">
+                        <a Style="width: 100%;display: flex;align-content:flex-start;" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
                             <ListItemMeta>
                                 <TitleTemplate>
                                     @context.Incendios
@@ -61,7 +61,7 @@
 
     public List<BasicItem> dataIncendios = new List<BasicItem>
     {
-        new BasicItem { Incendios = "Incendio tipo 1"},
+        new BasicItem { Incendios = "Incendo de Comercio"},
         new BasicItem { Incendios = "Incendio tipo 2"},
         new BasicItem { Incendios = "Incendio tipo 3"},
         new BasicItem { Incendios = "Incendio tipo 4"},
