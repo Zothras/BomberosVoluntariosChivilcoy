@@ -7,8 +7,8 @@ namespace Vista.Data.ViewModels
 {
     public abstract class SalidasViewModels
     {
-        public DateTime FechaSalida { get; set; }
-        public DateTime FechaLLegada { get; set; }
+        public DateTime HoraSalida { get; set; }
+        public DateTime HoraLLegada { get; set; }
         public int KmSalida { get; set; }
         public int KmLlegada { get; set; }
         public int NumeroParte { get; set; }

@@ -7,34 +7,6 @@ namespace Vista.Data.ViewModels.Incendios
     {
         public TipoIncendio Tipo { get; set; }
         [Required, StringLength(255)]
-        public string Descripcion { get; set; }
-        public DateTime Fecha { get; set; }
-        public DateTime HoraSalida { get; set; }
-        public DateTime HoraLlegada { get; set; }
-        public int KmSalida { get; set; }
-        public int KmLLegada { get; set; }
-        public int NumeroParte { get; set; }
-        [Required, StringLength(255)]
-        public string CalleORuta { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroOKilometro { get; set; }
-        [StringLength(255)]
-        public string? EntreCalles { get; set; }
-        [StringLength(255)]
-        public string? PisoNumero { get; set; }
-        [StringLength(255)]
-        public string? Depto { get; set; }
-        public TipoZona TipoZona { get; set; }
-        [Required, StringLength(255)]
-        public string NombreSolicitante { get; set; }
-        [Required, StringLength(255)]
-        public string ApellidoSolicitante { get; set; }
-        [Required, StringLength(255)]
-        public string DniSolicitante { get; set; }
-        [Required, StringLength(255)]
-        public string TelefonoSolicitante { get; set; }
-        [StringLength(255)]
-        public string? Receptor { get; set; }
         public bool DeteccionAutomaticaId { get; set; }
         public bool? Extintor { get; set; }
         public bool? Hidrante { get; set; }
