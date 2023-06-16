@@ -5,14 +5,23 @@
 @using System.Text.Json;
 @using Vista.Data.ViewModels.MaterialesPeligrosos;
 
-<Form Loading="loading" Model="@modelMateriales"
+<Form  Model="@modelMateriales"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
+
+    <FormItem Label="Dato Hora salida">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraSalida" />
+    </FormItem>
+    <FormItem Label="Dato Hora llegada">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraLLegada" />
+    </FormItem>
     <FormItem Label="Tipo material">
         <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
     </FormItem>
+
+    
     <FormItem Label="Descripcion">
         <Input @bind-Value="@modelMateriales.Descripcion" />
     </FormItem>
@@ -36,10 +45,7 @@
         </Button>
     </FormItem>
 </Form>
-<div style="margin-top: 16px">
-    Loading state：
-    <Switch Checked=loading OnChange=toggle />
-</div>
+
 @code
 {
 
@@ -57,10 +63,12 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelMateriales)}");
     }
-
-    bool loading = false;
-
-    void toggle(bool value) => loading = value;
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+   
 
     
 }
