@@ -24,14 +24,6 @@
 
 @if (moviles is not null)
 {
-    <BSContainer Container="Container.Medium">
-        <div class="Titulo">
-            <h3> Moviles </h3>
-        </div>
-        <BSContainer id="blancoA">
-
-        </BSContainer>
-    </BSContainer>
     <BSContainer id="Cartas">
         <BSRow Align="Align.Start">
             @foreach(Movil m in moviles)
@@ -65,6 +57,17 @@
             
         </BSRow>
     </BSContainer>
+    <div>
+            @*string x = "Movil" + @m.NumeroMovil;*@
+            <div>
+                <Card Hoverable Style="width: 240px" Cover="@coverTemplate" Actions="@(new[] {
+                                    actionSetting(()=> OnClick("delete")) ,
+                                    actionEdit(()=> OnClick("edit")),
+                                    actionEllipsis(()=> OnClick("ellipsis")) })">
+                        <CardMeta Title="Ejemplo diseño de carta" Description="www.instagram.com" />
+                </Card>
+            </div>
+    </div>
 }
 else
 {
@@ -117,6 +120,22 @@ else
         StateHasChanged();
     }
     
+
+
+    RenderFragment coverTemplate =@<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />;
+
+
+    RenderFragment actionSetting(Action clickAction) =>@<Icon Type="delete" OnClick="@clickAction" />;
+
+    RenderFragment actionEdit(Action clickAction) =>@<Icon Type="edit" OnClick="@clickAction" />;
+
+    RenderFragment actionEllipsis(Action clickAction) => @<Icon Type="ellipsis" OnClick="@clickAction" />;
+
+    void OnClick(string icon)
+    {
+        Console.WriteLine($"icon {icon} is clicked");
+    }
+
 }
 
 

@@ -12,32 +12,21 @@
 @*-----------------------*@
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
-    <Header Style="position: fixed;box-shadow: 1px 1px 1px rgb(128, 128, 128);background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;">
-        @*<nav class="navbar navbar-expand-lg navbar-dark py-3" id="BarraMain">
-        <div class="container px-4 px-lg-5">
 
+    <Header Style="position: fixed;box-shadow: 1px 1px 1px rgb(128, 128, 128);background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
+        <div style="display: flex;align-items: center; align-content: center;height: 100%;gap:15px;">
+            <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
+                @if (collapsed)
+                {
+                    <Icon Type="menu-unfold" Theme="outline" Style="font-size: 20px;"></Icon>
+                }
+                else
+                {
+                    <Icon Type="menu-fold" Theme="outline" Style="font-size: 20px;"></Icon>
+                }
+            </Button>
+            <a class="navbar-brand" style="display: flex;align-items:center;gap: 5px;color: rgb(263040,255,255);font-size: 20px;" href="/"><img class="Logo" src="/Imagenes/Logo1.png" /> Bomberos Voluntarios Chivilcoy</a>
         </div>
-        </nav>*@
-        <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px; background: none; border: none;">
-            @if (collapsed)
-            {
-                <Icon Type="menu-unfold" Theme="outline"></Icon>
-            }
-            else
-            {
-                <Icon Type="menu-fold" Theme="outline"></Icon>
-            }
-        </Button>
-        <a class="navbar-brand" style="color: rgb(255,255,255)" href="/"><img class="Logo" src="/Imagenes/Logo1.png" /> Bomberos Voluntarios Chivilcoy</a>
-        @*<button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>*@
-        @*<div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ms-auto my-0 my-lg-0">
-        <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
-        <li class="nav-item"><a class="nav-link" href="salidas">Salidas</a></li>
-        <li class="nav-item"><a class="nav-link" href="bomberos">Bomberos</a></li>
-        <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
-        </ul>
-        </div>*@
     </Header>
     <Layout>
             <div style="height: 100%;width: 200px;z-index: 100;position: fixed;">
@@ -60,7 +49,43 @@
                                     <i class="fa-solid fa-fire-extinguisher" style="color: #263040;"></i>
                                 </IconTemplate>
                                 <ChildContent>
-                                    <li class="nav-item"><a class="nav-link" href="salidas">Salidas</a></li>
+                                    <Dropdown>
+                                        <Overlay>
+                                            <Menu>
+                                                <SubMenu Title=@("Incendios")>
+                                                    <MenuItem>Comercio</MenuItem>
+                                                    <MenuItem>Cayorda</MenuItem>
+                                                </SubMenu>
+                                                <SubMenu Title=@("Factores climatiacos")>
+                                                    <MenuItem>Factor1</MenuItem>
+                                                    <MenuItem>Factor2</MenuItem>
+                                                </SubMenu>
+                                                <SubMenu Title=@("Materiales peligrosos")>
+                                                    <MenuItem>Materiales t1</MenuItem>
+                                                    <MenuItem>Materiales t2</MenuItem>
+                                                </SubMenu>
+                                                <SubMenu Title=@("Servicios")>
+                                                    <MenuItem>Serviocio1</MenuItem>
+                                                    <MenuItem>Servicio2</MenuItem>
+                                                </SubMenu>
+                                                <SubMenu Title=@("Accidentes")>
+                                                    <MenuItem>Tipo1</MenuItem>
+                                                    <MenuItem>Tipo2</MenuItem>
+                                                </SubMenu>
+                                                <SubMenu Title=@("Rescates")>
+                                                    <MenuItem>Animal</MenuItem>
+                                                    <MenuItem>Persona</MenuItem>
+                                                </SubMenu>
+                                            </Menu>
+                                        </Overlay>
+                                        <ChildContent>
+                                            <li style="margin-left: 1em;">
+                                                <a class="ant-dropdown-link" @onclick:preventDefault>
+                                                    Salidas <Icon Type="down" />
+                                                </a>
+                                            </li>
+                                        </ChildContent>
+                                    </Dropdown>
                                 </ChildContent>
                             </MenuItem>
                             <MenuItem Key="2" Icon="desktop">
@@ -79,30 +104,6 @@
                                     <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
                                 </ChildContent>
                             </MenuItem>
-                            <SubMenu Key="sub1" TitleTemplate=@sub1Title Style="background-color: rgb(230, 230, 230);">
-                                <div style="background-color: rgb(230, 230, 230); color: black;">
-                                    <MenuItem Key="5" Style="background-color: rgb(230, 230, 230);">
-                                        <ChildContent>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios"); })">Incendios</a>
-                                        </ChildContent>
-                                    </MenuItem>
-                                    <MenuItem Key="6">
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">Factores climatiacos</a>
-                                    </MenuItem>
-                                    <MenuItem Key="7">
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">Materiales peligrosos</a>
-                                    </MenuItem>
-                                    <MenuItem Key="8">
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/servicios"); })">Servicios</a>
-                                    </MenuItem>
-                                    <MenuItem Key="9">
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">Accidentes</a>
-                                    </MenuItem>
-                                    <MenuItem Key="10">
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates"); })">Rescates</a>
-                                    </MenuItem>
-                                </div>
-                            </SubMenu>
                         <Sider Style="margin-top:5em; background-color: transparent;">
                            
                         </Sider>
