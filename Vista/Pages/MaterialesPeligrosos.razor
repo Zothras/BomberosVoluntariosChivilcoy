@@ -88,30 +88,134 @@
         <FormItem Label="Tipo material">
             <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
         </FormItem>
+        <FormItem Label="Lugar De nacimiento">
+            <Input @bind-Value="@damnificado.LugarDeNacimiento" />
+        </FormItem>
+        <FormItem Label="edad">
+            <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
+        </FormItem>
+        <FormItem Label="Tipo material">
+            <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
+        </FormItem>
     }
+    @*Datos de Vehiculos  damnificados*@
+    <FormItem Label="¿Ubo vehiculos damnificados?">
+        <Switch @bind-Checked="switchValuev" />
+    </FormItem>
+    @if (switchValuev == true )
+    {
+        <FormItem Label="Color">
+            <Input @bind-Value="@damnificado.Color" />
+        </FormItem>
+        <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
+        
+    }
+    @*Datos Del seguro*@
+    <FormItem Label="Compania Aseguradora">
+        <Input @bind-Value="@modelMateriales.CompaniaAseguradora" />
+    </FormItem>
+    <FormItem Label="NumeroPoliza">
+        <Input @bind-Value="@modelMateriales.NumeroPoliza" />
+    </FormItem>
+    <FormItem Label="FechaVencimineto">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.FechaVencimineto" />
+    </FormItem>
+    @*Moviles de salidas*@
+    @*a la hora de pedir el chofer y movil, 
+    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
+    <b><label>Datos de chofer</label></b>
+    <br />
+     <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
+    <FormItem Label="Numero de legajo">
+        <Input @bind-Value="movilSalidaViewModels.NumeroLegajo" />
+    </FormItem>
+    <FormItem Label="Numero de movil">
+        <Input @bind-Value="movilSalidaViewModels.NumeroMovil" />
+    </FormItem>
+    <br />
+    <Button>Cargar Movil salida</Button>
+    @*Cuerpos paraticipantes*@
+    <b><label>Cuerpo Participante</label></b>
+    <FormItem Label="Tipo Escalafon">
+        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
+    </FormItem>
+    <FormItem Label="Numero de legajo">
+        <AntDesign.InputNumber @bind-Value="bomberoSalidaView.NumeroLegajo" />
+    </FormItem>
+    <FormItem Label="Nombre de bombero">
+        <Input @bind-Value="bomberoSalidaView.Nombre" />
+    </FormItem>
+    <FormItem Label="Apellido de bombero">
+        <Input @bind-Value="bomberoSalidaView.Apellido" />
+    </FormItem>
+    <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
+    <br />
+    <Button>Cargar cuerpo participante</Button>
+    <br />
+    <b><label>Datos encargados</label></b>
+    <FormItem Label="Nombre del bombero">
+        <Input @bind-Value="modelMateriales.NombreEncargado" />
+    </FormItem>
+    <FormItem Label="Apellido del bombero">
+        <Input @bind-Value="modelMateriales.ApellidoEncargado" />
+    </FormItem>
+    <FormItem Label="Numero de legajo">
+        <AntDesign.InputNumber @bind-Value="modelMateriales.LegajoEncargado" />
+    </FormItem>
+    <b><label>Quien lleno planilla</label></b>
+    <FormItem Label="Nombre del bombero">
+        <Input @bind-Value="modelMateriales.NombreLLenoPlanilla" />
+    </FormItem>
+    <FormItem Label="Apellido del bombero">
+        <Input @bind-Value="modelMateriales.ApllidoLLenoPlanilla" />
+    </FormItem>
+    <FormItem Label="Numero de legajo">
+        <AntDesign.InputNumber @bind-Value="modelMateriales.LegajoLLenoPlanilla" />
+    </FormItem>
+
+    @*Tipo servicio*@
+    <FormItem Label="Tipo Servicio salida">
+        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelMateriales.TipoServicio" />
+    </FormItem>
 
    @*propio de la salida de tipo material*@
     <FormItem Label="Tipo material">
         <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
     </FormItem>
-  
-    <FormItem Label="Cuerpo Parteticipantes">
-        <Input @bind-Value="@modelMateriales.CuerpoParticipante" />
+    <b><label>Acciones sobre los materiales</label></b>
+    <Checkbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">
+     Check all
+    </Checkbox>
+    <br />
+    <AntDesign.CheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged" />
+    
+    <FormItem Label="Detalles Acciones ">
+        <Input @bind-Value="modelMateriales.DetallesAccionesMateriales" />
     </FormItem>
-    <FormItem Label="Tipo material">
-        <Input @bind-Value="@modelMateriales.Descripcion" />
+    @*Acciones sobre personas*@
+    <FormItem Label="Tipo Evacuacion">
+        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
     </FormItem>
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Input @bind-Value="@modelMateriales.Descripcion" />
+    <br />
+    <b><label>Acciones sobre personas</label></b>
+    <AntDesign.CheckboxGroup Options="@ckeckAllOptionsP" ValueChanged="@OnChanged" />
+    <FormItem Label="Detalles Acciones Personas ">
+        <Input @bind-Value="modelMateriales.DetallesAccionesPersonas" />
     </FormItem>
-
-
-
+    <FormItem Label="Tipo Superficie">
+        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
+    </FormItem>
+    <FormItem Label="Detalles Surpeficie Afectada ">
+        <Input @bind-Value="modelMateriales.DetalleSuperficieAfectada" />
+    </FormItem>
+    <FormItem Label="Tipo Evacuacion">
+        <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
+    </FormItem>
 
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
-            Submit
+            Cargar salida
         </Button>
     </FormItem>
 </Form>
@@ -121,9 +225,14 @@
 
     private DamnificadoViewModels damnificado = new();
     private MaterialPeligrosoViewModels modelMateriales = new ();
+    private MovilSalidaViewModels movilSalidaViewModels = new();
+    private BomberoSalidaViewModels bomberoSalidaView = new();
+
     bool switchValue { get; set; }
-
-
+    bool switchValuev { get; set; }
+    bool chek { get; set; }
+    bool chekM { get; set; }
+    bool chekB { get; set; }
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(modelMateriales)}");
@@ -138,8 +247,38 @@
         Console.WriteLine($"Selected Time: {args.Date}");
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
-   
+    // array de las opciones posibles, buscar la opcion y agregarla en la planilla
+    static CheckboxOption[] ckeckAllOptions = new CheckboxOption[]{
+        new CheckboxOption{ Label="Controlada",Value="Controlada" },
+        new CheckboxOption{ Label="Venteo", Value="Venteo" },
+        new CheckboxOption{ Label="DilucionDeVapores", Value="DilucionDeVapores"},
+        new CheckboxOption{ Label="Neutralizacion",Value="Neutralizacion" },
+        new CheckboxOption{ Label="Trasvase",Value="Trasvase" },
+        new CheckboxOption{ Label="Otro",Value="Otro" },
+    };
+    static CheckboxOption[] ckeckAllOptionsP = new CheckboxOption[]{
+        new CheckboxOption{ Label="Descontaminacion",Value="Descontaminacion" },
+        new CheckboxOption{ Label="Confinamiento", Value="Confinamiento" },
+        new CheckboxOption{ Label="SinAccion", Value="SinAccion"},
+        new CheckboxOption{ Label="Otro",Value="Otro" },
+    };
+    void CheckAllChanged()
+    {
+        bool allChecked = checkAll;
+        ckeckAllOptions.ForEach(o => o.Checked = !allChecked);
+    }
+
+    void OnChanged()
+    {
+
+    }
+
+    bool indeterminate => ckeckAllOptions.Count(o => o.Checked) > 0 && ckeckAllOptions.Count(o => o.Checked) < ckeckAllOptions.Count();
+
+    bool checkAll => ckeckAllOptions.All(o => o.Checked);
+
+}
 
     
-}
+
 
