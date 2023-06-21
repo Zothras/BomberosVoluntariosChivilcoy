@@ -6,9 +6,7 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-<div class="Titulo">
-    <h3> Bomberos</h3>
-</div>
+
 <BSContainer id="agregar-bombero">
     <a @onclick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">
         <BSButton id="button-center" Color="BSColor.Danger">Agregar Bombero +</BSButton>
@@ -154,7 +152,7 @@
                 </FormItem>
 
                 <FormItem Label="Grado">
-            <EnumSelect DefaultValue="@bomberoVM.Grado" TEnum="EscalafonJerarquico" @bind-Value="@bomberoVM.Grado" />
+                    <EnumSelect DefaultValue="@bomberoVM.Grado" TEnum="EscalafonJerarquico" @bind-Value="@bomberoVM.Grado" />
                 </FormItem>
 
 
@@ -167,7 +165,7 @@
                 </FormItem>
 
 
-                @*Carga Contacto-----------------------------------------------------------------------*@
+        @* Carga Contacto-----------------------------------------------------------------------*@
                 <FormItem Label="Telefono Laboral">
                     <Input DefaultValue="@bomberoVM.TelefonoLaboral" @bind-Value="@bomberoVM.TelefonoLaboral" />
                 </FormItem>
@@ -306,12 +304,12 @@
         public string? TelefonoFijo { get; set; }
         [Required, StringLength(255)]
         public string? Email { get; set; }
-        //Imagen-------------------------------
-        public string Base64 { get; set; }
-        [Required, StringLength(255)]
-        public string TipoImagen { get; set; }
-        [Required, StringLength(255)]
-        public string NombreImagen { get; set; }
+        ////Imagen-------------------------------
+        //public string Base64 { get; set; }
+        //[Required, StringLength(255)]
+        //public string TipoImagen { get; set; }
+        //[Required, StringLength(255)]
+        //public string NombreImagen { get; set; }
         //Brigada-------------------------------
         public string NombreBrigada { get; set; }
     }
@@ -389,10 +387,26 @@
     private async Task<BomberosViewModel> GetBomberoViewModel(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync(); 
-        Contacto? contacto = await context.Contactos.Where(c => c.ContactoId == bombero.Contacto.ContactoId).SingleOrDefaultAsync(); 
+        //Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        //Bombero? bomberoBrigada = context.Bomberos.Include(b => b.BrigadaId).FirstOrDefault();
+        //Bombero? bomberoContacto = context.Bomberos.Include(b => b.Contacto).FirstOrDefault();
+        //Bombero? bomberoImagen = context.Bomberos.Include(b => b.ImagenId).FirstOrDefault(); 
+
+        //Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id)
+        //.Include(bc => bc.Contacto).ThenInclude(contacto =>contacto.ContactoId)
+        //.Include(br => br.BrigadaId)
+        //.Include(bi =>bi.ImagenId)
+        //.Include(p => p.PersonaId)
+        //.SingleOrDefaultAsync();
+        //Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        //Contacto? contacto = await context.Contactos.Where(c => c.ContactoId == bombero.Contacto.ContactoId).SingleOrDefaultAsync(); 
+        //Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
+        //Imagen? imagen = await context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefaultAsync();
+        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        //Bombero? contacto = await context.Bomberos.Include (c => c.Contacto ).SingleOrDefaultAsync();
         Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
-        Imagen? imagen = await context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefaultAsync();
+        //Contacto? contacto = await context.Contactos.Where(c => c == bombero.Contacto).Include(contacto => contacto.ContactoId == bombero.Contacto.ContactoId).SingleOrDefaultAsync();
+        //Bombero? imagen = await context.Bomberos.Include(i => i.ImagenId).SingleOrDefaultAsync();
 
         BomberosViewModel BomeroPasajeVM = new()
         {
@@ -406,9 +420,9 @@
                 LugarNacimiento = bombero.LugarNacimiento,
                 Grado = bombero.Grado,
 
-                NombreImagen =imagen.NombreImagen,
-                TipoImagen = imagen.TipoImagen,
-                Base64 = imagen.Base64Imagen,
+                //NombreImagen = bombero.Imagen.NombreImagen,
+                //TipoImagen = bombero.Imagen.TipoImagen,
+                //Base64 = bombero.Imagen.Base64Imagen,
 
                 Dotacion = bombero.Dotacion,
 
@@ -430,10 +444,10 @@
                 NivelEstudios = bombero.NivelEstudios,
                 FechaAceptacion = bombero.FechaAceptacion,
 
-                TelefonoCel = contacto.TelefonoCel,
-                TelefonoFijo =contacto.TelefonoFijo,
-                TelefonoLaboral = contacto.TelefonoLaboral,
-                Email = contacto.Email
+                //TelefonoCel = bombero.Contacto.TelefonoCel,
+                //TelefonoFijo = bombero.Contacto.TelefonoFijo,
+                //TelefonoLaboral =  bombero.Contacto.TelefonoLaboral,
+                //Email = bombero.Contacto.Email
         };
         StateHasChanged();
         return BomeroPasajeVM;
