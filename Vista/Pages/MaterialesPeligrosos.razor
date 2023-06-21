@@ -21,10 +21,10 @@
     <FormItem Label="Dato Hora llegada">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraLLegada" />
     </FormItem>
-    <FormItem Label="Kilometor llegada">
+    <FormItem Label="Kilometro salida">
         <AntDesign.InputNumber  @bind-Value="modelMateriales.KmSalida" />
     </FormItem>
-    <FormItem Label="Kilometor llegada">
+    <FormItem Label="Kilometro llegada">
         <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
     </FormItem>
     <FormItem Label="Calle/Ruta">
@@ -85,7 +85,7 @@
         <FormItem Label="Documento">
             <Input @bind-Value="@damnificado.Dni" />
         </FormItem>
-        <FormItem Label="Tipo material">
+        <FormItem Label="Tipo sexo">
             <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
         </FormItem>
         <FormItem Label="Lugar De nacimiento">
@@ -97,6 +97,7 @@
         <FormItem Label="Tipo material">
             <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
         </FormItem>
+        <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
     }
     @*Datos de Vehiculos  damnificados*@
     <FormItem Label="¿Ubo vehiculos damnificados?">
@@ -182,12 +183,33 @@
     <FormItem Label="Tipo material">
         <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
     </FormItem>
+    <FormItem Label="Sustancias">
+        <Input @bind-Value="modelMateriales.Sustancias" />
+    </FormItem>
     <b><label>Acciones sobre los materiales</label></b>
-    <Checkbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">
-     Check all
-    </Checkbox>
-    <br />
-    <AntDesign.CheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged" />
+    <CheckboxGroup Style="width:100%"  ValueChanged="@OnChange">
+
+        <Row>
+            <Col Span="8">
+            <Checkbox Label="Controlada" @bind-Value="@modelMateriales.Controlada">Controlada</Checkbox>
+            </Col>
+            <Col Span="8">
+                <Checkbox Label="Venteo" @bind-Value="@modelMateriales.Venteo">Venteo</Checkbox>
+            </Col>
+            <Col Span="8">
+                <Checkbox Label="DilucionDeVapores" @bind-Value="@modelMateriales.DilucionDeVapores">DilucionDeVapores</Checkbox>
+            </Col>
+            <Col Span="8">
+                <Checkbox Label="Neutralizacion" @bind-Value="@modelMateriales.Neutralizacion">Neutralizacion</Checkbox>
+            </Col>
+            <Col Span="8">
+            <Checkbox Label="Trasvase" @bind-Value="@modelMateriales.Trasvase">Trasvase</Checkbox>
+            </Col>
+            <Col Span="8">
+            <Checkbox Label="otro" @bind-Value="@modelMateriales.OtraAccionesMateriales">OtraAccionesMateriales</Checkbox>
+            </Col>
+        </Row>
+    </CheckboxGroup>
     
     <FormItem Label="Detalles Acciones ">
         <Input @bind-Value="modelMateriales.DetallesAccionesMateriales" />
@@ -198,10 +220,24 @@
     </FormItem>
     <br />
     <b><label>Acciones sobre personas</label></b>
-    <AntDesign.CheckboxGroup Options="@ckeckAllOptionsP" ValueChanged="@OnChanged" />
-    <FormItem Label="Detalles Acciones Personas ">
-        <Input @bind-Value="modelMateriales.DetallesAccionesPersonas" />
-    </FormItem>
+    <CheckboxGroup Style="width:100%" ValueChanged="@OnChange">
+
+        <Row>
+            <Col Span="8">
+            <Checkbox Label="Confinamiento" @bind-Value="@modelMateriales.Confinamiento">Confinamiento</Checkbox>
+            </Col>
+            <Col Span="8">
+            <Checkbox Label="Descontaminacion" @bind-Value="@modelMateriales.Descontaminacion">Descontaminacion</Checkbox>
+            </Col>
+            <Col Span="8">
+            <Checkbox Label="SinAccion" @bind-Value="@modelMateriales.SinAccion">SinAccion</Checkbox>
+            </Col>
+            <Col Span="8">
+            <Checkbox Label="OtraAccionesPersonas" @bind-Value="@modelMateriales.OtraAccionesPersonas">OtraAccionesPersonas</Checkbox>
+            </Col>
+        </Row>
+    </CheckboxGroup>
+    
     <FormItem Label="Tipo Superficie">
         <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
     </FormItem>
@@ -214,7 +250,7 @@
 
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarMaterialPeligroso">
             Cargar salida
         </Button>
     </FormItem>
@@ -227,12 +263,104 @@
     private MaterialPeligrosoViewModels modelMateriales = new ();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-
+    public List<DamnificadoViewModels> damnificadosList = new();
     bool switchValue { get; set; }
     bool switchValuev { get; set; }
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
+
+
+    public async void CargarMaterialPeligroso()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        MaterialPeligroso materiales = new()
+            {
+                NumeroParte = modelMateriales.NumeroParte,
+                HoraSalida = modelMateriales.HoraSalida,
+                HoraLlegada = modelMateriales.HoraLLegada,
+                KmSalida = modelMateriales.KmSalida,
+                KmLlegada = modelMateriales.KmLlegada,
+                Descripcion = modelMateriales.Descripcion,
+                CalleORuta = modelMateriales.CalleORuta,
+                NumeroOKilometro = modelMateriales.NumeroOKilometro,
+                EntreCalles = modelMateriales.EntreCalles,
+                PisoNumero = modelMateriales.PisoNumero,
+                Depto = modelMateriales.Depto,
+                //Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo)
+                TipoZona = modelMateriales.TipoZona,
+                NombreSolicitante = modelMateriales.NombreSolicitante,
+                ApellidoSolicitante = modelMateriales.ApellidoSolicitante,
+                DniSolicitante = modelMateriales.DniSolicitante,
+                TelefonoSolicitante = modelMateriales.TelefonoSolicitante,
+                TipoServicio = modelMateriales.TipoServicio,
+                //carga propio de materiales peligrosos
+                Tipo = modelMateriales.Tipo,
+                Sustancias = modelMateriales.Sustancias,
+                Damnificados = modelMateriales.Damnificados,
+                Controlada = modelMateriales.Controlada,
+                Venteo = modelMateriales.Venteo,
+                DilucionDeVapores= modelMateriales.DilucionDeVapores,
+                Neutralizacion = modelMateriales.Neutralizacion,
+                Trasvase = modelMateriales.Trasvase,
+                OtraAccionesMateriales= modelMateriales.OtraAccionesMateriales,
+                DetallesAccionesMateriales = modelMateriales.DetallesAccionesMateriales,
+                Evacuacion = modelMateriales.Evacuacion,
+                Descontaminacion = modelMateriales.Descontaminacion,
+                Confinamiento = modelMateriales.Confinamiento,
+                SinAccion = modelMateriales.SinAccion,
+                OtraAccionesPersonas = modelMateriales.OtraAccionesPersonas,
+                TipoSuperficie = modelMateriales.TipoSuperficie,
+                DetalleSuperficieAfectada = modelMateriales.DetalleSuperficieAfectada,
+                TipoSituacion = modelMateriales.TipoSituacion,
+
+
+           ReceptorBombero = new()
+           {
+               Nombre = modelMateriales.NombreReceptor,
+               Apellido= modelMateriales.ApellidoReceptor,
+               NumeroLegajo = modelMateriales.LegajoReceptor,
+           },
+           Seguro = new ()
+           {
+               CompañiaAseguradora = modelMateriales.CompaniaAseguradora,
+               NumeroDePoliza = modelMateriales.NumeroPoliza,
+               FechaDeVencimineto = modelMateriales.FechaVencimineto,
+           },
+           Encargado= new()
+           {
+               Nombre = modelMateriales.NombreEncargado,
+               Apellido = modelMateriales.ApellidoEncargado,
+               NumeroLegajo= modelMateriales.LegajoEncargado,
+           },
+           QuienLleno = new()
+           {
+               Nombre= modelMateriales.NombreLLenoPlanilla,
+               Apellido=modelMateriales.ApllidoLLenoPlanilla,
+               NumeroLegajo = modelMateriales.LegajoLLenoPlanilla,
+           }
+
+
+        };
+
+    }
+    
+    public async void AgregarDamnificado()
+    {
+        damnificado = new()
+        {
+          Nombre = damnificado.Nombre,
+          Apellido = damnificado.Apellido,
+          Dni = damnificado.Dni,
+          Sexo = damnificado.Sexo,
+          LugarDeNacimiento = damnificado.LugarDeNacimiento,
+          Edad = damnificado.Edad,
+          Estado = damnificado.Estado,
+        };
+        damnificadosList.Add(damnificado);
+    }
+
+
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(modelMateriales)}");
@@ -247,35 +375,12 @@
         Console.WriteLine($"Selected Time: {args.Date}");
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
+    void OnChange(string[] checkedValues)
+    {
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
     // array de las opciones posibles, buscar la opcion y agregarla en la planilla
-    static CheckboxOption[] ckeckAllOptions = new CheckboxOption[]{
-        new CheckboxOption{ Label="Controlada",Value="Controlada" },
-        new CheckboxOption{ Label="Venteo", Value="Venteo" },
-        new CheckboxOption{ Label="DilucionDeVapores", Value="DilucionDeVapores"},
-        new CheckboxOption{ Label="Neutralizacion",Value="Neutralizacion" },
-        new CheckboxOption{ Label="Trasvase",Value="Trasvase" },
-        new CheckboxOption{ Label="Otro",Value="Otro" },
-    };
-    static CheckboxOption[] ckeckAllOptionsP = new CheckboxOption[]{
-        new CheckboxOption{ Label="Descontaminacion",Value="Descontaminacion" },
-        new CheckboxOption{ Label="Confinamiento", Value="Confinamiento" },
-        new CheckboxOption{ Label="SinAccion", Value="SinAccion"},
-        new CheckboxOption{ Label="Otro",Value="Otro" },
-    };
-    void CheckAllChanged()
-    {
-        bool allChecked = checkAll;
-        ckeckAllOptions.ForEach(o => o.Checked = !allChecked);
-    }
-
-    void OnChanged()
-    {
-
-    }
-
-    bool indeterminate => ckeckAllOptions.Count(o => o.Checked) > 0 && ckeckAllOptions.Count(o => o.Checked) < ckeckAllOptions.Count();
-
-    bool checkAll => ckeckAllOptions.All(o => o.Checked);
+   
 
 }
 
