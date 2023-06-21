@@ -2,82 +2,51 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/moviles"
 
-<style>
-    #cartas{
-            border-radius: 15px;
-    }
-        #blancoA {
-        width: 100%;
-        padding: 10px;
-    }
-    #text-center{
-        text-align:center;
-    }
-    #button-center{
-        position:center;
-    }
-    #agregar-movil{
-        position: absolute;
-        bottom:100px;
-    }
-</style>
 
 @if (moviles is not null)
 {
-    <BSContainer id="Cartas">
-        <BSRow Align="Align.Start">
-            @foreach(Movil m in moviles)
-            {
-                <BSCol>
-                    <BSContainer id="Cartas" Container="Container.Fluid">
-                        <BSCard CardType="CardType.Card" style="width: 18rem;">
-                            <BSCard CardType="CardType.Image" src="@CargarImage(m)" alt="Card image cap" />
-                            <BSCard CardType="CardType.Body">
-                                <BSCard id="text-center" CardType="CardType.Title">Movil @m.NumeroMovil</BSCard>
-                                <div class="d-grid gap-2 col-7 mx-auto">
-                                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/movil/{m.VehiculoId}"); })">
-                                    <BSButton id="button-center" Color="BSColor.Danger">Ver Información</BSButton>
-                                </a>
-                                </div>
-                                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
-                                   <Button><Icon Type="edit" Theme="outline" />Editar Movil</Button>
-                                </a>
-                                
-                                
-                                <Button OnClick="()=> EliminarMovil(m.VehiculoId)"><Icon Type="delete" Theme="outline" />Borra Movil</Button>
-                                
-                                
-                            </BSCard>
-
-                        </BSCard>
-                    </BSContainer>
-                </BSCol>
-                
-            }
-            
-        </BSRow>
-    </BSContainer>
-    <div>
-            @*string x = "Movil" + @m.NumeroMovil;*@
-            <div>
-                <Card Hoverable Style="width: 240px" Cover="@coverTemplate" Actions="@(new[] {
-                                    actionSetting(()=> OnClick("delete")) ,
-                                    actionEdit(()=> OnClick("edit")),
-                                    actionEllipsis(()=> OnClick("ellipsis")) })">
-                        <CardMeta Title="Ejemplo diseño de carta" Description="www.instagram.com" />
-                </Card>
-            </div>
-    </div>
+             @foreach(Movil m in moviles)
+             {
+                <card  class="cartaPropia" style="display: flex; flex-direction: column;height: 300px; width: 240px;border-radius: 2px;align-items: center;border: 1px solid gray;">
+                    <div style="width: 100%;height: 70%;">
+                        <img src="@CargarImage(m)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;">
+                    </div>
+                    <div style="height: 30%;width: 100%;">
+                        <span style="background: #fff;font-size: 14px;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                            <p>Movil nº @m.NumeroMovil</p>
+                        </span>
+                        <div style="display:flex; flex-direction: row;width: 100%;">
+                            <Button class="botonCarta" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/movil/{m.VehiculoId}"); })">
+                                <Icon Type="ellipsis" Theme="outline"/>
+                            </Button>
+                            <Button class="botonCarta" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
+                                <Icon Type="edit" Theme="outline" />
+                            </Button>
+                            <Button class="botonCarta" OnClick="()=> EliminarMovil(m.VehiculoId)">
+                                <Icon Type="delete" Theme="outline" />
+                            </Button>
+                        </div>
+                    </div>
+                </card>
+                <style>
+                    .cartaPropia:hover{
+                        box-shadow: 2px 2px 2px #CFCFCF;
+                    }
+                    .botonCarta{
+                        width: 100%;
+                    }
+                </style>
+             }
 }
 else
 {
     <h5>No hay moviles, carge uno porfavor</h5>
 }
-<Divider>
+<div>
     <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
         <Button Type="@ButtonType.Primary">Agregar Movil</Button>
     </a>
-</Divider>
+</div>
 
 
 @code {
@@ -119,23 +88,6 @@ else
         moviles = await context.Moviles.ToArrayAsync();
         StateHasChanged();
     }
-    
-
-
-    RenderFragment coverTemplate =@<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />;
-
-
-    RenderFragment actionSetting(Action clickAction) =>@<Icon Type="delete" OnClick="@clickAction" />;
-
-    RenderFragment actionEdit(Action clickAction) =>@<Icon Type="edit" OnClick="@clickAction" />;
-
-    RenderFragment actionEllipsis(Action clickAction) => @<Icon Type="ellipsis" OnClick="@clickAction" />;
-
-    void OnClick(string icon)
-    {
-        Console.WriteLine($"icon {icon} is clicked");
-    }
-
 }
 
 

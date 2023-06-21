@@ -53,26 +53,36 @@
                                         <Overlay>
                                             <Menu>
                                                 <SubMenu Title=@("Incendios")>
-                                                    <MenuItem>Comercio</MenuItem>
+                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/incendios-comercio"); })">
+                                                        <MenuItem>Comercio</MenuItem>
+                                                    </a>
                                                     <MenuItem>Cayorda</MenuItem>
                                                 </SubMenu>
                                                 <SubMenu Title=@("Factores climatiacos")>
-                                                    <MenuItem>Factor1</MenuItem>
+                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/factores-climaticos"); })">
+                                                        <MenuItem>Factor1</MenuItem>
+                                                    </a>
                                                     <MenuItem>Factor2</MenuItem>
                                                 </SubMenu>
-                                                <SubMenu Title=@("Materiales peligrosos")>
-                                                    <MenuItem>Materiales t1</MenuItem>
-                                                    <MenuItem>Materiales t2</MenuItem>
-                                                </SubMenu>
+                                                <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                                                    <MenuItem Title=@("Materiales peligrosos")></MenuItem>
+                                                </a>
                                                 <SubMenu Title=@("Servicios")>
-                                                    <MenuItem>Serviocio1</MenuItem>
+                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/servicios"); })">
+                                                        <MenuItem>Servicio1</MenuItem>
+                                                    </a>
                                                     <MenuItem>Servicio2</MenuItem>
                                                 </SubMenu>
                                                 <SubMenu Title=@("Accidentes")>
-                                                    <MenuItem>Tipo1</MenuItem>
+                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/accidentes"); })">
+                                                        <MenuItem>Tipo1</MenuItem>
+                                                    </a>
                                                     <MenuItem>Tipo2</MenuItem>
                                                 </SubMenu>
                                                 <SubMenu Title=@("Rescates")>
+                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/rescates"); })">
+                                                        <MenuItem>Rescates</MenuItem>
+                                                    </a>
                                                     <MenuItem>Animal</MenuItem>
                                                     <MenuItem>Persona</MenuItem>
                                                 </SubMenu>
