@@ -2,46 +2,62 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/moviles"
 
+<style>
+    .cartaPropia:hover {
+        box-shadow: 2px 2px 3px #D8D8D8;
+    }
 
-@if (moviles is not null)
-{
-             @foreach(Movil m in moviles)
-             {
-                <card  class="cartaPropia" style="display: flex; flex-direction: column;height: 300px; width: 240px;border-radius: 2px;align-items: center;border: 1px solid gray;">
-                    <div style="width: 100%;height: 70%;">
+    .botonCarta {
+        width: 100%;
+        outline: none;
+        box-shadow: none;
+        border-bottom-color: #fff !important;
+    }
+    .grid{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 1em;
+        height: 100%;
+        width: 100vh;
+        margin: 1em 1em;
+    }
+</style>
+<div class="grid">
+    @if (moviles is not null)
+    {
+        @foreach(Movil m in moviles)
+        {
+        
+                <card class="cartaPropia" style="display: flex; flex-direction: column;height: 280px; width: 180px;border-radius: 2px;border: 1px solid #BABABA;">
+                    <div style="width: 100%;height: 75%;margin: 0; padding: 0;">
                         <img src="@CargarImage(m)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;">
                     </div>
-                    <div style="height: 30%;width: 100%;">
-                        <span style="background: #fff;font-size: 14px;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                            <p>Movil nº @m.NumeroMovil</p>
-                        </span>
-                        <div style="display:flex; flex-direction: row;width: 100%;">
-                            <Button class="botonCarta" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/movil/{m.VehiculoId}"); })">
-                                <Icon Type="ellipsis" Theme="outline"/>
+                    <div style="width: 100%;height:25%;">
+                        <div style="height: 50%">
+                            <p style="height: 100%;background: #fff;font-size: 14px;display:flex;justify-content: center;align-items: center;font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';">Movil nº @m.NumeroMovil</p>
+                        </div>
+                        <div style="display: flex; flex-direction: row;height: 50%;">
+                            <Button class="botonCarta" Style="border-radius: 0;border-top:1px solid #BABABA;height: 100%;border-left-color: #fff;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/movil/{m.VehiculoId}"); })">
+                                <Icon Type="ellipsis" Theme="outline" />
                             </Button>
-                            <Button class="botonCarta" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
+                            <Button class="botonCarta" Style="border-radius: 0;border-top:1px solid #BABABA;border-left:1px solid #BABABA;border-right:1px solid #BABABA;height: 100%;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
                                 <Icon Type="edit" Theme="outline" />
                             </Button>
-                            <Button class="botonCarta" OnClick="()=> EliminarMovil(m.VehiculoId)">
+                            <Button class="botonCarta" Style="border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;" OnClick="()=> EliminarMovil(m.VehiculoId)">
                                 <Icon Type="delete" Theme="outline" />
                             </Button>
                         </div>
                     </div>
                 </card>
-                <style>
-                    .cartaPropia:hover{
-                        box-shadow: 2px 2px 2px #CFCFCF;
-                    }
-                    .botonCarta{
-                        width: 100%;
-                    }
-                </style>
-             }
-}
-else
-{
-    <h5>No hay moviles, carge uno porfavor</h5>
-}
+        }
+    }
+    else
+    {
+        <h5>No hay moviles, carge uno porfavor</h5>
+    }
+</div>
 <div>
     <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
         <Button Type="@ButtonType.Primary">Agregar Movil</Button>

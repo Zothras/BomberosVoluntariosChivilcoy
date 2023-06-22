@@ -1,4 +1,4 @@
-﻿@inject NavigationManager navigationManager
+﻿@*@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas"
 
@@ -33,9 +33,9 @@
                         </Button>
                     </ListItem>
                 </AntList>
-            </Collapse>
+            </Collapse>*@
             @*<button @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">Factores climatiacos</button>*@
-        </Panel>
+       @* </Panel>
         <Panel Header="Materiales peligrosos" Key="3">
             <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">Materiales peligrosos</button>
         </Panel>
@@ -78,4 +78,4 @@
     {
         Console.WriteLine($"item was clicked: {title}");
     }
-}
+}*@
