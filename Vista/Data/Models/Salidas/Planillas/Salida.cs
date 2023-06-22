@@ -6,9 +6,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
+    
     public abstract class Salida
     {
         public int SalidaId { get; set; }
+        public DateTime Fecha { get; set; } 
         public DateTime HoraSalida { get; set; }
         public DateTime HoraLlegada { get; set; }
         public int KmSalida { get; set; }
