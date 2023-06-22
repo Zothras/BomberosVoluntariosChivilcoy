@@ -46,7 +46,7 @@
     @*--------------------------------------------Modal-----------------------------------------------*@
 </Table>
                 
-<Modal Title="@("BasicModal")"
+<Modal Title="@("Bombero")"
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
@@ -210,7 +210,14 @@
     #region "tabla"
 
     Bombero[]? bomberos;
+    //private async Task Bombero[]> GetTablebomberos()
 
+    //{
+    //    using var db = await DbFactory.CreateDbContextAsync();
+
+    //    bomberos = await db.Bomberos.ToArrayAsync();
+    //    return bomberos;
+    //}
     IEnumerable<Bombero> selectedRows;
     ITable table;
 
@@ -229,6 +236,7 @@
     private async Task OnChange(QueryModel<Bombero> queryModel)
     {
         Console.WriteLine(JsonSerializer.Serialize(queryModel));
+        OnInitializedAsync();
     }
 
     public void RemoveSelection(int id)
@@ -341,11 +349,13 @@
     #region original modal coding
 
     bool _visible = false;
-
+    int idBombero;
     private async void ShowModal(int id)
     {
         _visible = true;
         bomberoVM = await GetBomberoViewModel(id);
+        idBombero = id;
+
 
     }
 
@@ -379,34 +389,30 @@
     /// on modal OK button is click, submit form manually
     /// </summary>
     /// <param name="e"></param>
-    private void HandleOk(MouseEventArgs e)
+    private async void HandleOk(MouseEventArgs e)
     {
-        _form.Submit();
+        //_form.Submit();
+
+        EditarBombero(idBombero);
+        //navigationManager.NavigateTo($"/bomberos");
+        //NevigateToYourUrl();
+        _visible = false;
+    }
+    private void NevigateToYourUrl()
+    {
+        navigationManager.NavigateTo($"/bomberos", true);
     }
 
     private async Task<BomberosViewModel> GetBomberoViewModel(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        //Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        //Bombero? bomberoBrigada = context.Bomberos.Include(b => b.BrigadaId).FirstOrDefault();
-        //Bombero? bomberoContacto = context.Bomberos.Include(b => b.Contacto).FirstOrDefault();
-        //Bombero? bomberoImagen = context.Bomberos.Include(b => b.ImagenId).FirstOrDefault(); 
-
-        //Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id)
-        //.Include(bc => bc.Contacto).ThenInclude(contacto =>contacto.ContactoId)
-        //.Include(br => br.BrigadaId)
-        //.Include(bi =>bi.ImagenId)
-        //.Include(p => p.PersonaId)
-        //.SingleOrDefaultAsync();
-        //Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        //Contacto? contacto = await context.Contactos.Where(c => c.ContactoId == bombero.Contacto.ContactoId).SingleOrDefaultAsync(); 
-        //Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
-        //Imagen? imagen = await context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefaultAsync();
         Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        //Bombero? contacto = await context.Bomberos.Include (c => c.Contacto ).SingleOrDefaultAsync();
         Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
-        //Contacto? contacto = await context.Contactos.Where(c => c == bombero.Contacto).Include(contacto => contacto.ContactoId == bombero.Contacto.ContactoId).SingleOrDefaultAsync();
         //Bombero? imagen = await context.Bomberos.Include(i => i.ImagenId).SingleOrDefaultAsync();
+        Bombero? bombero1 = await context.Bomberos
+            .Include(b => b.Contacto)
+            .Where(b => b.NumeroLegajo == id)
+            .SingleOrDefaultAsync();
 
         BomberosViewModel BomeroPasajeVM = new()
         {
@@ -444,12 +450,81 @@
                 NivelEstudios = bombero.NivelEstudios,
                 FechaAceptacion = bombero.FechaAceptacion,
 
-                //TelefonoCel = bombero.Contacto.TelefonoCel,
-                //TelefonoFijo = bombero.Contacto.TelefonoFijo,
-                //TelefonoLaboral =  bombero.Contacto.TelefonoLaboral,
-                //Email = bombero.Contacto.Email
+                TelefonoCel = bombero1.Contacto.TelefonoCel,
+                TelefonoFijo = bombero1.Contacto.TelefonoFijo,
+                TelefonoLaboral = bombero1.Contacto.TelefonoLaboral,
+                Email = bombero1.Contacto.Email
         };
         StateHasChanged();
         return BomeroPasajeVM;
+    }
+
+    private async void EditarBombero(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
+        Bombero? bombero1 = await context.Bomberos
+            .Include(b => b.Contacto)
+            .Where(b => b.NumeroLegajo == id)
+            .SingleOrDefaultAsync();
+
+        bombero.FechaNacimiento = bomberoVM.FechaNacimiento;
+        bombero.Sexo = bomberoVM.Sexo;
+        bombero.FechaNacimiento = bomberoVM.FechaNacimiento;
+        bombero.Sexo = bomberoVM.Sexo;
+        bombero.Nombre = bomberoVM.Nombre;
+        bombero.Apellido = bomberoVM.Apellido;
+        bombero.Documento = bomberoVM.Documento;
+        bombero.NumeroLegajo = bomberoVM.NumeroLegajo;
+        bombero.NumeroIoma = bomberoVM.NumeroIoma;
+        bombero.LugarNacimiento = bomberoVM.LugarNacimiento;
+        bombero.Grado = bomberoVM.Grado;
+        //Imagen = new()
+        //{
+        //    NombreImagen = bomberoVM.NombreImagen,
+        //    TipoImagen = bomberoVM.TipoImagen,
+        //    Base64Imagen = bomberoVM.Base64
+        //},
+        bombero.Dotacion = bomberoVM.Dotacion;
+        brigada.Nombre = bomberoVM.NombreBrigada;
+        bombero.Resolucion1 = bomberoVM.Resolucion1;
+        bombero.Resolucion2 = bomberoVM.Resolucion2;
+        bombero.Resolucion3 = bomberoVM.Resolucion3;
+        bombero.Resolucion4 = bomberoVM.Resolucion4;
+        bombero.Resolucion5 = bomberoVM.Resolucion5;
+        bombero.Resolucion6 = bomberoVM.Resolucion6;
+        bombero.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
+        bombero.Estado = bomberoVM.Estado;
+        bombero.Chofer = bomberoVM.Chofer;
+        bombero.VencimientoRegistro = bomberoVM.VencimientoRegistro;
+        bombero.Direccion = bomberoVM.Direccion;
+        bombero.Observaciones = bomberoVM.Observaciones;
+        bombero.Profesion = bomberoVM.Profesion;
+        bombero.NivelEstudios = bomberoVM.NivelEstudios;
+        bombero.FechaAceptacion = bomberoVM.FechaAceptacion;
+        bombero1.Contacto.TelefonoCel = bomberoVM.TelefonoCel;
+        bombero1.Contacto.TelefonoFijo = bomberoVM.TelefonoFijo;
+        bombero1.Contacto.TelefonoLaboral = bomberoVM.TelefonoLaboral;
+        bombero1.Contacto.Email = bomberoVM.Email;
+
+        await context.SaveChangesAsync();
+        
+        StateHasChanged();
+    }
+    public string CargarImage(Bombero bombero)
+    {
+        using var db = DbFactory.CreateDbContext();
+
+        string src = "/";
+
+        ImagenMovil? imagen = db.ImagenesMoviles.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
+
+        if (imagen is not null)
+        {
+            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
+        }
+
+        return src;
     }
 }
