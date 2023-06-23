@@ -4,15 +4,8 @@
 
 <PageTitle> Bomberos Chivilcoy</PageTitle>
 
-@*
-<BSContainer Container="Container.ExtraExtraLarge" style="width: 100%;">
-    @Body
-</BSContainer>*@
-
-@*-----------------------*@
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
-
     <Header Style="position: fixed;box-shadow: 1px 1px 1px rgb(128, 128, 128);background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
         <div style="display: flex;align-items: center; align-content: center;height: 100%;gap:15px;">
             <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
@@ -30,104 +23,96 @@
     </Header>
     <Layout>
             <div style="height: 100%;width: 200px;z-index: 100;position: fixed;">
-                
-                    <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;"
-                        
-                          Theme="MenuTheme.Dark"
-                          Mode=MenuMode.Inline
-                          InlineCollapsed=collapsed>
-                            <MenuItem Key="0">
-                                <IconTemplate>
-                                    <i class="fa-solid fa-user" style="color: #263040;"></i>
-                                </IconTemplate>
+                <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;"
+                    Theme="MenuTheme.Dark"
+                    Mode=MenuMode.Inline
+                    InlineCollapsed=collapsed>
+                    <MenuItem Key="0">
+                        <IconTemplate>
+                            <i class="fa-solid fa-user" style="color: #263040;"></i>
+                        </IconTemplate>
+                        <ChildContent>
+                            <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
+                        </ChildContent>
+                    </MenuItem>
+                    <MenuItem Key="2" Icon="desktop">
+                        <IconTemplate>
+                            <i class="fa-solid fa-users" style="color: #263040;"></i>
+                        </IconTemplate>
+                        <ChildContent>
+                            <li class="nav-item"><a class="nav-link" href="bomberos">Bomberos</a></li>
+                        </ChildContent>
+                    </MenuItem>
+                    <MenuItem Key="3" Icon="container">
+                        <IconTemplate>
+                            <i class="fa-solid fa-truck-droplet" style="color: #263040;"></i>
+                        </IconTemplate>
+                        <ChildContent>
+                            <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
+                        </ChildContent>
+                    </MenuItem>
+                    <MenuItem Key="1" Icon="pie-chart">
+                        <IconTemplate>
+                            <i class="fa-solid fa-fire-extinguisher" style="color: #263040;"></i>
+                        </IconTemplate>
+                        <ChildContent>
+                            <Dropdown>
+                                <Overlay>
+                                    <Menu>
+                                        <SubMenu Title=@("Incendios")>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/incendios-comercio"); })">
+                                                <MenuItem>Comercio</MenuItem>
+                                            </a>
+                                            <MenuItem>Cayorda</MenuItem>
+                                        </SubMenu>
+                                        <SubMenu Title=@("Factores climatiacos")>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/factores-climaticos"); })">
+                                                <MenuItem>Factor1</MenuItem>
+                                            </a>
+                                            <MenuItem>Factor2</MenuItem>
+                                        </SubMenu>
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                                            <MenuItem Title=@("Materiales peligrosos")></MenuItem>
+                                        </a>
+                                        <SubMenu Title=@("Servicios")>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/servicios"); })">
+                                                <MenuItem>Servicio1</MenuItem>
+                                            </a>
+                                            <MenuItem>Servicio2</MenuItem>
+                                        </SubMenu>
+                                        <SubMenu Title=@("Accidentes")>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/accidentes"); })">
+                                                <MenuItem>Tipo1</MenuItem>
+                                            </a>
+                                            <MenuItem>Tipo2</MenuItem>
+                                        </SubMenu>
+                                        <SubMenu Title=@("Rescates")>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/rescates"); })">
+                                                <MenuItem>Rescates</MenuItem>
+                                            </a>
+                                            <MenuItem>Animal</MenuItem>
+                                            <MenuItem>Persona</MenuItem>
+                                        </SubMenu>
+                                    </Menu>
+                                </Overlay>
                                 <ChildContent>
-                                    <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
+                                    <li style="margin-left: 1em;">
+                                        <a class="ant-dropdown-link" @onclick:preventDefault>
+                                            Salidas <Icon Type="down" />
+                                        </a>
+                                    </li>
                                 </ChildContent>
-                            </MenuItem>
-                            <MenuItem Key="1" Icon="pie-chart">
-                                <IconTemplate>
-                                    <i class="fa-solid fa-fire-extinguisher" style="color: #263040;"></i>
-                                </IconTemplate>
-                                <ChildContent>
-                                    <Dropdown>
-                                        <Overlay>
-                                            <Menu>
-                                                <SubMenu Title=@("Incendios")>
-                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/incendios-comercio"); })">
-                                                        <MenuItem>Comercio</MenuItem>
-                                                    </a>
-                                                    <MenuItem>Cayorda</MenuItem>
-                                                </SubMenu>
-                                                <SubMenu Title=@("Factores climatiacos")>
-                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/factores-climaticos"); })">
-                                                        <MenuItem>Factor1</MenuItem>
-                                                    </a>
-                                                    <MenuItem>Factor2</MenuItem>
-                                                </SubMenu>
-                                                <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
-                                                    <MenuItem Title=@("Materiales peligrosos")></MenuItem>
-                                                </a>
-                                                <SubMenu Title=@("Servicios")>
-                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/servicios"); })">
-                                                        <MenuItem>Servicio1</MenuItem>
-                                                    </a>
-                                                    <MenuItem>Servicio2</MenuItem>
-                                                </SubMenu>
-                                                <SubMenu Title=@("Accidentes")>
-                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/accidentes"); })">
-                                                        <MenuItem>Tipo1</MenuItem>
-                                                    </a>
-                                                    <MenuItem>Tipo2</MenuItem>
-                                                </SubMenu>
-                                                <SubMenu Title=@("Rescates")>
-                                                    <a @onclick="@(() => { navigationManager.NavigateTo("salidas/rescates"); })">
-                                                        <MenuItem>Rescates</MenuItem>
-                                                    </a>
-                                                    <MenuItem>Animal</MenuItem>
-                                                    <MenuItem>Persona</MenuItem>
-                                                </SubMenu>
-                                            </Menu>
-                                        </Overlay>
-                                        <ChildContent>
-                                            <li style="margin-left: 1em;">
-                                                <a class="ant-dropdown-link" @onclick:preventDefault>
-                                                    Salidas <Icon Type="down" />
-                                                </a>
-                                            </li>
-                                        </ChildContent>
-                                    </Dropdown>
-                                </ChildContent>
-                            </MenuItem>
-                            <MenuItem Key="2" Icon="desktop">
-                                <IconTemplate>
-                                    <i class="fa-solid fa-users" style="color: #263040;"></i>
-                                </IconTemplate>
-                                <ChildContent>
-                                    <li class="nav-item"><a class="nav-link" href="bomberos">Bomberos</a></li>
-                                </ChildContent>
-                            </MenuItem>
-                            <MenuItem Key="3" Icon="container">
-                                <IconTemplate>
-                                    <i class="fa-solid fa-truck-droplet" style="color: #263040;"></i>
-                                </IconTemplate>
-                                <ChildContent>
-                                    <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
-                                </ChildContent>
-                            </MenuItem>
-                        <Sider Style="margin-top:5em; background-color: transparent;">
-                           
-                        </Sider>
-                    </Menu>
-                    
+                            </Dropdown>
+                        </ChildContent>
+                    </MenuItem>
+                    <Sider Style="margin-top:5em; background-color: transparent;">
+                    </Sider>
+                </Menu>
             </div>
-        
-        
         <Content Style="margin-top: 5em;margin-left: 80px;position: relative; background: rgb(200,200,200);height: 200%;">
             <div style="margin: 0 20px 0 20px;display: flex; justify-content: center; align-items: center;flex-direction:column;">
                 @Body
             </div>
-
-
             @*AGREGAR FOOTER POR PAGINA
                 <Footer Style="margin-top:auto;background-color: rgb(62, 24, 24); width: 100%;color: white;z-index: 1; position: absolute; bottom: 0;">
                 @*<footer Class="footer text-center" id="FooterCopy">
@@ -140,11 +125,8 @@
                 </BSContainer>
             </Footer>*@
         </Content>
-        
     </Layout>
-    
 </Layout>
-@*-----------------------*@
 
 @code {
     bool collapsed = false;

@@ -18,12 +18,25 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-start;
-        gap: 1em;
+        gap: 12px;
         height: 100%;
         width: 100vh;
         margin: 1em 1em;
     }
 </style>
+<div style="display: flex;justify-content: space-between;margin: 1em 1em;width: 100vh;padding: 0; align-items: center;">
+    <div style="position: relative;">
+        <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;">
+                <b>ALTA / BAJA / MODIFICACION DE MOVILES</b>
+            </p>
+    </div>
+    <div>
+        <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
+            <Button Type="@ButtonType.Primary">Agregar Movil</Button>
+        </a>
+    </div>
+</div>
+<hr style="background:#fff; margin: 1em 1em;width: 100vh;"/>
 <div class="grid">
     @if (moviles is not null)
     {
@@ -48,6 +61,7 @@
                             <Button class="botonCarta" Style="border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;" OnClick="()=> EliminarMovil(m.VehiculoId)">
                                 <Icon Type="delete" Theme="outline" />
                             </Button>
+                            
                         </div>
                     </div>
                 </card>
@@ -58,12 +72,34 @@
         <h5>No hay moviles, carge uno porfavor</h5>
     }
 </div>
-<div>
-    <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
-        <Button Type="@ButtonType.Primary">Agregar Movil</Button>
-    </a>
-</div>
 
+@*<Space Direction="DirectionVHType.Vertical">
+    <SpaceItem>
+        <Button Type="primary" OnClick="@(()=>{ _visible = true;})">
+            <Icon Type="ellipsis" Theme="outline" />
+        </Button>
+    </SpaceItem>
+</Space>
+<Modal Title="@title"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       Footer="@ModalFooter.DefaultOkFooter">
+    <div>
+        <img id="ImagenMovil" src="#" />
+    </div>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+@code {
+    string title = "BasicModal";
+    bool _visible = false;
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine("OK");
+        _visible = false;
+    }
+}*@
 
 @code {
     public Movil[]? moviles;
