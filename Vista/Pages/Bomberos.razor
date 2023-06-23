@@ -31,13 +31,17 @@
 
     <Selection Key="@(context.NumeroLegajo.ToString())" />
     <PropertyColumn Property="c=>c.NumeroLegajo" Sortable />
+    <Column @bind-Field="@context.Nombre">
+        <a>@context.Nombre</a>
+    </Column>
     <PropertyColumn Property="c=>c.Nombre" Sortable />
     <PropertyColumn Property="c=>c.Apellido" Sortable />
     <PropertyColumn Property="c=>c.Grado" Sortable />
     <ActionColumn Title="Action">
         <Space>
             <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
-                <Button Type="primary" OnClick="()=>ShowModal(context.NumeroLegajo)">Editar</Button>
+            <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
+            <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
         </Space>
     </ActionColumn>
  
@@ -109,7 +113,7 @@
                 </FormItem>
 
                 <FormItem Label="Nivel de estuduio">
-            <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
+                    <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
                 </FormItem>
 
                 <FormItem Label="Profesion">
@@ -187,6 +191,58 @@
                 </FormItem>
           </Form>
  </Modal>
+ @{
+    RenderFragment footer = @<Template>
+    <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
+</Template>;
+}
+ <Modal Title="@("Detalles de bombero")"
+       Visible="@_visibleDetalle"
+       OnCancel="@HandleCancelDetalle"
+       Footer="@footer">
+
+    <p>Nombre: @bomberoVM.Nombre</p>
+    <p>Apellido: @bomberoVM.Apellido</p>
+    <p>Direccion: @bomberoVM.Direccion</p>
+    <p>FechaNacimiento: @bomberoVM.FechaNacimiento</p>
+    <p>FechaNacimiento: @bomberoVM.FechaNacimiento</p>
+    <p>NumeroLegajo: @bomberoVM.NumeroLegajo</p>
+    <p>Grado: @bomberoVM.Grado</p>
+    <p>Dotacion: @bomberoVM.Dotacion</p>
+    <p>Brigada: @bomberoVM.Brigada</p>
+    @if (@bomberoVM.Chofer)
+    {
+        <p>Chofer: Es Chofer</p>
+        <p>VencimientoRegistro: @bomberoVM.VencimientoRegistro</p>
+    }
+    else 
+    {
+        <p>Chofer: Es Chofer</p>
+    }
+    
+
+    <p>VencimientoRegistro: @bomberoVM.VencimientoRegistro</p>
+    <p>Sexo: @bomberoVM.Sexo</p>
+    <p>LugarNacimiento: @bomberoVM.LugarNacimiento</p>
+    <p>Documento: @bomberoVM.Documento</p>
+    <p>LugarNacimiento: @bomberoVM.LugarNacimiento</p>
+    <p>GrupoSanguineo: @bomberoVM.GrupoSanguineo</p>
+    <p>Observaciones: @bomberoVM.Observaciones</p>
+    <p>Profesion: @bomberoVM.Profesion</p>
+    <p>NivelEstudios: @bomberoVM.NivelEstudios</p>
+    <p>NumeroIoma: @bomberoVM.NumeroIoma</p>
+    <p>Resolucion1: @bomberoVM.Resolucion1</p>
+    <p>Resolucion2: @bomberoVM.Resolucion2</p>
+    <p>Resolucion3: @bomberoVM.Resolucion3</p>
+    <p>Resolucion4: @bomberoVM.Resolucion4</p>
+    <p>Resolucion5: @bomberoVM.Resolucion5</p>
+    <p>Resolucion6: @bomberoVM.Resolucion6</p>
+    <p>TelefonoCel: @bomberoVM.TelefonoCel</p>
+    <p>TelefonoLaboral: @bomberoVM.TelefonoLaboral</p>
+    <p>TelefonoFijo: @bomberoVM.TelefonoFijo</p>
+    <p>Email: @bomberoVM.Email</p>
+    <p>NombreBrigada: @bomberoVM.NombreBrigada</p>
+</Modal>
                 <br />
                 <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
 
@@ -322,15 +378,6 @@
         public string NombreBrigada { get; set; }
     }
     #endregion
-    //private void OnFinish(EditContext editContext)
-    //{
-    //    Console.WriteLine($"Success:{JsonSerializer.Serialize(bomberoView)}");
-    //}
-
-    //private void OnFinishFailed(EditContext editContext)
-    //{
-    //    Console.WriteLine($"Failed:{JsonSerializer.Serialize(bomberoView)}");
-    //}
     #region original form coding
 
     private BomberosViewModel bomberoVM = new BomberosViewModel();
@@ -349,14 +396,21 @@
     #region original modal coding
 
     bool _visible = false;
+    bool _visibleDetalle = false;
     int idBombero;
-    private async void ShowModal(int id)
+    private async void ShowModalEditar(int id)
     {
         _visible = true;
         bomberoVM = await GetBomberoViewModel(id);
         idBombero = id;
-
-
+    }
+    private async void ShowModalDetalle(int id)
+    {
+        bomberoVM = await GetBomberoViewModel(id);
+        
+        _visibleDetalle = true;
+        
+        
     }
 
     private void HandleCancel(MouseEventArgs e)
@@ -364,15 +418,13 @@
         Console.WriteLine("e");
         _visible = false;
     }
+    private void HandleCancelDetalle(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visibleDetalle = false;
+    }
 
     #endregion
-
-    /*
-    * Careful!
-    *
-    * next bind submit event to modal OK button
-     */
-
     private Form<BomberosViewModel> _form;
 
     /// <summary>
@@ -391,13 +443,17 @@
     /// <param name="e"></param>
     private async void HandleOk(MouseEventArgs e)
     {
+        //bomberoVM.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
         //_form.Submit();
 
         EditarBombero(idBombero);
         //navigationManager.NavigateTo($"/bomberos");
-        //NevigateToYourUrl();
+        StateHasChanged();
+        await Task.Delay(500);
+        NevigateToYourUrl();
         _visible = false;
     }
+
     private void NevigateToYourUrl()
     {
         navigationManager.NavigateTo($"/bomberos", true);
@@ -512,6 +568,7 @@
         
         StateHasChanged();
     }
+
     public string CargarImage(Bombero bombero)
     {
         using var db = DbFactory.CreateDbContext();
