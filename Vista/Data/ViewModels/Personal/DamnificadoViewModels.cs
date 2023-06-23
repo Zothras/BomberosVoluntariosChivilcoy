@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Vista.Data.Enums;
+using Vista.Data.Models.Salidas.Componentes;
+using Vista.Data.Models.Salidas.Planillas;
 
 namespace Vista.Data.ViewModels.Personal
 {
@@ -17,6 +19,7 @@ namespace Vista.Data.ViewModels.Personal
         public int Edad { get; set; }
         public TipoDamnificado Estado { get; set; }
 
+        public VehiculoDamnificado? VehiculoDamnificado { get; set; }
         [Required, StringLength(255)]
         public string Marca { get; set; }
         [Required, StringLength(255)]
@@ -30,6 +33,8 @@ namespace Vista.Data.ViewModels.Personal
         [Required, StringLength(255)]
         public string Color { get; set; }
         public bool? Airbag { get; set; }
+        public int SalidaId { get; set; }
+        public Salida Salida { get; set; }
 
     }
 }

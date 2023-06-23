@@ -124,7 +124,7 @@
             <Input @bind-Value="@damnificado.Color" />
         </FormItem>
         <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
-        <Button OnClick="@AgregarDamnificadoVehiculo">Agregar vehiculo damnificado</Button>
+        <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
     }
     @*Datos Del seguro*@
     <FormItem Label="Compania Aseguradora">
@@ -252,7 +252,7 @@
 
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarMaterialPeligroso">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarMaterialPeligroso" >
             Cargar salida
         </Button>
     </FormItem>
@@ -265,15 +265,15 @@
     private MaterialPeligrosoViewModels modelMateriales = new ();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    public List<DamnificadoViewModels> DamnificadosSalida = new();
-    public List<MovilSalidaViewModels> MovilesSalidas = new();
+    public List<Damnificado> DamnificadosSalida { get; set; } = new();
+    public List<MovilSalida> MovilesSalidas = new();
     bool switchValue { get; set; }
     bool switchValuev { get; set; }
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
 
-   
+
     //direccion
     public async void CargarMaterialPeligroso()
     {
@@ -281,6 +281,7 @@
         Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == modelMateriales.LegajoReceptor).SingleOrDefaultAsync();
         Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == modelMateriales.LegajoEncargado).SingleOrDefaultAsync();
         Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == modelMateriales.LegajoLLenoPlanilla).SingleOrDefaultAsync();
+
         MaterialPeligroso materiales = new()
             {
                 Fecha = modelMateriales.Fecha,
@@ -305,7 +306,6 @@
                 //carga propio de materiales peligrosos
                 Tipo = modelMateriales.Tipo,
                 Sustancias = modelMateriales.Sustancias,
-                Damnificados = modelMateriales.Damnificados,
                 Controlada = modelMateriales.Controlada,
                 Venteo = modelMateriales.Venteo,
                 DilucionDeVapores = modelMateriales.DilucionDeVapores,
@@ -320,10 +320,7 @@
                 OtraAccionesPersonas = modelMateriales.OtraAccionesPersonas,
                 TipoSuperficie = modelMateriales.TipoSuperficie,
                 DetalleSuperficieAfectada = modelMateriales.DetalleSuperficieAfectada,
-                TipoSituacion = modelMateriales.TipoSituacion,
-                //listas
-                //Moviles = MovilesSalidas.Clone();
-                //Damnificados = DamnificadosSalida.Clone();
+                TipoSituacion = modelMateriales.TipoSituacion,               
                QuienLleno = BomberoLlenoPlanilla,
                ReceptorBombero = bomberoReceptor,
                Encargado = bomberoEncargado,
@@ -333,11 +330,40 @@
                    NumeroDePoliza = modelMateriales.NumeroPoliza,
                    FechaDeVencimineto = modelMateriales.FechaVencimineto,
                },
-               
-               
+
+
 
 
         };
+
+        foreach (Damnificado d in DamnificadosSalida)
+        {
+
+            Damnificado damn = new()
+                {
+                    Nombre = d.Nombre,
+                    Apellido = d.Apellido,
+                    Dni = d.Dni,
+                    Sexo = d.Sexo,
+                    LugarDeNacimiento = d.LugarDeNacimiento,
+                    Edad = d.Edad,
+                    Estado = d.Estado,
+                    VehiculoDamnificado = new()
+                    {
+                        Marca = damnificado.Marca,
+                        Modelo = damnificado.Modelo,
+                        Año = damnificado.Año,
+                        Patente = damnificado.Patente,
+                        Tipo = damnificado.Tipo,
+                        Color = damnificado.Color,
+                        Airbag = chek,
+                    }
+                };
+            materiales.Damnificados.Add(damn);
+            await db.SaveChangesAsync();
+        }
+        
+        
         await db.MaterialesPeligrosos.AddAsync(materiales);
         await db.SaveChangesAsync();
     }
@@ -345,7 +371,7 @@
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        DamnificadoViewModels dp= new()
+        Damnificado dp= new()
         {
           Nombre = damnificado.Nombre,
           Apellido = damnificado.Apellido,
@@ -354,36 +380,25 @@
           LugarDeNacimiento = damnificado.LugarDeNacimiento,
           Edad = damnificado.Edad,
           Estado = damnificado.Estado,
+          
         };
         DamnificadosSalida.Add(dp);
+        await db.SaveChangesAsync();
     }
-    public async void AgregarDamnificadoVehiculo()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-       DamnificadoViewModels dv= new()
-        {
-          Marca = damnificado.Marca,
-          Modelo = damnificado.Modelo,
-          Año = damnificado.Año,
-          Patente = damnificado.Patente,
-          Tipo = damnificado.Tipo,
-          Color = damnificado.Color,
-          Airbag = chek,
-        };
-         DamnificadosSalida.Add(dv);
-    }
+    
     public async void AgregarMovilSalida()
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == movilSalidaViewModels.NumeroLegajo).SingleOrDefaultAsync();
         Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == movilSalidaViewModels.NumeroMovil).SingleOrDefaultAsync();
-       MovilSalidaViewModels  m = new ()
+       MovilSalida  m = new ()
         {
             CargoCombustible = chekM,
             Chofer = bomberoChofer,
-            MovilesSalida = Movilsalida,
+            Movil = Movilsalida,
         };
          MovilesSalidas.Add(m);
+        await db.SaveChangesAsync();
     }
 
     private void OnFinish(EditContext editContext)
