@@ -17,5 +17,9 @@ namespace Vista.Data.ViewModels.Personal
         [Required, StringLength(255)]
         public string Color { get; set; }
         public bool? Airbag { get; set; }
+        public string CompañiaAseguradora { get; set; }
+        [Required, StringLength(255)]
+        public string NumeroDePoliza { get; set; }
+        public DateTime FechaDeVencimineto { get; set; }
     }
 }

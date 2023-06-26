@@ -76,6 +76,7 @@
     </FormItem>
     @if (switchValue == true)
     {
+       
         <FormItem Label="Nombre">
             <Input @bind-Value="@damnificado.Nombre" />
         </FormItem>
@@ -106,24 +107,33 @@
     @if (switchValuev == true )
     {
         <FormItem Label="Marca">
-            <Input @bind-Value="@damnificado.Marca" />
+            <Input @bind-Value="@vehiculo.Marca" />
         </FormItem>
         <FormItem Label="Modelo">
-            <Input @bind-Value="@damnificado.Modelo" />
+            <Input @bind-Value="@vehiculo.Modelo" />
         </FormItem>
         <FormItem Label="Año">
-            <AntDesign.InputNumber @bind-Value="damnificado.Año" />
+            <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
         </FormItem>
         <FormItem Label="Patente">
-            <Input @bind-Value="@damnificado.Patente" />
+            <Input @bind-Value="@vehiculo.Patente" />
         </FormItem>
         <FormItem Label="tipo">
-            <Input @bind-Value="@damnificado.Tipo" />
+            <Input @bind-Value="@vehiculo.Tipo" />
         </FormItem>
         <FormItem Label="Color">
-            <Input @bind-Value="@damnificado.Color" />
+            <Input @bind-Value="@vehiculo.Color" />
         </FormItem>
+        <FormItem Label="Compania Aseguradora">
+        <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
+        </FormItem>
+        <FormItem Label="NumeroPoliza">
+            <Input @bind-Value="@vehiculo.NumeroDePoliza" />
+        </FormItem>
+        <FormItem Label="FechaVencimineto">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
         <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
+        </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
     }
     @*Datos Del seguro*@
@@ -265,8 +275,10 @@
     private MaterialPeligrosoViewModels modelMateriales = new ();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    public List<Damnificado> DamnificadosSalida { get; set; } = new();
+    private VehiculoDamnificadoViewModels vehiculo = new();
+    public List<DamnificadoViewModels> DamnificadosSalida  = new();
     public List<MovilSalida> MovilesSalidas = new();
+
     bool switchValue { get; set; }
     bool switchValuev { get; set; }
     bool chek { get; set; }
@@ -283,7 +295,7 @@
         Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == modelMateriales.LegajoLLenoPlanilla).SingleOrDefaultAsync();
 
         MaterialPeligroso materiales = new()
-            {
+        {
                 Fecha = modelMateriales.Fecha,
                 NumeroParte = modelMateriales.NumeroParte,
                 HoraSalida = modelMateriales.HoraSalida,
@@ -321,26 +333,25 @@
                 TipoSuperficie = modelMateriales.TipoSuperficie,
                 DetalleSuperficieAfectada = modelMateriales.DetalleSuperficieAfectada,
                 TipoSituacion = modelMateriales.TipoSituacion,               
-               QuienLleno = BomberoLlenoPlanilla,
-               ReceptorBombero = bomberoReceptor,
-               Encargado = bomberoEncargado,
+                QuienLleno = BomberoLlenoPlanilla,
+                ReceptorBombero = bomberoReceptor,
+                Encargado = bomberoEncargado,
                Seguro = new ()
                {
                    CompañiaAseguradora = modelMateriales.CompaniaAseguradora,
                    NumeroDePoliza = modelMateriales.NumeroPoliza,
                    FechaDeVencimineto = modelMateriales.FechaVencimineto,
                },
-
-
+               Damnificados = new()
 
 
         };
 
-        foreach (Damnificado d in DamnificadosSalida)
+        foreach (DamnificadoViewModels d in DamnificadosSalida)
         {
 
             Damnificado damn = new()
-                {
+            {
                     Nombre = d.Nombre,
                     Apellido = d.Apellido,
                     Dni = d.Dni,
@@ -350,28 +361,37 @@
                     Estado = d.Estado,
                     VehiculoDamnificado = new()
                     {
-                        Marca = damnificado.Marca,
-                        Modelo = damnificado.Modelo,
-                        Año = damnificado.Año,
-                        Patente = damnificado.Patente,
-                        Tipo = damnificado.Tipo,
-                        Color = damnificado.Color,
+                        Marca = vehiculo.Marca,
+                        Modelo = vehiculo.Modelo,
+                        Año = vehiculo.Año,
+                        Patente = vehiculo.Patente,
+                        Tipo = vehiculo.Tipo,
+                        Color = vehiculo.Color,
                         Airbag = chek,
+                        Seguro = new()
+                        {
+                             CompañiaAseguradora = vehiculo.CompañiaAseguradora,
+                             NumeroDePoliza = vehiculo.NumeroDePoliza,
+                             FechaDeVencimineto = vehiculo.FechaDeVencimineto,
+                        },
                     }
-                };
+            };
             materiales.Damnificados.Add(damn);
-            await db.SaveChangesAsync();
+           
+            
         }
-        
-        
         await db.MaterialesPeligrosos.AddAsync(materiales);
         await db.SaveChangesAsync();
+       
+       
+        
     }
 
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        Damnificado dp= new()
+      
+        DamnificadoViewModels dp = new()
         {
           Nombre = damnificado.Nombre,
           Apellido = damnificado.Apellido,

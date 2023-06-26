@@ -192,7 +192,7 @@
 
 @code {
 
-    public IncendioComercioViewModels  salidaIncendioComercioView { get; set; } = new();
+    public IncendioComercioViewModels  salidaIncendioComercioView  = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -202,61 +202,60 @@
     public async void SubirIncendioComercio()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        if (salidaIncendioComercioView is not null)
-        {
+        
             //IncendioComercio? numeroParte = await db.Set<IncendioComercio>().Where(m => m. == salidaIncendioComercioView.NumeroParte).SingleOrDefaultAsync();
-            if (salidaIncendioComercioView is not null)
-            {
-                Incendio salidaIncendioComercio = new Incendio()
-                {
-                    Tipo = salidaIncendioComercioView.Tipo,
-                    Descripcion = salidaIncendioComercioView.Descripcion,
-                    HoraSalida = salidaIncendioComercioView.HoraSalida,
-                    HoraLlegada = salidaIncendioComercioView.HoraLLegada,
-                    KmSalida = salidaIncendioComercioView.KmSalida,
-                    KmLlegada = salidaIncendioComercioView.KmLlegada,
-                    NumeroParte = salidaIncendioComercioView.NumeroParte,
-                    CalleORuta = salidaIncendioComercioView.CalleORuta,
-                    NumeroOKilometro = salidaIncendioComercioView.NumeroOKilometro,
-                    EntreCalles = salidaIncendioComercioView.EntreCalles,
-                    PisoNumero = salidaIncendioComercioView.PisoNumero,
-                    Depto = salidaIncendioComercioView.Depto,
-                    TipoZona = salidaIncendioComercioView.TipoZona,
-                    NombreSolicitante = salidaIncendioComercioView.NombreSolicitante,
-                    ApellidoSolicitante = salidaIncendioComercioView.ApellidoSolicitante,
-                    DniSolicitante = salidaIncendioComercioView.DniSolicitante,
-                    TelefonoSolicitante = salidaIncendioComercioView.TelefonoSolicitante,
+           
+        IncendioComercio salidaIncendioComercio = new()
+        {
+             TipoLugar = 
+                   
+                    //Tipo = salidaIncendioComercioView.Tipo,
+                    //Descripcion = salidaIncendioComercioView.Descripcion,
+                    //HoraSalida = salidaIncendioComercioView.HoraSalida,
+                    //HoraLlegada = salidaIncendioComercioView.HoraLLegada,
+                    //KmSalida = salidaIncendioComercioView.KmSalida,
+                    //KmLlegada = salidaIncendioComercioView.KmLlegada,
+                    //NumeroParte = salidaIncendioComercioView.NumeroParte,
+                    //CalleORuta = salidaIncendioComercioView.CalleORuta,
+                    //NumeroOKilometro = salidaIncendioComercioView.NumeroOKilometro,
+                    //EntreCalles = salidaIncendioComercioView.EntreCalles,
+                    //PisoNumero = salidaIncendioComercioView.PisoNumero,
+                    //Depto = salidaIncendioComercioView.Depto,
+                    //TipoZona = salidaIncendioComercioView.TipoZona,
+                    //NombreSolicitante = salidaIncendioComercioView.NombreSolicitante,
+                    //ApellidoSolicitante = salidaIncendioComercioView.ApellidoSolicitante,
+                    //DniSolicitante = salidaIncendioComercioView.DniSolicitante,
+                    //TelefonoSolicitante = salidaIncendioComercioView.TelefonoSolicitante,
                     //NombreReceptor = salidaIncendioComercioView.NombreReceptor,
                     //ApellidoReceptor = salidaIncendioComercioView.ApellidoReceptor,
                     //LegajoReceptor = salidaIncendioComercioView.LegajoReceptor,
-                    DeteccionAutomaticaId= salidaIncendioComercioView.DeteccionAutomaticaId,
-                    Extintor = salidaIncendioComercioView.Extintor,
-                    Hidrante = salidaIncendioComercioView.Hidrante,
-                    TipoLugarSiniestroEmbarcacion = salidaIncendioComercioView.TipoLugarSiniestroEmbarcacion,
-                    OtroLugarDeSiniestroEmbarcacion= salidaIncendioComercioView.OtroLugarDeSiniestroEmbarcacion,
-                    TipoEvacuacion = salidaIncendioComercioView.TipoEvacuacion,
-                    TipoSuperficieAfectada = salidaIncendioComercioView.TipoSuperficieAfectada,
-                    DetalleSuperficieAfectadaIncendio = salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio,
-                    SuperficieAfectadaCausa = salidaIncendioComercioView.SuperficieAfectadaCausa,
-                    TipoAbertura = salidaIncendioComercioView.TipoAbertura,
-                    OtraAbertura= salidaIncendioComercioView.OtraAbertura,
-                    TipoTecho = salidaIncendioComercioView.TipoTecho,
-                    OtroTecho = salidaIncendioComercioView.OtroTecho,
-                    OtroLugar = salidaIncendioComercioView.OtroLugar,
-                    NombreEstablecimiento = salidaIncendioComercioView.NombreEstablecimiento,
-                    CantidadPisos = salidaIncendioComercioView.CantidadPisos,
-                    PisoAfectado = salidaIncendioComercioView.PisoAfectado,
-                    CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes
-                };
-                    db.Set<Incendio>().Add(salidaIncendioComercio);
-                    await db.SaveChangesAsync();
-                    salidaIncendioComercioView = new();
-                    StateHasChanged();
+                    //DeteccionAutomaticaId= salidaIncendioComercioView.DeteccionAutomaticaId,
+                    //Extintor = salidaIncendioComercioView.Extintor,
+                    //Hidrante = salidaIncendioComercioView.Hidrante,
+                    //TipoLugarSiniestroEmbarcacion = salidaIncendioComercioView.TipoLugarSiniestroEmbarcacion,
+                    //OtroLugarDeSiniestroEmbarcacion= salidaIncendioComercioView.OtroLugarDeSiniestroEmbarcacion,
+                    //TipoEvacuacion = salidaIncendioComercioView.TipoEvacuacion,
+                    //TipoSuperficieAfectada = salidaIncendioComercioView.TipoSuperficieAfectada,
+                    //DetalleSuperficieAfectadaIncendio = salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio,
+                    //SuperficieAfectadaCausa = salidaIncendioComercioView.SuperficieAfectadaCausa,
+                    //TipoAbertura = salidaIncendioComercioView.TipoAbertura,
+                    //OtraAbertura= salidaIncendioComercioView.OtraAbertura,
+                    //TipoTecho = salidaIncendioComercioView.TipoTecho,
+                    //OtroTecho = salidaIncendioComercioView.OtroTecho,
+                    //OtroLugar = salidaIncendioComercioView.OtroLugar,
+                    //NombreEstablecimiento = salidaIncendioComercioView.NombreEstablecimiento,
+                    //CantidadPisos = salidaIncendioComercioView.CantidadPisos,
+                    //PisoAfectado = salidaIncendioComercioView.PisoAfectado,
+                    //CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes
+        };
+        db.IncendiosComercios.AddAsync(salidaIncendioComercio);
+        await db.SaveChangesAsync();
+               
 
              
 
-            }
-        }
+           
+        
         
         
 
