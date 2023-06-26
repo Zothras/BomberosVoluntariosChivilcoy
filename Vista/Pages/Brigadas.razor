@@ -1,22 +1,19 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/bomberos/AgregarBrigada"
+@using AntDesign.TableModels;
+@using System.Text.Json;
 
 <h3>Crear una brigada</h3>
-
+@*
 <label>Ingrese el nombre de la brigada :</label>
 <input @bind="BrigadaNueva.Nombre" type="text" />
-
-<br />
-<br />
-<br />
+<Input @bind-Value="@brigadaVM.nombreBrigada" Placeholder="Agregar brigada" />
 <button @onclick="CrearBrigada">Crear</button>
-<br />
-<br />
-<br />
-<br />
-<br />
-<input type="text" @bind="BrigadaEliminar">Eliminar brigada</input>
+
+<Input @bind-Value="@BrigadaEliminar" Placeholder="Eliminar brigada" />
+
+
 <button @onclick="EliminarBrigada">Eliminar</button>
 
 
@@ -29,34 +26,60 @@
         <label>@b.Nombre   <button @onclick="@(() => { navigationManager.NavigateTo($"/bomberos/AgregarBrigada{b.BrigadaId}"); })"><i class="fas fa-eye"></i></button></label>
         <br>
     }
-}
+}*@
+<Button Type="primary" OnClick="@ShowModal">
+    Open Modal with a Form
+</Button>
+<Modal Title="@("Agregar Brigada")"
+       Visible="@_visible"
+       OnOk="@HandleOkAgregar"
+       OnCancel="@HandleCancelAgregar">
+    <Form Loading="loading" Model="@brigadaVM"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed"
+    @ref="@_form">
+        <FormItem Label="Nombre Brigada">
+            <Input @bind-Value="@context.nombreBrigada" />
+        </FormItem>
+    </Form>
+</Modal>
+@*------------------------------------------------------------------------Tabla-----------------------------------------------------------------------------------------*@
+
+
+
+
+@*------------------------------------------------------------------------Fin Tabla-----------------------------------------------------------------------------------------*@
 
 @code {
     private Brigada BrigadaNueva { get; set; } = new();
+    private BrigadaViewModel brigadaVM= new BrigadaViewModel();
     private Brigada[]? brigadas;
-    public string BrigadaEliminar { get; set; }
+    private string BrigadaEliminar { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
         brigadas = await db.Brigadas.ToArrayAsync();
+        StateHasChanged();
     }
-
     public async void CrearBrigada()
     {
-        if (!String.IsNullOrWhiteSpace(BrigadaNueva.Nombre))
+        if (!String.IsNullOrWhiteSpace(brigadaVM.nombreBrigada))
         {
             using var db = await DbFactory.CreateDbContextAsync();
 
             Brigada brigada = new()
             {
-                Nombre = BrigadaNueva.Nombre
+                Nombre = brigadaVM.nombreBrigada
             };
 
             await db.Brigadas.AddAsync(brigada);
             await db.SaveChangesAsync();
-            BrigadaNueva.Nombre = string.Empty;
+            brigadaVM.nombreBrigada = string.Empty;
             brigadas = await db.Brigadas.ToArrayAsync();
             StateHasChanged();
         }
@@ -65,15 +88,81 @@
     public async void EliminarBrigada()
     {
 
-        using var context = DbFactory.CreateDbContext();
-        Brigada? brigada = await context.Brigadas.Where(b => b.Nombre == BrigadaEliminar).SingleOrDefaultAsync();
+        using var db = DbFactory.CreateDbContext();
+        Brigada? brigada = await db.Brigadas.Where(b => b.Nombre == BrigadaEliminar).SingleOrDefaultAsync();
         if (brigada is not null)
         {
-            context.Remove(brigada);
+            db.Remove(brigada);
         }
-        await context.SaveChangesAsync();
+        await db.SaveChangesAsync();
         BrigadaEliminar = string.Empty;
-        brigadas = await context.Brigadas.ToArrayAsync();
+        brigadas = await db.Brigadas.ToArrayAsync();
         StateHasChanged();
+    }
+    private class BrigadaViewModel
+    {
+        public string nombreBrigada { get; set; }
+    }
+}
+@code {
+
+    #region original form coding
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(brigadaVM)}");
+    }
+
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    #endregion
+
+    #region original modal coding
+
+    bool _visible = false;
+
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HandleCancelAgregar(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+
+    #endregion
+
+     /*
+     * Careful!
+     *
+     * next bind submit event to modal OK button
+     */
+
+    private Form<BrigadaViewModel> _form;
+
+    /// <summary>
+    /// when form is submited, close the modal
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+
+    /// <summary>
+    /// on modal OK button is click, submit form manually
+    /// </summary>
+    /// <param name="e"></param>
+    private void HandleOkAgregar(MouseEventArgs e)
+    {
+        //_form.Submit();
+        CrearBrigada();
+        _visible = false;
+
     }
 }
