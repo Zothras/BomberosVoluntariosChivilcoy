@@ -34,7 +34,7 @@
                 <Title Level="3">Bomberos</Title>
             </GridCol>
             <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+                <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>table?.ReloadData()" />
             </GridCol>
         </GridRow>
     </TitleTemplate>
@@ -46,12 +46,6 @@
         <PropertyColumn Property="c=>c.Nombre" Sortable />
         <PropertyColumn Property="c=>c.Apellido" Sortable />
         <PropertyColumn Property="c=>c.Grado" Sortable />
-        <PropertyColumn Property="c=>c.Brigada.Nombre"
-                        SorterCompare="@((a,b)=> a.Length - b.Length)"
-                        SortDirections="new[] { SortDirection.Descending }"
-                        Filters="nameFilters"
-                        OnFilter="((value,name)=>name.StartsWith(value))"
-                        Title="Brigada" />
         <ActionColumn Title="Action">
             <Space>
                 <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
@@ -185,7 +179,7 @@
                 </FormItem>
 
 
-        @* Carga Contacto-----------------------------------------------------------------------*@
+                 @* Carga Contacto-----------------------------------------------------------------------*@
                 <FormItem Label="Telefono Laboral">
                     <Input DefaultValue="@bomberoVM.TelefonoLaboral" @bind-Value="@bomberoVM.TelefonoLaboral" />
                 </FormItem>
@@ -199,11 +193,22 @@
                 </FormItem>
 
                 <FormItem Label="Email">
-            <Input DefaultValue="@bomberoVM.Email" @bind-Value="@bomberoVM.Email" />
+                    <Input DefaultValue="@bomberoVM.Email" @bind-Value="@bomberoVM.Email" />
                 </FormItem>
                 @*Carga Brigada-----------------------------------------------------------------------*@
                 <FormItem Label="Nombre Brigada">
-            <Input DefaultValue="@bomberoVM.NombreBrigada" @bind-Value="@bomberoVM.NombreBrigada" />
+                    <Input DefaultValue="@bomberoVM.NombreBrigada" @bind-Value="@bomberoVM.NombreBrigada" />
+                </FormItem>
+                <FormItem Label="Nombre Brigada">
+                    <Select TItem="Brigada"
+                            TItemValue="string"
+                            DataSource="@brigadas"
+                            @bind-Value="@bomberoVM.NombreBrigada"
+                            DefaultValue="@bomberoVM.NombreBrigada"
+                            ValueName="@nameof(Brigada.Nombre)"
+                            LabelName="@nameof(Brigada.Nombre)"
+                            OnSelectedItemChanged="OnSelectedItemChangedHandler">
+                    </Select>
                 </FormItem>
           </Form>
  </Modal>
@@ -282,21 +287,9 @@
     #region "tabla"
 
     Bombero[]? bomberos;
-    private Brigada BrigadaNueva { get; set; } = new();
     private Brigada[]? brigadas ;
-    private string BrigadaEliminar { get; set; }
-    private TableFilter<string>[] nameFilters;
     string searchString;
     IEnumerable<Bombero> dataSource;
-    ITable _table;
-    //private async Task Bombero[]> GetTablebomberos()
-
-    //{
-    //    using var db = await DbFactory.CreateDbContextAsync();
-
-    //    bomberos = await db.Bomberos.ToArrayAsync();
-    //    return bomberos;
-    //}
     IEnumerable<Bombero> selectedRows;
     ITable table;
 
@@ -311,21 +304,7 @@
         brigadas = await db.Brigadas.ToArrayAsync();
         bomberos = await db.Bomberos.ToArrayAsync();
 
-        //se añade cada brigada a lo bomberos, ya que sino el valor queda nulo
-        for (int i = 0; i < bomberos.Count(); i++)
-        {
-            Brigada? brigada = await db.Brigadas.Where(b => b.BrigadaId == bomberos[i].BrigadaId).SingleOrDefaultAsync();
-            bomberos[i].Brigada.Nombre = brigada.Nombre;
-            bomberos[i].Brigada.BrigadaId = brigada.BrigadaId;
 
-        }
-
-        //Se añade los valores para filtrar la brigada
-        nameFilters = new TableFilter<string>[brigadas.Count()];
-        for (int i = 0; i < nameFilters.Count(); i++)
-        {
-            nameFilters[i] = new() { Text = brigadas[i].Nombre, Value = brigadas[i].Nombre };
-        }
         StateHasChanged();
     }
     void OnRowClick(RowData<Bombero> row)
@@ -447,17 +426,20 @@
     int idBombero;
     private async void ShowModalEditar(int id)
     {
+
+        GetBomberoViewModel(id);
+        await Task.Delay(200);
         _visible = true;
-        bomberoVM = await GetBomberoViewModel(id);
         idBombero = id;
     }//Abre el modal editar
+
     private async void ShowModalDetalle(int id)
     {
-        bomberoVM = await GetBomberoViewModel(id);
-        
+        GetBomberoViewModel(id);
+        await Task.Delay(200);
         _visibleDetalle = true;
-        
-        
+
+
     }//Abre modal ver detalles
 
     private void HandleCancel(MouseEventArgs e)
@@ -484,10 +466,6 @@
         _visible = false;
     }
 
-    /// <summary>
-    /// on modal OK button is click, submit form manually
-    /// </summary>
-    /// <param name="e"></param>
     private async void HandleOk(MouseEventArgs e)
     {
         //bomberoVM.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
@@ -495,9 +473,10 @@
 
         EditarBombero(idBombero);
         //navigationManager.NavigateTo($"/bomberos");
-        StateHasChanged();
-        await Task.Delay(500);
-        NevigateToYourUrl();
+
+        //StateHasChanged();
+        //await Task.Delay(500);
+        //NevigateToYourUrl();
         _visible = false;
     }
 
@@ -506,7 +485,7 @@
         navigationManager.NavigateTo($"/bomberos", true);
     }
 
-    private async Task<BomberosViewModel> GetBomberoViewModel(int id)
+    private async void GetBomberoViewModel(int id)
     {
         using var context = DbFactory.CreateDbContext();
         Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
@@ -558,8 +537,8 @@
                 TelefonoLaboral = bombero1.Contacto.TelefonoLaboral,
                 Email = bombero1.Contacto.Email
         };
+        bomberoVM = BomeroPasajeVM;
         StateHasChanged();
-        return BomeroPasajeVM;
     }//Se obtienen los valores de la base de datos al view model
 
     private async void EditarBombero(int id)
@@ -612,8 +591,8 @@
         bombero1.Contacto.Email = bomberoVM.Email;
 
         await context.SaveChangesAsync();
-        
-        StateHasChanged();
+        await OnInitializedAsync();
+         StateHasChanged();
     }
 
     public string CargarImage(Bombero bombero)
@@ -630,5 +609,10 @@
         }
 
         return src;
+    }
+
+    private void OnSelectedItemChangedHandler(Brigada value)
+    {
+        Console.WriteLine($"selected: ${value?.Nombre}");
     }
 }

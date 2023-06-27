@@ -27,36 +27,132 @@
         <br>
     }
 }*@
-<Button Type="primary" OnClick="@ShowModal">
-    Open Modal with a Form
+
+
+@*--------------------------------------------------------------------------Modal Agregar---------------------------------------------------------------------------------*@
+<Button Type="primary" OnClick="@ShowModalAgregar">
+    Agregar Brigada
 </Button>
 <Modal Title="@("Agregar Brigada")"
-       Visible="@_visible"
+       Visible="@_visibleAgregar"
        OnOk="@HandleOkAgregar"
        OnCancel="@HandleCancelAgregar">
     <Form Loading="loading" Model="@brigadaVM"
           LabelColSpan="8"
           WrapperColSpan="16"
           OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailed"
-    @ref="@_form">
+          OnFinishFailed="OnFinishFailedAgregar"
+    @ref="@_formAgregar">
         <FormItem Label="Nombre Brigada">
             <Input @bind-Value="@context.nombreBrigada" />
         </FormItem>
     </Form>
 </Modal>
+
+
+@*--------------------------------------------------------------------------Modal Eliminar---------------------------------------------------------------------------------*@
+<Button Type="primary" OnClick="@ShowModalEliminar">
+    Eliminar Brigada
+</Button>
+<Modal Title="@("Agregar Brigada")"
+       Visible="@_visibleEliminar"
+       OnOk="@HandleOkEliminar"
+       OnCancel="@HandleCancelEliminar">
+    <Form Loading="loading" Model="@brigadaVM"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinishEliminar"
+          OnFinishFailed="OnFinishFailedEliminar"
+        @ref="@_formEliminar">
+        <FormItem Label="Nombre Brigada">
+            <Select TItem="Brigada"
+                    TItemValue="string"
+                    DataSource="@brigadas"
+                    @bind-Value="@BrigadaEliminar"
+                    DefaultValue="@("Elegir Brigada")"
+                    ValueName="@nameof(Brigada.Nombre)"
+                    LabelName="@nameof(Brigada.Nombre)"
+                    Style="width:120px"
+                    OnSelectedItemChanged="OnSelectedItemChangedHandler">
+            </Select>
+        </FormItem>
+    </Form>
+</Modal>
+
+
 @*------------------------------------------------------------------------Tabla-----------------------------------------------------------------------------------------*@
 
+<Table DataSource="bomberos" OnChange="OnChange" TItem="Bombero" @ref="_table">
+    <TitleTemplate>
+
+        <GridRow>
+            <GridCol Span="8">
+                <Title Level="3">Brigadas</Title>
+            </GridCol>
+            <GridCol Span="8" Offset="12">
+                <Search Placeholder="Search" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+            </GridCol>
+        </GridRow>
+    </TitleTemplate>
+
+    <ColumnDefinitions>
+        @if (searchString is null)
+        {
+            <PropertyColumn Property="c=>c.Brigada.Nombre"
+                            SorterCompare="@((a,b)=> a.Length - b.Length)"
+                            SortDirections="new[] { SortDirection.Descending }"
+                            Filters="nameFilters"
+                            OnFilter="((value,name)=>name.StartsWith(value))"
+                            Title="Brigada" />
+            <PropertyColumn Property="c=>c.Nombre" Sortable />
+            <PropertyColumn Property="c=>c.NumeroLegajo"
+                            DefaultSortOrder="@SortDirection.Descending"
+            SorterCompare="@((a,b)=> a - b)" />
+        }
+        @*corregir-------------------------------------------------------------------------------------------------------------------------------------------------------*@
+        else if (searchString is not null)
+        {
+            @foreach (Bombero b in bomberos)
+            {
+                if (b.Nombre.Contains(search(searchString)) || b.Brigada.Nombre.Contains(search(searchString)))
+                {
+                    <PropertyColumn Property="c=>c.Brigada.Nombre"
+                                    SorterCompare="@((a,b)=> a.Length - b.Length)"
+                                    SortDirections="new[] { SortDirection.Descending }"
+                                    Filters="nameFilters"
+                                    OnFilter="((value,name)=>name.StartsWith(value))"
+                                    Title="Brigada" />
+                    <PropertyColumn Property="c=>c.Nombre" Sortable />
+                    <PropertyColumn Property="c=>c.NumeroLegajo"
+                                    DefaultSortOrder="@SortDirection.Descending"
+                                    SorterCompare="@((a,b)=> a - b)" />
+                }
+            }
+            @search(searchString);
+            
+                
+        }
+
+        
+    </ColumnDefinitions>
+</Table>
 
 
 
 @*------------------------------------------------------------------------Fin Tabla-----------------------------------------------------------------------------------------*@
 
 @code {
-    private Brigada BrigadaNueva { get; set; } = new();
+
     private BrigadaViewModel brigadaVM= new BrigadaViewModel();
+    List<Bombero>? bomberos = new List<Bombero>();//lo hago con lista porque no me deja usar el buscador en OnChange por pasar valores nulos
+    private Brigada BrigadaNueva { get; set; } = new();
+
     private Brigada[]? brigadas;
     private string BrigadaEliminar { get; set; }
+    private TableFilter<string>[] nameFilters;
+    string searchString;
+    IEnumerable<Bombero> dataSource;
+    ITable _table;
 
 
     protected override async Task OnInitializedAsync()
@@ -64,12 +160,30 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         brigadas = await db.Brigadas.ToArrayAsync();
+        bomberos = await db.Bomberos.ToListAsync();
+        //se añade cada brigada a lo bomberos, ya que sino el valor queda nulo
+        for (int i = 0; i < bomberos.Count(); i++)
+        {
+            Brigada? brigada = await db.Brigadas.Where(b => b.BrigadaId == bomberos[i].BrigadaId).SingleOrDefaultAsync();
+            bomberos[i].Brigada.Nombre = brigada.Nombre;
+            bomberos[i].Brigada.BrigadaId = brigada.BrigadaId;
+
+        }
+
+        //Se añade los valores para filtrar la brigada
+        nameFilters = new TableFilter<string>[brigadas.Count()];
+        for (int i = 0; i < nameFilters.Count(); i++)
+        {
+            nameFilters[i] = new() { Text = brigadas[i].Nombre, Value = brigadas[i].Nombre };
+        }
         StateHasChanged();
     }
+
     public async void CrearBrigada()
     {
         if (!String.IsNullOrWhiteSpace(brigadaVM.nombreBrigada))
         {
+            //agregar condicional para ver si ya existe la brigada
             using var db = await DbFactory.CreateDbContextAsync();
 
             Brigada brigada = new()
@@ -80,10 +194,12 @@
             await db.Brigadas.AddAsync(brigada);
             await db.SaveChangesAsync();
             brigadaVM.nombreBrigada = string.Empty;
-            brigadas = await db.Brigadas.ToArrayAsync();
+            //brigadas = await db.Brigadas.ToArrayAsync();
+            await OnInitializedAsync();//Actualza los datos 
             StateHasChanged();
         }
     }
+
     //eliminar una brigada segun el nombre
     public async void EliminarBrigada()
     {
@@ -96,19 +212,28 @@
         }
         await db.SaveChangesAsync();
         BrigadaEliminar = string.Empty;
-        brigadas = await db.Brigadas.ToArrayAsync();
+        //brigadas = await db.Brigadas.ToArrayAsync();
+        await OnInitializedAsync();
         StateHasChanged();
     }
+
     private class BrigadaViewModel
     {
         public string nombreBrigada { get; set; }
+        public string nombreBombro { get; set; }
+        public EscalafonJerarquico Grado { get; set; }
+
     }
 }
 @code {
 
     #region original form coding
+    private void OnFinishFailedAgregar(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(brigadaVM)}");
+    }
 
-    private void OnFinishFailed(EditContext editContext)
+    private void OnFinishFailedEliminar(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(brigadaVM)}");
     }
@@ -119,30 +244,30 @@
 
     #endregion
 
-    #region original modal coding
+    #region Modal Agregar
 
-    bool _visible = false;
+    bool _visibleAgregar = false;
 
-    private void ShowModal()
+    private void ShowModalAgregar()
     {
-        _visible = true;
+        _visibleAgregar = true;
     }
 
     private void HandleCancelAgregar(MouseEventArgs e)
     {
         Console.WriteLine("e");
-        _visible = false;
+        _visibleAgregar = false;
     }
 
-    #endregion
 
-     /*
-     * Careful!
-     *
-     * next bind submit event to modal OK button
+
+    /*
+    * Careful!
+    *
+    * next bind submit event to modal OK button
      */
 
-    private Form<BrigadaViewModel> _form;
+    private Form<BrigadaViewModel> _formAgregar;
 
     /// <summary>
     /// when form is submited, close the modal
@@ -151,7 +276,7 @@
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine("e");
-        _visible = false;
+        _visibleAgregar = false;
     }
 
     /// <summary>
@@ -162,7 +287,62 @@
     {
         //_form.Submit();
         CrearBrigada();
-        _visible = false;
+        _visibleAgregar = false;
 
+    }
+    #endregion
+
+    #region Modal Eliminar
+
+    bool _visibleEliminar = false;
+
+    private void ShowModalEliminar()
+    {
+        _visibleEliminar = true;
+    }
+
+    private void HandleCancelEliminar(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visibleEliminar = false;
+    }
+
+    private Form<BrigadaViewModel> _formEliminar;
+
+    private void OnFinishEliminar(EditContext editContext)
+    {
+        Console.WriteLine("e");
+        _visibleEliminar = false;
+    }
+
+    private void HandleOkEliminar(MouseEventArgs e)
+    {
+        //_form.Submit();
+        EliminarBrigada();
+        _visibleEliminar = false;
+
+    }
+    private void OnSelectedItemChangedHandler(Brigada value)
+    {
+        Console.WriteLine($"selected: ${value?.Nombre}");
+    }
+    #endregion
+
+    void OnChange(QueryModel<Bombero> query)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(query));
+
+        dataSource = query.ExecuteQuery(bomberos.AsQueryable())
+            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase) 
+            || x.Brigada.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private string search(string value)
+    {
+        string nombreSearch = bomberos.Where(d =>
+        d.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        d.Brigada.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase)).ToString();
+
+        return nombreSearch;
     }
 }

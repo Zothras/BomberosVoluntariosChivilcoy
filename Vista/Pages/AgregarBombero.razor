@@ -196,10 +196,17 @@
             <Input @bind-Value="@bomberoView.Email"/>
         </FormItem>
         @*Carga Brigada-----------------------------------------------------------------------*@
-        <FormItem Label="Nombre Brigada" >
-            <Input @bind-Value="@bomberoView.NombreBrigada"/>
+        <FormItem Label="Nombre Brigada">
+            <Select TItem="Brigada"
+                    TItemValue="string"
+                    DataSource="@brigadas"
+                    @bind-Value="@bomberoView.NombreBrigada"
+                    DefaultValue="@("Elegir Brigada")"
+                    ValueName="@nameof(Brigada.Nombre)"
+                    LabelName="@nameof(Brigada.Nombre)"
+                    OnSelectedItemChanged="OnSelectedItemChangedHandler">
+            </Select>
         </FormItem>
-
 
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
                 <Button HtmlType="submit"
@@ -390,9 +397,11 @@
                 //brigadaView = new();
                 bomberoView = new();
                 StateHasChanged();
+                navigationManager.NavigateTo($"/bomberos", true);
             }
         }
     }
+
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(bomberoView)}");
@@ -403,4 +412,8 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(bomberoView)}");
     }
 
+    private void OnSelectedItemChangedHandler(Brigada value)
+    {
+        Console.WriteLine($"selected: ${value?.Nombre}");
+    }
 }
