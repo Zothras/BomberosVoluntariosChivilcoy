@@ -106,23 +106,31 @@
     @if (switchValuev == true)
     {
         <FormItem Label="Marca">
-            <Input @bind-Value="@damnificado.Marca" />
+            <Input @bind-Value="@vehiculo.Marca" />
         </FormItem>
         <FormItem Label="Modelo">
-            <Input @bind-Value="@damnificado.Modelo" />
+            <Input @bind-Value="@vehiculo.Modelo" />
         </FormItem>
         <FormItem Label="Año">
-            <AntDesign.InputNumber @bind-Value="damnificado.Año" />
+            <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
         </FormItem>
         <FormItem Label="Patente">
-            <Input @bind-Value="@damnificado.Patente" />
+            <Input @bind-Value="@vehiculo.Patente" />
         </FormItem>
         <FormItem Label="tipo">
-            <Input @bind-Value="@damnificado.Tipo" />
+            <Input @bind-Value="@vehiculo.Tipo" />
         </FormItem>
         <FormItem Label="Color">
-            <Input @bind-Value="@damnificado.Color" />
+            <Input @bind-Value="@vehiculo.Color" />
         </FormItem>
+        <FormItem Label="Compania Aseguradora">
+        <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
+        </FormItem>
+        <FormItem Label="NumeroPoliza">
+            <Input @bind-Value="@vehiculo.NumeroDePoliza" />
+        </FormItem>
+        <FormItem Label="FechaVencimineto"/>
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
         <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
         <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
     }
@@ -180,38 +188,76 @@
     <FormItem Label="Tipo Servicio salida">
         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioComercioView.TipoServicio" />
     </FormItem>
-    <FormItem Label="Tipo de Incendio">
-        <EnumSelect TEnum="TipoIncendio" @bind-Value="@salidaIncendioComercioView.Tipo" />
-    </FormItem>
     <FormItem Label="Tipo de Zona">
         <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioComercioView.TipoZona" />
     </FormItem>
     <FormItem Label="Lugar">
-        <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar" />
+        <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar"/>  
     </FormItem>
-    <FormItem Label = "Superficie Afectada Causa">
+    <FormItem Label="Superficie Afectada Causa">
         <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@salidaIncendioComercioView.SuperficieAfectadaCausa" />
+        @if (salidaIncendioComercioView.TipoLugar == TipoLugarComercioIncendio.Otro)
+        {
+            <FormItem Label="OtroLugar">
+                <Input @bind-Value="@salidaIncendioComercioView.OtroLugar" />
+            </FormItem>
+        }
     </FormItem>
-
+    <FormItem Label="Nombre establecimiento:">
+        <Input @bind-Value="salidaIncendioComercioView.NombreEstablecimiento" />
+        <br>
+    </FormItem>
+    <FormItem Label="Cantidad pisos afectados:">
+        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.CantidadPisos" />
+        <br>
+    </FormItem>
+    @for (int i = 0; i == salidaIncendioComercioView.CantidadPisos; i++)
+    {
+        <FormItem Label="Pisos afectados">
+            <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.PisoAfectado" />
+            <br>
+        </FormItem>
+    }
+    <FormItem Label="Cantidad ambientes:">
+        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.CantidadAmbientes" />
+        <br>
+    </FormItem>
+    <FormItem Label="Tipo Evacuacion">
+        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@salidaIncendioComercioView.TipoEvacuacion" />
+    </FormItem>
     <FormItem Label="Tipo Superficie">
         <EnumSelect TEnum="TipoSuperficie" @bind-Value="@salidaIncendioComercioView.TipoSuperficieAfectada" />
     </FormItem>
     <FormItem Label="Detalles Surpeficie Afectada ">
         <Input @bind-Value="salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio" />
     </FormItem>
+    <FormItem Label="Tipo Techo">
+        <EnumSelect TEnum="TipoIncendioTecho" @bind-Value="@salidaIncendioComercioView.TipoTecho" />
+        @if (salidaIncendioComercioView.TipoTecho == TipoIncendioTecho.Otro)
+        {
+            <FormItem Label="Otro Techo">
+                <Input @bind-Value="@salidaIncendioComercioView.OtroTecho" />
+            </FormItem>
+        }
+    </FormItem>
+    <FormItem Label="Tipo Abertura">
+        <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@salidaIncendioComercioView.TipoAbertura" />
+        @if (salidaIncendioComercioView.TipoAbertura == TipoIncendioAbertura.Otro)
+        {
+            <FormItem Label="Otro Abertura">
+                <Input @bind-Value="@salidaIncendioComercioView.OtraAbertura" />
+            </FormItem>
+        }
+    </FormItem>
+    <b><label>Hubo deteccion automatica?</label></b>
+    <br />
+    <Checkbox @bind-Checked="salidaIncendioComercioView.DeteccionAutomaticaId"></Checkbox>
     <b><label>Habia Extintor?</label></b>
     <br />
-    <Checkbox @bind-Checked="chekExt"> Si</Checkbox>
-    <Checkbox @bind-Checked="chekExt"> No</Checkbox>
+    <Checkbox @bind-Checked="chekExt"> </Checkbox>
     <b><label>Habia Hidrante?</label></b>
     <br />
-    <Checkbox @bind-Checked="chekHidr"> Si</Checkbox>
-    <Checkbox @bind-Checked="chekHidr"> No</Checkbox>
-    <FormItem Label="Tipo Evacuacion">
-        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@salidaIncendioComercioView.TipoEvacuacion" />
-    </FormItem>
-    
-
+    <Checkbox @bind-Checked="chekHidr"></Checkbox>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio">
             Cargar salida
@@ -219,28 +265,13 @@
     </FormItem>
 </Form>
 
-@if (salidaIncendioComercioView.Tipo == TipoIncendio.Comercios || salidaIncendioComercioView.Tipo == TipoIncendio.EstablecimientoEducativo || salidaIncendioComercioView.Tipo == TipoIncendio.EstablecimientoPublico || salidaIncendioComercioView.Tipo == TipoIncendio.Hospital || salidaIncendioComercioView.Tipo == TipoIncendio.Clinica || salidaIncendioComercioView.Tipo == TipoIncendio.Industria || salidaIncendioComercioView.Tipo == TipoIncendio.Vivienda)
-{
-    <label>Nombre establecimiento:</label>
-    <input type="text" @bind="salidaIncendioComercioView.NombreEstablecimiento" />
-    <br>
-    <label>Cantidad pisos afectados:</label>
-    <input type="number" @bind="salidaIncendioComercioView.CantidadPisos" />
-    <br>
-    @for (int i = 0; i == salidaIncendioComercioView.CantidadPisos; i++)
-    {
-        <label>Piso afectado:</label>
-        <input type="number" @bind="salidaIncendioComercioView.PisoAfectado" />
-        <br>
-    }
-    <label>Cantidad ambientes:</label>
-    <input type="number" @bind="salidaIncendioComercioView.CantidadAmbientes"/>
-    <br>
-}
+
+
+
 
 
 @code {
-    public IncendioComercioViewModels salidaIncendioComercioView;
+    public IncendioComercioViewModels salidaIncendioComercioView = new();
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
@@ -270,14 +301,17 @@
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        salidaIncendioComercioView.HoraSalida = DateTime.Now;
-    }
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    salidaIncendioComercioView.HoraSalida = DateTime.Now;
+    //}
 
     public async void SubirIncendioComercio()
     {
         using var db = await DbFactory.CreateDbContextAsync();
+        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoReceptor).SingleOrDefaultAsync();
+        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoEncargado).SingleOrDefaultAsync();
+        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoLLenoPlanilla).SingleOrDefaultAsync();
         if (salidaIncendioComercioView is not null)
         {
             Vista.Data.Models.Salidas.Planillas.IncendioComercio? numeroParte = await db.IncendiosComercios.Where(m => m.NumeroParte == salidaIncendioComercioView.NumeroParte).SingleOrDefaultAsync();
@@ -285,7 +319,6 @@
             {
                 Vista.Data.Models.Salidas.Planillas.IncendioComercio salidaIncendioComercio = new()
                 {
-                    Tipo = salidaIncendioComercioView.Tipo,
                     Descripcion = salidaIncendioComercioView.Descripcion,
                     HoraSalida = salidaIncendioComercioView.HoraSalida,
                     HoraLlegada = salidaIncendioComercioView.HoraLLegada,
@@ -302,19 +335,10 @@
                     ApellidoSolicitante = salidaIncendioComercioView.ApellidoSolicitante,
                     DniSolicitante = salidaIncendioComercioView.DniSolicitante,
                     TelefonoSolicitante = salidaIncendioComercioView.TelefonoSolicitante,
-                    ReceptorBombero = new()
-                    {
-                        Nombre = salidaIncendioComercioView.NombreReceptor,
-                        Apellido = salidaIncendioComercioView.ApellidoReceptor,
-                        NumeroLegajo = salidaIncendioComercioView.LegajoReceptor,
-                        
-                    },
                     DeteccionAutomaticaId= salidaIncendioComercioView.DeteccionAutomaticaId,
                     Extintor = salidaIncendioComercioView.Extintor,
                     Hidrante = salidaIncendioComercioView.Hidrante,
                     TipoLugar = salidaIncendioComercioView.TipoLugar,                
-                    TipoLugarSiniestroEmbarcacion = salidaIncendioComercioView.TipoLugarSiniestroEmbarcacion,
-                    OtroLugarDeSiniestroEmbarcacion= salidaIncendioComercioView.OtroLugarDeSiniestroEmbarcacion,
                     TipoEvacuacion = salidaIncendioComercioView.TipoEvacuacion,
                     TipoSuperficieAfectada = salidaIncendioComercioView.TipoSuperficieAfectada,
                     DetalleSuperficieAfectadaIncendio = salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio,
@@ -327,7 +351,17 @@
                     NombreEstablecimiento = salidaIncendioComercioView.NombreEstablecimiento,
                     CantidadPisos = salidaIncendioComercioView.CantidadPisos,
                     PisoAfectado = salidaIncendioComercioView.PisoAfectado,
-                    CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes
+                    CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes,
+                    QuienLleno = BomberoLlenoPlanilla,
+                    ReceptorBombero = bomberoReceptor,
+                    Encargado = bomberoEncargado,
+                    Seguro = new()
+                    {
+                        CompañiaAseguradora = salidaIncendioComercioView.CompaniaAseguradora,
+                        NumeroDePoliza = salidaIncendioComercioView.NumeroPoliza,
+                        FechaDeVencimineto = salidaIncendioComercioView.FechaVencimineto,
+                    },
+                    Damnificados = new()
                 };
                 foreach (DamnificadoViewModels d in DamnificadosSalida)
                 {
@@ -364,10 +398,6 @@
                 }
                 await db.IncendiosComercios.AddAsync(salidaIncendioComercio);
                 await db.SaveChangesAsync();
-                    db.Set<Incendio>().Add(salidaIncendioComercio);
-                    await db.SaveChangesAsync();
-
-
             }
 
         }
@@ -408,4 +438,3 @@
         await db.SaveChangesAsync();
     }
 }
-    
