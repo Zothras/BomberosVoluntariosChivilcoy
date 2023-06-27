@@ -19,7 +19,7 @@ namespace Vista.Data.ViewModels.Personal
         public int Edad { get; set; }
         public TipoDamnificado Estado { get; set; }
 
-       
+        public VehiculoDamnificadoViewModels? VehiculoDamnificado { get; set; }
 
     }
 }

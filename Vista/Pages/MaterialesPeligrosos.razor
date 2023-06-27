@@ -152,14 +152,14 @@
     <b><label>Datos de chofer</label></b>
     <br />
      <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-    <FormItem Label="Numero de legajo">
+    <FormItem Label="Numero de legajo del chofer">
         <Input @bind-Value="movilSalidaViewModels.NumeroLegajo" />
     </FormItem>
     <FormItem Label="Numero de movil">
         <Input @bind-Value="movilSalidaViewModels.NumeroMovil" />
     </FormItem>
     <br />
-    <Button>Cargar Movil salida</Button>
+    <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
     <FormItem Label="Tipo Escalafon">
@@ -168,15 +168,9 @@
     <FormItem Label="Numero de legajo">
         <AntDesign.InputNumber @bind-Value="bomberoSalidaView.NumeroLegajo" />
     </FormItem>
-    <FormItem Label="Nombre de bombero">
-        <Input @bind-Value="bomberoSalidaView.Nombre" />
-    </FormItem>
-    <FormItem Label="Apellido de bombero">
-        <Input @bind-Value="bomberoSalidaView.Apellido" />
-    </FormItem>
     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
     <br />
-    <Button>Cargar cuerpo participante</Button>
+    <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
     <br />
     <b><label>Datos encargados</label></b>
     <FormItem Label="Numero de legajo">
@@ -277,7 +271,8 @@
     private BomberoSalidaViewModels bomberoSalidaView = new();
     private VehiculoDamnificadoViewModels vehiculo = new();
     public List<DamnificadoViewModels> DamnificadosSalida  = new();
-    public List<MovilSalida> MovilesSalidas = new();
+    public List<MovilSalidaViewModels> MovilesSalidasL = new();
+    public List<BomberoSalidaViewModels> bomberosSalida = new();
 
     bool switchValue { get; set; }
     bool switchValuev { get; set; }
@@ -342,10 +337,34 @@
                    NumeroDePoliza = modelMateriales.NumeroPoliza,
                    FechaDeVencimineto = modelMateriales.FechaVencimineto,
                },
-               Damnificados = new()
-
+               Damnificados = new(),
+               Moviles = new(),
+               CuerpoParticipante=new()
 
         };
+        foreach (BomberoSalidaViewModels bom in bomberosSalida)
+        {
+            Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
+            BomberoSalida BomSalida = new()
+            {
+                Salio = bom.Salio,
+                Grado = bom.Grado,
+                Bombero = bomberoSalida
+            };
+            materiales.CuerpoParticipante.Add(BomSalida);
+        }
+        foreach (MovilSalidaViewModels m in MovilesSalidasL)
+        {
+            Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
+            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            MovilSalida movilS = new()
+            {
+                CargoCombustible = m.CargoCombustible,
+                Chofer = bomberoChofer,
+                Movil = Movilsalida
+            };
+            materiales.Moviles.Add(movilS);
+        }
 
         foreach (DamnificadoViewModels d in DamnificadosSalida)
         {
@@ -359,6 +378,7 @@
                     LugarDeNacimiento = d.LugarDeNacimiento,
                     Edad = d.Edad,
                     Estado = d.Estado,
+
                     VehiculoDamnificado = new()
                     {
                         Marca = vehiculo.Marca,
@@ -370,27 +390,27 @@
                         Airbag = chek,
                         Seguro = new()
                         {
-                             CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                             NumeroDePoliza = vehiculo.NumeroDePoliza,
-                             FechaDeVencimineto = vehiculo.FechaDeVencimineto,
+                            CompañiaAseguradora = vehiculo.CompañiaAseguradora,
+                            NumeroDePoliza = vehiculo.NumeroDePoliza,
+                            FechaDeVencimineto = vehiculo.FechaDeVencimineto,
                         },
                     }
             };
             materiales.Damnificados.Add(damn);
-           
-            
+
+
         }
         await db.MaterialesPeligrosos.AddAsync(materiales);
         await db.SaveChangesAsync();
-       
-       
-        
+
+
+
     }
 
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-      
+
         DamnificadoViewModels dp = new()
         {
           Nombre = damnificado.Nombre,
@@ -400,24 +420,38 @@
           LugarDeNacimiento = damnificado.LugarDeNacimiento,
           Edad = damnificado.Edad,
           Estado = damnificado.Estado,
-          
+
         };
         DamnificadosSalida.Add(dp);
         await db.SaveChangesAsync();
     }
-    
+
     public async void AgregarMovilSalida()
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == movilSalidaViewModels.NumeroLegajo).SingleOrDefaultAsync();
         Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == movilSalidaViewModels.NumeroMovil).SingleOrDefaultAsync();
-       MovilSalida  m = new ()
+        MovilSalidaViewModels m = new()
         {
             CargoCombustible = chekM,
             Chofer = bomberoChofer,
-            Movil = Movilsalida,
+            MovilesSalida = Movilsalida,
         };
-         MovilesSalidas.Add(m);
+        MovilesSalidasL.Add(m);
+        await db.SaveChangesAsync();
+    }
+
+    public async void AgregarCuerpoParticipante()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+       
+        BomberoSalidaViewModels b = new()
+        {
+            Salio = bomberoSalidaView.Salio,
+            Grado = bomberoSalidaView.Grado,
+            NumeroLegajo = bomberoSalidaView.NumeroLegajo
+        };
+        bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
 
