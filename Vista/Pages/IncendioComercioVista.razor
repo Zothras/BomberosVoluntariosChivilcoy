@@ -106,22 +106,22 @@
     @if (switchValuev == true)
     {
         <FormItem Label="Marca">
-            <Input @bind-Value="@damnificado.Marca" />
+            <Input @bind-Value="@vehiculo.Marca" />
         </FormItem>
         <FormItem Label="Modelo">
-            <Input @bind-Value="@damnificado.Modelo" />
+            <Input @bind-Value="@vehiculo.Modelo" />
         </FormItem>
         <FormItem Label="Año">
-            <AntDesign.InputNumber @bind-Value="damnificado.Año" />
+            <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
         </FormItem>
         <FormItem Label="Patente">
-            <Input @bind-Value="@damnificado.Patente" />
+            <Input @bind-Value="@vehiculo.Patente" />
         </FormItem>
         <FormItem Label="tipo">
-            <Input @bind-Value="@damnificado.Tipo" />
+            <Input @bind-Value="@vehiculo.Tipo" />
         </FormItem>
         <FormItem Label="Color">
-            <Input @bind-Value="@damnificado.Color" />
+            <Input @bind-Value="@vehiculo.Color" />
         </FormItem>
         <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
         <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
