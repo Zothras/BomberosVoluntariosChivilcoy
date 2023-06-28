@@ -231,8 +231,8 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-                .Entity<Incendio>()
-                .Property(i => i.TipoLugarSiniestroEmbarcacion)
+                .Entity<IncendioEmbarcacion>()
+                .Property(i => i.TipoLugar)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
