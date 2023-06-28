@@ -3,7 +3,7 @@ using Vista.Data.Enums;
 
 namespace Vista.Data.ViewModels.Incendios
 {
-    public class IncedioViewModels : SalidasViewModels
+    public class IncendioViewModels : SalidasViewModels
     {
         public TipoIncendio Tipo { get; set; }
         [Required, StringLength(255)]

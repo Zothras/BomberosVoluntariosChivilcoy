@@ -2,7 +2,7 @@
 
 namespace Vista.Data.ViewModels.Incendios
 {
-    public class IncendioIndustriaViewModels : IncedioViewModels
+    public class IncendioIndustriaViewModels : IncendioViewModels
     {
         public TipoIncendioIndustria TipoLugar { get; set; }
     }
