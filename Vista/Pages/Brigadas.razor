@@ -3,7 +3,7 @@
 @page "/bomberos/AgregarBrigada"
 @using AntDesign.TableModels;
 @using System.Text.Json;
-
+@using System.Text.RegularExpressions;
 <h3>Crear una brigada</h3>
 @*
 <label>Ingrese el nombre de la brigada :</label>
@@ -90,15 +90,25 @@
                 <Title Level="3">Brigadas</Title>
             </GridCol>
             <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+                <Search Placeholder="Search" @bind-Value="searchString" OnInput="()=>UpdateSearchStatus()" OnSearch="()=>search(searchString)" />
+                @if (String.IsNullOrWhiteSpace(searchString))
+                {
+                    bomberos = bomberosRespaldo;
+                }
+                
+                @*<AutoComplete Options="@bomberosFiltro">
+                    <AutoCompleteSearch Placeholder="Buscar" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+                </AutoComplete>*@
             </GridCol>
         </GridRow>
     </TitleTemplate>
 
     <ColumnDefinitions>
-        @if (searchString is null)
+        @if (String.IsNullOrWhiteSpace(searchString))
         {
-            <PropertyColumn Property="c=>c.Brigada.Nombre"
+            bomberos = bomberosRespaldo;
+        }
+        <PropertyColumn Property="c=>c.Brigada.Nombre"
                             SorterCompare="@((a,b)=> a.Length - b.Length)"
                             SortDirections="new[] { SortDirection.Descending }"
                             Filters="nameFilters"
@@ -108,30 +118,29 @@
             <PropertyColumn Property="c=>c.NumeroLegajo"
                             DefaultSortOrder="@SortDirection.Descending"
             SorterCompare="@((a,b)=> a - b)" />
-        }
+        
         @*corregir-------------------------------------------------------------------------------------------------------------------------------------------------------*@
-        else if (searchString is not null)
+        @*else if (bomberosFiltrados is not null)
         {
-            @foreach (Bombero b in bomberos)
+            @foreach (Bombero bom in bomberosFiltrados)
             {
-                if (b.Nombre.Contains(search(searchString)) || b.Brigada.Nombre.Contains(search(searchString)))
-                {
-                    <PropertyColumn Property="c=>c.Brigada.Nombre"
+
+                <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Brigada.Nombre"
                                     SorterCompare="@((a,b)=> a.Length - b.Length)"
                                     SortDirections="new[] { SortDirection.Descending }"
                                     Filters="nameFilters"
                                     OnFilter="((value,name)=>name.StartsWith(value))"
                                     Title="Brigada" />
-                    <PropertyColumn Property="c=>c.Nombre" Sortable />
-                    <PropertyColumn Property="c=>c.NumeroLegajo"
+                <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Nombre" Sortable />
+                <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.NumeroLegajo"
                                     DefaultSortOrder="@SortDirection.Descending"
-                                    SorterCompare="@((a,b)=> a - b)" />
-                }
+                SorterCompare="@((a,b)=> a - b)" />
+
             }
-            @search(searchString);
-            
-                
-        }
+
+            bomberosFiltrados = new List<Bombero>();
+
+        }*@
 
         
     </ColumnDefinitions>
@@ -145,6 +154,10 @@
 
     private BrigadaViewModel brigadaVM= new BrigadaViewModel();
     List<Bombero>? bomberos = new List<Bombero>();//lo hago con lista porque no me deja usar el buscador en OnChange por pasar valores nulos
+    List<Bombero>? bomberosRespaldo = new List<Bombero>();
+    List<string>? bomberosFiltro = new List<string>();
+    private bool busquedaVacia = true;
+
     private Brigada BrigadaNueva { get; set; } = new();
 
     private Brigada[]? brigadas;
@@ -154,6 +167,16 @@
     IEnumerable<Bombero> dataSource;
     ITable _table;
 
+    private List<Bombero> bomberosFiltrados = new List<Bombero>();
+
+    private void getDatosMostrarBombero()
+    {
+        foreach (Bombero b in bomberos)
+        {
+            //string bomber = $"{b.Nombre} {b.Brigada.Nombre}";
+            bomberosFiltro.Add(b.Nombre);
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -161,6 +184,8 @@
 
         brigadas = await db.Brigadas.ToArrayAsync();
         bomberos = await db.Bomberos.ToListAsync();
+        bomberosRespaldo = bomberos;
+        getDatosMostrarBombero();
         //se añade cada brigada a lo bomberos, ya que sino el valor queda nulo
         for (int i = 0; i < bomberos.Count(); i++)
         {
@@ -337,12 +362,25 @@
             || x.Brigada.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
     }
 
-    private string search(string value)
+    private void search(string value)
     {
-        string nombreSearch = bomberos.Where(d =>
-        d.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-        d.Brigada.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase)).ToString();
+        int number;
 
-        return nombreSearch;
+        bomberosFiltrados = bomberos.Where(d =>
+        d.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        d.Brigada.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        if (int.TryParse(value, out number))
+        {
+            bomberosFiltrados = bomberos.Where(d =>
+            d.NumeroLegajo.Equals(number)).ToList();
+        }
+        bomberos = bomberosFiltrados;
+
+    }
+    private void UpdateSearchStatus()
+    {
+
+        busquedaVacia = string.IsNullOrWhiteSpace(searchString);
+        if (busquedaVacia) bomberos = bomberosRespaldo;
     }
 }

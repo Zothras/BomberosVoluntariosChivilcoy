@@ -7,6 +7,7 @@
 @using System.Text.Json;
 
 
+
 <BSContainer id="agregar-bombero">
     <a @onclick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">
         <BSButton id="button-center" Color="BSColor.Danger">Agregar Bombero +</BSButton>
@@ -43,6 +44,7 @@
         <PropertyColumn Property="c=>c.NumeroLegajo"
                         DefaultSortOrder="@SortDirection.Descending"
                         SorterCompare="@((a,b)=> a - b)" />
+        <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
         <PropertyColumn Property="c=>c.Nombre" Sortable />
         <PropertyColumn Property="c=>c.Apellido" Sortable />
         <PropertyColumn Property="c=>c.Grado" Sortable />
