@@ -6,17 +6,18 @@
 @using Vista.Data.ViewModels.MaterialesPeligrosos;
 @using Vista.Data.ViewModels.Personal;
 
+
 <Form  Model="@modelMateriales"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
+    <FormItem Label="Numero de parte">
+        <AntDesign.InputNumber @bind-Value="modelMateriales.NumeroParte"/>
+    </FormItem>
     <FormItem Label="Fecha">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.Fecha" />
-    </FormItem>
-    <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="modelMateriales.NumeroParte" />
     </FormItem>
       <FormItem Label="Descripcion">
         <Input @bind-Value="@modelMateriales.Descripcion" />
@@ -444,7 +445,7 @@
     public async void AgregarCuerpoParticipante()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-       
+
         BomberoSalidaViewModels b = new()
         {
             Salio = bomberoSalidaView.Salio,
@@ -454,6 +455,16 @@
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    using var db = await DbFactory.CreateDbContextAsync();
+    //    var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
+    //    if (salida is not null)
+    //    {
+    //        modelMateriales.NumeroParte = salida.NumeroParte++;
+    //    }
+        
+    //}
 
     private void OnFinish(EditContext editContext)
     {
