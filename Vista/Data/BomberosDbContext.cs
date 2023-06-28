@@ -83,15 +83,16 @@ namespace Vista.Data
                 .HasValue<RescateAnimal>(5)
                 .HasValue<RescatePersona>(6)
                 .HasValue<IncendioComercio>(7)
-                .HasValue<IncendioEstablecimientoEducativo>(8)
-                .HasValue<IncendioEstablecimientoPublico>(9)
-                .HasValue<IncendioForestal>(10)
-                .HasValue<IncendioHospitalesYClinicas>(11)
-                .HasValue<IncendioIndustria>(12)
-                .HasValue<IncendioVivienda>(13)
-                .HasValue<ServicioEspecialPrevencion>(14)
-                .HasValue<Incendio>(15)
-                .HasValue<ServicioEspecial>(16);
+                .HasValue<IncendioEmbarcacion>(8)
+                .HasValue<IncendioEstablecimientoEducativo>(9)
+                .HasValue<IncendioEstablecimientoPublico>(10)
+                .HasValue<IncendioForestal>(11)
+                .HasValue<IncendioHospitalesYClinicas>(12)
+                .HasValue<IncendioIndustria>(13)
+                .HasValue<IncendioVivienda>(14)
+                .HasValue<ServicioEspecialPrevencion>(15)
+                .HasValue<Incendio>(16)
+                .HasValue<ServicioEspecial>(17);
             modelBuilder.Entity<Salida>()
                 .ToTable("Salidas");
 
