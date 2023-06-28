@@ -3,11 +3,16 @@
 @inject NavigationManager navigationManager
 
 <PageTitle> Bomberos Chivilcoy</PageTitle>
-
+<style>
+    .ant-menu-dark.ant-menu-inline .ant-menu-item
+    {
+        margin-left: 8px!important;
+    }
+</style>
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
     <Header Style="position: fixed;box-shadow: 1px 1px 1px rgb(128, 128, 128);background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
-        <div style="display: flex;align-items: center; align-content: center;height: 100%;gap:15px;">
+        <div style="display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
             <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
                 @if (collapsed)
                 {
@@ -15,10 +20,11 @@
                 }
                 else
                 {
-                    <Icon Type="menu-fold" Theme="outline" Style="font-size: 20px;"></Icon>
+                    <Icon Type="menu-fold" Theme="outline" Style="font-size: 20px;"></Icon><i class="fa-solid fa-user-helmet-safety" style="color: #263040;"></i>
                 }
             </Button>
             <a class="navbar-brand" style="display: flex;align-items:center;gap: 5px;color: rgb(263040,255,255);font-size: 20px;" href="/"><img class="Logo" src="/Imagenes/Logo1.png" /> Bomberos Voluntarios Chivilcoy</a>
+            @*<p class="navbar-brand" style="color: rgb(263040,255,255);position: absolute;right: 10px; transform:translate(50% -50%);">!Hola #Usuario!</p>*@
         </div>
     </Header>
     <Layout>

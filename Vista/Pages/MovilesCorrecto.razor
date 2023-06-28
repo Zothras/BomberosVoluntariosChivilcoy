@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService _message
 @page "/moviles"
 
 <style>
@@ -58,10 +59,13 @@
                         <Button class="botonCarta" Style="border-radius: 0;border-top:1px solid #BABABA;border-left:1px solid #BABABA;border-right:1px solid #BABABA;height: 100%;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
                             <Icon Type="edit" Theme="outline" />
                         </Button>
-                        <Button class="botonCarta" Style="border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;" OnClick="()=> EliminarMovil(m.VehiculoId)">
-                            <Icon Type="delete" Theme="outline" />
-                        </Button>
-                            
+                        <Popconfirm Title="¿Estas seguro de borrar este movil?"
+                                    OnConfirm="()=>EliminarMovil(m.VehiculoId)"
+                                    OnCancel="Cancel">
+                            <Button class="botonCarta" Style="border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;">
+                                <Icon Type="delete" Theme="outline" />
+                            </Button>
+                        </Popconfirm>
                     </div>
                 </div>
             </card>
@@ -79,34 +83,6 @@
         }
     }
 </div>
-
-@*<Space Direction="DirectionVHType.Vertical">
-    <SpaceItem>
-        <Button Type="primary" OnClick="@(()=>{ _visible = true;})">
-            <Icon Type="ellipsis" Theme="outline" />
-        </Button>
-    </SpaceItem>
-</Space>
-<Modal Title="@title"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       Footer="@ModalFooter.DefaultOkFooter">
-    <div>
-        <img id="ImagenMovil" src="#" />
-    </div>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-</Modal>
-@code {
-    string title = "BasicModal";
-    bool _visible = false;
-
-    private void HandleOk(MouseEventArgs e)
-    {
-        Console.WriteLine("OK");
-        _visible = false;
-    }
-}*@
 
 @code {
     public Movil[]? moviles;
@@ -146,6 +122,10 @@
         //NumeroMovil.NumeroMovil = string.Empty;
         moviles = await context.Moviles.ToArrayAsync();
         StateHasChanged();
+    }
+    private void Cancel()
+    {
+        _message.Error("Operacion cancelada");
     }
 }
 
