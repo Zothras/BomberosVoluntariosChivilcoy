@@ -8,6 +8,10 @@
     {
         margin-left: 8px!important;
     }
+
+    .ant-tooltip-content {
+        display: none;
+    }
 </style>
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
@@ -69,7 +73,10 @@
                                             <a @onclick="@(() => { navigationManager.NavigateTo("salidas/incendios-comercio"); })">
                                                 <MenuItem>Comercio</MenuItem>
                                             </a>
-                                            <MenuItem>Cayorda</MenuItem>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
+                                                <MenuItem>Forestal</MenuItem>
+                                            </a>
+                                        
                                         </SubMenu>
                                         <SubMenu Title=@("Factores climatiacos")>
                                             <a @onclick="@(() => { navigationManager.NavigateTo("salidas/factores-climaticos"); })">
@@ -94,7 +101,7 @@
                                         </SubMenu>
                                         <SubMenu Title=@("Rescates")>
                                             <a @onclick="@(() => { navigationManager.NavigateTo("salidas/rescates"); })">
-                                                <MenuItem>Rescates</MenuItem>
+                                                <MenuItem>Ambulancia</MenuItem>
                                             </a>
                                             <MenuItem>Animal</MenuItem>
                                             <MenuItem>Persona</MenuItem>
@@ -115,7 +122,7 @@
                     </Sider>
                 </Menu>
             </div>
-        <Content Style="margin-top: 5em;margin-left: 80px;position: relative; background: rgb(215,215,215);height: 200%;">
+        <Content Style="margin-top: 5em;margin-left: 80px;position: relative; background: rgb(220,220,220);height: 200%;">
             <div style="margin: 0 20px 0 20px;display: flex; justify-content: center; align-items: center;flex-direction:column;">
                 @Body
             </div>

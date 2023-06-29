@@ -2,69 +2,125 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/moviles/editar/{VehiculoId:int?}"
 
+
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 4px;
+    }
+
+    .ant-carousel .slick-slide {
+        text-align: center;
+        height: 160px;
+        line-height: 160px;
+        background: #364d79;
+        overflow: hidden;
+    }
+    .ant-carousel .slick-slide h3 {
+       color: #fff;
+    }
+</style>
 @if (movilView is not null)
 {
-    <label>marca:</label>
-    <input type="text" @bind="movilView.Marca" />
-    <br>
-    <label>modelo:</label>
-    <input type="text" @bind="movilView.Modelo" />
-    <br>
-    <label>año:</label>
-    <input type="text" @bind="movilView.Año" />
-    <InputFile OnChange="SubirFoto" />
-    <br>
-    <label>patente:</label>
-    <input type="text" @bind="movilView.Patente" />
-    <br>
-    <label>tipo:</label>
-    <input type="text" @bind="movilView.Tipo" />
-    <br>
-    <label>nº movil:</label>
-    <input type="text" @bind="movilView.NumeroMovil" />
-    <br>
-    <label>nº motor:</label>
-    <input type="text" @bind="movilView.NumeroMotor" />
-    <br>
-    <label>nº chasis:</label>
-    <input type="text" @bind="movilView.NumeroChasis" />
-    <br>
-    <select @bind="movilView.Estado">
-        <option value="@TipoEstadoMovil.Activo">Activo</option>
-        <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
-        <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
-        <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
-    </select>
-    <br>
-    <h4>seguro</h4>
-    <label>compañia:</label>
-    <input type="text" @bind="seguroView.CompañiaAseguradora" />
-    <br>
-    <label>nº poliza:</label>
-    <input type="text" @bind="seguroView.NumeroDePoliza" />
-    <br>
-    <label>fecha de vencimiento:</label>
-    <input type="date" @bind="seguroView.FechaDeVencimiento" />
-    <br />
-    <br />
-    @if (bomberos is not null)
-    {
-        <h4>bomberos</h4>
-        <br />
-        @foreach (BomberoViewModel b in bomberoViews)
-        {
-            <h5>@b.Rol.ToString() :</h5>
-            <br />
-            <select @bind="b.PersonaId">
-                <option selected value="0">-seleccione un bombero-</option>
-                @foreach (Bombero bo in bomberos)
+    <Modal Title="@title"
+           Visible="@_visible"
+           OnOk="@HandleOk"
+           OnCancel="@HandleCancel" Style="width: 60%;">
+            
+    </Modal>
+    <div style="width: 60%;height: 40%;">
+        <Carousel @ref="_carousel">
+            <CarouselSlick>
+                <label>marca:</label>
+                <input type="text" @bind="movilView.Marca" />
+                <br>
+                <label>modelo:</label>
+                <input type="text" @bind="movilView.Modelo" />
+                <br>
+                <label>año:</label>
+                <input type="text" @bind="movilView.Año" />
+                <InputFile OnChange="SubirFoto" />
+                <br>
+                <label>patente:</label>
+                <input type="text" @bind="movilView.Patente" />
+                <br>
+                <label>tipo:</label>
+                <input type="text" @bind="movilView.Tipo" />
+                <br>
+            </CarouselSlick>
+            <CarouselSlick>
+                <label>nº movil:</label>
+                <input type="text" @bind="movilView.NumeroMovil" />
+                <br>
+                <label>nº motor:</label>
+                <input type="text" @bind="movilView.NumeroMotor" />
+                <br>
+                <label>nº chasis:</label>
+                <input type="text" @bind="movilView.NumeroChasis" />
+                <br>
+                <select @bind="movilView.Estado">
+                    <option value="@TipoEstadoMovil.Activo">Activo</option>
+                    <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
+                    <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
+                    <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
+                </select>
+                <br>
+            </CarouselSlick>
+            <CarouselSlick>
+                <h4>seguro</h4>
+                <label>compañia:</label>
+                <input type="text" @bind="seguroView.CompañiaAseguradora" />
+                <br>
+                <label>nº poliza:</label>
+                <input type="text" @bind="seguroView.NumeroDePoliza" />
+                <br>
+                <label>fecha de vencimiento:</label>
+                <input type="date" @bind="seguroView.FechaDeVencimiento" />
+                <br />
+                <br />
+                @if (bomberos is not null)
                 {
-                    <option value="@bo.PersonaId">@bo.Apellido  @bo.Nombre</option>
+                    <h4>bomberos</h4>
+                    <br />
+                    @foreach (BomberoViewModel b in bomberoViews)
+                    {
+                        <h5>@b.Rol.ToString() :</h5>
+                        <br />
+                        <select @bind="b.PersonaId">
+                            <option selected value="0">-seleccione un bombero-</option>
+                            @foreach (Bombero bo in bomberos)
+                            {
+                                <option value="@bo.PersonaId">@bo.Apellido  @bo.Nombre</option>
+                            }
+                        </select>
+                    }
+                    <button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })"></button>
                 }
-            </select>
-        }
-        <button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })"></button>
-    }
+            </CarouselSlick>
+            <CarouselSlick>
+                <h3>4</h3>
+            </CarouselSlick>
+        </Carousel>
+    </div>
+    <div class="button-container">
+        <Button OnClick="@( _=>_carousel.Previous())" Size="small">Prev</Button>
+        <div>
+            @foreach (int i in Enumerable.Range(0, 4))
+            {
+                <Button OnClick="@( _=>_carousel.GoTo(i))" Size="small">@(i + 1)</Button>
+            }
+        </div>
+        <Button OnClick="@( _=>_carousel.Next())" Size="small">Next</Button>
+
+    </div>
+
+    //
+    
+    //
+    
+    //
+    
     <br />
     <br />
     <br />
@@ -246,6 +302,24 @@ else
 
         navigationManager.NavigateTo("/moviles");
     }
+    //modal
+    string title = "Editar movil";
+    bool _visible = true;
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    //carousel
+    Carousel? _carousel;
 }
 
 
