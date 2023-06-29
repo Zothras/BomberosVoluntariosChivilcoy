@@ -1,70 +1,64 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/salidas/incendios-comercio"
+@page "/salidas/incendios-forestales"
 @using System.ComponentModel.DataAnnotations;
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
 @using System.Text.Json;
 
-<Form Model="@salidaIncendioComercioView"
+<Form Model="@salidaIncendioForestalView"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
     <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.NumeroParte" Disabled/>
+        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.NumeroParte" Disabled />
     </FormItem>
     <FormItem Label="Descripcion">
-        <Input @bind-Value="@salidaIncendioComercioView.Descripcion" />
+        <Input @bind-Value="@salidaIncendioForestalView.Descripcion" />
     </FormItem>
     <FormItem Label="Dato Hora salida">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioComercioView.HoraSalida" />
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.HoraSalida" />
     </FormItem>
     <FormItem Label="Dato Hora llegada">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioComercioView.HoraLLegada" />
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.HoraLLegada" />
     </FormItem>
     <FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.KmSalida" />
+        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.KmSalida" />
     </FormItem>
     <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.KmLlegada" />
+        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.KmLlegada" />
     </FormItem>
     <FormItem Label="Calle/Ruta">
-        <Input @bind-Value="@salidaIncendioComercioView.CalleORuta" />
+        <Input @bind-Value="@salidaIncendioForestalView.CalleORuta" />
     </FormItem>
     <FormItem Label="Numero/kilometro">
-        <Input @bind-Value="@salidaIncendioComercioView.NumeroOKilometro" />
+        <Input @bind-Value="@salidaIncendioForestalView.NumeroOKilometro" />
     </FormItem>
     <FormItem Label="Entre calles">
-        <Input @bind-Value="@salidaIncendioComercioView.EntreCalles" />
-    </FormItem>
-    <FormItem Label="PisoNumero">
-        <Input @bind-Value="@salidaIncendioComercioView.PisoNumero" />
-    </FormItem>
-    <FormItem Label="Depto">
-        <Input @bind-Value="@salidaIncendioComercioView.Depto" />
+        <Input @bind-Value="@salidaIncendioForestalView.EntreCalles" />
     </FormItem>
     <FormItem Label="Tipo zona">
-        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioComercioView.TipoZona"/>
+        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioForestalView.TipoZona" />
     </FormItem>
     @*Solicitante datos*@
     <b><label>Datos de solicitante</label></b>
     <FormItem Label="Nombre del solicitante">
-        <Input @bind-Value="@salidaIncendioComercioView.NombreSolicitante" />
+        <Input @bind-Value="@salidaIncendioForestalView.NombreSolicitante" />
     </FormItem>
     <FormItem Label="Apelldio del solicitante">
-        <Input @bind-Value="@salidaIncendioComercioView.ApellidoSolicitante" />
+        <Input @bind-Value="@salidaIncendioForestalView.ApellidoSolicitante" />
     </FormItem>
     <FormItem Label="documneto del solicitante">
-        <Input @bind-Value="@salidaIncendioComercioView.DniSolicitante" />
+        <Input @bind-Value="@salidaIncendioForestalView.DniSolicitante" />
     </FormItem>
     <FormItem Label="Telefono  del solicitante">
-        <Input @bind-Value="@salidaIncendioComercioView.TelefonoSolicitante" />
+        <Input @bind-Value="@salidaIncendioForestalView.TelefonoSolicitante" />
     </FormItem>
     @*Datos bomberos receptor*@
     <FormItem Label="Numero legajo">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.LegajoReceptor" />
+        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.LegajoReceptor" />
     </FormItem>
 
     @*Datos de damnificados*@
@@ -96,10 +90,6 @@
         </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
     }
-    @*Datos de Vehiculos  damnificados*@
-    <FormItem Label="¿Ubo vehiculos damnificados?">
-        <Switch @bind-Checked="switchValuev" />
-    </FormItem>
     @*Moviles de salidas*@
     @*a la hora de pedir el chofer y movil,
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
@@ -115,13 +105,13 @@
     <br />
     @*Datos Del seguro Movil*@
     <FormItem Label="Compania Aseguradora">
-        <Input @bind-Value="@salidaIncendioComercioView.CompaniaAseguradora" />
+        <Input @bind-Value="@salidaIncendioForestalView.CompaniaAseguradora" />
     </FormItem>
     <FormItem Label="NumeroPoliza">
-        <Input @bind-Value="@salidaIncendioComercioView.NumeroPoliza" />
+        <Input @bind-Value="@salidaIncendioForestalView.NumeroPoliza" />
     </FormItem>
     <FormItem Label="FechaVencimineto">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioComercioView.FechaVencimineto" />
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.FechaVencimineto" />
     </FormItem>
     <Button>Cargar Movil salida</Button>
     @*Cuerpos paraticipantes*@
@@ -138,84 +128,67 @@
     <br />
     <b><label>Datos encargados</label></b>
     <FormItem Label="Numero de legajo">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.LegajoEncargado" />
+        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.LegajoEncargado" />
     </FormItem>
     <b><label>Quien lleno planilla</label></b>
     <FormItem Label="Numero de legajo">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.LegajoLLenoPlanilla" />
+        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.LegajoLLenoPlanilla" />
     </FormItem>
     @*Tipo servicio*@
     <FormItem Label="Tipo Servicio salida">
-        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioComercioView.TipoServicio" />
+        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioForestalView.TipoServicio" />
     </FormItem>
     <FormItem Label="Tipo de Zona">
-        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioComercioView.TipoZona" />
+        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioForestalView.TipoZona" />
     </FormItem>
     <FormItem Label="Lugar">
-        <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar"/>  
-        @if (salidaIncendioComercioView.TipoLugar == TipoLugarComercioIncendio.Otro)
+        <EnumSelect TEnum="TipoIncendioForestal" @bind-Value="@salidaIncendioForestalView.TipoLugar" />
+        @if (salidaIncendioForestalView.TipoLugar == TipoIncendioForestal.Otro)
         {
             <FormItem Label="OtroLugar">
-                <Input @bind-Value="@salidaIncendioComercioView.OtroLugar" />
+                <Input @bind-Value="@salidaIncendioForestalView.OtroLugar" />
             </FormItem>
         }
     </FormItem>
     <FormItem Label="Superficie Afectada Causa">
-        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@salidaIncendioComercioView.SuperficieAfectadaCausa" />
-    </FormItem>
-    <FormItem Label="Nombre establecimiento:">
-        <Input @bind-Value="salidaIncendioComercioView.NombreEstablecimiento" />
-        <br>
-    </FormItem>
-    <FormItem Label="Cantidad pisos:">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.CantidadPisos" />
-        <br>
-    </FormItem>
-    <FormItem Label="Pisos afectados">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.PisoAfectado" />
-        <br>
-    </FormItem>
-
-    <FormItem Label="Cantidad ambientes:">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.CantidadAmbientes" />
-        <br>
+        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@salidaIncendioForestalView.SuperficieAfectadaCausa" />
     </FormItem>
     <FormItem Label="Tipo Evacuacion">
-        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@salidaIncendioComercioView.TipoEvacuacion" />
+        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@salidaIncendioForestalView.TipoEvacuacion" />
     </FormItem>
     <FormItem Label="Tipo Superficie">
-        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@salidaIncendioComercioView.TipoSuperficieAfectada" />
+        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@salidaIncendioForestalView.TipoSuperficieAfectada" />
     </FormItem>
     <FormItem Label="Detalles Surpeficie Afectada ">
-        <Input @bind-Value="salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio" />
+        <Input @bind-Value="salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio" />
     </FormItem>
     <FormItem Label="Tipo Techo">
-        <EnumSelect TEnum="TipoIncendioTecho" @bind-Value="@salidaIncendioComercioView.TipoTecho" />
-        @if (salidaIncendioComercioView.TipoTecho == TipoIncendioTecho.Otro)
+        <EnumSelect TEnum="TipoIncendioTecho" @bind-Value="@salidaIncendioForestalView.TipoTecho" />
+        @if (salidaIncendioForestalView.TipoTecho == TipoIncendioTecho.Otro)
         {
             <FormItem Label="Otro Techo">
-                <Input @bind-Value="@salidaIncendioComercioView.OtroTecho" />
+                <Input @bind-Value="@salidaIncendioForestalView.OtroTecho" />
             </FormItem>
         }
     </FormItem>
     <FormItem Label="Tipo Abertura">
-        <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@salidaIncendioComercioView.TipoAbertura" />
-        @if (salidaIncendioComercioView.TipoAbertura == TipoIncendioAbertura.Otro)
+        <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@salidaIncendioForestalView.TipoAbertura" />
+        @if (salidaIncendioForestalView.TipoAbertura == TipoIncendioAbertura.Otro)
         {
             <FormItem Label="Otro Abertura">
-                <Input @bind-Value="@salidaIncendioComercioView.OtraAbertura" />
+                <Input @bind-Value="@salidaIncendioForestalView.OtraAbertura" />
             </FormItem>
         }
     </FormItem>
     <b><label>Hubo deteccion automatica?</label></b>
     <br />
-    <Checkbox @bind-Checked="salidaIncendioComercioView.DeteccionAutomaticaId"></Checkbox>
+    <Checkbox @bind-Checked="salidaIncendioForestalView.DeteccionAutomaticaId"></Checkbox>
     <b><label>Habia Extintor?</label></b>
     <br />
-    <Checkbox @bind-Checked="salidaIncendioComercioView.Extintor"></Checkbox>
+    <Checkbox @bind-Checked="salidaIncendioForestalView.Extintor"></Checkbox>
     <b><label>Habia Hidrante?</label></b>
     <br />
-    <Checkbox @bind-Checked="salidaIncendioComercioView.Hidrante"></Checkbox>
+    <Checkbox @bind-Checked="salidaIncendioForestalView.Hidrante"></Checkbox>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio">
             Cargar salida
@@ -224,13 +197,9 @@
 </Form>
 
 
+@code {
 
-
-
-
-@code{
-
-    public IncendioComercioViewModels salidaIncendioComercioView = new();
+    public IncendioForestaViewModels salidaIncendioForestalView = new();
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
@@ -245,8 +214,8 @@
 
     protected override void OnInitialized()
     {
-        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
-        
+        salidaIncendioForestalView.Tipo = TipoIncendio.Forestal; // Establecer valor predeterminado
+
     }
     protected override async Task OnInitializedAsync()
     {
@@ -254,18 +223,18 @@
         var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
         if (salida is not null)
         {
-            salidaIncendioComercioView.NumeroParte = salida.NumeroParte + 1;
+            salidaIncendioForestalView.NumeroParte = salida.NumeroParte + 1;
         }
 
     }
     private void OnFinish(EditContext editContext)
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(salidaIncendioComercioView)}");
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(salidaIncendioForestalView)}");
     }
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioComercioView)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioForestalView)}");
     }
     private void OnChange(DateTimeChangedEventArgs args)
     {
@@ -276,63 +245,57 @@
     public async void SubirIncendioComercio()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoReceptor).SingleOrDefaultAsync();
-        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoEncargado).SingleOrDefaultAsync();
-        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoLLenoPlanilla).SingleOrDefaultAsync();
-        if (salidaIncendioComercioView is not null)
+        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioForestalView.LegajoReceptor).SingleOrDefaultAsync();
+        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioForestalView.LegajoEncargado).SingleOrDefaultAsync();
+        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioForestalView.LegajoLLenoPlanilla).SingleOrDefaultAsync();
+        if (salidaIncendioForestalView is not null)
         {
-            Vista.Data.Models.Salidas.Planillas.IncendioComercio? numeroParte = await db.IncendiosComercios.Where(m => m.NumeroParte == salidaIncendioComercioView.NumeroParte).SingleOrDefaultAsync();
-            if (salidaIncendioComercioView is not null)
+            Vista.Data.Models.Salidas.Planillas.IncendioForestal? numeroParte = await db.IncendiosForestales.Where(m => m.NumeroParte == salidaIncendioForestalView.NumeroParte).SingleOrDefaultAsync();
+            if (salidaIncendioForestalView is not null)
             {
-                Vista.Data.Models.Salidas.Planillas.IncendioComercio salidaIncendioComercio = new()
-                {
-                    
-                    Descripcion = salidaIncendioComercioView.Descripcion,
-                    HoraSalida = salidaIncendioComercioView.HoraSalida,
-                    HoraLlegada = salidaIncendioComercioView.HoraLLegada,
-                    KmSalida = salidaIncendioComercioView.KmSalida,
-                    KmLlegada = salidaIncendioComercioView.KmLlegada,
-                    NumeroParte = salidaIncendioComercioView.NumeroParte,
-                    CalleORuta = salidaIncendioComercioView.CalleORuta,
-                    NumeroOKilometro = salidaIncendioComercioView.NumeroOKilometro,
-                    EntreCalles = salidaIncendioComercioView.EntreCalles,
-                    PisoNumero = salidaIncendioComercioView.PisoNumero,
-                    Depto = salidaIncendioComercioView.Depto,
-                    TipoZona = salidaIncendioComercioView.TipoZona,
-                    NombreSolicitante = salidaIncendioComercioView.NombreSolicitante,
-                    ApellidoSolicitante = salidaIncendioComercioView.ApellidoSolicitante,
-                    DniSolicitante = salidaIncendioComercioView.DniSolicitante,
-                    TelefonoSolicitante = salidaIncendioComercioView.TelefonoSolicitante,
-                    DeteccionAutomaticaId= salidaIncendioComercioView.DeteccionAutomaticaId,
-                    Extintor = salidaIncendioComercioView.Extintor,
-                    Hidrante = salidaIncendioComercioView.Hidrante,
-                    TipoLugar = salidaIncendioComercioView.TipoLugar,                
-                    TipoEvacuacion = salidaIncendioComercioView.TipoEvacuacion,
-                    TipoSuperficieAfectada = salidaIncendioComercioView.TipoSuperficieAfectada,
-                    DetalleSuperficieAfectadaIncendio = salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio,
-                    SuperficieAfectadaCausa = salidaIncendioComercioView.SuperficieAfectadaCausa,
-                    TipoAbertura = salidaIncendioComercioView.TipoAbertura,
-                    OtraAbertura= salidaIncendioComercioView.OtraAbertura,
-                    TipoTecho = salidaIncendioComercioView.TipoTecho,
-                    OtroTecho = salidaIncendioComercioView.OtroTecho,
-                    OtroLugar = salidaIncendioComercioView.OtroLugar,
-                    NombreEstablecimiento = salidaIncendioComercioView.NombreEstablecimiento,
-                    CantidadPisos = salidaIncendioComercioView.CantidadPisos,
-                    PisoAfectado = salidaIncendioComercioView.PisoAfectado,
-                    CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes,
-                    QuienLleno = BomberoLlenoPlanilla,
-                    ReceptorBombero = bomberoReceptor,
-                    Encargado = bomberoEncargado,
-                    Seguro = new()
+                Vista.Data.Models.Salidas.Planillas.IncendioForestal salidaIncendioForestal = new()
                     {
-                        CompañiaAseguradora = salidaIncendioComercioView.CompaniaAseguradora,
-                        NumeroDePoliza = salidaIncendioComercioView.NumeroPoliza,
-                        FechaDeVencimineto = salidaIncendioComercioView.FechaVencimineto,
-                    },
-                    Damnificados = new(),
-                    Moviles = new(),
-                    CuerpoParticipante = new()
-                };
+                        Tipo = salidaIncendioForestalView.Tipo,
+                        Descripcion = salidaIncendioForestalView.Descripcion,
+                        HoraSalida = salidaIncendioForestalView.HoraSalida,
+                        HoraLlegada = salidaIncendioForestalView.HoraLLegada,
+                        KmSalida = salidaIncendioForestalView.KmSalida,
+                        KmLlegada = salidaIncendioForestalView.KmLlegada,
+                        NumeroParte = salidaIncendioForestalView.NumeroParte,
+                        CalleORuta = salidaIncendioForestalView.CalleORuta,
+                        NumeroOKilometro = salidaIncendioForestalView.NumeroOKilometro,
+                        EntreCalles = salidaIncendioForestalView.EntreCalles,
+                        TipoZona = salidaIncendioForestalView.TipoZona,
+                        NombreSolicitante = salidaIncendioForestalView.NombreSolicitante,
+                        ApellidoSolicitante = salidaIncendioForestalView.ApellidoSolicitante,
+                        DniSolicitante = salidaIncendioForestalView.DniSolicitante,
+                        TelefonoSolicitante = salidaIncendioForestalView.TelefonoSolicitante,
+                        DeteccionAutomaticaId = salidaIncendioForestalView.DeteccionAutomaticaId,
+                        Extintor = salidaIncendioForestalView.Extintor,
+                        Hidrante = salidaIncendioForestalView.Hidrante,
+                        TipoLugar = salidaIncendioForestalView.TipoLugar,
+                        TipoEvacuacion = salidaIncendioForestalView.TipoEvacuacion,
+                        TipoSuperficieAfectada = salidaIncendioForestalView.TipoSuperficieAfectada,
+                        DetalleSuperficieAfectadaIncendio = salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio,
+                        SuperficieAfectadaCausa = salidaIncendioForestalView.SuperficieAfectadaCausa,
+                        TipoAbertura = salidaIncendioForestalView.TipoAbertura,
+                        OtraAbertura = salidaIncendioForestalView.OtraAbertura,
+                        TipoTecho = salidaIncendioForestalView.TipoTecho,
+                        OtroTecho = salidaIncendioForestalView.OtroTecho,
+                        OtroLugar = salidaIncendioForestalView.OtroLugar,
+                        QuienLleno = BomberoLlenoPlanilla,
+                        ReceptorBombero = bomberoReceptor,
+                        Encargado = bomberoEncargado,
+                        Seguro = new()
+                        {
+                            CompañiaAseguradora = salidaIncendioForestalView.CompaniaAseguradora,
+                            NumeroDePoliza = salidaIncendioForestalView.NumeroPoliza,
+                            FechaDeVencimineto = salidaIncendioForestalView.FechaVencimineto,
+                        },
+                        Damnificados = new(),
+                        Moviles = new(),
+                        CuerpoParticipante = new()
+                    };
                 foreach (BomberoSalidaViewModels bom in bomberosSalida)
                 {
                     Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
@@ -342,7 +305,7 @@
                             Grado = bom.Grado,
                             Bombero = bomberoSalida
                         };
-                    salidaIncendioComercio.CuerpoParticipante.Add(BomSalida);
+                    salidaIncendioForestal.CuerpoParticipante.Add(BomSalida);
                 }
                 foreach (MovilSalidaViewModels m in MovilesSalidasL)
                 {
@@ -354,7 +317,7 @@
                             Chofer = bomberoChofer,
                             Movil = Movilsalida
                         };
-                    salidaIncendioComercio.Moviles.Add(movilS);
+                    salidaIncendioForestal.Moviles.Add(movilS);
                 }
                 foreach (DamnificadoViewModels d in DamnificadosSalida)
                 {
@@ -369,9 +332,9 @@
                             Edad = d.Edad,
                             Estado = d.Estado,
                         };
-                    salidaIncendioComercio.Damnificados.Add(damn);
+                    salidaIncendioForestal.Damnificados.Add(damn);
                 }
-                await db.IncendiosComercios.AddAsync(salidaIncendioComercio);
+                await db.IncendiosForestales.AddAsync(salidaIncendioForestal);
                 await db.SaveChangesAsync();
             }
         }

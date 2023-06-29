@@ -3,7 +3,7 @@
     public enum TipoCausaIncendio
     {
         Negligencia,
-        Internacional,
+        Intenciional,
         Natural,
         Desconocidas
     }
