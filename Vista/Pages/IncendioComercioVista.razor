@@ -13,7 +13,7 @@
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
     <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.NumeroParte" />
+        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.NumeroParte" Disabled/>
     </FormItem>
     <FormItem Label="Descripcion">
         <Input @bind-Value="@salidaIncendioComercioView.Descripcion" />
@@ -131,16 +131,6 @@
         <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
         <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
     }
-    @*Datos Del seguro*@
-    <FormItem Label="Compania Aseguradora">
-        <Input @bind-Value="@salidaIncendioComercioView.CompaniaAseguradora" />
-    </FormItem>
-    <FormItem Label="NumeroPoliza">
-        <Input @bind-Value="@salidaIncendioComercioView.NumeroPoliza" />
-    </FormItem>
-    <FormItem Label="FechaVencimineto">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioComercioView.FechaVencimineto" />
-    </FormItem>
     @*Moviles de salidas*@
     @*a la hora de pedir el chofer y movil,
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
@@ -154,6 +144,16 @@
         <Input @bind-Value="movilSalidaViewModels.NumeroMovil" />
     </FormItem>
     <br />
+    @*Datos Del seguro Movil*@
+    <FormItem Label="Compania Aseguradora">
+        <Input @bind-Value="@salidaIncendioComercioView.CompaniaAseguradora" />
+    </FormItem>
+    <FormItem Label="NumeroPoliza">
+        <Input @bind-Value="@salidaIncendioComercioView.NumeroPoliza" />
+    </FormItem>
+    <FormItem Label="FechaVencimineto">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioComercioView.FechaVencimineto" />
+    </FormItem>
     <Button>Cargar Movil salida</Button>
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
@@ -162,12 +162,6 @@
     </FormItem>
     <FormItem Label="Numero de legajo">
         <AntDesign.InputNumber @bind-Value="bomberoSalidaView.NumeroLegajo" />
-    </FormItem>
-    <FormItem Label="Nombre de bombero">
-        <Input @bind-Value="bomberoSalidaView.Nombre" />
-    </FormItem>
-    <FormItem Label="Apellido de bombero">
-        <Input @bind-Value="bomberoSalidaView.Apellido" />
     </FormItem>
     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
     <br />
@@ -185,24 +179,20 @@
     <FormItem Label="Tipo Servicio salida">
         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioComercioView.TipoServicio" />
     </FormItem>
-
-    <FormItem Label="Tipo Incendio">
-        <EnumSelect TEnum="TipoIncendio" @bind-Value="@salidaIncendioComercioView.Tipo" Disabled />
-    </FormItem>
     <FormItem Label="Tipo de Zona">
         <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioComercioView.TipoZona" />
     </FormItem>
     <FormItem Label="Lugar">
         <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar"/>  
-    </FormItem>
-    <FormItem Label="Superficie Afectada Causa">
-        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@salidaIncendioComercioView.SuperficieAfectadaCausa" />
         @if (salidaIncendioComercioView.TipoLugar == TipoLugarComercioIncendio.Otro)
         {
             <FormItem Label="OtroLugar">
                 <Input @bind-Value="@salidaIncendioComercioView.OtroLugar" />
             </FormItem>
         }
+    </FormItem>
+    <FormItem Label="Superficie Afectada Causa">
+        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@salidaIncendioComercioView.SuperficieAfectadaCausa" />
     </FormItem>
     <FormItem Label="Nombre establecimiento:">
         <Input @bind-Value="salidaIncendioComercioView.NombreEstablecimiento" />
@@ -212,13 +202,11 @@
         <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.CantidadPisos" />
         <br>
     </FormItem>
-    @for (int i = 0; i == salidaIncendioComercioView.CantidadPisos; i++)
-    {
-        <FormItem Label="Pisos afectados">
-            <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.PisoAfectado" />
-            <br>
-        </FormItem>
-    }
+    <FormItem Label="Pisos afectados">
+        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.PisoAfectado" />
+        <br>
+    </FormItem>
+
     <FormItem Label="Cantidad ambientes:">
         <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.CantidadAmbientes" />
         <br>
@@ -255,10 +243,10 @@
     <Checkbox @bind-Checked="salidaIncendioComercioView.DeteccionAutomaticaId"></Checkbox>
     <b><label>Habia Extintor?</label></b>
     <br />
-    <Checkbox @bind-Checked="chekExt"> </Checkbox>
+    <Checkbox @bind-Checked="salidaIncendioComercioView.Extintor"></Checkbox>
     <b><label>Habia Hidrante?</label></b>
     <br />
-    <Checkbox @bind-Checked="chekHidr"></Checkbox>
+    <Checkbox @bind-Checked="salidaIncendioComercioView.Hidrante"></Checkbox>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio">
             Cargar salida
@@ -277,7 +265,7 @@
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    private VehiculoDamnificadoViewModels vehiculo = new();
+    private VehiculoDamnificadoViewModels? vehiculo = new();
     public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
@@ -286,16 +274,21 @@
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
-    bool chekHidr { get; set; }
-    bool chekExt { get; set; }
-
-
-
-
 
     protected override void OnInitialized()
     {
         salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
+        
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
+        if (salida is not null)
+        {
+            salidaIncendioComercioView.NumeroParte = salida.NumeroParte + 1;
+        }
+
     }
     private void OnFinish(EditContext editContext)
     {
