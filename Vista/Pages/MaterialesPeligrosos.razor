@@ -16,9 +16,6 @@
     <FormItem Label="Numero de parte">
         <AntDesign.InputNumber @bind-Value="modelMateriales.NumeroParte"/>
     </FormItem>
-    <FormItem Label="Fecha">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.Fecha" />
-    </FormItem>
       <FormItem Label="Descripcion">
         <Input @bind-Value="@modelMateriales.Descripcion" />
     </FormItem>
@@ -292,7 +289,7 @@
 
         MaterialPeligroso materiales = new()
         {
-                Fecha = modelMateriales.Fecha,
+                
                 NumeroParte = modelMateriales.NumeroParte,
                 HoraSalida = modelMateriales.HoraSalida,
                 HoraLlegada = modelMateriales.HoraLLegada,
@@ -455,16 +452,16 @@
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    using var db = await DbFactory.CreateDbContextAsync();
-    //    var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-    //    if (salida is not null)
-    //    {
-    //        modelMateriales.NumeroParte = salida.NumeroParte++;
-    //    }
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
+        if (salida is not null)
+        {
+            modelMateriales.NumeroParte = salida.NumeroParte++;
+        }
         
-    //}
+    }
 
     private void OnFinish(EditContext editContext)
     {

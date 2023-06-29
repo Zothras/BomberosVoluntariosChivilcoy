@@ -12,9 +12,6 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
-    <FormItem Label="Fecha">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioComercioView.Fecha" />
-    </FormItem>
     <FormItem Label="Numero de parte">
         <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.NumeroParte" />
     </FormItem>
@@ -328,7 +325,7 @@
             {
                 Vista.Data.Models.Salidas.Planillas.IncendioComercio salidaIncendioComercio = new()
                 {
-                    Tipo = salidaIncendioComercioView.Tipo,
+                    
                     Descripcion = salidaIncendioComercioView.Descripcion,
                     HoraSalida = salidaIncendioComercioView.HoraSalida,
                     HoraLlegada = salidaIncendioComercioView.HoraLLegada,
