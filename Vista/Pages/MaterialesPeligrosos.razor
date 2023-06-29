@@ -14,7 +14,7 @@
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
     <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="modelMateriales.NumeroParte"/>
+        <AntDesign.InputNumber @bind-Value="modelMateriales.NumeroParte" Disabled/>
     </FormItem>
       <FormItem Label="Descripcion">
         <Input @bind-Value="@modelMateriales.Descripcion" />
@@ -458,7 +458,7 @@
         var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
         if (salida is not null)
         {
-            modelMateriales.NumeroParte = salida.NumeroParte++;
+            modelMateriales.NumeroParte = salida.NumeroParte + 1;
         }
         
     }

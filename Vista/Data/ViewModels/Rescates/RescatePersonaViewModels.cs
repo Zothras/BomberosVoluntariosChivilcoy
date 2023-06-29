@@ -7,8 +7,6 @@ namespace Vista.Data.ViewModels.Rescates
     {
         public TipoRescatePersona TipoRescatePersona { get; set; }
 
-        [Required, StringLength(255)]
-        public string Otro { get; set; }
-        public TipoLugarAmbulancias tipoLugarAmbulancias { get; set; }
+
     }
 }

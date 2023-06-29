@@ -1,0 +1,394 @@
+﻿@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@page "/salidas/rescates-animal"
+@using Vista.Data.ViewModels.Personal;
+@using Vista.Data.ViewModels.Rescates;
+@using System.Text.Json;
+<Form Model="@AnimalViewModel"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
+    @*Datos generales de las salidas*@
+    <FormItem Label="Numero de parte">
+        <AntDesign.InputNumber @bind-Value="AnimalViewModel.NumeroParte" Disabled />
+    </FormItem>
+    <FormItem Label="Descripcion">
+        <Input @bind-Value="@AnimalViewModel.Descripcion" />
+    </FormItem>
+    <FormItem Label="Dato Hora salida">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@AnimalViewModel.HoraSalida" />
+    </FormItem>
+    <FormItem Label="Dato Hora llegada">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@AnimalViewModel.HoraLLegada" />
+    </FormItem>
+    <FormItem Label="Kilometro salida">
+        <AntDesign.InputNumber @bind-Value="AnimalViewModel.KmSalida" />
+    </FormItem>
+    <FormItem Label="Kilometro llegada">
+        <AntDesign.InputNumber @bind-Value="AnimalViewModel.KmLlegada" />
+    </FormItem>
+    <FormItem Label="Calle/Ruta">
+        <Input @bind-Value="@AnimalViewModel.CalleORuta" />
+    </FormItem>
+    <FormItem Label="Numero/kilometro">
+        <Input @bind-Value="@AnimalViewModel.NumeroOKilometro" />
+    </FormItem>
+    <FormItem Label="Entre calles">
+        <Input @bind-Value="@AnimalViewModel.EntreCalles" />
+    </FormItem>
+    <FormItem Label="PisoNumero">
+        <Input @bind-Value="@AnimalViewModel.PisoNumero" />
+    </FormItem>
+    <FormItem Label="Depto">
+        <Input @bind-Value="@AnimalViewModel.Depto" />
+    </FormItem>
+    <FormItem Label="Tipo zona">
+        <EnumSelect TEnum="TipoZona" @bind-Value="@AnimalViewModel.TipoZona" />
+    </FormItem>
+    @*Solicitante datos*@
+    <b><label>Datos de solicitante</label></b>
+    <FormItem Label="Nombre del solicitante">
+        <Input @bind-Value="@AnimalViewModel.NombreSolicitante" />
+    </FormItem>
+    <FormItem Label="Apelldio del solicitante">
+        <Input @bind-Value="@AnimalViewModel.ApellidoSolicitante" />
+    </FormItem>
+    <FormItem Label="documneto del solicitante">
+        <Input @bind-Value="@AnimalViewModel.DniSolicitante" />
+    </FormItem>
+    <FormItem Label="Telefono  del solicitante">
+        <Input @bind-Value="@AnimalViewModel.TelefonoSolicitante" />
+    </FormItem>
+    @*Datos bomberos receptor*@
+    <FormItem Label="Numero legajo">
+        <AntDesign.InputNumber @bind-Value="AnimalViewModel.LegajoReceptor" />
+    </FormItem>
+
+    @*Datos de damnificados*@
+    <FormItem Label="¿Ubo damnificados?">
+        <Switch @bind-Checked="switchValue" />
+    </FormItem>
+    @if (switchValue == true)
+    {
+
+        <FormItem Label="Nombre">
+            <Input @bind-Value="@damnificado.Nombre" />
+        </FormItem>
+        <FormItem Label="Apellido">
+            <Input @bind-Value="@damnificado.Apellido" />
+        </FormItem>
+        <FormItem Label="Documento">
+            <Input @bind-Value="@damnificado.Dni" />
+        </FormItem>
+        <FormItem Label="Tipo sexo">
+            <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
+        </FormItem>
+        <FormItem Label="Lugar De nacimiento">
+            <Input @bind-Value="@damnificado.LugarDeNacimiento" />
+        </FormItem>
+        <FormItem Label="edad">
+            <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
+        </FormItem>
+        <FormItem Label="Tipo material">
+            <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
+        </FormItem>
+        <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+    }
+    @*Datos de Vehiculos  damnificados*@
+    <FormItem Label="¿Ubo vehiculos damnificados?">
+        <Switch @bind-Checked="switchValuev" />
+    </FormItem>
+    @if (switchValuev == true)
+    {
+        <FormItem Label="Marca">
+            <Input @bind-Value="@vehiculo.Marca" />
+        </FormItem>
+        <FormItem Label="Modelo">
+            <Input @bind-Value="@vehiculo.Modelo" />
+        </FormItem>
+        <FormItem Label="Año">
+            <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
+        </FormItem>
+        <FormItem Label="Patente">
+            <Input @bind-Value="@vehiculo.Patente" />
+        </FormItem>
+        <FormItem Label="tipo">
+            <Input @bind-Value="@vehiculo.Tipo" />
+        </FormItem>
+        <FormItem Label="Color">
+            <Input @bind-Value="@vehiculo.Color" />
+        </FormItem>
+        <FormItem Label="Compania Aseguradora">
+            <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
+        </FormItem>
+        <FormItem Label="NumeroPoliza">
+            <Input @bind-Value="@vehiculo.NumeroDePoliza" />
+        </FormItem>
+        <FormItem Label="FechaVencimineto">
+            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
+            <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
+        </FormItem>
+        <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
+    }
+    @*Datos Del seguro*@
+    <FormItem Label="Compania Aseguradora">
+        <Input @bind-Value="@AnimalViewModel.CompaniaAseguradora" />
+    </FormItem>
+    <FormItem Label="NumeroPoliza">
+        <Input @bind-Value="@AnimalViewModel.NumeroPoliza" />
+    </FormItem>
+    <FormItem Label="FechaVencimineto">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@AnimalViewModel.FechaVencimineto" />
+    </FormItem>
+    @*Moviles de salidas*@
+    @*a la hora de pedir el chofer y movil,
+    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
+    <b><label>Datos de chofer</label></b>
+    <br />
+    <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
+    <FormItem Label="Numero de legajo del chofer">
+        <Input @bind-Value="movilSalidaViewModels.NumeroLegajo" />
+    </FormItem>
+    <FormItem Label="Numero de movil">
+        <Input @bind-Value="movilSalidaViewModels.NumeroMovil" />
+    </FormItem>
+    <br />
+    <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
+    @*Cuerpos paraticipantes*@
+    <b><label>Cuerpo Participante</label></b>
+    <FormItem Label="Tipo Escalafon">
+        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
+    </FormItem>
+    <FormItem Label="Numero de legajo">
+        <AntDesign.InputNumber @bind-Value="bomberoSalidaView.NumeroLegajo" />
+    </FormItem>
+    <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
+    <br />
+    <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
+    <br />
+    <b><label>Datos encargados</label></b>
+    <FormItem Label="Numero de legajo">
+        <AntDesign.InputNumber @bind-Value="AnimalViewModel.LegajoEncargado" />
+    </FormItem>
+    <b><label>Quien lleno planilla</label></b>
+    <FormItem Label="Numero de legajo">
+        <AntDesign.InputNumber @bind-Value="AnimalViewModel.LegajoLLenoPlanilla" />
+    </FormItem>
+    @*Tipo servicio*@
+    <FormItem Label="Tipo Servicio salida">
+        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@AnimalViewModel.TipoServicio" />
+    </FormItem>
+    @*Propio de rescates*@
+    <FormItem Label="Tipo  lugar de rescate">
+        <EnumSelect TEnum="TipoRescateAnimal" @bind-Value="@AnimalViewModel.TipoRescateAnimal" />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarRescateAnimal">
+            Cargar salida
+        </Button>
+    </FormItem>
+</Form>
+
+
+@code {
+    private DamnificadoViewModels damnificado = new();
+    private RescateAnimaViewModels AnimalViewModel = new();
+    private MovilSalidaViewModels movilSalidaViewModels = new();
+    private BomberoSalidaViewModels bomberoSalidaView = new();
+    private VehiculoDamnificadoViewModels vehiculo = new();
+    public List<DamnificadoViewModels> DamnificadosSalida = new();
+    public List<MovilSalidaViewModels> MovilesSalidasL = new();
+    public List<BomberoSalidaViewModels> bomberosSalida = new();
+
+    bool switchValue { get; set; }
+    bool switchValuev { get; set; }
+    bool chek { get; set; }
+    bool chekM { get; set; }
+    bool chekB { get; set; }
+
+    public async void CargarRescateAnimal()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == AnimalViewModel.LegajoReceptor).SingleOrDefaultAsync();
+        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == AnimalViewModel.LegajoEncargado).SingleOrDefaultAsync();
+        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == AnimalViewModel.LegajoLLenoPlanilla).SingleOrDefaultAsync();
+
+        RescateAnimal Rescates = new()
+            {
+
+                NumeroParte = AnimalViewModel.NumeroParte,
+                HoraSalida = AnimalViewModel.HoraSalida,
+                HoraLlegada = AnimalViewModel.HoraLLegada,
+                KmSalida = AnimalViewModel.KmSalida,
+                KmLlegada = AnimalViewModel.KmLlegada,
+                Descripcion = AnimalViewModel.Descripcion,
+                CalleORuta = AnimalViewModel.CalleORuta,
+                NumeroOKilometro = AnimalViewModel.NumeroOKilometro,
+                EntreCalles = AnimalViewModel.EntreCalles,
+                PisoNumero = AnimalViewModel.PisoNumero,
+                Depto = AnimalViewModel.Depto,
+                //Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo)
+                TipoZona = AnimalViewModel.TipoZona,
+                NombreSolicitante = AnimalViewModel.NombreSolicitante,
+                ApellidoSolicitante = AnimalViewModel.ApellidoSolicitante,
+                DniSolicitante = AnimalViewModel.DniSolicitante,
+                TelefonoSolicitante = AnimalViewModel.TelefonoSolicitante,
+                TipoServicio = AnimalViewModel.TipoServicio,
+                //carga propio de rescates
+                TipoRescateAnimal = AnimalViewModel.TipoRescateAnimal,
+                QuienLleno = BomberoLlenoPlanilla,
+                ReceptorBombero = bomberoReceptor,
+                Encargado = bomberoEncargado,
+                Seguro = new()
+                {
+                    CompañiaAseguradora = AnimalViewModel.CompaniaAseguradora,
+                    NumeroDePoliza = AnimalViewModel.NumeroPoliza,
+                    FechaDeVencimineto = AnimalViewModel.FechaVencimineto,
+                },
+                Damnificados = new(),
+                Moviles = new(),
+                CuerpoParticipante = new()
+
+            };
+        foreach (BomberoSalidaViewModels bom in bomberosSalida)
+        {
+            Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
+            BomberoSalida BomSalida = new()
+                {
+                    Salio = bom.Salio,
+                    Grado = bom.Grado,
+                    Bombero = bomberoSalida
+                };
+            Rescates.CuerpoParticipante.Add(BomSalida);
+        }
+        foreach (MovilSalidaViewModels m in MovilesSalidasL)
+        {
+            Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
+            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            MovilSalida movilS = new()
+                {
+                    CargoCombustible = m.CargoCombustible,
+                    Chofer = bomberoChofer,
+                    Movil = Movilsalida
+                };
+            Rescates.Moviles.Add(movilS);
+        }
+
+        foreach (DamnificadoViewModels d in DamnificadosSalida)
+        {
+
+            Damnificado damn = new()
+                {
+                    Nombre = d.Nombre,
+                    Apellido = d.Apellido,
+                    Dni = d.Dni,
+                    Sexo = d.Sexo,
+                    LugarDeNacimiento = d.LugarDeNacimiento,
+                    Edad = d.Edad,
+                    Estado = d.Estado,
+
+                    //VehiculoDamnificado = new()
+                    //{
+                    //    Marca = vehiculo.Marca,
+                    //    Modelo = vehiculo.Modelo,
+                    //    Año = vehiculo.Año,
+                    //    Patente = vehiculo.Patente,
+                    //    Tipo = vehiculo.Tipo,
+                    //    Color = vehiculo.Color,
+                    //    Airbag = chek,
+                    //    Seguro = new()
+                    //    {
+                    //        CompañiaAseguradora = vehiculo.CompañiaAseguradora,
+                    //        NumeroDePoliza = vehiculo.NumeroDePoliza,
+                    //        FechaDeVencimineto = vehiculo.FechaDeVencimineto,
+                    //    },
+                    //}
+                };
+            Rescates.Damnificados.Add(damn);
+
+
+        }
+        await db.RescateAnimales.AddAsync(Rescates);
+        await db.SaveChangesAsync();
+
+
+
+    }
+    public async void AgregarDamnificado()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        DamnificadoViewModels dp = new()
+            {
+                Nombre = damnificado.Nombre,
+                Apellido = damnificado.Apellido,
+                Dni = damnificado.Dni,
+                Sexo = damnificado.Sexo,
+                LugarDeNacimiento = damnificado.LugarDeNacimiento,
+                Edad = damnificado.Edad,
+                Estado = damnificado.Estado,
+
+            };
+        DamnificadosSalida.Add(dp);
+        await db.SaveChangesAsync();
+    }
+
+    public async void AgregarMovilSalida()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == movilSalidaViewModels.NumeroLegajo).SingleOrDefaultAsync();
+        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == movilSalidaViewModels.NumeroMovil).SingleOrDefaultAsync();
+        MovilSalidaViewModels m = new()
+            {
+                CargoCombustible = chekM,
+                Chofer = bomberoChofer,
+                MovilesSalida = Movilsalida,
+            };
+        MovilesSalidasL.Add(m);
+        await db.SaveChangesAsync();
+    }
+
+    public async void AgregarCuerpoParticipante()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        BomberoSalidaViewModels b = new()
+            {
+                Salio = bomberoSalidaView.Salio,
+                Grado = bomberoSalidaView.Grado,
+                NumeroLegajo = bomberoSalidaView.NumeroLegajo
+            };
+        bomberosSalida.Add(b);
+        await db.SaveChangesAsync();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
+        if (salida is not null)
+        {
+            AnimalViewModel.NumeroParte = salida.NumeroParte + 1;
+        }
+
+    }
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(AnimalViewModel)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(AnimalViewModel)}");
+    }
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+    void OnChange(string[] checkedValues)
+    {
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
+}
