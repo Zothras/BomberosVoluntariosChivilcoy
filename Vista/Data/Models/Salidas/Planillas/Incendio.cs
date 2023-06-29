@@ -13,7 +13,7 @@ namespace Vista.Data.Models.Salidas.Planillas
         public bool? Hidrante { get; set; }
         public List<EmbarcacionAfectada> EmbarcacionAfectadas { get; set; }
         public List<VehiculoAfectado> VehiculoAfectados { get; set; }
-        public TipoLugarSiniestroEmbarcacion TipoLugarSiniestroEmbarcacion { get; set; }
+        public TipoLugarSiniestroEmbarcacion? TipoLugarSiniestroEmbarcacion { get; set; }
         [StringLength(255)]
         public string? OtroLugarDeSiniestroEmbarcacion { get; set; }
         //Superficie Afectada
