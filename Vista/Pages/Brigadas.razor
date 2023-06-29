@@ -4,6 +4,7 @@
 @using AntDesign.TableModels;
 @using System.Text.Json;
 @using System.Text.RegularExpressions;
+@using System.Linq;
 <h3>Crear una brigada</h3>
 @*
 <label>Ingrese el nombre de la brigada :</label>
@@ -90,7 +91,7 @@
                 <Title Level="3">Brigadas</Title>
             </GridCol>
             <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search" @bind-Value="searchString" OnInput="()=>UpdateSearchStatus()" OnSearch="()=>search(searchString)" />
+                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
                 @if (String.IsNullOrWhiteSpace(searchString))
                 {
                     bomberos = bomberosRespaldo;
@@ -104,10 +105,6 @@
     </TitleTemplate>
 
     <ColumnDefinitions>
-        @if (String.IsNullOrWhiteSpace(searchString))
-        {
-            bomberos = bomberosRespaldo;
-        }
         <PropertyColumn Property="c=>c.Brigada.Nombre"
                             SorterCompare="@((a,b)=> a.Length - b.Length)"
                             SortDirections="new[] { SortDirection.Descending }"
@@ -159,6 +156,7 @@
     private bool busquedaVacia = true;
 
     private Brigada BrigadaNueva { get; set; } = new();
+
 
     private Brigada[]? brigadas;
     private string BrigadaEliminar { get; set; }
@@ -379,8 +377,84 @@
     }
     private void UpdateSearchStatus()
     {
-
         busquedaVacia = string.IsNullOrWhiteSpace(searchString);
         if (busquedaVacia) bomberos = bomberosRespaldo;
+    
+
+        //QueryModel<Bombero> query = new QueryModel<Bombero>
+        //    {
+        //        Filters = new List<QueryFilter>(),
+        //        SortField = "Nombre",
+        //        SortOrder = SortDirection.Ascending,
+        //        PageIndex = 1,
+        //        PageSize = 10
+        //    };
+        //Console.WriteLine(JsonSerializer.Serialize(query));
+        //busquedaVacia = string.IsNullOrWhiteSpace(searchString);
+        //dataSource = query.ExecuteQuery(bomberos.AsQueryable())
+        //   .Where(x => string.IsNullOrWhiteSpace(searchString));
+        //if (busquedaVacia)
+        //{
+        //    QueryModel<Bombero> query;
+        //    query.FilterModel.
+        //    bomberos = bomberosRespaldo;
+        //}
+
     }
+    //public RealTimeQueryModel<TableRow> queryModel = new RealTimeQueryModel<TableRow>(1, 10, 0, new List<ITableSortModel>(), new List<ITableFilterModel>());
+    //public class RealTimeQueryModel<TItem> : QueryModel<TItem>
+    //{
+    //    private string searchValue;
+
+    //    public string SearchValue
+    //    {
+    //        get => searchValue;
+    //        set
+    //        {
+    //            if (searchValue != value)
+    //            {
+    //                searchValue = value;
+    //                OnSearchValueChanged();
+    //            }
+    //        }
+    //    }
+
+    //    public IList<ITableFilterModel> FilterModel { get; set; }
+
+    //    //public RealTimeQueryModel(int pageIndex, int pageSize, int startIndex)
+    //    //: base(pageIndex, pageSize, startIndex)
+    //    //{
+    //    //    searchValue = string.Empty;
+    //    //}
+
+    //    public RealTimeQueryModel(int pageIndex, int pageSize, int startIndex, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel)
+    //        : base(pageIndex, pageSize, startIndex, sortModel, filterModel)
+    //    {
+    //        searchValue = string.Empty;
+    //        //FilterModel = filterModel;
+    //    }
+
+    //    public void OnSearchValueChanged()
+    //    {
+            
+    //        FilterModel = new List<ITableFilterModel>();
+    //        if (!string.IsNullOrEmpty(SearchValue))
+    //        {
+    //            var filter = new FilterModel<string>(-1, "", new List<string>(), new List<TableFilter>
+    //        {
+    //            new TableFilter
+    //            {
+    //                Text = SearchValue,
+    //                Value = SearchValue
+    //            }
+    //        });
+    //            FilterModel.Add(filter);
+    //        }
+    //        brigada
+    //    }
+    //}
+   
+    
+
 }
+

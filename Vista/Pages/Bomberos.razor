@@ -35,7 +35,11 @@
                 <Title Level="3">Bomberos</Title>
             </GridCol>
             <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>table?.ReloadData()" />
+                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+                @if (String.IsNullOrWhiteSpace(searchString))
+                {
+                    bomberos = bomberosRespaldo;
+                }
             </GridCol>
         </GridRow>
     </TitleTemplate>
@@ -47,7 +51,10 @@
         <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
         <PropertyColumn Property="c=>c.Nombre" Sortable />
         <PropertyColumn Property="c=>c.Apellido" Sortable />
-        <PropertyColumn Property="c=>c.Grado" Sortable />
+        <PropertyColumn Property="c=>c.Grado" 
+                        SortDirections="new[] { SortDirection.Descending }"
+                        Filters="EscalafonJerarquicoFilter"
+                        OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
         <ActionColumn Title="Action">
             <Space>
                 <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
@@ -288,12 +295,19 @@
 
     #region "tabla"
 
-    Bombero[]? bomberos;
+    //Bombero[]? bomberos;
     private Brigada[]? brigadas ;
     string searchString;
     IEnumerable<Bombero> dataSource;
     IEnumerable<Bombero> selectedRows;
     ITable table;
+    List<Bombero>? bomberos = new List<Bombero>();//lo hago con lista porque no me deja usar el buscador en OnChange por pasar valores nulos
+    List<Bombero>? bomberosRespaldo = new List<Bombero>();
+    List<string>? bomberosFiltro = new List<string>();
+    private List<Bombero> bomberosFiltrados = new List<Bombero>();
+    private bool busquedaVacia = true;
+
+    private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
     int _pageIndex = 1;
     int _pageSize = 10;
@@ -304,11 +318,22 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         brigadas = await db.Brigadas.ToArrayAsync();
-        bomberos = await db.Bomberos.ToArrayAsync();
+        bomberos = await db.Bomberos.ToListAsync();
 
+        bomberosRespaldo = bomberos;
+
+        EscalafonJerarquicoFilter = new TableFilter<EscalafonJerarquico>[Enum.GetValues(typeof(EscalafonJerarquico)).Length];
+        int i = 0;
+        foreach (EscalafonJerarquico value in Enum.GetValues(typeof(EscalafonJerarquico)))
+        {
+            EscalafonJerarquicoFilter[i] = new() { Text = Enum.GetName(typeof(EscalafonJerarquico), value), Value = value };
+            i++;
+        }
+       
 
         StateHasChanged();
     }
+
     void OnRowClick(RowData<Bombero> row)
     {
         Console.WriteLine($"row {row.Data.Brigada.BrigadaId} was clicked");
@@ -334,8 +359,8 @@
         using var context = DbFactory.CreateDbContext();
         Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
         context.Remove(bombero);
-        bomberos = bomberos.Where(x => x.NumeroLegajo != id).ToArray();
-        _total = bomberos.Length;
+        bomberos = bomberos.Where(x => x.NumeroLegajo != id).ToList();
+        _total = bomberos.Count;
         await context.SaveChangesAsync();
         StateHasChanged();
     }
@@ -616,5 +641,29 @@
     private void OnSelectedItemChangedHandler(Brigada value)
     {
         Console.WriteLine($"selected: ${value?.Nombre}");
+    }
+
+    private void search(string value)
+    {
+        int number;
+
+        bomberosFiltrados = bomberos.Where(d =>
+        d.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        Enum.GetName(typeof(EscalafonJerarquico), d.Grado).Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        d.Apellido.Contains(value, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+        if (int.TryParse(value, out number))
+        {
+            bomberosFiltrados = bomberos.Where(d =>
+            d.NumeroLegajo.Equals(number)).ToList();
+        }
+        bomberos = bomberosFiltrados;
+
+    }
+
+    private void UpdateSearchStatus()
+    {
+        busquedaVacia = string.IsNullOrWhiteSpace(searchString);
+        if (busquedaVacia) bomberos = bomberosRespaldo;
     }
 }
