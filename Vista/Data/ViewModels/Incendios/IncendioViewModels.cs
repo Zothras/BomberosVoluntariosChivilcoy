@@ -15,12 +15,12 @@ namespace Vista.Data.ViewModels.Incendios
         [Required, StringLength(255)]
         public string DetalleSuperficieAfectadaIncendio { get; set; }
         public TipoCausaIncendio SuperficieAfectadaCausa { get; set; }
-        public TipoIncendioAbertura TipoAbertura { get; set; }
+        public TipoIncendioAbertura? TipoAbertura { get; set; }
         [Required, StringLength(255)]
-        public string OtraAbertura { get; set; }
-        public TipoIncendioTecho TipoTecho { get; set; }
+        public string? OtraAbertura { get; set; }
+        public TipoIncendioTecho? TipoTecho { get; set; }
         [Required, StringLength(255)]
-        public string OtroTecho { get; set; }
+        public string? OtroTecho { get; set; }
         [Required, StringLength(255)]
         public string OtroLugar { get; set; }
         [StringLength(255)]

@@ -89,7 +89,10 @@
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
-    <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
+    <div>
+        <b><label>Cargo Combustible</label></b>
+        <Checkbox @bind-Checked="chekM"></Checkbox>
+    </div>
     <FormItem Label="Numero de legajo">
         <Input @bind-Value="movilSalidaViewModels.NumeroLegajo" />
     </FormItem>
@@ -108,6 +111,7 @@
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.FechaVencimineto" />
     </FormItem>
     <Button>Cargar Movil salida</Button>
+    <br />
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
     <FormItem Label="Tipo Escalafon">
@@ -116,7 +120,10 @@
     <FormItem Label="Numero de legajo">
         <AntDesign.InputNumber @bind-Value="bomberoSalidaView.NumeroLegajo" />
     </FormItem>
-    <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
+    <div>
+        <b><label>Salio</label></b>
+        <Checkbox @bind-Checked="chekB"></Checkbox>
+    </div>
     <br />
     <Button>Cargar cuerpo participante</Button>
     <br />
@@ -134,6 +141,7 @@
         <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.LegajoLLenoPlanilla" />
     </FormItem>
     @*Tipo servicio*@
+    <b><label>Salida</label></b>
     <FormItem Label="Tipo Servicio salida">
         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioForestalView.TipoServicio" />
     </FormItem>
@@ -161,15 +169,19 @@
     <FormItem Label="Detalles Surpeficie Afectada ">
         <Input @bind-Value="salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio" />
     </FormItem>
-    <b><label>Hubo deteccion automatica?</label></b>
-    <br />
-    <Checkbox @bind-Checked="salidaIncendioForestalView.DeteccionAutomaticaId"></Checkbox>
-    <b><label>Habia Extintor?</label></b>
-    <br />
-    <Checkbox @bind-Checked="salidaIncendioForestalView.Extintor"></Checkbox>
-    <b><label>Habia Hidrante?</label></b>
-    <br />
-    <Checkbox @bind-Checked="salidaIncendioForestalView.Hidrante"></Checkbox>
+    <div>
+        <b><label>Hubo deteccion automatica?</label></b>
+        <Checkbox @bind-Checked="salidaIncendioForestalView.DeteccionAutomaticaId"></Checkbox>
+    </div>
+    <div>
+        <b><label>Habia Extintor?</label></b>
+        <Checkbox @bind-Checked="salidaIncendioForestalView.Extintor"></Checkbox>
+    </div>
+    <div>
+        <b><label>Habia Hidrante?</label></b>
+        <Checkbox @bind-Checked="salidaIncendioForestalView.Hidrante"></Checkbox>
+    </div>
+   
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioForestal">
             Cargar salida
@@ -196,8 +208,6 @@
     protected override void OnInitialized()
     {
         salidaIncendioForestalView.Tipo = TipoIncendio.Forestal; // Establecer valor predeterminado
-        salidaIncendioForestalView.TipoTecho = TipoIncendioTecho.Vacio;
-        salidaIncendioForestalView.TipoAbertura = TipoIncendioAbertura.Vacio;
     }
     protected override async Task OnInitializedAsync()
     {

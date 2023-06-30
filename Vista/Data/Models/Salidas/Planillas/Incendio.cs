@@ -11,11 +11,8 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         public bool? Extintor { get; set; }
         public bool? Hidrante { get; set; }
-        public List<EmbarcacionAfectada> EmbarcacionAfectadas { get; set; }
         public List<VehiculoAfectado> VehiculoAfectados { get; set; }
         [StringLength(255)]
-        public string? OtroLugarDeSiniestroEmbarcacion { get; set; }
-        //Superficie Afectada
         public TipoEvacuacion TipoEvacuacion { get; set; }
         public TipoSuperficie TipoSuperficieAfectada { get; set; }
         [Required, StringLength(255)]
@@ -24,12 +21,12 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         //Fin Superficie Afectada
         public TipoIncendio Tipo { get; set; }
-        public TipoIncendioAbertura TipoAbertura { get; set; }
+        public TipoIncendioAbertura? TipoAbertura { get; set; }
         [Required, StringLength(255)]
         public string OtraAbertura { get; set; }
-        public TipoIncendioTecho TipoTecho { get; set; }
+        public TipoIncendioTecho? TipoTecho { get; set; }
         [Required, StringLength(255)]
-        public string OtroTecho { get; set; }
+        public string? OtroTecho { get; set; }
         [Required, StringLength(255)]
         public string OtroLugar { get; set; }
         [StringLength(255)]
