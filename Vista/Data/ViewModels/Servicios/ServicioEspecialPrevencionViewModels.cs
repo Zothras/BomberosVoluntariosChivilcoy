@@ -22,5 +22,6 @@ namespace Vista.Data.ViewModels.Servicios
         public string DiasCapacitacion { get; set; }
         [Required, StringLength(255)]
         public string HorariosCapacitacion { get; set; }
+        public TipoServicioPrevencion TipoPrevencion { get; set; }
     }
 }

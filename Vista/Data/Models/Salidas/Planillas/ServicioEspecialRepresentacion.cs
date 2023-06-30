@@ -2,7 +2,7 @@
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
-    public class ServicioEspecialRepresentacion : ServicioEspecial
+    public class ServicioEspecialPrevencionViewModels : ServicioEspecial
     {
         public TipoServicioRepresentacion TipoRepresentacion { get; set; }
     }
