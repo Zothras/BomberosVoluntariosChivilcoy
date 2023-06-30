@@ -39,9 +39,6 @@
     <FormItem Label="Entre calles">
         <Input @bind-Value="@salidaIncendioForestalView.EntreCalles" />
     </FormItem>
-    <FormItem Label="Tipo zona">
-        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioForestalView.TipoZona" />
-    </FormItem>
     @*Solicitante datos*@
     <b><label>Datos de solicitante</label></b>
     <FormItem Label="Nombre del solicitante">
@@ -56,10 +53,7 @@
     <FormItem Label="Telefono  del solicitante">
         <Input @bind-Value="@salidaIncendioForestalView.TelefonoSolicitante" />
     </FormItem>
-    @*Datos bomberos receptor*@
-    <FormItem Label="Numero legajo">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.LegajoReceptor" />
-    </FormItem>
+    
 
     @*Datos de damnificados*@
     <FormItem Label="¿Ubo damnificados?">
@@ -79,13 +73,13 @@
         <FormItem Label="Tipo sexo">
             <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
         </FormItem>
-        <FormItem Label="Lugar De nacimiento">
+        <FormItem Label="Lugar de nacimiento">
             <Input @bind-Value="@damnificado.LugarDeNacimiento" />
         </FormItem>
-        <FormItem Label="edad">
+        <FormItem Label="Edad">
             <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
         </FormItem>
-        <FormItem Label="Tipo material">
+        <FormItem Label="Tipo de estado">
             <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
         </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
@@ -126,6 +120,11 @@
     <br />
     <Button>Cargar cuerpo participante</Button>
     <br />
+    @*Datos bomberos receptor*@
+    <b><label>Datos del bombero receptor</label></b>
+    <FormItem Label="Numero legajo">
+        <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.LegajoReceptor" />
+    </FormItem>
     <b><label>Datos encargados</label></b>
     <FormItem Label="Numero de legajo">
         <AntDesign.InputNumber @bind-Value="salidaIncendioForestalView.LegajoEncargado" />
@@ -162,24 +161,6 @@
     <FormItem Label="Detalles Surpeficie Afectada ">
         <Input @bind-Value="salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio" />
     </FormItem>
-    @*<FormItem Label="Tipo Techo">
-        <EnumSelect TEnum="TipoIncendioTecho" @bind-Value="@salidaIncendioForestalView.TipoTecho" />
-        @if (salidaIncendioForestalView.TipoTecho == TipoIncendioTecho.Otro)
-        {
-            <FormItem Label="Otro Techo">
-                <Input @bind-Value="@salidaIncendioForestalView.OtroTecho" />
-            </FormItem>
-        }
-    </FormItem>
-    <FormItem Label="Tipo Abertura">
-        <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@salidaIncendioForestalView.TipoAbertura" />
-        @if (salidaIncendioForestalView.TipoAbertura == TipoIncendioAbertura.Otro)
-        {
-            <FormItem Label="Otro Abertura">
-                <Input @bind-Value="@salidaIncendioForestalView.OtraAbertura" />
-            </FormItem>
-        }
-    </FormItem>*@
     <b><label>Hubo deteccion automatica?</label></b>
     <br />
     <Checkbox @bind-Checked="salidaIncendioForestalView.DeteccionAutomaticaId"></Checkbox>
@@ -215,6 +196,8 @@
     protected override void OnInitialized()
     {
         salidaIncendioForestalView.Tipo = TipoIncendio.Forestal; // Establecer valor predeterminado
+        salidaIncendioForestalView.TipoTecho = TipoIncendioTecho.Vacio;
+        salidaIncendioForestalView.TipoAbertura = TipoIncendioAbertura.Vacio;
     }
     protected override async Task OnInitializedAsync()
     {
@@ -277,6 +260,10 @@
                         TipoSuperficieAfectada = salidaIncendioForestalView.TipoSuperficieAfectada,
                         DetalleSuperficieAfectadaIncendio = salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio,
                         SuperficieAfectadaCausa = salidaIncendioForestalView.SuperficieAfectadaCausa,
+                        TipoAbertura = salidaIncendioForestalView.TipoAbertura,
+                        OtraAbertura = salidaIncendioForestalView.OtraAbertura,
+                        TipoTecho = salidaIncendioForestalView.TipoTecho,
+                        OtroTecho = salidaIncendioForestalView.OtroTecho,
                         OtroLugar = salidaIncendioForestalView.OtroLugar,
                         QuienLleno = BomberoLlenoPlanilla,
                         ReceptorBombero = bomberoReceptor,

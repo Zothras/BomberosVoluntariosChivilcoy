@@ -6,6 +6,7 @@
         AceroHierro,
         Aluminio,
         Plastica,
+        Vacio,
         Otro
     }
 }

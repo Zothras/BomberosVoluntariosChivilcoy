@@ -7,6 +7,7 @@
         Tejas,
         ChapaMetalica,
         ChapaCarton,
+        Vacio,
         Otro
     }
 }
