@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/salidas/rescates"
+@page "/salidas/rescates-persona"
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.ViewModels.Rescates;
 @using System.Text.Json;
@@ -291,23 +291,6 @@
                     LugarDeNacimiento = d.LugarDeNacimiento,
                     Edad = d.Edad,
                     Estado = d.Estado,
-
-                    //VehiculoDamnificado = new()
-                    //{
-                    //    Marca = vehiculo.Marca,
-                    //    Modelo = vehiculo.Modelo,
-                    //    Año = vehiculo.Año,
-                    //    Patente = vehiculo.Patente,
-                    //    Tipo = vehiculo.Tipo,
-                    //    Color = vehiculo.Color,
-                    //    Airbag = chek,
-                    //    Seguro = new()
-                    //    {
-                    //        CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                    //        NumeroDePoliza = vehiculo.NumeroDePoliza,
-                    //        FechaDeVencimineto = vehiculo.FechaDeVencimineto,
-                    //    },
-                    //}
                 };
             Rescates.Damnificados.Add(damn);
 
