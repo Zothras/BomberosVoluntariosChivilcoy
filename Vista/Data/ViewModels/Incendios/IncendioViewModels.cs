@@ -10,9 +10,6 @@ namespace Vista.Data.ViewModels.Incendios
         public bool DeteccionAutomaticaId { get; set; }
         public bool Extintor { get; set; }
         public bool Hidrante { get; set; }
-        
-        [StringLength(255)]
-        public string? OtroLugarDeSiniestroEmbarcacion { get; set; }
         public TipoEvacuacion TipoEvacuacion { get; set; }
         public TipoSuperficie TipoSuperficieAfectada { get; set; }
         [Required, StringLength(255)]

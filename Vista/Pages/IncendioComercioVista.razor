@@ -45,9 +45,6 @@
     <FormItem Label="Depto">
         <Input @bind-Value="@salidaIncendioComercioView.Depto" />
     </FormItem>
-    <FormItem Label="Tipo zona">
-        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioComercioView.TipoZona"/>
-    </FormItem>
     @*Solicitante datos*@
     <b><label>Datos de solicitante</label></b>
     <FormItem Label="Nombre del solicitante">
@@ -246,7 +243,6 @@
     protected override void OnInitialized()
     {
         salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
-        
     }
     protected override async Task OnInitializedAsync()
     {
@@ -286,7 +282,7 @@
             {
                 Vista.Data.Models.Salidas.Planillas.IncendioComercio salidaIncendioComercio = new()
                 {
-                    
+                    Tipo = salidaIncendioComercioView.Tipo,
                     Descripcion = salidaIncendioComercioView.Descripcion,
                     HoraSalida = salidaIncendioComercioView.HoraSalida,
                     HoraLlegada = salidaIncendioComercioView.HoraLLegada,

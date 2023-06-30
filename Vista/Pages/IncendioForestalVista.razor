@@ -162,7 +162,7 @@
     <FormItem Label="Detalles Surpeficie Afectada ">
         <Input @bind-Value="salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio" />
     </FormItem>
-    <FormItem Label="Tipo Techo">
+    @*<FormItem Label="Tipo Techo">
         <EnumSelect TEnum="TipoIncendioTecho" @bind-Value="@salidaIncendioForestalView.TipoTecho" />
         @if (salidaIncendioForestalView.TipoTecho == TipoIncendioTecho.Otro)
         {
@@ -179,7 +179,7 @@
                 <Input @bind-Value="@salidaIncendioForestalView.OtraAbertura" />
             </FormItem>
         }
-    </FormItem>
+    </FormItem>*@
     <b><label>Hubo deteccion automatica?</label></b>
     <br />
     <Checkbox @bind-Checked="salidaIncendioForestalView.DeteccionAutomaticaId"></Checkbox>
@@ -190,7 +190,7 @@
     <br />
     <Checkbox @bind-Checked="salidaIncendioForestalView.Hidrante"></Checkbox>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioForestal">
             Cargar salida
         </Button>
     </FormItem>
@@ -215,7 +215,6 @@
     protected override void OnInitialized()
     {
         salidaIncendioForestalView.Tipo = TipoIncendio.Forestal; // Establecer valor predeterminado
-
     }
     protected override async Task OnInitializedAsync()
     {
@@ -242,7 +241,7 @@
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
-    public async void SubirIncendioComercio()
+    public async void SubirIncendioForestal()
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioForestalView.LegajoReceptor).SingleOrDefaultAsync();
@@ -278,10 +277,6 @@
                         TipoSuperficieAfectada = salidaIncendioForestalView.TipoSuperficieAfectada,
                         DetalleSuperficieAfectadaIncendio = salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio,
                         SuperficieAfectadaCausa = salidaIncendioForestalView.SuperficieAfectadaCausa,
-                        TipoAbertura = salidaIncendioForestalView.TipoAbertura,
-                        OtraAbertura = salidaIncendioForestalView.OtraAbertura,
-                        TipoTecho = salidaIncendioForestalView.TipoTecho,
-                        OtroTecho = salidaIncendioForestalView.OtroTecho,
                         OtroLugar = salidaIncendioForestalView.OtroLugar,
                         QuienLleno = BomberoLlenoPlanilla,
                         ReceptorBombero = bomberoReceptor,

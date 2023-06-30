@@ -230,7 +230,6 @@ namespace Vista.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
-            
             modelBuilder
                 .Entity<Incendio>()
                 .Property(i => i.TipoEvacuacion)
