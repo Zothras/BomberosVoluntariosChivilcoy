@@ -7,10 +7,10 @@ namespace Vista.Data.ViewModels.Servicios
     {
         public TipoServicioRepresentacion TipoRepresentacion { get; set; }
         //Datos de la capacitacion
-        public TipoNivelCapacitacion? NivelCapacitacion { get; set; }
+        public string? NivelCapacitacion { get; set; }
         [StringLength(255)]
         public string? NivelCapacitacionOtro { get; set; }
-        public TipoCapacitacion? TipoCapacitacion { get; set; }
+        public string? TipoCapacitacion { get; set; }
         [StringLength(255)]
         public string? CapacitacionOtra { get; set; }
         [Required, StringLength(255)]

@@ -158,7 +158,7 @@
     </FormItem>
     
      <FormItem Label="Datos Capacitacion">
-        <Select @bind-Value="@_selectedValue"
+        <Select @bind-Value="@modelServiciosEspecialesRepresentacion.NivelCapacitacion"
             DefaultValue="@("Cuartel")"
 		    TItemValue="string"
             TItem="string"
@@ -180,13 +180,10 @@
          <FormItem Label="Otra">
             <Input @bind-Value="modelServiciosEspecialesRepresentacion.CapacitacionOtra" />
          </FormItem>
-    }else
-    {
-        CambiarValoesEnum();
     }
 
     <FormItem Label="Datos Capacitacion">
-        <Select @bind-Value="@_selectedValue1"
+        <Select @bind-Value="@modelServiciosEspecialesRepresentacion.TipoCapacitacion"
                 DefaultValue="@("Cuartel")"
                 TItemValue="string"
                 TItem="string"
@@ -209,10 +206,7 @@
             <Input @bind-Value="modelServiciosEspecialesRepresentacion.NivelCapacitacionOtro" />
         </FormItem>
     }
-    else
-    {
-        CambiarValoesEnum1();
-    }
+    
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarFactorClimatico">
@@ -223,14 +217,14 @@
 
 @code
 {
-    private void CambiarValoesEnum()
-    {
-        modelServiciosEspecialesRepresentacion.NivelCapacitacion= (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), _selectedValue);
-    }
-    private void CambiarValoesEnum1()
-    {
-        modelServiciosEspecialesRepresentacion.TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), _selectedValue1);
-    }
+    //private void CambiarValoesEnum()
+    //{
+    //    modelServiciosEspecialesRepresentacion.NivelCapacitacion= (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), _selectedValue);
+    //}
+    //private void CambiarValoesEnum1()
+    //{
+    //    modelServiciosEspecialesRepresentacion.TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), _selectedValue1);
+    //}
     string _selectedValue;
     string _selectedItem;
     string _selectedValue1;
@@ -302,9 +296,9 @@
                 //Carga Representacion
                 DatosCapacitacion= new()
                 {
-                    NivelCapacitacion = modelServiciosEspecialesRepresentacion.NivelCapacitacion,
+                    NivelCapacitacion = (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), modelServiciosEspecialesRepresentacion.NivelCapacitacion),
                     NivelCapacitacionOtro = modelServiciosEspecialesRepresentacion.NivelCapacitacionOtro,
-                    TipoCapacitacion = modelServiciosEspecialesRepresentacion.TipoCapacitacion,
+                    TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), modelServiciosEspecialesRepresentacion.TipoCapacitacion),
                     CapacitacionOtra = modelServiciosEspecialesRepresentacion.CapacitacionOtra,
                     DiasCapacitacion = modelServiciosEspecialesRepresentacion.DiasCapacitacion,
                     HorariosCapacitacion = modelServiciosEspecialesRepresentacion.HorariosCapacitacion
