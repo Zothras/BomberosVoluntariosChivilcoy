@@ -4,13 +4,31 @@
 
 <PageTitle> Bomberos Chivilcoy</PageTitle>
 <style>
-    .ant-menu-dark.ant-menu-inline .ant-menu-item
-    {
-        margin-left: 8px!important;
+    .ant-menu-vertical > .ant-menu-item, .ant-menu-vertical-left > .ant-menu-item, .ant-menu-vertical-right > .ant-menu-item, .ant-menu-inline > .ant-menu-item, .ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title{
+        width: 100%;
     }
-
     .ant-tooltip-content {
         display: none;
+    }
+    .ant-menu-item-selected{
+        background-color: rgb(62, 24, 24)!important;
+        width: 100%;    
+        /*margin-right: 8px!important;*/
+    }
+    .ant-menu-item{
+        padding-left: 32px!important;
+    }
+    .ant-menu-item a:hover{
+        color: rgb(62, 24, 24) !important;
+    }
+    .ant-menu-item-selected a{
+        color: rgb(230, 230, 230) !important;
+    }
+    .ant-menu-item-selected anticon{
+        color: rgb(230, 230, 230) !important;
+    }
+    a.nav-link::before{
+        margin-left: 8px !important;
     }
 </style>
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@

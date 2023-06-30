@@ -53,7 +53,7 @@
         <SpaceItem>
             <Card Title=@("Movil") Style="width: 300px;height: 30%;display: grid;">
                 <div style="width: 50%;">
-                    <label id="texto">Marca:</label>
+                    @*<label id="texto">Marca:</label>
                     <br>
                     <input id="estilo" type="text" @bind="movilView.Marca" />
                     <BSContainer id="blancoA">
@@ -73,10 +73,26 @@
                     </BSContainer>
                     <label id="texto">Foto:</label>
                     <br>
-                    <InputFile OnChange="SubirFoto" />
+                    <InputFile OnChange="SubirFoto" />*@
+                    <div>
+                        <label>Marca: </label>
+                        <InputText @bind-Value="movilView.Marca" />
+                    </div>
+                    <div>
+                        <label>Modelo: </label>
+                        <InputText @bind-Value="movilView.Modelo" />
+                    </div>
+                    <div>
+                        <label>Año: </label>
+                        <Input Type="number" @bind-Value="movilView.Año" />
+                    </div>
+                    <div>
+                        <label>Foto: </label>
+                        <InputFile OnChange="SubirFoto" />
+                    </div>
                 </div>
                 <div style="width: 50%;">
-                    <label id="texto">Patente:</label>
+                    @*<label id="texto">Patente:</label>
                     <br>
                     <input id="estilo" type="text" @bind="movilView.Patente" />
                     <BSContainer id="blancoA">
@@ -117,14 +133,46 @@
                         <option id="estilo" value="@TipoEstadoMovil.Inactivo">Inactivo</option>
                         <option id="estilo" value="@TipoEstadoMovil.Reparacion">Reparacion</option>
                         <option id="estilo" value="@TipoEstadoMovil.Limpieza">Limpieza</option>
-                    </select>
+                    </select>*@
+                    <div>
+                        <label>Patente: </label>
+                        <InputText @bind-Value="movilView.Patente" />
+                    </div>
+                    <div>
+                        <label>Tipo: </label>
+                        <InputText @bind-Value="movilView.Tipo" />
+                    </div>
+                    <div>
+                        <label>Nº movil: </label>
+                        <InputText @bind-Value="movilView.NumeroMovil" />
+                    </div>
+                    <div>
+                        <label>Nº motor: </label>
+                        <InputText @bind-Value="movilView.NumeroMotor" />
+                    </div>
+                    <div>
+                        <label>Modelo de bomba: </label>
+                        <InputText @bind-Value="movilView.ModeloBomba" />
+                    </div>
+                    <div>
+                        <label>Nº chasis: </label>
+                        <InputText @bind-Value="movilView.NumeroChasis" />
+                    </div>
+                    <div>
+                        <label>Estado: </label>
+                        <select @bind="movilView.Estado">
+                            <option value="@TipoEstadoMovil.Activo">Activo</option>
+                            <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
+                            <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
+                            <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
+                        </select>
+                    </div>
                 </div>
-                
             </Card>
         </SpaceItem>
         <SpaceItem>
             <Card Title=@("Seguro") Style="width: 300px;">
-                <label id="texto">Compañia:</label>
+                @*<label id="texto">Compañia:</label>
                 <br>
                 <input id="estilo" type="text" @bind="seguroView.CompañiaAseguradora" />
                 <BSContainer id="blancoA">
@@ -138,7 +186,19 @@
                 </BSContainer>
                 <label id="texto">Fecha de vencimiento:</label>
                 <br>
-                <input id="estilo" type="date" @bind="seguroView.FechaDeVencimiento" />
+                <input id="estilo" type="date" @bind="seguroView.FechaDeVencimiento" />*@
+                <div>
+                    <label>Compañia: </label>
+                    <InputText @bind-Value="seguroView.CompañiaAseguradora" />
+                </div>
+                <div>
+                    <label>Nº poliza: </label>
+                    <InputText @bind-Value="seguroView.NumeroDePoliza" />
+                </div>
+                <div>
+                    <label>Fecha de vencimiento: </label>
+                    <DatePicker @bind-Value="seguroView.FechaDeVencimiento" />
+                </div>
             </Card>
         </SpaceItem>
     </Space>
