@@ -75,7 +75,7 @@
                         <IconTemplate>
                             <i class="fa-solid fa-truck-droplet" style="color: #263040;"></i>
                         </IconTemplate>
-                        <ChildContent>
+                        <ChildContent>  
                             <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
                         </ChildContent>
                     </MenuItem>
@@ -88,16 +88,18 @@
                                 <Overlay>
                                     <Menu>
                                         <SubMenu Title=@("Incendios")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/incendios-comercio"); })">
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
                                                 <MenuItem>Comercio</MenuItem>
                                             </a>
                                             <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
                                                 <MenuItem>Forestal</MenuItem>
                                             </a>
-                                        
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
+                                                <MenuItem>Industrial</MenuItem>
+                                            </a>
                                         </SubMenu>
                                         <SubMenu Title=@("Factores climatiacos")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/factores-climaticos"); })">
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
                                                 <MenuItem>Factor1</MenuItem>
                                             </a>
                                             <MenuItem>Factor2</MenuItem>
@@ -106,23 +108,24 @@
                                             <MenuItem Title=@("Materiales peligrosos")></MenuItem>
                                         </a>
                                         <SubMenu Title=@("Servicios")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/servicios"); })">
-                                                <MenuItem>Servicio1</MenuItem>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
+                                                <MenuItem>Representacion</MenuItem>
                                             </a>
-                                            <MenuItem>Servicio2</MenuItem>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
+                                                <MenuItem>Prevencion</MenuItem>
+                                            </a>
                                         </SubMenu>
                                         <SubMenu Title=@("Accidentes")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/accidentes"); })">
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
                                                 <MenuItem>Tipo1</MenuItem>
                                             </a>
                                             <MenuItem>Tipo2</MenuItem>
                                         </SubMenu>
                                         <SubMenu Title=@("Rescates")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("salidas/rescates"); })">
-                                                <MenuItem>Ambulancia</MenuItem>
-                                            </a>
                                             <MenuItem>Animal</MenuItem>
-                                            <MenuItem>Persona</MenuItem>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescate-persona"); })">
+                                                <MenuItem>Persona</MenuItem>
+                                            </a>
                                         </SubMenu>
                                     </Menu>
                                 </Overlay>

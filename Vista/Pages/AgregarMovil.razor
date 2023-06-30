@@ -4,87 +4,39 @@
 @page "/moviles/agregar"
 @using AntDesign;
 <style>
-    #crear-movil{
-        background-color: #C43A3A;
-        color:white;
-        font-size:20px;
-        font-family: calibri light;
-        border: 0px;
-        border-radius: 8px;
+    input[type=text], input[type=number]{
+        border: none;
+        background: transparent;
+        border-bottom: 1px solid #333;
+        outline: none;
+        width: 60%;
+        padding: .5em;
     }
 
-    #blancoA {
-        width: 100%;
-        padding:15px;
-    }
-    #estilo{
-        border:1px;
-        border-radius:8px;
-        background-color: #AFAFAF;    
-    }
-    #texto{
-        font-size: 20px;
-        font-family: calibri light;
-        Font-Weight: bold;
-    }
-    #encabezado{
-        font-size: 30px;
-        font-family: calibri light;
-        Font-Weight: bold;
-    }
-    /*linea de progreso*/
-    .steps-content {
-        margin-top: 16px;
-        border: 1px dashed #e9e9e9;
-        border-radius: 6px;
-        background-color: #fafafa;
-        min-height: 200px;
-        text-align: center;
-        padding-top: 80px;
-    }
-
-    .steps-action {
-        margin-top: 24px;
-    }
+        input[type=text]:focus, input[type=number]:focus, input[type=file]:focus, input[type=date]:focus{
+            background: #D0D0D0;
+        }
 </style>
 @if (movilView is not null)
 {
-    <Space Direction="DirectionVHType.Vertical">
+    <Space Direction="DirectionVHType.Vertical" Style="#">
         <SpaceItem>
-            <Card Title=@("Movil") Style="width: 300px;height: 30%;display: grid;">
+            <Card Title=@("Movil") Style="width: 500px;height: 30%;display: grid;">
                 <div style="width: 50%;">
-                    @*<label id="texto">Marca:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.Marca" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Modelo:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.Modelo" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Año:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.Año" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Foto:</label>
-                    <br>
-                    <InputFile OnChange="SubirFoto" />*@
                     <div>
-                        <label>Marca: </label>
-                        <InputText @bind-Value="movilView.Marca" />
+                        <input type="text" @bind="movilView.Marca" placeholder="Marca: " />
                     </div>
                     <div>
-                        <label>Modelo: </label>
-                        <InputText @bind-Value="movilView.Modelo" />
+                        <input type="text" @bind="movilView.Modelo" placeholder="Modelo: " />
                     </div>
                     <div>
-                        <label>Año: </label>
-                        <Input Type="number" @bind-Value="movilView.Año" />
+                        <div>
+                            <label>Año:</label>
+                        </div>
+                        <input type="text" @bind="movilView.Año" />
+                    </div>
+                    <div>
+                        <input type="text" @bind="movilView.Patente" placeholder="Patente: " />
                     </div>
                     <div>
                         <label>Foto: </label>
@@ -92,75 +44,26 @@
                     </div>
                 </div>
                 <div style="width: 50%;">
-                    @*<label id="texto">Patente:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.Patente" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Tipo:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.Tipo" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Nº movil:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.NumeroMovil" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Nº motor:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.NumeroMotor" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Modelo de bomba:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.ModeloBomba" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <label id="texto">Nº chasis:</label>
-                    <br>
-                    <input id="estilo" type="text" @bind="movilView.NumeroChasis" />
-                    <BSContainer id="blancoA">
-
-                    </BSContainer>
-                    <select id="estilo" @bind="movilView.Estado">
-                        <option id="estilo" value="@TipoEstadoMovil.Activo">Activo</option>
-                        <option id="estilo" value="@TipoEstadoMovil.Inactivo">Inactivo</option>
-                        <option id="estilo" value="@TipoEstadoMovil.Reparacion">Reparacion</option>
-                        <option id="estilo" value="@TipoEstadoMovil.Limpieza">Limpieza</option>
-                    </select>*@
                     <div>
-                        <label>Patente: </label>
-                        <InputText @bind-Value="movilView.Patente" />
+                        <input type="text" @bind="movilView.Tipo" placeholder="Tipo: " />
                     </div>
                     <div>
-                        <label>Tipo: </label>
-                        <InputText @bind-Value="movilView.Tipo" />
+                        <input type="text" @bind="movilView.NumeroMovil" placeholder="Nº movil: " />
                     </div>
                     <div>
-                        <label>Nº movil: </label>
-                        <InputText @bind-Value="movilView.NumeroMovil" />
+                        <input type="text" @bind="movilView.NumeroMotor" placeholder="Nº motor: " />
                     </div>
                     <div>
-                        <label>Nº motor: </label>
-                        <InputText @bind-Value="movilView.NumeroMotor" />
+                        <input type="text" @bind="movilView.NumeroChasis" placeholder="Nº chasis: " />
                     </div>
                     <div>
-                        <label>Modelo de bomba: </label>
-                        <InputText @bind-Value="movilView.ModeloBomba" />
+                        <input type="text" @bind="movilView.ModeloBomba" placeholder="Modelo de bomba: " />
                     </div>
                     <div>
-                        <label>Nº chasis: </label>
-                        <InputText @bind-Value="movilView.NumeroChasis" />
-                    </div>
-                    <div>
-                        <label>Estado: </label>
-                        <select @bind="movilView.Estado">
+                        <div>
+                            <label>Estado: </label>
+                        </div>
+                        <select @bind="movilView.Estado" placeholder="Estado: ">
                             <option value="@TipoEstadoMovil.Activo">Activo</option>
                             <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
                             <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
@@ -172,37 +75,20 @@
         </SpaceItem>
         <SpaceItem>
             <Card Title=@("Seguro") Style="width: 300px;">
-                @*<label id="texto">Compañia:</label>
-                <br>
-                <input id="estilo" type="text" @bind="seguroView.CompañiaAseguradora" />
-                <BSContainer id="blancoA">
-
-                </BSContainer>
-                <label id="texto">Nº poliza:</label>
-                <br>
-                <input id="estilo" type="text" @bind="seguroView.NumeroDePoliza" />
-                <BSContainer id="blancoA">
-
-                </BSContainer>
-                <label id="texto">Fecha de vencimiento:</label>
-                <br>
-                <input id="estilo" type="date" @bind="seguroView.FechaDeVencimiento" />*@
                 <div>
-                    <label>Compañia: </label>
-                    <InputText @bind-Value="seguroView.CompañiaAseguradora" />
+                    <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder="Compañia: " />
                 </div>
                 <div>
-                    <label>Nº poliza: </label>
-                    <InputText @bind-Value="seguroView.NumeroDePoliza" />
+                    <input type="text" @bind="seguroView.NumeroDePoliza" placeholder="Nº poliza: " />
                 </div>
                 <div>
                     <label>Fecha de vencimiento: </label>
-                    <DatePicker @bind-Value="seguroView.FechaDeVencimiento" />
+                    <input type="date" @bind="seguroView.FechaDeVencimiento" />
                 </div>
             </Card>
         </SpaceItem>
     </Space>
-    <Button Type="@ButtonType.Primary" @onclick="SubirMovil">Crear Movil</Button>
+    <Button Type="@ButtonType.Primary" @onclick="SubirMovil" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Crear Movil</Button>
 }
 
 @code {
@@ -306,5 +192,6 @@
         }
 
         StateHasChanged();
+        navigationManager.NavigateTo("/moviles"); 
     }
 }

@@ -33,7 +33,7 @@
     </div>
     <div>
         <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
-            <Button Type="@ButtonType.Primary">Agregar Movil</Button>
+            <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar Movil</Button>
         </a>
     </div>
 </div>
@@ -79,7 +79,7 @@
         </div>
         //Hay que ver si se puede cambiar el contenido despues del delay
         @code {
-            RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center;" Spin />;
+            RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
         }
     }
 </div>
