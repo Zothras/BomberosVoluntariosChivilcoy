@@ -52,7 +52,7 @@
         <EnumSelect TEnum="TipoZona" @bind-Value="@modelServiciosEspecialesPrevencion.TipoZona" />
     </FormItem>
     @*Datos de damnificados*@
-    <FormItem Label="¿Ubo damnificados?">
+    <FormItem Label="¿Hubo damnificados?">
         <Switch @bind-Checked="switchValue" />
     </FormItem>
     @if (switchValue == true)
@@ -96,12 +96,14 @@
         <Input @bind-Value="@modelServiciosEspecialesPrevencion.TelefonoSolicitante" />
     </FormItem>
     @*Datos bomberos receptor*@
+    <b><label>Datos bomberos receptor</label></b>
     <FormItem Label="Numero legajo">
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.LegajoReceptor" />
     </FormItem>
 
 
     @*Datos Del seguro*@
+    <b><label>Seguro</label></b>
     <FormItem Label="Compania Aseguradora">
         <Input @bind-Value="@modelServiciosEspecialesPrevencion.CompaniaAseguradora" />
     </FormItem>
@@ -112,8 +114,8 @@
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesPrevencion.FechaVencimineto" />
     </FormItem>
     @*Moviles de salidas*@
-    @*a la hora de pedir el chofer y movil,*@
-    pedir dato unico para no cargar todo y buscarlo en la base de datos
+    @*a la hora de pedir el chofer y movil,
+    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
     <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
@@ -136,8 +138,12 @@
     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
+    <b><label></label></b>
     <br />
-    <b><label>Datos encargados</label></b>
+    <b><label>Se cargaron @MovilesSalidasL.Count  Cuerpos participantes</label></b>
+    <br />
+    <b><label>Encargado</label></b>
+    <br />
     <FormItem Label="Numero de legajo">
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.LegajoEncargado" />
     </FormItem>
@@ -146,22 +152,27 @@
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.LegajoLLenoPlanilla" />
     </FormItem>
     @*Tipo servicio*@
+    <br />
+    <b><label>Servisio salida</label></b>
+    <br />
     <FormItem Label="Tipo Servicio salida">
         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelServiciosEspecialesPrevencion.TipoServicio" />
     </FormItem>
 
-    @*propio de la salida de Factor Climatico*@
+    @*propio de la salida de Servicio representacion*@
 
-
-    <FormItem Label="Tipo Representacion">
-        <EnumSelect TEnum="TipoServicioPrevencion" @bind-Value="@modelServiciosEspecialesPrevencion.TipoPrevencion" />
+    <br />
+    <b><label>Servisio Representacion</label></b>
+    <br />
+    <FormItem Label="Tipo Organizacion Beneficiada">
+        <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@modelServiciosEspecialesPrevencion.TipoOrganizacion" />
     </FormItem>
-    <FormItem Label="Tipo Representacion">
-        <EnumSelect TEnum="TipoServiciosEspeciales" @bind-Value="@modelServiciosEspecialesPrevencion.Tipo" />
+    <FormItem Label="Tipo Prevencion">
+        <EnumSelect TEnum="TipoServicioPrevencion" @bind-Value="@modelServiciosEspecialesPrevencion.TipoPrevencion" />
     </FormItem>
 
     <FormItem Label="Datos Capacitacion">
-        <Select @bind-Value="@_selectedValue"
+        <Select @bind-Value="@modelServiciosEspecialesPrevencion.NivelCapacitacion"
                 DefaultValue="@("Cuartel")"
                 TItemValue="string"
                 TItem="string"
@@ -174,23 +185,20 @@
                 <SelectOption TItemValue="string" TItem="string" Value="@("Nacional")" Label="Nacional" />
                 <SelectOption TItemValue="string" TItem="string" Value="@("Internacional")" Label="Internacional" />
                 <SelectOption TItemValue="string" TItem="string" Value="@("Regional")" Label="Regional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Regional" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
             </SelectOptions>
         </Select>
     </FormItem>
-    @if (_selectedValue == "Otro")
+    @if (modelServiciosEspecialesPrevencion.NivelCapacitacion == "Otro")
     {
+        modelServiciosEspecialesPrevencion.NivelCapacitacion = null;
         <FormItem Label="Otra">
-            <Input @bind-Value="modelServiciosEspecialesPrevencion.CapacitacionOtra" />
+            <Input @bind-Value="modelServiciosEspecialesPrevencion.NivelCapacitacionOtro" />
         </FormItem>
     }
-    else
-    {
-        CambiarValoesEnum();
-    }
 
-    <FormItem Label="Datos Capacitacion">
-        <Select @bind-Value="@_selectedValue1"
+    <FormItem Label="Tipo Capacitacion">
+        <Select @bind-Value="@modelServiciosEspecialesPrevencion.TipoCapacitacion"
                 DefaultValue="@("Cuartel")"
                 TItemValue="string"
                 TItem="string"
@@ -198,25 +206,37 @@
                 OnSelectedItemChanged="@(item => _selectedItem1 = item)"
                 Style="width: 120px;">
             <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("Cuartel")" Label="Cuartel" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Federativa")" Label="Federativa" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Nacional")" Label="Nacional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Internacional")" Label="Internacional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Regional")" Label="Regional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Regional" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("RescateConCuerda")" Label="RescateConCuerda" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("RescateEnAltura")" Label="RescateEnAltura" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("ComandoDeIncidente")" Label="ComandoDeIncidente" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("EstructurasColapsadas")" Label="EstructurasColapsadas" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("IncendiosEstructurales")" Label="IncendiosEstructurales" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("IncendiosForestales")" Label="IncendiosForestales" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("MaterialesPeligrosos")" Label="MaterialesPeligrosos" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("PedagogiaYDidactiva")" Label="PedagogiaYDidactiva" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("RescateAcuatico")" Label="RescateAcuatico" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Socorrismo")" Label="Socorrismo" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("DepartamentoDeOperaciones")" Label="DepartamentoDeOperaciones" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("EscuelaDeCadetes")" Label="EscuelaDeCadetes" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("MaterialesPeligrosos")" Label="MaterialesPeligrosos" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("SeguridadDelBombero")" Label="SeguridadDelBombero" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
             </SelectOptions>
         </Select>
     </FormItem>
-    @if (_selectedValue == "Otro")
+    @if (modelServiciosEspecialesPrevencion.TipoCapacitacion == "Otro")
     {
+        modelServiciosEspecialesPrevencion.TipoCapacitacion= null;
         <FormItem Label="Otra">
-            <Input @bind-Value="modelServiciosEspecialesPrevencion.NivelCapacitacionOtro" />
+            <Input @bind-Value="modelServiciosEspecialesPrevencion.CapacitacionOtra" />
         </FormItem>
     }
-    else
-    {
-        CambiarValoesEnum1();
-    }
+    <FormItem Label="Dias capacitacion">
+        <Input @bind-Value="modelServiciosEspecialesPrevencion.DiasCapacitacion" />
+    </FormItem>
+    <FormItem Label="Horarios capacitacion">
+        <Input @bind-Value="modelServiciosEspecialesPrevencion.HorariosCapacitacion" />
+    </FormItem>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarFactorClimatico">
@@ -227,14 +247,14 @@
 
 @code
 {
-    private void CambiarValoesEnum()
-    {
-        modelServiciosEspecialesPrevencion.NivelCapacitacion = (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), _selectedValue);
-    }
-    private void CambiarValoesEnum1()
-    {
-        modelServiciosEspecialesPrevencion.TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), _selectedValue1);
-    }
+    //private void CambiarValoesEnum()
+    //{
+    //    modelServiciosEspecialesRepresentacion.NivelCapacitacion= (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), _selectedValue);
+    //}
+    //private void CambiarValoesEnum1()
+    //{
+    //    modelServiciosEspecialesRepresentacion.TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), _selectedValue1);
+    //}
     string _selectedValue;
     string _selectedItem;
     string _selectedValue1;
@@ -264,7 +284,7 @@
         Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == modelServiciosEspecialesPrevencion.LegajoEncargado).SingleOrDefaultAsync();
         Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == modelServiciosEspecialesPrevencion.LegajoLLenoPlanilla).SingleOrDefaultAsync();
 
-        Vista.Data.Models.Salidas.Planillas.ServicioEspecialPrevencion ServicioPrevencion = new()
+        Vista.Data.Models.Salidas.Planillas.ServicioEspecialPrevencion ServicioPrevenicion = new()
             {
 
                 NumeroParte = modelServiciosEspecialesPrevencion.NumeroParte,
@@ -284,9 +304,8 @@
                 ApellidoSolicitante = modelServiciosEspecialesPrevencion.ApellidoSolicitante,
                 DniSolicitante = modelServiciosEspecialesPrevencion.DniSolicitante,
                 TelefonoSolicitante = modelServiciosEspecialesPrevencion.TelefonoSolicitante,
-                TipoServicio = modelServiciosEspecialesPrevencion.TipoServicio,
 
-                Tipo = modelServiciosEspecialesPrevencion.Tipo,
+                TipoServicio = modelServiciosEspecialesPrevencion.TipoServicio,
                 //Organizacion beneficiada
                 TipoOrganizacion = modelServiciosEspecialesPrevencion.TipoOrganizacion,
                 //Tipo de representación
@@ -307,9 +326,9 @@
                 //Carga Representacion
                 DatosCapacitacion = new()
                 {
-                    NivelCapacitacion = modelServiciosEspecialesPrevencion.NivelCapacitacion,
+                    NivelCapacitacion = (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), modelServiciosEspecialesPrevencion.NivelCapacitacion),
                     NivelCapacitacionOtro = modelServiciosEspecialesPrevencion.NivelCapacitacionOtro,
-                    TipoCapacitacion = modelServiciosEspecialesPrevencion.TipoCapacitacion,
+                    TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), modelServiciosEspecialesPrevencion.TipoCapacitacion),
                     CapacitacionOtra = modelServiciosEspecialesPrevencion.CapacitacionOtra,
                     DiasCapacitacion = modelServiciosEspecialesPrevencion.DiasCapacitacion,
                     HorariosCapacitacion = modelServiciosEspecialesPrevencion.HorariosCapacitacion
@@ -326,7 +345,7 @@
                     Grado = bom.Grado,
                     Bombero = bomberoSalida
                 };
-            ServicioPrevencion.CuerpoParticipante.Add(BomSalida);
+            ServicioPrevenicion.CuerpoParticipante.Add(BomSalida);
         }
         foreach (MovilSalidaViewModels m in MovilesSalidasL)
         {
@@ -338,7 +357,7 @@
                     Chofer = bomberoChofer,
                     Movil = Movilsalida
                 };
-            ServicioPrevencion.Moviles.Add(movilS);
+            ServicioPrevenicion.Moviles.Add(movilS);
         }
         foreach (DamnificadoViewModels d in DamnificadosSalida)
         {
@@ -370,11 +389,11 @@
                         },
                     }
                 };
-            ServicioPrevencion.Damnificados.Add(damn);
+            ServicioPrevenicion.Damnificados.Add(damn);
 
 
         }
-        await db.ServicioEspecialPrevenciones.AddAsync(ServicioPrevencion);
+        await db.ServicioEspecialPrevenciones.AddAsync(ServicioPrevenicion);
         await db.SaveChangesAsync();
 
 
@@ -461,6 +480,10 @@
 
 
 }
+
+
+
+
 
 
 

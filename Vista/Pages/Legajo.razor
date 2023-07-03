@@ -1,6 +1,91 @@
 ﻿@page "/legajo"
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using System.Text.Json;
 <h3>Legajos</h3>
 
-@code {
+<Table DataSource="salidas" OnChange="OnChange" TItem="Salida">
+    <TitleTemplate>
+        <GridRow>
+            <GridCol Span="4">
+                <Title Level="3">Table Title</Title>
+            </GridCol>
+            <GridCol Span="8" Offset="12">
+                <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+            </GridCol>
+        </GridRow>
+    </TitleTemplate>
+    <ColumnDefinitions>
+        <PropertyColumn Property="c=>c.NumeroParte"
+                        DefaultSortOrder="@SortDirection.Descending"
+                        SorterCompare="@((a,b)=> a - b)" />
+        <PropertyColumn Property="c=>c.NumeroParte"
+                        DefaultSortOrder="@SortDirection.Descending"
+                        SorterCompare="@((a,b)=> a - b)" />
+        
+    </ColumnDefinitions>
+    
+</Table>
 
+@using AntDesign.TableModels;
+@using System.Text.Json;
+@code {
+    string searchString;
+    IEnumerable<Salida> dataSource;
+    ITable _table;
+    List<Salida>? salidas= new List<Salida>();
+
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    using var db = await DbFactory.CreateDbContextAsync();
+    //    Salida? salidas= await db.Sal
+    //}
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+
+        var salidas = db.Set<Salida>().ToList();
+        var discriminadores = new List<string>();
+
+        foreach (var entidad in salidas)
+        {
+            var entry = db.Entry(entidad);
+            var entityType = entry.Metadata;
+            var discriminatorProperty = entityType.FindDiscriminatorProperty();
+            var discriminatorValue = entry.CurrentValues[discriminatorProperty];
+
+            string discriminador = discriminatorValue?.ToString();
+            discriminadores.Add(discriminador);
+        }
+
+        StateHasChanged();
+    }
+
+    //public TableFilter<string>[] nameFilters = new TableFilter<string>[] {
+    //    new() { Text = "Joe", Value = "Joe" },
+    //    new() { Text = "Jim", Value = "Jim" },
+    //};
+
+    //public TableFilter<string>[] addressFilters = new TableFilter<string>[] {
+    //    new() { Text = "London", Value = "London" },
+    //    new() { Text = "New York", Value = "New York" },
+    //};
+
+    void OnChange(QueryModel<Salida> query)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(query));
+
+        //dataSource = query.ExecuteQuery(data.AsQueryable())
+        //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    void OnRowClick(RowData<Salida> row)
+    {
+        Console.WriteLine($"row {row.Data.SalidaId} was clicked");
+    }
 }

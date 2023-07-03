@@ -52,7 +52,7 @@
         <EnumSelect TEnum="TipoZona" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoZona" />
     </FormItem>
     @*Datos de damnificados*@
-    <FormItem Label="¿Ubo damnificados?">
+    <FormItem Label="¿Hubo damnificados?">
         <Switch @bind-Checked="switchValue" />
     </FormItem>
     @if (switchValue == true)
@@ -96,12 +96,14 @@
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.TelefonoSolicitante" />
     </FormItem>
     @*Datos bomberos receptor*@
+    <b><label>Datos bomberos receptor</label></b>
     <FormItem Label="Numero legajo">
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesRepresentacion.LegajoReceptor" />
     </FormItem>
 
 
     @*Datos Del seguro*@
+     <b><label>Seguro</label></b>
     <FormItem Label="Compania Aseguradora">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.CompaniaAseguradora" />
     </FormItem>
@@ -112,8 +114,8 @@
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesRepresentacion.FechaVencimineto" />
     </FormItem>
     @*Moviles de salidas*@
-    @*a la hora de pedir el chofer y movil,*@
-    pedir dato unico para no cargar todo y buscarlo en la base de datos
+    @*a la hora de pedir el chofer y movil,
+    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
     <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
@@ -136,8 +138,12 @@
     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
+    <b><label></label></b>
     <br />
-    <b><label>Datos encargados</label></b>
+    <b><label>Se cargaron @MovilesSalidasL.Count  Cuerpos participantes</label></b>
+    <br />
+    <b><label>Encargado</label></b>
+    <br />
     <FormItem Label="Numero de legajo">
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesRepresentacion.LegajoEncargado" />
     </FormItem>
@@ -146,13 +152,21 @@
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesRepresentacion.LegajoLLenoPlanilla" />
     </FormItem>
     @*Tipo servicio*@
+    <br />
+    <b><label>Servisio salida</label></b>
+    <br />
     <FormItem Label="Tipo Servicio salida">
         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoServicio" />
     </FormItem>
 
-    @*propio de la salida de Factor Climatico*@
+    @*propio de la salida de Servicio representacion*@
 
-
+     <br />
+    <b><label>Servisio Representacion</label></b>
+    <br />
+    <FormItem Label="Tipo Organizacion Beneficiada">
+        <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoOrganizacion" />
+    </FormItem>
     <FormItem Label="Tipo Representacion">
         <EnumSelect TEnum="TipoServicioRepresentacion" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoRepresentacion" />
     </FormItem>
@@ -171,18 +185,18 @@
                     <SelectOption TItemValue="string" TItem="string" Value="@("Nacional")" Label="Nacional" />
                     <SelectOption TItemValue="string" TItem="string" Value="@("Internacional")" Label="Internacional" />
                     <SelectOption TItemValue="string" TItem="string" Value="@("Regional")" Label="Regional" />
-                    <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Regional" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
 		    </SelectOptions>
         </Select> 
     </FormItem>
-    @if(_selectedValue== "Otro")
+    @if ( modelServiciosEspecialesRepresentacion.NivelCapacitacion == "Otro")
     {
          <FormItem Label="Otra">
-            <Input @bind-Value="modelServiciosEspecialesRepresentacion.CapacitacionOtra" />
+            <Input @bind-Value="modelServiciosEspecialesRepresentacion.NivelCapacitacionOtro" />
          </FormItem>
     }
 
-    <FormItem Label="Datos Capacitacion">
+    <FormItem Label="Tipo Capacitacion">
         <Select @bind-Value="@modelServiciosEspecialesRepresentacion.TipoCapacitacion"
                 DefaultValue="@("Cuartel")"
                 TItemValue="string"
@@ -191,22 +205,36 @@
                 OnSelectedItemChanged="@(item => _selectedItem1 = item)"
                 Style="width: 120px;">
             <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("Cuartel")" Label="Cuartel" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Federativa")" Label="Federativa" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Nacional")" Label="Nacional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Internacional")" Label="Internacional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Regional")" Label="Regional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Regional" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("RescateConCuerda")" Label="RescateConCuerda" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("RescateEnAltura")" Label="RescateEnAltura" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("ComandoDeIncidente")" Label="ComandoDeIncidente" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("EstructurasColapsadas")" Label="EstructurasColapsadas" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("IncendiosEstructurales")" Label="IncendiosEstructurales" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("IncendiosForestales")" Label="IncendiosForestales" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("MaterialesPeligrosos")" Label="MaterialesPeligrosos" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("PedagogiaYDidactiva")" Label="PedagogiaYDidactiva" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("RescateAcuatico")" Label="RescateAcuatico" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Socorrismo")" Label="Socorrismo" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("DepartamentoDeOperaciones")" Label="DepartamentoDeOperaciones" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("EscuelaDeCadetes")" Label="EscuelaDeCadetes" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("MaterialesPeligrosos")" Label="MaterialesPeligrosos" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("SeguridadDelBombero")" Label="SeguridadDelBombero" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
             </SelectOptions>
         </Select>
     </FormItem>
-    @if (_selectedValue == "Otro")
+    @if (modelServiciosEspecialesRepresentacion.TipoCapacitacion == "Otro")
     {
         <FormItem Label="Otra">
-            <Input @bind-Value="modelServiciosEspecialesRepresentacion.NivelCapacitacionOtro" />
+            <Input @bind-Value="modelServiciosEspecialesRepresentacion.CapacitacionOtra" />
         </FormItem>
     }
-    
+    <FormItem Label="Dias capacitacion">
+         <Input @bind-Value="modelServiciosEspecialesRepresentacion.DiasCapacitacion" />
+    </FormItem>
+    <FormItem Label="Horarios capacitacion">
+         <Input @bind-Value="modelServiciosEspecialesRepresentacion.HorariosCapacitacion" />
+    </FormItem>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarFactorClimatico">
