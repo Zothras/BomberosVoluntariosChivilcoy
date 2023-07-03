@@ -2,7 +2,7 @@
 @inject IconService iconService
 @inject NavigationManager navigationManager
 
-<PageTitle> Bomberos Chivilcoy</PageTitle>
+<PageTitle>Bomberos Chivilcoy</PageTitle>
 <style>
     .ant-menu-vertical > .ant-menu-item, .ant-menu-vertical-left > .ant-menu-item, .ant-menu-vertical-right > .ant-menu-item, .ant-menu-inline > .ant-menu-item, .ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title{
         width: 100%;
@@ -13,7 +13,6 @@
     .ant-menu-item-selected{
         background-color: rgb(62, 24, 24)!important;
         width: 100%;    
-        /*margin-right: 8px!important;*/
     }
     .ant-menu-item{
         padding-left: 32px!important;
@@ -30,6 +29,15 @@
     a.nav-link::before{
         margin-left: 8px !important;
     }
+
+    .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+        display: flex!important;
+    }
+
+    .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected .icoSelected{
+        color: rgb(223, 223, 223) !important;
+    }
+    
 </style>
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
@@ -57,7 +65,7 @@
                     InlineCollapsed=collapsed>
                     <MenuItem Key="0">
                         <IconTemplate>
-                            <i class="fa-solid fa-user" style="color: #263040;"></i>
+                            <i class="fa-solid fa-user icoSelected" style="color: #263040;"></i>
                         </IconTemplate>
                         <ChildContent>
                             <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
@@ -65,7 +73,7 @@
                     </MenuItem>
                     <MenuItem Key="2" Icon="desktop">
                         <IconTemplate>
-                            <i class="fa-solid fa-users" style="color: #263040;"></i>
+                            <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
                         </IconTemplate>
                         <ChildContent>
                             <li class="nav-item"><a class="nav-link" href="bomberos">Bomberos</a></li>
@@ -73,7 +81,7 @@
                     </MenuItem>
                     <MenuItem Key="3" Icon="container">
                         <IconTemplate>
-                            <i class="fa-solid fa-truck-droplet" style="color: #263040;"></i>
+                            <i class="fa-solid fa-truck-droplet icoSelected" style="color: #263040;"></i>
                         </IconTemplate>
                         <ChildContent>  
                             <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
@@ -81,7 +89,7 @@
                     </MenuItem>
                     <MenuItem Key="1" Icon="pie-chart">
                         <IconTemplate>
-                            <i class="fa-solid fa-fire-extinguisher" style="color: #263040;"></i>
+                            <i class="fa-solid fa-fire-extinguisher icoSelected" style="color: #263040;"></i>
                         </IconTemplate>
                         <ChildContent>
                             <Dropdown>
@@ -97,18 +105,30 @@
                                             <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
                                                 <MenuItem>Industrial</MenuItem>
                                             </a>
-                                        </SubMenu>
-                                        <SubMenu Title=@("Factores climatiacos")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
-                                                <MenuItem>Factor1</MenuItem>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
+                                                <MenuItem>Vehiculares</MenuItem>
                                             </a>
-                                            <MenuItem>Factor2</MenuItem>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
+                                                <MenuItem>Establecimiento educativo</MenuItem>
+                                            </a>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
+                                                <MenuItem>Hospitales / Clinicas</MenuItem>
+                                            </a>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
+                                                <MenuItem>Establecimiento publico</MenuItem>
+                                            </a>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
+                                                <MenuItem>Vivienda</MenuItem>
+                                            </a>
                                         </SubMenu>
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                                            <MenuItem Title=@("Factores climaticos")></MenuItem>
+                                        </a>
                                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
                                             <MenuItem Title=@("Materiales peligrosos")></MenuItem>
                                         </a>
                                         <SubMenu Title=@("Servicios")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
                                                 <MenuItem>Representacion</MenuItem>
                                             </a>
                                             <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
