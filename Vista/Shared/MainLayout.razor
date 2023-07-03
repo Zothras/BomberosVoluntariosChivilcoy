@@ -115,15 +115,14 @@
                                                 <MenuItem>Prevencion</MenuItem>
                                             </a>
                                         </SubMenu>
-                                        <SubMenu Title=@("Accidentes")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
-                                                <MenuItem>Tipo1</MenuItem>
-                                            </a>
-                                            <MenuItem>Tipo2</MenuItem>
-                                        </SubMenu>
+                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
+                                            <MenuItem Title=@("Accidentes")></MenuItem>
+                                        </a>
                                         <SubMenu Title=@("Rescates")>
-                                            <MenuItem>Animal</MenuItem>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescate-persona"); })">
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
+                                                <MenuItem>Animal</MenuItem>
+                                            </a>
+                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
                                                 <MenuItem>Persona</MenuItem>
                                             </a>
                                         </SubMenu>
