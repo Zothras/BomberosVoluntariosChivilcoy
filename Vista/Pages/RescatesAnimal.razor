@@ -96,42 +96,6 @@
         </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
     }
-    @*Datos de Vehiculos  damnificados*@
-    <FormItem Label="¿Ubo vehiculos damnificados?">
-        <Switch @bind-Checked="switchValuev" />
-    </FormItem>
-    @if (switchValuev == true)
-    {
-        <FormItem Label="Marca">
-            <Input @bind-Value="@vehiculo.Marca" />
-        </FormItem>
-        <FormItem Label="Modelo">
-            <Input @bind-Value="@vehiculo.Modelo" />
-        </FormItem>
-        <FormItem Label="Año">
-            <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
-        </FormItem>
-        <FormItem Label="Patente">
-            <Input @bind-Value="@vehiculo.Patente" />
-        </FormItem>
-        <FormItem Label="tipo">
-            <Input @bind-Value="@vehiculo.Tipo" />
-        </FormItem>
-        <FormItem Label="Color">
-            <Input @bind-Value="@vehiculo.Color" />
-        </FormItem>
-        <FormItem Label="Compania Aseguradora">
-            <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
-        </FormItem>
-        <FormItem Label="NumeroPoliza">
-            <Input @bind-Value="@vehiculo.NumeroDePoliza" />
-        </FormItem>
-        <FormItem Label="FechaVencimineto">
-            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
-            <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
-        </FormItem>
-        <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
-    }
     @*Datos Del seguro*@
     <FormItem Label="Compania Aseguradora">
         <Input @bind-Value="@AnimalViewModel.CompaniaAseguradora" />
@@ -197,7 +161,6 @@
     private RescateAnimaViewModels AnimalViewModel = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    private VehiculoDamnificadoViewModels vehiculo = new();
     public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();

@@ -190,7 +190,14 @@
     </FormItem>
     <FormItem Label="Tipo Servicio salida">
         <EnumSelect TEnum="TipoCondicionesClimaticas" @bind-Value="@accidenteViewModels.CondicionesClimaticas" />
+         @if (accidenteViewModels.CondicionesClimaticas == TipoCondicionesClimaticas.Otro)
+        {
+            <FormItem Label="Otro Abertura">
+                <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
+            </FormItem>
+        }
     </FormItem>
+   
     <FormItem Label="Otra condicion">
         <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
     </FormItem>
