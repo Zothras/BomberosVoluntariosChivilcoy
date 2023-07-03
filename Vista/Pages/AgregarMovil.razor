@@ -4,82 +4,113 @@
 @page "/moviles/agregar"
 @using AntDesign;
 <style>
+    .inpt-container{
+        position: relative;
+        padding: .8em 0;
+    }
     input[type=text], input[type=number]{
         border: none;
-        background: transparent;
-        border-bottom: 1px solid #333;
+        background: none;
+        border-bottom: 1px solid #bdb8b8;
         outline: none;
-        width: 60%;
-        padding: .5em;
+        padding: 1em;
+        width: 80%;
+        height: .6em;
+    }
+    .inpt-label{
+        position: absolute;
+        top: 0;
+        left: 5px;
+        transform: translateY(10px);
+        color: #bdb8b8;
+        transition: transform .5s, color .3s;
+    }
+    input[type=text]:focus, input[type=number]:focus, input[type=file]:focus, input[type=date]:focus{
+        border-bottom: 1px solid rgb(62, 24, 24);
+        transition: 1s;
     }
 
-        input[type=text]:focus, input[type=number]:focus, input[type=file]:focus, input[type=date]:focus{
-            background: #D0D0D0;
-        }
+    input[type = text]:focus + .inpt-label, input[type = text]:not(:placeholder-shown) + .inpt-label{
+        transform: translateY(-4px) scale(.9);
+        transform-origin: left top;
+        color: rgb(62, 24, 24);
+    }
 </style>
 @if (movilView is not null)
 {
-    <Space Direction="DirectionVHType.Vertical" Style="#">
+
+    <Space Direction="DirectionVHType.Vertical" Style="width: 50%;">
         <SpaceItem>
-            <Card Title=@("Movil") Style="width: 500px;height: 30%;display: grid;">
-                <div style="width: 50%;">
-                    <div>
-                        <input type="text" @bind="movilView.Marca" placeholder="Marca: " />
-                    </div>
-                    <div>
-                        <input type="text" @bind="movilView.Modelo" placeholder="Modelo: " />
-                    </div>
-                    <div>
-                        <div>
-                            <label>Año:</label>
+            <Card Title=@("Movil") Style="width: 100%;height: 80%;">
+                <div style="display: flex;gap: 20px;">
+                    <div style="width: 50%;">
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Marca" placeholder=" "/>
+                            <label class="inpt-label">Marca:</label>
                         </div>
-                        <input type="text" @bind="movilView.Año" />
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Modelo" placeholder=" "/>
+                            <label class="inpt-label">Modelo:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Año" placeholder=" "/>
+                            <label class="inpt-label">Año:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Patente" placeholder=" "/>
+                            <label class="inpt-label">Patente:</label>
+                        </div>
+                        <div>
+                            <div>Foto: </div>
+                            <InputFile OnChange="SubirFoto" />
+                        </div>
                     </div>
-                    <div>
-                        <input type="text" @bind="movilView.Patente" placeholder="Patente: " />
-                    </div>
-                    <div>
-                        <label>Foto: </label>
-                        <InputFile OnChange="SubirFoto" />
+                    <div style="width: 50%;">
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Tipo" placeholder=" "/>
+                            <label class="inpt-label">Tipo:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.NumeroMovil" placeholder=" "/>
+                            <label class="inpt-label">Nº movil:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.NumeroMotor" placeholder=" "/>
+                            <label class="inpt-label">Nº motor:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.NumeroChasis" placeholder=" "/>
+                            <label class="inpt-label">Nº chasis:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.ModeloBomba" placeholder=" "/>
+                            <label class="inpt-label">Modelo de bomba:</label>
+                        </div>
+                        <div >
+                            <div>
+                                <label>Estado: </label>
+                            </div>
+                            <select @bind="movilView.Estado">
+                                <option value="@TipoEstadoMovil.Activo">Activo</option>
+                                <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
+                                <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
+                                <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div style="width: 50%;">
-                    <div>
-                        <input type="text" @bind="movilView.Tipo" placeholder="Tipo: " />
-                    </div>
-                    <div>
-                        <input type="text" @bind="movilView.NumeroMovil" placeholder="Nº movil: " />
-                    </div>
-                    <div>
-                        <input type="text" @bind="movilView.NumeroMotor" placeholder="Nº motor: " />
-                    </div>
-                    <div>
-                        <input type="text" @bind="movilView.NumeroChasis" placeholder="Nº chasis: " />
-                    </div>
-                    <div>
-                        <input type="text" @bind="movilView.ModeloBomba" placeholder="Modelo de bomba: " />
-                    </div>
-                    <div>
-                        <div>
-                            <label>Estado: </label>
-                        </div>
-                        <select @bind="movilView.Estado" placeholder="Estado: ">
-                            <option value="@TipoEstadoMovil.Activo">Activo</option>
-                            <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
-                            <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
-                            <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
-                        </select>
-                    </div>
-                </div>
+               
             </Card>
         </SpaceItem>
         <SpaceItem>
             <Card Title=@("Seguro") Style="width: 300px;">
-                <div>
-                    <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder="Compañia: " />
+                <div class="inpt-container">
+                    <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder=" "/>
+                    <label class="inpt-label">Compañia:</label>
                 </div>
-                <div>
-                    <input type="text" @bind="seguroView.NumeroDePoliza" placeholder="Nº poliza: " />
+                <div class="inpt-container">
+                    <input type="text" @bind="seguroView.NumeroDePoliza" placeholder=" "/>
+                    <label class="inpt-label">Nº poliza:</label>
                 </div>
                 <div>
                     <label>Fecha de vencimiento: </label>
