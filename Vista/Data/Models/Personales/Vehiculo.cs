@@ -11,7 +11,7 @@ namespace Vista.Data.Models.Personales
         public string Marca { get; set; }
         [Required, StringLength(255)]
         public string Modelo { get; set; }
-        public int Año { get; set; }
+        public int? Año { get; set; }
         [Required, StringLength(255)]
         public string Patente { get; set; }
         [Required, StringLength(255)]
