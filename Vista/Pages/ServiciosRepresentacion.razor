@@ -101,18 +101,6 @@
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesRepresentacion.LegajoReceptor" />
     </FormItem>
 
-
-    @*Datos Del seguro*@
-     <b><label>Seguro</label></b>
-    <FormItem Label="Compania Aseguradora">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.CompaniaAseguradora" />
-    </FormItem>
-    <FormItem Label="NumeroPoliza">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NumeroPoliza" />
-    </FormItem>
-    <FormItem Label="FechaVencimineto">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesRepresentacion.FechaVencimineto" />
-    </FormItem>
     @*Moviles de salidas*@
     @*a la hora de pedir el chofer y movil,
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@

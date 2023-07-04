@@ -96,16 +96,6 @@
         </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
     }
-    @*Datos Del seguro*@
-    <FormItem Label="Compania Aseguradora">
-        <Input @bind-Value="@AnimalViewModel.CompaniaAseguradora" />
-    </FormItem>
-    <FormItem Label="NumeroPoliza">
-        <Input @bind-Value="@AnimalViewModel.NumeroPoliza" />
-    </FormItem>
-    <FormItem Label="FechaVencimineto">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@AnimalViewModel.FechaVencimineto" />
-    </FormItem>
     @*Moviles de salidas*@
     @*a la hora de pedir el chofer y movil,
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@

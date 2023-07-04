@@ -59,6 +59,30 @@
     <FormItem Label="Telefono  del solicitante">
         <Input @bind-Value="@incendioEducativoModel.TelefonoSolicitante" />
     </FormItem>
+    <div>
+        <div>
+            <b>
+                <FormItem Label="¿Tiene seguro el lugar?">
+                    <Switch @bind-Checked="switchValueS" />
+                </FormItem>
+            </b>
+        </div>
+        <div>
+            @if (switchValueS == true)
+            {
+                <b><label>Seguro del lugar afectado</label></b>
+                <FormItem Label="Compania Aseguradora">
+                    <Input @bind-Value="@incendioEducativoModel.CompaniaAseguradora" />
+                </FormItem>
+                <FormItem Label="NumeroPoliza">
+                    <Input @bind-Value="@incendioEducativoModel.NumeroPoliza" />
+                </FormItem>
+                <FormItem Label="FechaVencimineto">
+                    <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@incendioEducativoModel.FechaVencimineto" />
+                </FormItem>
+            }
+        </div>
+    </div>
     @*Datos de damnificados*@
     <FormItem Label="¿Ubo damnificados?">
         <Switch @bind-Checked="switchValue" />
@@ -104,17 +128,7 @@
         <Input @bind-Value="movilSalidaViewModels.NumeroMovil" />
     </FormItem>
     <br />
-    @*Datos Del seguro Movil*@
-    <FormItem Label="Compania Aseguradora">
-        <Input @bind-Value="@incendioEducativoModel.CompaniaAseguradora" />
-    </FormItem>
-    <FormItem Label="NumeroPoliza">
-        <Input @bind-Value="@incendioEducativoModel.NumeroPoliza" />
-    </FormItem>
-    <FormItem Label="FechaVencimineto">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@incendioEducativoModel.FechaVencimineto" />
-    </FormItem>
-    <Button>Cargar Movil salida</Button>
+    <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <br />
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
@@ -237,7 +251,7 @@
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
     bool switchValue { get; set; }
-    bool switchValuev { get; set; }
+    bool switchValueS { get; set; }
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }

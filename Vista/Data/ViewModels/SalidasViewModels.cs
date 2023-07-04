@@ -40,9 +40,9 @@ namespace Vista.Data.ViewModels
         public List<Damnificado> Damnificados { get; set; }
 
         //datos del seguro 
-        public string CompaniaAseguradora { get; set; }
-        public string NumeroPoliza { get; set; }
-        public DateTime FechaVencimineto { get; set; }
+        public string? CompaniaAseguradora { get; set; }
+        public string? NumeroPoliza { get; set; }
+        public DateTime? FechaVencimineto { get; set; }
 
         public List<MovilSalida> Moviles { get; set; }
         public List<BomberoSalida> CuerpoParticipante { get; set; }

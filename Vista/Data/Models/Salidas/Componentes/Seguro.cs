@@ -8,9 +8,9 @@ namespace Vista.Data.Models.Salidas.Componentes
     {
         public int SeguroId { get; set; }
         [Required, StringLength(255)]
-        public string CompañiaAseguradora { get; set; }
+        public string? CompañiaAseguradora { get; set; }
         [Required, StringLength(255)]
-        public string NumeroDePoliza { get; set; }
-        public DateTime FechaDeVencimineto { get; set; }
+        public string? NumeroDePoliza { get; set; }
+        public DateTime? FechaDeVencimineto { get; set; }
     }
 }

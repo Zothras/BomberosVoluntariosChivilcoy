@@ -68,7 +68,7 @@
     </FormItem>
 
     @*Datos de damnificados*@
-    <FormItem Label="¿Ubo damnificados?">
+    <FormItem Label="¿Hubo damnificados?">
         <Switch @bind-Checked="switchValue" />
     </FormItem>
     @if (switchValue == true)
@@ -133,16 +133,6 @@
         </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
     }
-    @*Datos Del seguro*@
-    <FormItem Label="Compania Aseguradora">
-        <Input @bind-Value="@accidenteViewModels.CompaniaAseguradora" />
-    </FormItem>
-    <FormItem Label="NumeroPoliza">
-        <Input @bind-Value="@accidenteViewModels.NumeroPoliza" />
-    </FormItem>
-    <FormItem Label="FechaVencimineto">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.FechaVencimineto" />
-    </FormItem>
     @*Moviles de salidas*@
     @*a la hora de pedir el chofer y movil,
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@

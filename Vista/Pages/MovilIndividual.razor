@@ -130,18 +130,10 @@ else if (!existe)
         [Required, StringLength(255)]
         public string Nombre { get; set; }
     }
-    public class SeguroViewModel
-    {
-        [Required, StringLength(255)]
-        public string CompañiaAseguradora { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroDePoliza { get; set; }
-        public DateTime FechaDeVencimiento { get; set; }
-    }
+
 
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
-    public SeguroViewModel seguroView { get; set; } = new();
     public bool existe;
 
 
@@ -170,16 +162,6 @@ else if (!existe)
                     movilView.EncargadoNombre = $"{b.Bombero.Nombre} {b.Bombero.Apellido}";
                 }
             }
-
-            SeguroVehiculo? seguro = await db.SeguroVehiculos.Where(s => s.SeguroId == movil.SeguroId).SingleOrDefaultAsync();
-
-            if (seguro is not null)
-            {
-                seguroView.CompañiaAseguradora = seguro.CompañiaAseguradora;
-                seguroView.NumeroDePoliza = seguro.NumeroDePoliza;
-                seguroView.FechaDeVencimiento = seguro.FechaDeVencimineto;
-            }
-
             ImagenMovil? imagen = await db.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
 
             if (imagen is not null)
