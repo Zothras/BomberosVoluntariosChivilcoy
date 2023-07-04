@@ -7,11 +7,11 @@
 @using System.Text.Json;
 <h3>Legajos</h3>
 
-<Table DataSource="salidas" OnChange="OnChange" TItem="Salida">
+<Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel">
     <TitleTemplate>
         <GridRow>
             <GridCol Span="4">
-                <Title Level="3">Table Title</Title>
+                <Title Level="3">Registro Salidas</Title>
             </GridCol>
             <GridCol Span="8" Offset="12">
                 <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
@@ -19,13 +19,19 @@
         </GridRow>
     </TitleTemplate>
     <ColumnDefinitions>
-        <PropertyColumn Property="c=>c.NumeroParte"
+        <PropertyColumn Title="N° Parte" Property="c=>c.NumeroParte"
                         DefaultSortOrder="@SortDirection.Descending"
                         SorterCompare="@((a,b)=> a - b)" />
-        <PropertyColumn Property="c=>c.NumeroParte"
+        <PropertyColumn Title="Direccion" Property="c=>c.EntreCalles"
                         DefaultSortOrder="@SortDirection.Descending"
-                        SorterCompare="@((a,b)=> a - b)" />
-        
+                         />
+         <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+        <PropertyColumn Title="Tipo Salida" Property="c=>c.Discriminador"
+                        SortDirections="new[] { SortDirection.Descending }"
+                        Filters="DiscriminadorFilter"
+                        OnFilter="((value,name)=>Enum.GetName(typeof(TipoSalida), name).StartsWith(Enum.GetName(typeof(TipoSalida), value)))" />
+                        
+        @*<Column Title="Salidas" @bind-Field="@discriminadores" Sortable />*@
     </ColumnDefinitions>
     
 </Table>
@@ -36,22 +42,19 @@
     string searchString;
     IEnumerable<Salida> dataSource;
     ITable _table;
-    List<Salida>? salidas= new List<Salida>();
+    List<SalidasViewModel>? salidasViewModel = new List<SalidasViewModel>();
+    List<string> discriminadores = new List<string>();
+    private TableFilter<TipoSalida>[] DiscriminadorFilter;
 
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    using var db = await DbFactory.CreateDbContextAsync();
-    //    Salida? salidas= await db.Sal
-    //}
+
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
+        List<Salida>? salidas = db.Set<Salida>().ToList();
 
-        var salidas = db.Set<Salida>().ToList();
-        var discriminadores = new List<string>();
-
+        
         foreach (var entidad in salidas)
         {
             var entry = db.Entry(entidad);
@@ -62,21 +65,21 @@
             string discriminador = discriminatorValue?.ToString();
             discriminadores.Add(discriminador);
         }
+        GetSalidasViewModel(salidas);
 
+        DiscriminadorFilter = new TableFilter<TipoSalida>[Enum.GetValues(typeof(TipoSalida)).Length];
+        int i = 0;
+        foreach (TipoSalida value in Enum.GetValues(typeof(TipoSalida)))
+        {
+            DiscriminadorFilter[i] = new() { Text = Enum.GetName(typeof(TipoSalida), value), Value = value };
+            i++;
+        }
         StateHasChanged();
     }
 
-    //public TableFilter<string>[] nameFilters = new TableFilter<string>[] {
-    //    new() { Text = "Joe", Value = "Joe" },
-    //    new() { Text = "Jim", Value = "Jim" },
-    //};
 
-    //public TableFilter<string>[] addressFilters = new TableFilter<string>[] {
-    //    new() { Text = "London", Value = "London" },
-    //    new() { Text = "New York", Value = "New York" },
-    //};
 
-    void OnChange(QueryModel<Salida> query)
+    void OnChange(QueryModel<SalidasViewModel> query)
     {
         Console.WriteLine(JsonSerializer.Serialize(query));
 
@@ -84,8 +87,110 @@
         //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
     }
 
-    void OnRowClick(RowData<Salida> row)
+    void OnRowClick(RowData<SalidasViewModel> row)
     {
         Console.WriteLine($"row {row.Data.SalidaId} was clicked");
     }
+}
+@code{
+    private class SalidasViewModel : Salida
+    {
+        public int SalidaId { get; set; }
+        public DateTime HoraSalida { get; set; }
+        public DateTime HoraLlegada { get; set; }
+        public int KmSalida { get; set; }
+        public int KmLlegada { get; set; }
+        public int NumeroParte { get; set; }
+
+        public string Descripcion { get; set; }
+
+        public string CalleORuta { get; set; }
+
+        public string NumeroOKilometro { get; set; }
+
+        public string? EntreCalles { get; set; }
+
+        public string? PisoNumero { get; set; }
+
+        public string? Depto { get; set; }
+        public TipoZona TipoZona { get; set; }
+
+        public string NombreSolicitante { get; set; }
+        public string ApellidoSolicitante { get; set; }
+        public string DniSolicitante { get; set; }
+        public string TelefonoSolicitante { get; set; }
+
+        public string? Receptor { get; set; }
+
+        public int? ReceptorId { get; set; }
+
+
+        public Bombero? ReceptorBombero { get; set; }
+
+        //Si hay damnificados, entonces hay intervinientes
+        public List<Damnificado> Damnificados { get; set; }
+
+        public int? SeguroId { get; set; }
+        public SeguroSalida? Seguro { get; set; }
+
+        //relaciones con bomberos y moviles
+        public List<MovilSalida> Moviles { get; set; }
+
+        public List<BomberoSalida> CuerpoParticipante { get; set; }
+
+        public int EncargadoId { get; set; }
+        public Bombero Encargado { get; set; }
+
+        public int QuienLlenoId { get; set; }
+        public Bombero QuienLleno { get; set; }
+        public TipoServicioSalida TipoServicio { get; set; }
+        public TipoSalida Discriminador { get; set; }
+    }
+    private async void  GetSalidasViewModel(List<Salida> salidas)
+    {
+
+        List<SalidasViewModel>? salidasViewModelCarga = new List<SalidasViewModel>();
+        int contador = 0;
+
+        foreach (Salida s in salidas)
+        {
+            SalidasViewModel NuevaSalidaVM = new SalidasViewModel()
+            {
+                    SalidaId = s.SalidaId,
+                    HoraSalida= s.HoraSalida,
+                    HoraLlegada = s.HoraLlegada,
+                    KmSalida= s.KmSalida,
+                    KmLlegada=s.KmLlegada,
+                    NumeroParte= s.NumeroParte,
+                    Descripcion=s.Descripcion,
+                    CalleORuta=s.CalleORuta,
+                    NumeroOKilometro=s.NumeroOKilometro,
+                    EntreCalles= s.EntreCalles,
+                    PisoNumero= s.PisoNumero,
+                    Depto=s.Depto,
+                    TipoZona=s.TipoZona,
+                    NombreSolicitante= s.NombreSolicitante,
+                    ApellidoSolicitante= s.ApellidoSolicitante,
+                    DniSolicitante=s.DniSolicitante,
+                    TelefonoSolicitante= s.TelefonoSolicitante,
+                    Receptor= s.Receptor,
+                    ReceptorId=s.ReceptorId,
+                    ReceptorBombero=s.ReceptorBombero,
+                    Damnificados=s.Damnificados,
+                    Seguro=s.Seguro,
+                    Moviles=s.Moviles,
+                    CuerpoParticipante=s.CuerpoParticipante,
+                    EncargadoId=s.EncargadoId,
+                    QuienLleno=s.QuienLleno,
+                    QuienLlenoId=s.QuienLlenoId,
+                    TipoServicio=s.TipoServicio,
+                    Discriminador = (TipoSalida)int.Parse(discriminadores[contador])
+            };
+            salidasViewModel.Add(NuevaSalidaVM);
+            contador++;
+        }
+        
+        
+    }
+
 }
