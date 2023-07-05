@@ -1,4 +1,5 @@
 ﻿using Vista.Data.Enums;
+using Vista.Data.Migrations;
 
 namespace Vista.Data.ViewModels.Personal
 {
@@ -9,6 +10,14 @@ namespace Vista.Data.ViewModels.Personal
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public int NumeroLegajo { get; set; }
+        public string NombreYApellido
+        {
+            get 
+            {
+                return Nombre + "" + Apellido;
+            }
+        }
+
 
     }
 }
