@@ -9,7 +9,7 @@
     }
 
     .botonCarta {
-        width: 100%;
+        width: 33.3%;
         outline: none;
         box-shadow: none;
         border-bottom-color: #fff !important;
@@ -59,10 +59,10 @@
                         <Button class="botonCarta" Style="border-radius: 0;border-top:1px solid #BABABA;border-left:1px solid #BABABA;border-right:1px solid #BABABA;height: 100%;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
                             <Icon Type="edit" Theme="outline" />
                         </Button>
-                        <Popconfirm Title="¿Estas seguro de borrar este movil?"
+                        <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de borrar este movil?"
                                     OnConfirm="()=>EliminarMovil(m.VehiculoId)"
                                     OnCancel="Cancel">
-                            <Button class="botonCarta" Style="border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;">
+                            <Button class="botonCarta" Style="width: 100%!important;border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;">
                                 <Icon Type="delete" Theme="outline" />
                             </Button>
                         </Popconfirm>
