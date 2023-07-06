@@ -19,13 +19,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Pages\Moviles\" />
-		<Folder Include="Pages\Salidas\Incendios\" />
-		<Folder Include="Pages\Bomberos\" />
-		<Folder Include="Pages\Salidas\" />
-		<Folder Include="Pages\Rescates\" />
 		<Folder Include="wwwroot\Imagenes\" />
 		<Folder Include="wwwroot\Moviles\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\pathFoto.js" />
 	</ItemGroup>
 	
 	<ItemGroup>

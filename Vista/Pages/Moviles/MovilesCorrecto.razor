@@ -28,8 +28,8 @@
 <div style="display: flex;justify-content: space-between;margin: 1em 1em;width: 100vh;padding: 0; align-items: center;">
     <div style="position: relative;">
         <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;">
-                <b>ALTA / BAJA / MODIFICACION DE MOVILES</b>
-            </p>
+            <b>ALTA / BAJA / MODIFICACION DE MOVILES</b>
+        </p>
     </div>
     <div>
         <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
@@ -43,7 +43,6 @@
     {
         @foreach(Movil m in moviles)
         {
-        
             <card class="cartaPropia" style="display: flex; flex-direction: column;height: 280px; width: 180px;border-radius: 2px;border: 1px solid #BABABA;">
                 <div style="width: 100%;height: 75%;margin: 0; padding: 0;">
                     <img src="@CargarImage(m)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;">
@@ -73,7 +72,6 @@
     }
     else
     {
-        @*<h5>No hay moviles, carge uno porfavor</h5>*@
         <div style="display: flex; justify-content: center;width: 100%;margin: 1em 1em;">
             <Spin Delay="500" Indicator=antIcon />
         </div>

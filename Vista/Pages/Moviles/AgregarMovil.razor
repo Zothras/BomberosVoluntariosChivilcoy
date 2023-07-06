@@ -95,6 +95,7 @@
                         <div class="inpt-container">
                             <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;"/>Cargar foto de movil</label>
                             <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
+                            <h3 id="path" style="display: inline-block;font-size:12px;">a ver:</h3>
                         </div>
                         <div class="inpt-container">
                             <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
@@ -167,7 +168,6 @@
 }
 
 @code {
-
     public class MovilViewModel
     {
         [Required, StringLength(255)]
@@ -186,8 +186,8 @@
         [Required, StringLength(255)]
         public string NumeroChasis { get; set; }
         [Required, StringLength(255)]
-        public string ModeloBomba{ get; set; }
-        [Required,StringLength(255)]
+        public string ModeloBomba { get; set; }
+        [Required, StringLength(255)]
         public TipoEstadoMovil Estado { get; set; }
 
     }
@@ -219,7 +219,7 @@
 
     private async void SubirFoto(InputFileChangeEventArgs e)
     {
-        string imagenBase64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream()); 
+        string imagenBase64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream());
 
         imagenView.Base64 = imagenBase64;
         imagenView.TipoImagen = e.File.ContentType;
@@ -237,38 +237,38 @@
             if (comprobante is null)
             {
                 Movil movil = new Movil()
-                {
-                    Marca = movilView.Marca,
-                    Modelo = movilView.Modelo,
-                    Año = movilView.Año,
-                    Patente = movilView.Patente,
-                    Tipo = movilView.Tipo,
-                    Imagen = new()
                     {
-                        NombreImagen = imagenView.Nombre,
-                        TipoImagen = imagenView.TipoImagen,
-                        Base64Imagen = imagenView.Base64
-                    },
-                    ModeloBomba = movilView.ModeloBomba,
-                    NumeroChasis = movilView.NumeroChasis,
-                    NumeroMotor = movilView.NumeroMotor,
-                    NumeroMovil = movilView.NumeroMovil,
-                    Estado = movilView.Estado,
-                    Seguro = new()
-                    {
-                        CompañiaAseguradora = seguroView.CompañiaAseguradora,
-                        FechaDeVencimineto = seguroView.FechaDeVencimiento,
-                        NumeroDePoliza = seguroView.NumeroDePoliza
-                    }
-                };
+                        Marca = movilView.Marca,
+                        Modelo = movilView.Modelo,
+                        Año = movilView.Año,
+                        Patente = movilView.Patente,
+                        Tipo = movilView.Tipo,
+                        Imagen = new()
+                        {
+                            NombreImagen = imagenView.Nombre,
+                            TipoImagen = imagenView.TipoImagen,
+                            Base64Imagen = imagenView.Base64
+                        },
+                        ModeloBomba = movilView.ModeloBomba,
+                        NumeroChasis = movilView.NumeroChasis,
+                        NumeroMotor = movilView.NumeroMotor,
+                        NumeroMovil = movilView.NumeroMovil,
+                        Estado = movilView.Estado,
+                        Seguro = new()
+                        {
+                            CompañiaAseguradora = seguroView.CompañiaAseguradora,
+                            FechaDeVencimineto = seguroView.FechaDeVencimiento,
+                            NumeroDePoliza = seguroView.NumeroDePoliza
+                        }
+                    };
                 db.Moviles.Add(movil);
                 await db.SaveChangesAsync();
             }
         }
 
         StateHasChanged();
-        navigationManager.NavigateTo("/moviles"); 
+        navigationManager.NavigateTo("/moviles");
     }
-
-    Carousel _carousel;
+    Carousel _carousel; 
+    
 }
