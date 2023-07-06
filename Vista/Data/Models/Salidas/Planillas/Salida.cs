@@ -34,7 +34,8 @@ namespace Vista.Data.Models.Salidas.Planillas
         public string DniSolicitante { get; set; }
         public string TelefonoSolicitante { get; set; }
         
-        public string? Receptor { get; set; }
+        public string? NombreYApellidoReceptor { get; set; }
+        public string? TelefonoReceptor { get; set; }
 
         public int? ReceptorId { get; set; }
 

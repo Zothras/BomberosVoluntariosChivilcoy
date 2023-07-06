@@ -66,13 +66,13 @@
          <Input @bind-Value="@modelMateriales.TelefonoSolicitante" />
     </FormItem>
     @*Datos del receptor*@
-    <FormItem Label="Datos del  Receptor">
-       
-        
+    <FormItem Label="Nombre y apellido del receptor">
+         <Input @bind-Value="@modelMateriales.NombreYApellidoReceptor" />
     </FormItem>
-    <FormItem Label="Datos bombero receptor">
-        
+    <FormItem Label="Telefono receptor">
+        <Input @bind-Value="@modelMateriales.TelefonoReceptor" />
     </FormItem>
+    
     
     @*Datos de damnificados*@
     <FormItem Label="¿Ubo damnificados?">
@@ -119,13 +119,13 @@
     <br />
      <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
     <FormItem Label="Elija el chofer">
-        <Select TItem="Bombero"
+        <Select TItem="BomberoViweModel"
                 TItemValue="int"
-                DataSource="@TodosBomberos"
+                DataSource="@bomberoTodos"
                 @bind-Value="@chofer"
-                LabelName="@nameof(Bombero.Nombre)"
-                ValueName="@nameof(Bombero.NumeroLegajo)"
-                Placeholder="Selecione el movil"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Select a person"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
@@ -142,6 +142,7 @@
                 EnableSearch>
                 
         </Select>
+
     </FormItem>
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
@@ -152,32 +153,16 @@
         <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
     </FormItem>
     <FormItem Label="Elija el bombero">
-        <Select TItem="Bombero"
+        <Select TItem="BomberoViweModel"
                 TItemValue="int"
-                DataSource="@TodosBomberos"
+                DataSource="@bomberoTodos"
                 @bind-Value="@BomberoCuerpo"
-                LabelName="@nameof(Bombero.Nombre)"
-                ValueName="@nameof(Bombero.NumeroLegajo)"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Selecione el movil"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
-    </FormItem>
-    <FormItem Label="Datos del bombero que elijio">
-        <div style="display:flex; flex-direction:column; gap: 0.5em;">
-            @if (TodosBomberos is not null)
-            {
-                @foreach (Bombero b in TodosBomberos)
-                {
-                    if (b.NumeroLegajo == BomberoCuerpo)
-                    {
-                        <label><b>Nombre y apellido: @b.Nombre @b.Apellido</b></label>
-                        <label><b>Numero legajo: @b.NumeroLegajo</b></label>
-                    }
-                }
-            }
-
-        </div>
     </FormItem>
     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
     <br />
@@ -185,65 +170,30 @@
     <br />
 
     <b><label>Elija al encargado</label></b>
-    <FormItem Label="Elija el bombero">
-        <Select TItem="Bombero"
+    <FormItem Label="Encargado">
+        <Select TItem="BomberoViweModel"
                 TItemValue="int"
-                DataSource="@TodosBomberos"
+                DataSource="@bomberoTodos"
                 @bind-Value="@BomberoEncargado"
-                LabelName="@nameof(Bombero.Nombre)"
-                ValueName="@nameof(Bombero.NumeroLegajo)"
-                Placeholder="Selecione el encargado"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Select a person"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
     </FormItem>
-    <FormItem Label="Datos del bombero que elijio">
-        <div style="display:flex; flex-direction:column; gap: 0.5em;">
-            @if (TodosBomberos is not null)
-            {
-                @foreach (Bombero b in TodosBomberos)
-                {
-                    if (b.NumeroLegajo == BomberoEncargado)
-                    {
-                        <label><b>Nombre y apellido: @b.Nombre @b.Apellido</b></label>
-                        <label><b>Numero legajo: @b.NumeroLegajo</b></label>
-                    }
-                }
-            }
-
-        </div>
-    </FormItem>
     <b><label>Quien lleno planilla</label></b>
     <FormItem Label="Bombero que lleno la planilla">
-        <FormItem Label="">
             <Select TItem="BomberoViweModel"
                     TItemValue="int"
                     DataSource="@bomberoTodos"
                     @bind-Value="@QuienLLenoPlanilla"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                    ValueName="@nameof(Bombero.NumeroLegajo)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Select a person"
                     DefaultActiveFirstOption="false"
                     EnableSearch>
             </Select>
-
-        </FormItem>
-        <FormItem Label="Datos bombero">
-            <div style="display:flex; flex-direction:column; gap: 0.5em;">
-                @if (TodosBomberos is not null)
-                {
-                    @foreach (Bombero b in TodosBomberos)
-                    {
-                        if (b.NumeroLegajo == QuienLLenoPlanilla)
-                        {
-                            <label><b>Nombre y apellido: @b.Nombre @b.Apellido</b></label>
-                            <label><b>Numero legajo: @b.NumeroLegajo</b></label>
-                        }
-                    }
-                }
-
-            </div>
-        </FormItem>
     </FormItem>
     @*Tipo servicio*@
     <FormItem Label="Tipo Servicio salida">
@@ -343,7 +293,6 @@
     public List<BomberoViweModel> bomberoTodos = new();
 
     bool switchValue { get; set; }
-    bool switchValuev { get; set; }
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
@@ -377,7 +326,8 @@
                 EntreCalles = modelMateriales.EntreCalles,
                 PisoNumero = modelMateriales.PisoNumero,
                 Depto = modelMateriales.Depto,
-                //Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo)
+                //NombreYApellidoReceptor = modelMateriales.NombreYApellidoReceptor,
+                //TelefonoReceptor = modelMateriales.TelefonoReceptor,
                 TipoZona = modelMateriales.TipoZona,
                 NombreSolicitante = modelMateriales.NombreSolicitante,
                 ApellidoSolicitante = modelMateriales.ApellidoSolicitante,

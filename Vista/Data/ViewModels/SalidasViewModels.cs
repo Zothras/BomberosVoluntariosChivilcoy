@@ -33,8 +33,8 @@ namespace Vista.Data.ViewModels
         public string TelefonoSolicitante { get; set; }
 
         //Datos del bombero receptor
-        public string NombreReceptor { get; set; }
-        public string ApellidoReceptor { get; set; }
+        public string? NombreYApellidoReceptor { get; set; }
+        public string? TelefonoReceptor { get; set; }
         public int LegajoReceptor { get; set; }
 
         public List<Damnificado> Damnificados { get; set; }
