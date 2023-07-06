@@ -3,6 +3,7 @@
 @page "/salidas/materiales-peligrosos"
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
+@using Microsoft.EntityFrameworkCore.Metadata.Internal;
 @using Vista.Data.ViewModels.MaterialesPeligrosos;
 @using Vista.Data.ViewModels.Personal;
 @using static Vista.Pages.BomberoEditar;
@@ -118,6 +119,39 @@
     <b><label>Datos de chofer</label></b>
     <br />
      <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
+    <Button Type="primary" OnClick="@ShowModal">
+        Cargo Combustibleeeee
+    </Button>
+    <Modal Title="@("Datos del cargo de combustible")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+        <Form Loading="loading" Model="@model"
+              LabelColSpan="8"
+              WrapperColSpan="16"
+              OnFinish="OnFinish"
+              OnFinishFailed="OnFinishFailed"
+              @ref="@_form">
+            <FormItem Label="Numero de factura">
+                <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
+            </FormItem>
+            <FormItem Label="Fecha de factura">
+                <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+            </FormItem>
+            <FormItem Label="Tipo de combustible">
+                <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
+            </FormItem>
+            <FormItem Label="Cantidad de litros">
+                <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
+            </FormItem>
+            <FormItem Label="Nombre y apellido">
+                <Input @bind-Value="@movilSalidaViewModels.QuienLLeno" />
+            </FormItem>
+            <FormItem Label="Telefono">
+                <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
+            </FormItem>
+        </Form>
+    </Modal>
     <FormItem Label="Elija el chofer">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
@@ -288,6 +322,7 @@
     public List<DamnificadoViewModels> DamnificadosSalida  = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
+    private Model model = new Model();
     Bombero[] TodosBomberos;
     Movil[] Moviles;
     public List<BomberoViweModel> bomberoTodos = new();
@@ -296,7 +331,7 @@
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
-
+     private Form<Model> _form;
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
@@ -326,8 +361,8 @@
                 EntreCalles = modelMateriales.EntreCalles,
                 PisoNumero = modelMateriales.PisoNumero,
                 Depto = modelMateriales.Depto,
-                //NombreYApellidoReceptor = modelMateriales.NombreYApellidoReceptor,
-                //TelefonoReceptor = modelMateriales.TelefonoReceptor,
+                NombreYApellidoReceptor = modelMateriales.NombreYApellidoReceptor,
+                TelefonoReceptor = modelMateriales.TelefonoReceptor,
                 TipoZona = modelMateriales.TipoZona,
                 NombreSolicitante = modelMateriales.NombreSolicitante,
                 ApellidoSolicitante = modelMateriales.ApellidoSolicitante,
@@ -384,6 +419,7 @@
             MovilSalida movilS = new()
             {
                 CargoCombustible = m.CargoCombustible,
+
                 Chofer = bomberoChofer,
                 Movil = Movilsalida
             };
@@ -558,7 +594,25 @@
             
         }
     }
+    bool loading = false;
 
+    void toggle(bool value) => loading = value;
+    bool _visible = false;
+
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        _visible = false;
+
+    }
+    private void HandleOk(MouseEventArgs e)
+    {
+        _form.Submit();
+    }
 }
 
     
