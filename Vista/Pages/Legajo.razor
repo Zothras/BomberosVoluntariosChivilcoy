@@ -35,7 +35,7 @@
             <Space>
                 <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroParte)">Delete</Button></SpaceItem>
                 @*<SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>*@
-                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroParte)">Detalles</Button></SpaceItem>
+                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button></SpaceItem>
             </Space>
         </ActionColumn>
         @*<Column Title="Salidas" @bind-Field="@discriminadores" Sortable />*@
@@ -69,15 +69,15 @@
     <p>ApellidoSolicitante: @salidasViewModel[numeroParteVisualizar].NombreSolicitante</p>
     <p>DniSolicitante: @salidasViewModel[numeroParteVisualizar].DniSolicitante</p>
     <p>TelefonoSolicitante: @salidasViewModel[numeroParteVisualizar].TelefonoSolicitante</p>
+@*
+    <p><b>Receptor:</b> @salidasViewModel[numeroParteVisualizar].Receptor</p>*@
 
-    <p>Receptor: @salidasViewModel[numeroParteVisualizar].Receptor</p>
-
-    <p>ReceptorBombero: @salidasViewModel[numeroParteVisualizar].ReceptorBombero</p>
+    <p><b>ReceptorBombero:</b> @salidasViewModel[numeroParteVisualizar].ReceptorBombero</p>
 
     
     @if (salidasViewModel[numeroParteVisualizar].Damnificados is not null)
     {
-        <p>Damnificados:</p>
+        <p><b>Damnificado:</b></p>
         @foreach (Damnificado d in salidasViewModel[numeroParteVisualizar].Damnificados)
         {
             <p>Nombre: @d.Nombre</p>
@@ -94,30 +94,31 @@
     }
     
 
-    <p>Moviles:</p>
+    <p><b>Moviles:</b></p>
+
     @foreach (MovilSalida ms in salidasViewModel[numeroParteVisualizar].Moviles)
     {
-        <p>Chofer: @ms.Chofer.Nombre @ms.Chofer.Apellido</p>
+        <p><b>Chofer: @ms.Chofer.Nombre @ms.Chofer.Apellido</b></p>
         <p>CargoCombustible: @ms.CargoCombustible</p>
         <p>MovilId: @ms.MovilId</p>
         <p>Tipo movil: @ms.Movil.Tipo</p>//traer datos de movil en llamada de salidas
         <p>Modelo movil: @ms.Movil.Modelo</p>
         <p>NumeroMovil movil: @ms.Movil.NumeroMovil</p>
     }
-    <p>CuerpoParticipante:</p>
+    <p><b>CuerpoParticipante:</b></p>
     @foreach (BomberoSalida b in salidasViewModel[numeroParteVisualizar].CuerpoParticipante)
     {
-        <p>Bombero: @b.Bombero.Nombre @b.Bombero.Apellido</p>//traer datos de cada bombero
+        <p><b>Bombero: @b.Bombero.Nombre @b.Bombero.Apellido</b></p>//traer datos de cada bombero
         <p>Numero de Legajo: @b.Bombero.NumeroLegajo</p>
         <p>Salio: @b.Salio</p>
         <p>Grado: @b.Grado</p>
     }
 
-    <p>Encargado:</p>
+    <p><b>Encargado:</b></p>
     <p>Bombero: @salidasViewModel[numeroParteVisualizar].Encargado.Nombre @salidasViewModel[numeroParteVisualizar].Encargado.Apellido</p>
     <p>Encargado:  @salidasViewModel[numeroParteVisualizar].Encargado.NumeroLegajo</p>
     
-    <p>QuienLleno:</p>
+    <p><b>QuienLleno:</b></p>
     <p>Bombero: @salidasViewModel[numeroParteVisualizar].QuienLleno.Nombre @salidasViewModel[numeroParteVisualizar].QuienLleno.Apellido</p>
     <p>Numero de Parte: @salidasViewModel[numeroParteVisualizar].QuienLleno.NumeroLegajo</p>
 
@@ -146,10 +147,14 @@
         //Llamo a los datos de la tabla sallida co sus respectivas listas y objetos
         salidas = db.Set<Salida>()
         .Include(s => s.Moviles)
-        .Include(s => s.CuerpoParticipante)
-        .Include(s => s.ReceptorBombero)
-        .Include(s => s.Encargado)
-        .Include(s=>s.QuienLleno)
+            .ThenInclude(ms => ms.Movil)
+
+            .Include(s => s.Moviles)
+            .ThenInclude(ms => ms.Chofer)
+        .Include(s => s.CuerpoParticipante).ThenInclude(cp => cp.Bombero)
+        .Include(s => s.ReceptorBombero).ThenInclude(rb => rb.Contacto)
+        .Include(s => s.Encargado).ThenInclude(e => e.Brigada)
+        .Include(s => s.QuienLleno).ThenInclude(ql => ql.Brigada)
         .ToList();
 
         //traigo el discriminados de cada elemento la tabla salidas
@@ -316,10 +321,10 @@
     string title = "Detalles Salida";
     bool _visible = false;
     int numeroParteVisualizar;
-
     private void ShowModalDetalle(int numeroParte)
     {
-        numeroParteVisualizar = numeroParte;
+        numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == numeroParte);
+        
         _visible = true;
     }
     private void HandleOk(MouseEventArgs e)
