@@ -37,7 +37,7 @@ namespace Vista.Data.ViewModels
         public string? TelefonoReceptor { get; set; }
         public int LegajoReceptor { get; set; }
 
-        public List<Damnificado> Damnificados { get; set; }
+        public List<Damnificado>? Damnificados { get; set; }
 
         //datos del seguro 
         public string? CompaniaAseguradora { get; set; }

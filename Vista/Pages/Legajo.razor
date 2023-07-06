@@ -5,9 +5,13 @@
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.Json;
+@using Vista.Data.ViewModels.FactorClimatico;
+@using Vista.Data.ViewModels.Personal;
+@using Vista.Data.ViewModels.Accidente;
+@using Vista.Data.ViewModels;
 <h3>Legajos</h3>
 
-<Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel">
+<Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1">
     <TitleTemplate>
         <GridRow>
             <GridCol Span="4">
@@ -51,10 +55,12 @@
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
-    <p>NumeroParte: @salidasViewModel[numeroParteVisualizar].NumeroParte</p>
+    
+        
+    <p><b>NumeroParte: @salidasViewModel[numeroParteVisualizar].NumeroParte</b></p>
     <p>Tipo De Salida: @salidasViewModel[numeroParteVisualizar].Discriminador</p>
 
-    <p>HoraLlegada: @salidasViewModel[numeroParteVisualizar].HoraLlegada</p>
+    <p>HoraLlegada: @salidasViewModel[numeroParteVisualizar].HoraLLegada</p>
     <p>KmSalida: @salidasViewModel[numeroParteVisualizar].KmSalida</p>
     <p>KmLlegada: @salidasViewModel[numeroParteVisualizar].KmLlegada</p>
     <p>Descripcion: @salidasViewModel[numeroParteVisualizar].Descripcion</p>
@@ -69,8 +75,9 @@
     <p>ApellidoSolicitante: @salidasViewModel[numeroParteVisualizar].NombreSolicitante</p>
     <p>DniSolicitante: @salidasViewModel[numeroParteVisualizar].DniSolicitante</p>
     <p>TelefonoSolicitante: @salidasViewModel[numeroParteVisualizar].TelefonoSolicitante</p>
-@*
-    <p><b>Receptor:</b> @salidasViewModel[numeroParteVisualizar].Receptor</p>*@
+
+    <p><b>Receptor:</b> @salidasViewModel[numeroParteVisualizar].NombreYApellidoReceptor</p>
+    <p><b>Telefono Receptor:</b> @salidasViewModel[numeroParteVisualizar].TelefonoReceptor</p>
 
     <p><b>ReceptorBombero:</b> @salidasViewModel[numeroParteVisualizar].ReceptorBombero</p>
 
@@ -99,11 +106,22 @@
     @foreach (MovilSalida ms in salidasViewModel[numeroParteVisualizar].Moviles)
     {
         <p><b>Chofer: @ms.Chofer.Nombre @ms.Chofer.Apellido</b></p>
-        <p>CargoCombustible: @ms.CargoCombustible</p>
+        
         <p>MovilId: @ms.MovilId</p>
         <p>Tipo movil: @ms.Movil.Tipo</p>//traer datos de movil en llamada de salidas
         <p>Modelo movil: @ms.Movil.Modelo</p>
         <p>NumeroMovil movil: @ms.Movil.NumeroMovil</p>
+        @if (ms.CargoCombustible)
+        {
+            <p><b>Cargo Combustible: si</b></p>
+            <p>Quien lleno planilla movil: @ms.NumeroFactura</p>
+            <p>Quien lleno planilla movil: @ms.FechaFactura</p>
+            <p>Quien lleno planilla movil: @ms.TipoConbustible</p>
+            <p>Quien lleno planilla movil: @ms.CantidadLitros</p>
+            <p>Quien lleno planilla movil: @ms.Usuario</p>
+            <p>Telefono: @ms.TelefonoReceptor</p>
+        }
+        
     }
     <p><b>CuerpoParticipante:</b></p>
     @foreach (BomberoSalida b in salidasViewModel[numeroParteVisualizar].CuerpoParticipante)
@@ -124,6 +142,44 @@
 
     <p>TipoServicio: @salidasViewModel[numeroParteVisualizar].TipoServicio</p>
 
+    @switch (@salidasViewModel[numeroParteVisualizar].Discriminador)
+    {
+        case TipoSalida.Accidente:
+            GetViewModelAccidentes(salidasViewModel[numeroParteVisualizar].SalidaId);
+            break;
+
+        case TipoSalida.FactorClimatico:
+            break;
+        case TipoSalida.MaterialPeligroso:
+            break;
+        case TipoSalida.ServicioEspecialPrevencionViewModels:
+            break;
+        case TipoSalida.RescateAnimal:
+            break;
+        case TipoSalida.RescatePersona:
+            break;
+        case TipoSalida.IncendioComercio:
+            break;
+        case TipoSalida.IncendioEstablecimientoEducativo:
+            break;
+        case TipoSalida.IncendioEstablecimientoPublico:
+            break;
+        case TipoSalida.IncendioForestal:
+            break;
+        case TipoSalida.IncendioHospitalesYClinicas:
+            break;
+        case TipoSalida.IncendioIndustria:
+            break;
+        case TipoSalida.IncendioVivienda:
+            break;
+        case TipoSalida.ServicioEspecialPrevencion:
+            break;
+        case TipoSalida.Incendio:
+            break;
+        case TipoSalida.ServicioEspecial:
+            break;
+    }
+
 </Modal>
 
 
@@ -134,11 +190,12 @@
     IEnumerable<Salida> dataSource;
     ITable _table;
     int _total = 0;
+    TipoSalida discriminadoresSalidas;
 
-    List<SalidasViewModel>? salidasViewModel = new List<SalidasViewModel>();
+    List<SalidasViewModel1>? salidasViewModel = new List<SalidasViewModel1>();
     List<string> discriminadores = new List<string>();
     private TableFilter<TipoSalida>[] DiscriminadorFilter;
-    List<SalidasViewModel>? salidasViewModelCarga = new List<SalidasViewModel>();
+    List<SalidasViewModel1>? salidasViewModelCarga = new List<SalidasViewModel1>();
     List<Salida>? salidas;
 
     protected override async Task OnInitializedAsync()
@@ -183,7 +240,7 @@
         StateHasChanged();
     }
 
-    void OnChange(QueryModel<SalidasViewModel> query)
+    void OnChange(QueryModel<SalidasViewModel1> query)
     {
         Console.WriteLine(JsonSerializer.Serialize(query));
 
@@ -191,7 +248,7 @@
         //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
     }
 
-    void OnRowClick(RowData<SalidasViewModel> row)
+    void OnRowClick(RowData<SalidasViewModel1> row)
     {
         Console.WriteLine($"row {row.Data.SalidaId} was clicked");
     }
@@ -210,32 +267,12 @@
     }
 }
 @code{
-    private class SalidasViewModel : Salida
+    private AccidenteViewModels accidenteViewModels;
+    List<AccidenteViewModels> accidentesVM = new List<AccidenteViewModels>();
+    private class SalidasViewModel1 : SalidasViewModels
     {
         public int SalidaId { get; set; }
-        public DateTime HoraSalida { get; set; }
-        public DateTime HoraLlegada { get; set; }
-        public int KmSalida { get; set; }
-        public int KmLlegada { get; set; }
-        public int NumeroParte { get; set; }
 
-        public string Descripcion { get; set; }
-
-        public string CalleORuta { get; set; }
-
-        public string NumeroOKilometro { get; set; }
-
-        public string? EntreCalles { get; set; }
-
-        public string? PisoNumero { get; set; }
-
-        public string? Depto { get; set; }
-        public TipoZona TipoZona { get; set; }
-
-        public string NombreSolicitante { get; set; }
-        public string ApellidoSolicitante { get; set; }
-        public string DniSolicitante { get; set; }
-        public string TelefonoSolicitante { get; set; }
 
         public string? Receptor { get; set; }
 
@@ -244,23 +281,15 @@
 
         public Bombero? ReceptorBombero { get; set; }
 
-        //Si hay damnificados, entonces hay intervinientes
-        public List<Damnificado> Damnificados { get; set; }
-
         public int? SeguroId { get; set; }
         public SeguroSalida? Seguro { get; set; }
 
-        //relaciones con bomberos y moviles
-        public List<MovilSalida> Moviles { get; set; }
-
-        public List<BomberoSalida> CuerpoParticipante { get; set; }
 
         public int EncargadoId { get; set; }
         public Bombero Encargado { get; set; }
 
         public int QuienLlenoId { get; set; }
         public Bombero QuienLleno { get; set; }
-        public TipoServicioSalida TipoServicio { get; set; }
         public TipoSalida Discriminador { get; set; }
     }
 
@@ -269,18 +298,18 @@
         //db.Set<Salida>().ToList();
         using var context = await DbFactory.CreateDbContextAsync();
 
-        
+
         int contador = 0;
         foreach (Salida s in salidas)
         {
             List<Damnificado>? damificado = await context.Damnificados
                 .Where(D => D.SalidaId == s.SalidaId)
                 .ToListAsync();
-            SalidasViewModel NuevaSalidaVM = new SalidasViewModel()
+            SalidasViewModel1 NuevaSalidaVM = new SalidasViewModel1()
             {
                     SalidaId = s.SalidaId,
                     HoraSalida= s.HoraSalida,
-                    HoraLlegada = s.HoraLlegada,
+                    HoraLLegada = s.HoraLlegada,
                     KmSalida= s.KmSalida,
                     KmLlegada=s.KmLlegada,
                     NumeroParte= s.NumeroParte,
@@ -295,7 +324,8 @@
                     ApellidoSolicitante= s.ApellidoSolicitante,
                     DniSolicitante=s.DniSolicitante,
                     TelefonoSolicitante= s.TelefonoSolicitante,
-                    //Receptor= s.Receptor,
+                    NombreYApellidoReceptor=s.NombreYApellidoReceptor,
+                    TelefonoReceptor=s.TelefonoReceptor,
                     ReceptorId=s.ReceptorId,
                     ReceptorBombero = s.ReceptorBombero,
                     Damnificados = damificado,
@@ -310,10 +340,23 @@
                     Discriminador = (TipoSalida)int.Parse(discriminadores[contador])
             };
             salidasViewModel.Add(NuevaSalidaVM);
+
             contador++;
         }
         StateHasChanged();
-        
+
+    }
+    private async void GetViewModelAccidentes(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        Salida? accidente = await db.Set<Salida>().Where(s => s.SalidaId == Id)
+        //.Include(sal => sal.VehiculosAfectado)
+        .SingleOrDefaultAsync();
+        accidenteViewModels = new()
+        {
+
+        };
     }
 
 }
