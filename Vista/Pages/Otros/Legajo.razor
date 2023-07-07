@@ -9,7 +9,7 @@
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.ViewModels.Accidente;
 @using Vista.Data.ViewModels;
-<h3>Legajos</h3>
+
 
 <Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1">
     <TitleTemplate>
@@ -145,10 +145,39 @@
     @switch (@salidasViewModel[numeroParteVisualizar].Discriminador)
     {
         case TipoSalida.Accidente:
-            GetViewModelAccidentes(salidasViewModel[numeroParteVisualizar].SalidaId);
+            Task.Run(async () =>
+            {   
+                await GetViewModelAccidentes(salidasViewModel[numeroParteVisualizar].SalidaId);
+            });
+            <p><b>Accidente: </b></p>
+            <p>Tipo: @accidenteViewModels.Tipo</p>
+            <p>Cantidad de vehiculos: @accidenteViewModels.CantidadVheiculo</p>
+            if (@accidenteViewModels.VehiculosAfectado is not null)
+            {
+                foreach (VehiculoAfectadoAccidente v in @accidenteViewModels.VehiculosAfectado)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                                //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Condiciones Climaticas: @accidenteViewModels.CondicionesClimaticas</p>
+            <p>Otro Condicion: @accidenteViewModels.OtroCondicion</p>
             break;
 
         case TipoSalida.FactorClimatico:
+            
             break;
         case TipoSalida.MaterialPeligroso:
             break;
@@ -223,6 +252,9 @@
             var discriminatorValue = entry.CurrentValues[discriminatorProperty];
 
             string discriminador = discriminatorValue?.ToString();
+            int discriminadorNumero = (int.Parse(discriminador)) - 1;// le bajo un valor para que sea congruente a como esta cargado en el 
+                                                                     //enum tipo salida(empiezan desde el valor 0 y en el dbContext empieza desde el 1)
+            discriminador = discriminadorNumero.ToString();
             discriminadores.Add(discriminador);
         }
         GetSalidasViewModel(salidas);
@@ -267,7 +299,7 @@
     }
 }
 @code{
-    private AccidenteViewModels accidenteViewModels;
+    private AccidenteViewModels accidenteViewModels = new();
     List<AccidenteViewModels> accidentesVM = new List<AccidenteViewModels>();
     private class SalidasViewModel1 : SalidasViewModels
     {
@@ -346,21 +378,30 @@
         StateHasChanged();
 
     }
-    private async void GetViewModelAccidentes(int Id)
+
+    private async Task GetViewModelAccidentes(int Id)
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
         Accidente? accidente = await db.Accidentes.Where(s => s.SalidaId == Id)
-        //.Include(sal => sal.VehiculosAfectado)
+        .Include(sal => sal.VehiculosAfectado).ThenInclude(vehiculo => vehiculo.Seguro)
         .SingleOrDefaultAsync();
+        List<VehiculoAfectadoAccidente> vehiculosAccidentesAfectados = await db.VehiculosAfectadosAccidentes.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
         accidenteViewModels = new()
         {
             Tipo=accidente.Tipo,
             CantidadVheiculo=accidente.CantidadVehiculos,
+
             VehiculosAfectado=accidente.VehiculosAfectado,
             CondicionesClimaticas=accidente.CondicionesClimaticas,
             OtroCondicion=accidente.OtroCondicion
+
         };
+        StateHasChanged();
+        
     }
 
 }
