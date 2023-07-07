@@ -118,8 +118,8 @@
             <p>Quien lleno planilla movil: @ms.FechaFactura</p>
             <p>Quien lleno planilla movil: @ms.TipoConbustible</p>
             <p>Quien lleno planilla movil: @ms.CantidadLitros</p>
-            <p>Quien lleno planilla movil: @ms.Usuario</p>
-            <p>Telefono: @ms.TelefonoReceptor</p>
+            <p>Quien lleno planilla movil: @ms.QuienLleno</p>
+            <p>Telefono: @ms.TelefonoQuienLleno</p>
         }
         
     }
@@ -350,12 +350,16 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
-        Salida? accidente = await db.Set<Salida>().Where(s => s.SalidaId == Id)
+        Accidente? accidente = await db.Accidentes.Where(s => s.SalidaId == Id)
         //.Include(sal => sal.VehiculosAfectado)
         .SingleOrDefaultAsync();
         accidenteViewModels = new()
         {
-
+            Tipo=accidente.Tipo,
+            CantidadVheiculo=accidente.CantidadVehiculos,
+            VehiculosAfectado=accidente.VehiculosAfectado,
+            CondicionesClimaticas=accidente.CondicionesClimaticas,
+            OtroCondicion=accidente.OtroCondicion
         };
     }
 
