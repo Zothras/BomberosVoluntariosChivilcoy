@@ -72,7 +72,6 @@
         <Input @bind-Value="@modelMateriales.TelefonoReceptor" />
     </FormItem>
 
-
     @*Datos de damnificados*@
     <FormItem Label="¿Ubo damnificados?">
         <Switch @bind-Checked="switchValue" />
@@ -116,16 +115,12 @@
     @*Moviles de salidas*@
     <b><label>Datos de chofer</label></b>
     <br />
-    <FormItem Label="FechaVencimineto">
-        <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-        <br />
+    <FormItem Label="" style="display: grid;place-items: center;">
+        <Checkbox @bind-Checked="chekM" > Cargo combustible</Checkbox>
         <Button Type="primary" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
     </FormItem>
-    
-
-
     <FormItem Label="Elija el chofer">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
@@ -608,6 +603,7 @@
 
         }
     }
+    //metodos para el modal
     private void OnFinishFailedModel(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
