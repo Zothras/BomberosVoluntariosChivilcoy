@@ -375,7 +375,7 @@
         Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
         Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
 
-        Vista.Data.Models.Salidas.Planillas.ServicioEspecialPrevencionViewModels ServicioRepresentacion = new()
+        Vista.Data.Models.Salidas.Planillas.ServicioEspecialRepresentaciones ServicioRepresentacion = new()
             {
 
                 NumeroParte = modelServiciosEspecialesRepresentacion.NumeroParte,

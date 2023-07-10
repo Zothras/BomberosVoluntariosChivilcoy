@@ -33,7 +33,7 @@ namespace Vista.Data
         public DbSet<IncendioIndustria> IncendiosIndustrias { get; set; }
         public DbSet<IncendioVivienda> IncendiosViviendas { get; set; }
         public DbSet<MaterialPeligroso> MaterialesPeligrosos { get; set; }
-        public DbSet<ServicioEspecialPrevencionViewModels> ServicioEspecialesRespresentaciones { get; set; }
+        public DbSet<ServicioEspecialRepresentaciones> ServicioEspecialesRespresentaciones { get; set; }
         public DbSet<ServicioEspecialPrevencion> ServicioEspecialPrevenciones { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
@@ -79,7 +79,7 @@ namespace Vista.Data
                 .HasValue<Accidente>(1)
                 .HasValue<FactorClimatico>(2)
                 .HasValue<MaterialPeligroso>(3)
-                .HasValue<ServicioEspecialPrevencionViewModels>(4)
+                .HasValue<ServicioEspecialRepresentaciones>(4)
                 .HasValue<RescateAnimal>(5)
                 .HasValue<RescatePersona>(6)
                 .HasValue<IncendioComercio>(7)
@@ -141,7 +141,7 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-                .Entity<ServicioEspecialPrevencionViewModels>()
+                .Entity<ServicioEspecialRepresentaciones>()
                 .Property(s => s.TipoRepresentacion)
                 .HasConversion<string>()
                 .HasMaxLength(255);
