@@ -21,10 +21,6 @@
 	<ItemGroup>
 		<Folder Include="wwwroot\Moviles\" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="wwwroot\js\pathFoto.js" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="AntDesign" Version="0.15.0" />
