@@ -9,8 +9,8 @@ namespace Vista.Data.Models.Salidas.Planillas
         //Localización, datos del solicitante, personas damnificadas y datos del seguro
         public bool DeteccionAutomaticaId { get; set; }
 
-        public bool? Extintor { get; set; }
-        public bool? Hidrante { get; set; }
+        public bool Extintor { get; set; }
+        public bool Hidrante { get; set; }
         public List<VehiculoAfectadoIncendio> VehiculoAfectados { get; set; }
         [StringLength(255)]
         public TipoEvacuacion TipoEvacuacion { get; set; }
