@@ -11,7 +11,7 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         public bool? Extintor { get; set; }
         public bool? Hidrante { get; set; }
-        public List<VehiculoAfectado> VehiculoAfectados { get; set; }
+        public List<VehiculoAfectadoIncendio> VehiculoAfectados { get; set; }
         [StringLength(255)]
         public TipoEvacuacion TipoEvacuacion { get; set; }
         public TipoSuperficie TipoSuperficieAfectada { get; set; }

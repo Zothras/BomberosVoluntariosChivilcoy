@@ -225,7 +225,9 @@
 
     @*propio de la salida de Factor Climatico*@
     
-
+    <FormItem Label="Tipo Factores Climaticos">
+        <EnumSelect TEnum="TipoFactoresClimaticos" @bind-Value="@modelFactorClimatico.Tipo" />
+    </FormItem>
     <FormItem Label="Tipo Superficie">
         <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelFactorClimatico.Superficie" />
     </FormItem>
@@ -342,9 +344,11 @@
                 TelefonoReceptor = modelFactorClimatico.TelefonoReceptor,
                 TipoServicio = modelFactorClimatico.TipoServicio,
                 //carga Evacuacion y superficie dañada
+
                 Evacuacion = modelFactorClimatico.Evacuacion,
                 Superficie = modelFactorClimatico.Superficie,
                 DetalleSuperficieDañada = modelFactorClimatico.DetalleSuperficieDañada,
+                Tipo= modelFactorClimatico.Tipo,
 
                 QuienLleno = BomberoLlenoPlanilla,
                 ReceptorBombero = bomberoReceptor,

@@ -2,14 +2,17 @@
 using Vista.Data.Enums;
 
 namespace Vista.Data.ViewModels.Incendios
+    using Vista.Data.Models.Salidas.Componentes;
 {
     public class IncendioViewModels : SalidasViewModels
     {
         public TipoIncendio Tipo { get; set; }
         [Required, StringLength(255)]
         public bool DeteccionAutomaticaId { get; set; }
-        public bool Extintor { get; set; }
-        public bool Hidrante { get; set; }
+        public bool? Extintor { get; set; }
+        public bool? Hidrante { get; set; }
+
+        public List<VehiculoAfectadoIncendio> VehiculoAfectados { get; set; }//Lo cambie por VehiculoAfectadoIncendio
         public TipoEvacuacion TipoEvacuacion { get; set; }
         public TipoSuperficie TipoSuperficieAfectada { get; set; }
         [Required, StringLength(255)]
