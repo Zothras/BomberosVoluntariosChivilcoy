@@ -67,7 +67,7 @@
 </style>
 @if (movilView is not null)
 {
-    <div style="width: 20%;height: 50%; background: #fff;">
+    <div style="width: 20%;height: 70%; background: #fff;">
         <Carousel @ref="_carousel">
             <CarouselSlick Style="height: 100%;width: 10%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;display: flex; flex-direction: column;margin: auto;">
                 <Card Title=@("Movil") Style="width: 100%;height: 100%;">
@@ -95,7 +95,7 @@
                         <div class="inpt-container">
                             <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;"/>Cargar foto de movil</label>
                             <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
-                            <h3 id="path" style="display: inline-block;font-size:12px;">a ver:</h3>
+                            <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre/></h3>
                         </div>
                         <div class="inpt-container">
                             <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
@@ -168,6 +168,7 @@
 }
 
 @code {
+
     public class MovilViewModel
     {
         [Required, StringLength(255)]
@@ -224,6 +225,7 @@
         imagenView.Base64 = imagenBase64;
         imagenView.TipoImagen = e.File.ContentType;
         imagenView.Nombre = e.File.Name;
+        StateHasChanged();
     }
 
     private async void SubirMovil()

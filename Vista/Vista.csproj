@@ -19,12 +19,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="wwwroot\Imagenes\" />
 		<Folder Include="wwwroot\Moviles\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="wwwroot\pathFoto.js" />
+	  <None Include="wwwroot\js\pathFoto.js" />
 	</ItemGroup>
 	
 	<ItemGroup>

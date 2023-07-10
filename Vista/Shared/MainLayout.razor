@@ -37,7 +37,10 @@
     .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected .icoSelected{
         color: rgb(223, 223, 223) !important;
     }
-    
+
+    .ant-menu-inline .ant-menu-item::after{
+        border-right: rgb(62, 24, 24) !important;
+    }
 </style>
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
@@ -60,9 +63,8 @@
     <Layout>
             <div style="height: 100%;width: 200px;z-index: 100;position: fixed;">
                 <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;"
-                    Theme="MenuTheme.Dark"
                     Mode=MenuMode.Inline
-                    InlineCollapsed=collapsed>
+                    InlineCollapsed=collapsed >
                     <MenuItem Key="0">
                         <IconTemplate>
                             <i class="fa-solid fa-user icoSelected" style="color: #263040;"></i>
@@ -163,20 +165,9 @@
                 </Menu>
             </div>
         <Content Style="margin-top: 5em;margin-left: 80px;position: relative; background: rgb(220,220,220);height: 200%;">
-            <div style="margin: 0 20px 0 20px;display: flex; justify-content: center; align-items: center;flex-direction:column;">
+            <div style="display: flex; justify-content: center; align-items: center;flex-direction:column;">
                 @Body
             </div>
-            @*AGREGAR FOOTER POR PAGINA
-                <Footer Style="margin-top:auto;background-color: rgb(62, 24, 24); width: 100%;color: white;z-index: 1; position: absolute; bottom: 0;">
-                @*<footer Class="footer text-center" id="FooterCopy">
-
-                </footer>
-                <BSContainer>
-                    <div class="copyright py-4 text-center text-white">
-                        <div class="container"><small>Copyright &copy;2022 <b>Bomberos Voluntarios Chivilcoy</b> - Todos los Derechos Reservados.</small></div>
-                    </div>
-                </BSContainer>
-            </Footer>*@
         </Content>
     </Layout>
 </Layout>
@@ -188,7 +179,8 @@
     @<span>
         <i class="fa-solid fa-fire-extinguisher" style="color: #263040;"></i>
         <span class="nav-item"><a style="color: black;" class="nav-link" href="salidas">Salidas</a></span>
-    </span>;
+        </span>
+    ;
 
     void ToggleCollapsed()
     {
@@ -202,5 +194,5 @@
             await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_2735473_hi62ezq5579.js");
         }
     }
+   
 }
-

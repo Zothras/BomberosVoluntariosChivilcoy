@@ -7,7 +7,7 @@
         display: none !important;
     }
     .inpt-container {
-        position: relative;
+        position: relative; 
         padding: .8em 0;
     }
 
@@ -70,7 +70,6 @@
     .raro {
         padding: 6em 0;
     }
-
     .ant-modal-body {
         padding: 0;
     }
@@ -87,102 +86,104 @@
         display: none;
     }
 </style>
-@if (movilView is not null)
-{
-    <Modal Title="@title"
-           Visible="@_visible"
-           OnOk="@HandleOk"
-           OnCancel="@HandleCancel">
-            <Carousel @ref="_carousel">
-                <CarouselSlick Style="padding: .2em;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;display: flex; flex-direction: column;margin: auto;">
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.Marca" placeholder=" " />
-                        <label class="inpt-label">Marca:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.Modelo" placeholder=" " />
-                        <label class="inpt-label">Modelo:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.Año" placeholder=" " />
-                        <label class="inpt-label">Año:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.Patente" placeholder=" " />
-                        <label class="inpt-label">Patente:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.Tipo" placeholder=" " />
-                        <label class="inpt-label">Tipo:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
-                        <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
-                        <h3 id="path" style="display: inline-block;font-size:12px;">a ver:</h3>
-                    </div>
-                    <div class="inpt-container">
-                        <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
-                    </div>
-                </CarouselSlick>
-                <CarouselSlick Style="padding: .2em;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
-                        <label class="inpt-label">Nº movil:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.NumeroMotor" placeholder=" " />
-                        <label class="inpt-label">Nº motor:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <input type="text" @bind="movilView.NumeroChasis" placeholder=" " />
-                        <label class="inpt-label">Nº chasis:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <select @bind="movilView.Estado" class="select-estadoMovil">
-                            <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
-                            <option value="@TipoEstadoMovil.Activo">Activo</option>
-                            <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
-                            <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
-                            <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
-                        </select>
-                    </div>
-                    <div style="height: 6.8em;">
-                    </div>
-                    <div class="inpt-container">
-                        <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
-                    </div>
-                </CarouselSlick>
-                <CarouselSlick Style="padding: .2em;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
-                    @if (bomberos is not null)
-                    {
-                        @foreach (BomberoViewModel b in bomberoViews)
+<div style="width: 100%;">
+    @if (movilView is not null)
+    {
+        <Modal Title="@title"
+               Visible="@_visible"
+               OnOk="@HandleOk"
+               OnCancel="@HandleCancel"
+               Style="width:462px!important;">
+                <Carousel @ref="_carousel">
+                    <CarouselSlick Style="padding: .2em;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;display: flex; flex-direction: column;margin: auto;">
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Marca" placeholder=" " />
+                            <label class="inpt-label">Marca:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Modelo" placeholder=" " />
+                            <label class="inpt-label">Modelo:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Año" placeholder=" " />
+                            <label class="inpt-label">Año:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Patente" placeholder=" " />
+                            <label class="inpt-label">Patente:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.Tipo" placeholder=" " />
+                            <label class="inpt-label">Tipo:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
+                            <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
+                            <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre <Icon Type="eye" Theme="outline" /></h3>
+                        </div>
+                        <div class="inpt-container">
+                            <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
+                        </div>
+                    </CarouselSlick>
+                    <CarouselSlick Style="padding: .2em;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
+                            <label class="inpt-label">Nº movil:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.NumeroMotor" placeholder=" " />
+                            <label class="inpt-label">Nº motor:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <input type="text" @bind="movilView.NumeroChasis" placeholder=" " />
+                            <label class="inpt-label">Nº chasis:</label>
+                        </div>
+                        <div class="inpt-container">
+                            <select @bind="movilView.Estado" class="select-estadoMovil">
+                                <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
+                                <option value="@TipoEstadoMovil.Activo">Activo</option>
+                                <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
+                                <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
+                                <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
+                            </select>
+                        </div>
+                        <div style="height: 6.8em;">
+                        </div>
+                        <div class="inpt-container">
+                            <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
+                        </div>
+                    </CarouselSlick>
+                    <CarouselSlick Style="padding: .2em;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
+                        @if (bomberos is not null)
                         {
-                            <div class="inpt-container">
-                                <select class="select-estadoMovil" @bind="b.PersonaId">
-                                    <option hidden selected value="0">Seleccione bombero @b.Rol.ToString()</option>
-                                    @foreach (Bombero bo in bomberos)
-                                    {
-                                        <option value="@bo.PersonaId">@bo.Apellido  @bo.Nombre</option>
-                                    }
-                                </select>
+                            @foreach (BomberoViewModel b in bomberoViews)
+                            {
+                                <div class="inpt-container">
+                                    <select class="select-estadoMovil" @bind="b.PersonaId">
+                                        <option hidden selected value="0">Seleccione bombero @b.Rol.ToString()</option>
+                                        @foreach (Bombero bo in bomberos)
+                                        {
+                                            <option value="@bo.PersonaId">@bo.Apellido  @bo.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+                            <div style="display: flex;justify-content: flex-end;">
+                                <Button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 40%;text-align: center,">Confirmar roles</Button>
                             </div>
                         }
-                        <div style="display: flex;justify-content: flex-end;">
-                            <Button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 40%;text-align: center,">Confirmar roles</Button>
-                        </div>
-                    }
-                    <div style="height: 11.45em;"></div>
-                    <Button @onclick="EditarMovil" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Editar movil</Button>
-                    <div style="height: .7em;"></div>
-                </CarouselSlick>
-            </Carousel>
-    </Modal>
-}
-else
-{
- <h1> Error 404</h1>    
-}
-
+                        <div style="height: 11.45em;"></div>
+                        <Button @onclick="EditarMovil" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Editar movil</Button>
+                        <div style="height: .7em;"></div>
+                    </CarouselSlick>
+                </Carousel>
+        </Modal>
+    }
+    else
+    {
+     <h1> Error 404</h1>    
+    }
+</div>
 @code {
     [Parameter]
     public int? VehiculoId { get; set; }
@@ -252,6 +253,7 @@ else
                 imagenView.Nombre = imagen.NombreImagen;
                 imagenView.TipoImagen = imagen.TipoImagen;
                 imagenView.Base64 = imagen.Base64Imagen;
+                StateHasChanged();
             }
             existe = true;
         }
