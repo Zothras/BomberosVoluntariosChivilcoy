@@ -95,10 +95,12 @@
     <FormItem Label="Telefono  del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesPrevencion.TelefonoSolicitante" />
     </FormItem>
-    @*Datos bomberos receptor*@
-    <b><label>Datos bomberos receptor</label></b>
-    <FormItem Label="Numero legajo">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.LegajoReceptor" />
+    @*Datos del receptor*@
+    <FormItem Label="Nombre y apellido del receptor">
+        <Input @bind-Value="@modelServiciosEspecialesPrevencion.NombreYApellidoReceptor" />
+    </FormItem>
+    <FormItem Label="Telefono receptor">
+        <Input @bind-Value="@modelServiciosEspecialesPrevencion.TelefonoReceptor" />
     </FormItem>
 
     @*Moviles de salidas*@
@@ -106,38 +108,94 @@
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
-    <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-    <FormItem Label="Numero de legajo del chofer">
-        <Input @bind-Value="movilSalidaViewModels.NumeroLegajo" />
+    <FormItem Label="">
+        <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
+        <br />
+        <Button Type="primary" OnClick="@ShowModal">
+            Cargo Combustible
+        </Button>
     </FormItem>
+
+
+    <FormItem Label="Elija el chofer">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberoTodos"
+        @bind-Value="@chofer"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Seleccione el bombero"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
+    </FormItem>
+
+
     <FormItem Label="Numero de movil">
-        <Input @bind-Value="movilSalidaViewModels.NumeroMovil" />
+        <Select TItem="Movil"
+                TItemValue="string"
+                DataSource="@Moviles"
+                @bind-Value="@NumeroMovil"
+                LabelName="@nameof(Movil.NumeroMovil)"
+                ValueName="@nameof(Movil.NumeroMovil)"
+                Placeholder="Seleccione el movil"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
+
     </FormItem>
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
+    <br />
+
+
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
     <FormItem Label="Tipo Escalafon">
         <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
     </FormItem>
-    <FormItem Label="Numero de legajo">
-        <AntDesign.InputNumber @bind-Value="bomberoSalidaView.NumeroLegajo" />
+    <FormItem Label="Elija el bombero">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberoTodos"
+                @bind-Value="@BomberoCuerpo"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Seleccione el bombero"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
     </FormItem>
     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
-    <b><label></label></b>
     <br />
-    <b><label>Se cargaron @MovilesSalidasL.Count  Cuerpos participantes</label></b>
-    <br />
-    <b><label>Encargado</label></b>
-    <br />
-    <FormItem Label="Numero de legajo">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.LegajoEncargado" />
+
+    <b><label>Elija al encargado</label></b>
+    <FormItem Label="Encargado">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberoTodos"
+                @bind-Value="@BomberoEncargado"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Seleccione un encargado"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
     </FormItem>
     <b><label>Quien lleno planilla</label></b>
-    <FormItem Label="Numero de legajo">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.LegajoLLenoPlanilla" />
+    <FormItem Label="Bombero que lleno la planilla">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberoTodos"
+                @bind-Value="@QuienLLenoPlanilla"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Seleccione un encargado"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
     </FormItem>
     @*Tipo servicio*@
     <br />
@@ -233,6 +291,38 @@
     </FormItem>
 </Form>
 
+<Modal Title="@("Datos de la carga de combustible")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <Form Loading="loading" Model="@movilSalidaViewModels"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinishModel"
+          OnFinishFailed="OnFinishFailed"
+    @ref="@_form1">
+        <FormItem Label="Numero factura">
+            <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
+        </FormItem>
+        <FormItem Label="Fecha factura">
+            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+        </FormItem>
+        <FormItem Label="Tipo Combustible">
+            <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
+        </FormItem>
+        <FormItem Label="Cantidad de Litros">
+            <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
+        </FormItem>
+        <FormItem Label="Quien lleno">
+            <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
+        </FormItem>
+        <FormItem Label="TelefonoQuienLleno">
+            <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
+        </FormItem>
+    </Form>
+</Modal>
+
+
 @code
 {
     //private void CambiarValoesEnum()
@@ -256,21 +346,35 @@
     public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
+    private Form<MovilSalidaViewModels> _form1;
 
+
+    Bombero[] TodosBomberos;
+    Movil[] Moviles;
+
+
+    public List<BomberoViweModel> bomberoTodos = new();
     bool switchValue { get; set; }
-    bool switchValuev { get; set; }
+    bool switchValueS { get; set; }
+    bool switchValueV { get; set; }
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
 
+    int BomberoReceptor;
+    string NumeroMovil;
+    int chofer;
+    int BomberoCuerpo;
+    int BomberoEncargado;
+    int QuienLLenoPlanilla;
 
     //direccion
     public async void CargarFactorClimatico()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == modelServiciosEspecialesPrevencion.LegajoReceptor).SingleOrDefaultAsync();
-        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == modelServiciosEspecialesPrevencion.LegajoEncargado).SingleOrDefaultAsync();
-        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == modelServiciosEspecialesPrevencion.LegajoLLenoPlanilla).SingleOrDefaultAsync();
+        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
+        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
+        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
 
         Vista.Data.Models.Salidas.Planillas.ServicioEspecialPrevencion ServicioPrevenicion = new()
             {
@@ -292,7 +396,8 @@
                 ApellidoSolicitante = modelServiciosEspecialesPrevencion.ApellidoSolicitante,
                 DniSolicitante = modelServiciosEspecialesPrevencion.DniSolicitante,
                 TelefonoSolicitante = modelServiciosEspecialesPrevencion.TelefonoSolicitante,
-
+                NombreYApellidoReceptor = modelServiciosEspecialesPrevencion.NombreYApellidoReceptor,
+                TelefonoReceptor = modelServiciosEspecialesPrevencion.TelefonoReceptor,
                 TipoServicio = modelServiciosEspecialesPrevencion.TipoServicio,
                 //Organizacion beneficiada
                 TipoOrganizacion = modelServiciosEspecialesPrevencion.TipoOrganizacion,
@@ -388,7 +493,6 @@
 
     }
 
-
     public async void AgregarMovilSalida()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -425,7 +529,9 @@
         {
             modelServiciosEspecialesPrevencion.NumeroParte = salida.NumeroParte++;
         }
-
+        TodosBomberos = await db.Bomberos.ToArrayAsync();
+        Moviles = await db.Moviles.ToArrayAsync();
+        CargarBomberosView();
     }
     public async void AgregarDamnificado()
     {
@@ -465,7 +571,77 @@
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
     // array de las opciones posibles, buscar la opcion y agregarla en la planilla
+    public void CargarBomberosView()
+    {
 
+        foreach (Bombero b in TodosBomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    FechaNacimiento = b.FechaNacimiento,
+                    Sexo = b.Sexo,
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    Documento = b.Documento,
+                    NumeroLegajo = b.NumeroLegajo,
+                    NumeroIoma = b.NumeroIoma,
+                    LugarNacimiento = b.LugarNacimiento,
+                    Grado = b.Grado,
+                    //NombreImagen = b.NombreImagen,
+                    //TipoImagen = b.TipoImagen,
+                    //Base64Imagen = b.Base64,
+                    Dotacion = b.Dotacion,
+                    //Nombre = b.NombreBrigada,
+                    Resolucion1 = b.Resolucion1,
+                    Resolucion2 = b.Resolucion2,
+                    Resolucion3 = b.Resolucion3,
+                    Resolucion4 = b.Resolucion4,
+                    Resolucion5 = b.Resolucion5,
+                    Resolucion6 = b.Resolucion6,
+                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
+                    Estado = b.Estado,
+                    Chofer = b.Chofer,
+                    VencimientoRegistro = b.VencimientoRegistro,
+                    Direccion = b.Direccion,
+                    Observaciones = b.Observaciones,
+                    Profesion = b.Profesion,
+                    NivelEstudios = b.NivelEstudios,
+                    FechaAceptacion = b.FechaAceptacion,
+                    //TelefonoCel = b.TelefonoCel,
+                    //TelefonoFijo = b.TelefonoFijo,
+                    //TelefonoLaboral = b.TelefonoLaboral,
+                    //Email = b.Email,
+
+                };
+            bomberoTodos.Add(bombero);
+
+        }
+    }
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    bool _visible = false;
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+    private void HandleCancel(MouseEventArgs e)
+    {
+
+        _visible = false;
+    }
+    private void OnFinishModel(EditContext editContext)
+    {
+
+        _visible = false;
+    }
+    private void HandleOk(MouseEventArgs e)
+    {
+
+        _visible = false;
+
+    }
 
 }
 
