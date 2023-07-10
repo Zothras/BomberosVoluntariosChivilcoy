@@ -5,7 +5,7 @@
         Accidente,
         FactorClimatico,
         MaterialPeligroso,
-        ServicioEspecialPrevencionViewModels,
+        ServicioEspecialRepresentaciones,
         RescateAnimal,
         RescatePersona,
         IncendioComercio,

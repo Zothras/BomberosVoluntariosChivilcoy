@@ -214,11 +214,24 @@
             <p>Detalle Superficie Afectada: @materialPeligrosoViewModel.DetalleSuperficieAfectada</p>
             <p>Tipo Situacion: @materialPeligrosoViewModel.TipoSituacion</p>
             break;
-        case TipoSalida.ServicioEspecialPrevencionViewModels:
+        case TipoSalida.ServicioEspecialRepresentaciones:
             Task.Run(async () =>
             {
-                await GetViewModelMaterialPeligroso(salidasViewModel[numeroParteVisualizar].SalidaId);
+                await GetViewModelServicioEspecialRepresentaciones(salidasViewModel[numeroParteVisualizar].SalidaId);
             });
+            
+              <p><b>Servicio Especial Prevencion: </b></p>
+              <p>Tipo Servicio Especial: @ServicioEspecialRepresentacionViewModel.Tipo</p>
+            <p>Tipo Organizacion: @ServicioEspecialRepresentacionViewModel.TipoOrganizacion</p>
+            <p>Tipo Representacion: @ServicioEspecialRepresentacionViewModel.TipoRepresentacion</p>
+            <p>Otro Representacion: @ServicioEspecialRepresentacionViewModel.OtroRepresentacion</p>
+            <p><b>    Datos Capacitacion: </b></p>
+            <p>Nivel Capacitacion: @ServicioEspecialRepresentacionViewModel.NivelCapacitacion</p>
+            <p>Nivel Capacitacion Otro: @ServicioEspecialRepresentacionViewModel.NivelCapacitacionOtro</p>
+            <p>Tipo Capacitacion: @ServicioEspecialRepresentacionViewModel.TipoCapacitacion</p>
+            <p>Capacitacion Otra: @ServicioEspecialRepresentacionViewModel.CapacitacionOtra</p>
+            <p>Dias Capacitacion: @ServicioEspecialRepresentacionViewModel.DiasCapacitacion</p>
+            <p>Horarios Capacitacion: @ServicioEspecialRepresentacionViewModel.HorariosCapacitacion</p>
             break;
         case TipoSalida.RescateAnimal:
             Task.Run(async () =>
@@ -756,6 +769,7 @@
     private IncendioComercioViewModels IncendioComercioViewModel = new();
 
     private Data.ViewModels.Servicios.ServicioEspecialPrevencionViewModels ServicioEspecialPrevencionViewModel = new();
+    private Data.ViewModels.Servicios.ServicioEspecialRepresentacionViewModels ServicioEspecialRepresentacionViewModel = new();
     private Data.ViewModels.Servicios.ServicioEspecialPrevencionViewModels ServicioEspecialViewModel = new();
 
     List<AccidenteViewModels> accidentesVM = new List<AccidenteViewModels>();
@@ -1296,7 +1310,32 @@
         StateHasChanged();
 
     }
+    
+    private async Task GetViewModelServicioEspecialRepresentaciones(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
 
+        ServicioEspecialRepresentaciones? servicioEspecialRepresentaciones = await db.ServicioEspecialesRespresentaciones.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.DatosCapacitacion).ThenInclude(servicio => servicio.ServicioEspecial)
+        .SingleOrDefaultAsync();
+
+        ServicioEspecialRepresentacionViewModel = new()
+            {
+                TipoRepresentacion = servicioEspecialRepresentaciones.TipoRepresentacion,
+                TipoOrganizacion = servicioEspecialRepresentaciones.TipoOrganizacion,
+                OtroRepresentacion = servicioEspecialRepresentaciones.OtroRepresentacion,
+                //TipoPrevencion = servicioEspecialPrevencion.TipoPrevencion,
+                NivelCapacitacion= servicioEspecialRepresentaciones.DatosCapacitacion.NivelCapacitacion.ToString(),
+                NivelCapacitacionOtro= servicioEspecialRepresentaciones.DatosCapacitacion.NivelCapacitacionOtro,
+                TipoCapacitacion= servicioEspecialRepresentaciones.DatosCapacitacion.TipoCapacitacion.ToString(),
+                CapacitacionOtra= servicioEspecialRepresentaciones.DatosCapacitacion.CapacitacionOtra,
+                DiasCapacitacion= servicioEspecialRepresentaciones.DatosCapacitacion.DiasCapacitacion,
+                HorariosCapacitacion=servicioEspecialRepresentaciones.DatosCapacitacion.HorariosCapacitacion,
+                Tipo=servicioEspecialRepresentaciones.Tipo
+            };
+        StateHasChanged();
+
+    }
 }
 @code {
     string title = "Detalles Salida";
