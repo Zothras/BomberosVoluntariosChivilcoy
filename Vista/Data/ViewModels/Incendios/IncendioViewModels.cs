@@ -20,7 +20,7 @@ using Vista.Data.Models.Salidas.Componentes;
         public TipoCausaIncendio SuperficieAfectadaCausa { get; set; }
         public TipoIncendioAbertura? TipoAbertura { get; set; }
         [Required, StringLength(255)]
-        public string? OtraAbertura { get; set; }
+        public string OtraAbertura { get; set; }
         public TipoIncendioTecho? TipoTecho { get; set; }
         [Required, StringLength(255)]
         public string? OtroTecho { get; set; }
