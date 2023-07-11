@@ -116,7 +116,7 @@
     <b><label>Datos de chofer</label></b>
     <br />
     <FormItem Label="" style="display: grid;place-items: center;">
-        <Checkbox @bind-Checked="chekM" > Cargo combustible</Checkbox>
+        <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
         <Button Type="primary" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
@@ -125,7 +125,7 @@
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@bomberoTodos"
-                @bind-Value="@chofer"
+        @bind-Value="@chofer"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Select a person"
@@ -272,12 +272,27 @@
     </FormItem>
 
 
+
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
+
         <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarMaterialPeligroso">
             Cargar salida
         </Button>
+
+
     </FormItem>
+
 </Form>
+
+<Modal Title="@("success")"
+       Visible="@_visible1"
+       OnOk="@HandleOk1"
+       OnCancel="@HandleCancel1">
+    <Result Status="success"
+            Title="Se cargo correctamente la salida"
+            SubTitle="">
+    </Result>
+</Modal>
 <Modal Title="@("Datos de la carga de combustible")"
        Visible="@_visible"
        OnOk="@HandleOk"
@@ -336,10 +351,11 @@
     int BomberoCuerpo;
     int BomberoEncargado;
     int QuienLLenoPlanilla;
-
+    bool _visible1;
 
     public async void CargarMaterialPeligroso()
     {
+        ShowModal1();
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
         Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
@@ -463,6 +479,7 @@
 
 
         }
+
         await db.MaterialesPeligrosos.AddAsync(materiales);
         await db.SaveChangesAsync();
 
@@ -604,6 +621,7 @@
         }
     }
     //metodos para el modal
+
     private void OnFinishFailedModel(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
@@ -617,20 +635,35 @@
     {
         _visible = true;
     }
+    public void ShowModal1()
+    {
+        _visible1 = true;
+    }
     private void HandleCancel(MouseEventArgs e)
     {
-       
+
         _visible = false;
     }
     private void OnFinishModel(EditContext editContext)
     {
-       
+
         _visible = false;
     }
     private void HandleOk(MouseEventArgs e)
     {
-        
+
         _visible = false;
+
+    }
+    private void HandleCancel1(MouseEventArgs e)
+    {
+
+        _visible1 = false;
+    }
+    private void HandleOk1(MouseEventArgs e)
+    {
+        navigationManager.NavigateTo($"/legajo");
+        _visible1 = false;
 
     }
 }
