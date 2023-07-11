@@ -11,6 +11,7 @@
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.ViewModels.Accidente;
 @using Vista.Data.ViewModels;
+@using Vista.Data.ViewModels.Rescates;
 
 
 <Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1">
@@ -666,9 +667,240 @@
 </Modal>
 
 
-@using AntDesign.TableModels;
-@using System.Text.Json;
-@using Vista.Data.ViewModels.Rescates;
+
+
+<Button Type="primary" OnClick="@ShowModalEditar">
+    Open Modal with a Form
+</Button>
+<Modal Title="@("Salida Editar")"
+       Visible="@_visibleEditar"
+       OnOk="@HandleOkEditar"
+       OnCancel="@HandleCancelEditar">
+    <Form Loading="loading" Model="@salidasViewModel"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinishEditar"
+          OnFinishFailed="OnFinishFailedEditar"
+    @ref="@_form">
+        @*Datos generales de las salidas*@
+        <FormItem Label="Numero de parte">
+            <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].NumeroParte" Disabled />
+        </FormItem>
+        <FormItem Label="Descripcion">
+            <Input @bind-Value="@salidasEditarVM.Descripcion" />
+        </FormItem>
+        <FormItem Label="Dato Hora salida">
+            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel[numeroParteVisualizar].HoraSalida" />
+        </FormItem>
+        <FormItem Label="Dato Hora llegada">
+            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel[numeroParteVisualizar].HoraLLegada" />
+        </FormItem>
+        <FormItem Label="Kilometro salida">
+            <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmSalida" />
+        </FormItem>
+        <FormItem Label="Kilometro llegada">
+            <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmLlegada" />
+        </FormItem>
+        <FormItem Label="Calle/Ruta">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].CalleORuta" />
+        </FormItem>
+        <FormItem Label="Numero/kilometro">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].NumeroOKilometro" />
+        </FormItem>
+        <FormItem Label="Entre calles">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].EntreCalles" />
+        </FormItem>
+        <FormItem Label="PisoNumero">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].PisoNumero" />
+        </FormItem>
+        <FormItem Label="Depto">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].Depto" />
+        </FormItem>
+
+        <FormItem Label="Tipo Zona">
+            <EnumSelect TEnum="TipoZona"  @bind-Value="@salidasViewModel[numeroParteVisualizar].TipoZona"/>
+        </FormItem>
+
+        @*Solicitante datos*@
+        <b><label>Datos de solicitante</label></b>
+        <FormItem Label="Nombre del solicitante">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].NombreSolicitante" />
+        </FormItem>
+        <FormItem Label="Apelldio del solicitante">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].ApellidoSolicitante" />
+        </FormItem>
+        <FormItem Label="documneto del solicitante">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].DniSolicitante" />
+        </FormItem>
+        <FormItem Label="Telefono  del solicitante">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].TelefonoSolicitante" />
+        </FormItem>
+        @*Datos del receptor*@
+        <FormItem Label="Nombre y apellido del receptor">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].NombreYApellidoReceptor" />
+        </FormItem>
+        <FormItem Label="Telefono receptor">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].TelefonoReceptor" />
+        </FormItem>
+        <FormItem Label="Legajo receptor">
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].LegajoReceptor" />
+        </FormItem>
+        
+        @*Datos de damnificados*@
+        @if(salidasViewModel[numeroParteVisualizar].Damnificados is not null)
+        {
+            foreach (Damnificado d in salidasViewModel[numeroParteVisualizar].Damnificados)
+            {
+                <FormItem Label="Nombre">
+                    <Input @bind-Value="@d.Nombre" />
+                </FormItem>
+                <FormItem Label="Apellido">
+                    <Input @bind-Value="@d.Apellido" />
+                </FormItem>
+                <FormItem Label="Documento">
+                    <Input @bind-Value="@d.Dni" />
+                </FormItem>
+                <FormItem Label="Tipo sexo">
+                    <EnumSelect TEnum="TipoSexo" @bind-Value="@d.Sexo" />
+                </FormItem>
+                <FormItem Label="Lugar De nacimiento">
+                    <Input @bind-Value="@d.LugarDeNacimiento" />
+                </FormItem>
+                <FormItem Label="edad">
+                    <AntDesign.InputNumber @bind-Value="d.Edad" />
+                </FormItem>
+                <FormItem Label="Tipo material">
+                    <EnumSelect TEnum="TipoDamnificado" @bind-Value="@d.Estado" />
+                </FormItem>
+            }
+        }
+        
+           
+        
+        @*Moviles de salidas*@
+        @*a la hora de pedir el chofer y movil,
+        pedir dato unico para no cargar todo y buscarlo en la base de datos*@
+        @*Moviles de salidas*@
+        <b><label>Datos de chofer</label></b>
+        <br />
+        @foreach (MovilSalida ms in salidasViewModel[numeroParteVisualizar].Moviles)
+        {
+            <FormItem Label="">
+                <Checkbox @bind-Checked="@ms.CargoCombustible"> Cargo combustible</Checkbox>
+            </FormItem>
+
+
+            <FormItem Label="Chofer: ">
+                <Select TItem="BomberoViweModel"
+                        TItemValue="int"
+                        DataSource="@bomberoTodos"
+                        @bind-Value="@ms.Chofer"
+                        LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                        ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                        Placeholder="Seleccione el bombero"
+                        DefaultActiveFirstOption="false"
+                        EnableSearch>
+                </Select>
+            </FormItem>
+            <FormItem Label="Movil Id">
+                <AntDesign.InputNumber @bind-Value="ms.MovilId" />
+            </FormItem>
+            <FormItem Label="Numero de movil">
+                <Select TItem="Movil"
+                        TItemValue="string"
+                        DataSource="@Moviles"
+                @bind-Value="@ms.Movil.NumeroMovil"
+                        LabelName="@nameof(Movil.NumeroMovil)"
+                        ValueName="@nameof(Movil.NumeroMovil)"
+                        Placeholder="Seleccione el movil"
+                        DefaultActiveFirstOption="false"
+                    EnableSearch>
+            </Select>
+
+        </FormItem>
+            <FormItem Label="Lugar De nacimiento">
+                    <Input @bind-Value="@ms.NumeroFactura"/>
+             </FormItem>
+             <FormItem Label="Lugar De nacimiento">
+                    <Input @bind-Value="@ms.TipoConbustible" />
+             </FormItem>
+             <FormItem Label="Lugar De nacimiento">
+                    <Input @bind-Value="@ms.CantidadLitros" />
+             </FormItem>
+             <FormItem Label="Lugar De nacimiento">
+                    <Input @bind-Value="@ms.QuienLleno" />
+             </FormItem>
+             <FormItem Label="Lugar De nacimiento">
+                <Input @bind-Value="@ms.TelefonoQuienLleno" />
+             </FormItem>
+
+        }
+        
+
+
+        @*Cuerpos paraticipantes*@
+        <b><label>Cuerpo Participante</label></b>
+        <FormItem Label="Elija el bombero">
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberoTodos"
+                    @bind-Value="@BomberoCuerpo"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione el bombero"
+                    DefaultActiveFirstOption="false"
+                    EnableSearch>
+            </Select>
+        </FormItem>
+        @foreach (BomberoSalida b in salidasViewModel[numeroParteVisualizar].CuerpoParticipante)
+        {
+            <FormItem Label="Elija el bombero">
+                <Select TItem="BomberoViweModel"
+                        TItemValue="int"
+                        DataSource="@bomberoTodos"
+                @bind-Value="@BomberoLegajoCambiarReceptor"
+                        LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                        ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                        Placeholder="Seleccione el bombero"
+                        DefaultActiveFirstOption="false"
+                        EnableSearch>
+                </Select>
+            </FormItem>
+            <p><b>Bombero: @b.Bombero.Nombre @b.Bombero.Apellido</b></p>
+            //traer datos de cada bombero
+            <Checkbox @bind-Checked="b.Salio"> Salio</Checkbox>
+        }
+
+        <b><label>Elija al encargado</label></b>
+        <FormItem Label="Encargado">
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberoTodos"
+                    @bind-Value="@BomberoEncargado"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione un encargado"
+                    DefaultActiveFirstOption="false"
+                    EnableSearch>
+            </Select>
+        </FormItem>
+        <b><label>Quien lleno planilla</label></b>
+        <FormItem Label="Bombero que lleno la planilla">
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberoTodos"
+                    @bind-Value="@QuienLLenoPlanilla"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione un encargado"
+                    DefaultActiveFirstOption="false"
+                    EnableSearch>
+            </Select>
+        </FormItem>
+    </Form>
+</Modal>
+
+@*Se traen los datos de salida generales y discriminador*@
 @code {
     string searchString;
     IEnumerable<Salida> dataSource;
@@ -681,6 +913,8 @@
     private TableFilter<TipoSalida>[] DiscriminadorFilter;
     List<SalidasViewModel1>? salidasViewModelCarga = new List<SalidasViewModel1>();
     List<Salida>? salidas;
+    Bombero[] TodosBomberos;
+    Movil[] Moviles;
 
     protected override async Task OnInitializedAsync()
     {
@@ -723,7 +957,8 @@
             i++;
         }
 
-
+        TodosBomberos = await db.Bomberos.ToArrayAsync();
+        Moviles = await db.Moviles.ToArrayAsync();
         StateHasChanged();
     }
 
@@ -753,6 +988,8 @@
         StateHasChanged();
     }
 }
+
+@*Carga de modales para mostrar detalles*@
 @code{
     private AccidenteViewModels accidenteViewModels = new();
     private FactorClimaticoViewModels factorClimaticoViewModel = new();
@@ -1337,14 +1574,27 @@
 
     }
 }
+
+@*Para mostrar Modale detalles*@
 @code {
     string title = "Detalles Salida";
     bool _visible = false;
     int numeroParteVisualizar;
+    public List<BomberoViweModel> bomberoTodos = new();
+    //List<int> BomberoLegajoCambiar
+    int BomberoLegajoReceptor;
+    int BomberoLegajoCambiarReceptor;
+    bool ComprobarCambioLegajoReceptor;
+
     private void ShowModalDetalle(int numeroParte)
     {
         numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == numeroParte);
-        
+
+        //Datos para comprobar si se cambiio al receptor y asi volver a cargar los datos en la salida
+        BomberoLegajoReceptor=salidasViewModel[numeroParte].ReceptorBombero.NumeroLegajo;
+        BomberoLegajoCambiarReceptor = BomberoLegajoReceptor;
+        ComprobarCambioLegajoReceptor= false;
+
         _visible = true;
     }
     private void HandleOk(MouseEventArgs e)
@@ -1357,5 +1607,147 @@
     {
         Console.WriteLine(e);
         _visible = false;
+    }
+}
+
+@*Modal Editar*@
+@using System.ComponentModel.DataAnnotations
+
+
+
+@code {
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    bool _visibleEditar = false;
+    private SalidasViewModel1 salidasEditarVM = new();
+    private MovilSalidaViewModels movilSalidaViewModels = new();
+    public List<MovilSalidaViewModels> MovilesSalidasL = new();
+
+    private void OnFinishFailedEditar(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidasEditarVM)}");
+    }
+
+    private void ShowModalEditar(int numeroParte)
+    {
+        numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == numeroParte);
+        _visibleEditar = true;
+    }
+
+    private void HandleCancelEditar(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visibleEditar = false;
+    }
+
+
+    /*
+    * Careful!
+    *
+    * next bind submit event to modal OK button
+     */
+
+    private Form<List<SalidasViewModel1>> _form;
+
+    /// <summary>
+    /// when form is submited, close the modal
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnFinishEditar(EditContext editContext)
+    {
+        Console.WriteLine("e");
+        _visibleEditar = false;
+    }
+
+    /// <summary>
+    /// on modal OK button is click, submit form manually
+    /// </summary>
+    /// <param name="e"></param>
+    private void HandleOkEditar(MouseEventArgs e)
+    {
+        _form.Submit();
+    }
+
+    private async void GetSalidaEditar()
+    {
+        
+    }
+    private class SalidaEditarViewModels : SalidasViewModels
+    {
+        string TipoSalidas;
+        public SalidaEditarViewModels(string TipoSalidaDiscriminador)
+        {
+            TipoSalidas = TipoSalidaDiscriminador;
+        }
+
+
+    }
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+    //private async void GetMovilSaidasViewModel(){
+    //    using var db = await DbFactory.CreateDbContextAsync();
+    //    foreach (MovilSalidaViewModels m in MovilesSalidasL)
+    //    {
+    //        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
+    //        Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+    //        MovilSalida movilS = new()
+    //        {
+    //                CargoCombustible = m.CargoCombustible,
+    //                Chofer = bomberoChofer,
+    //                Movil = Movilsalida
+    //        };
+    //            salidaIncendioComercio.Moviles.Add(movilS);
+    //    }
+    //}
+    public void CargarBomberosView()
+    {
+
+        foreach (Bombero b in TodosBomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    FechaNacimiento = b.FechaNacimiento,
+                    Sexo = b.Sexo,
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    Documento = b.Documento,
+                    NumeroLegajo = b.NumeroLegajo,
+                    NumeroIoma = b.NumeroIoma,
+                    LugarNacimiento = b.LugarNacimiento,
+                    Grado = b.Grado,
+                    //NombreImagen = b.NombreImagen,
+                    //TipoImagen = b.TipoImagen,
+                    //Base64Imagen = b.Base64,
+                    Dotacion = b.Dotacion,
+                    //Nombre = b.NombreBrigada,
+                    Resolucion1 = b.Resolucion1,
+                    Resolucion2 = b.Resolucion2,
+                    Resolucion3 = b.Resolucion3,
+                    Resolucion4 = b.Resolucion4,
+                    Resolucion5 = b.Resolucion5,
+                    Resolucion6 = b.Resolucion6,
+                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
+                    Estado = b.Estado,
+                    Chofer = b.Chofer,
+                    VencimientoRegistro = b.VencimientoRegistro,
+                    Direccion = b.Direccion,
+                    Observaciones = b.Observaciones,
+                    Profesion = b.Profesion,
+                    NivelEstudios = b.NivelEstudios,
+                    FechaAceptacion = b.FechaAceptacion,
+                    //TelefonoCel = b.TelefonoCel,
+                    //TelefonoFijo = b.TelefonoFijo,
+                    //TelefonoLaboral = b.TelefonoLaboral,
+                    //Email = b.Email,
+
+                };
+            bomberoTodos.Add(bombero);
+
+        }
     }
 }
