@@ -669,9 +669,9 @@
 
 
 
-<Button Type="primary" OnClick="@ShowModalEditar">
+@*<Button Type="primary" OnClick="@ShowModalEditar">
     Open Modal with a Form
-</Button>
+</Button>*@
 <Modal Title="@("Salida Editar")"
        Visible="@_visibleEditar"
        OnOk="@HandleOkEditar"
@@ -749,6 +749,7 @@
         @*Datos de damnificados*@
         @if(salidasViewModel[numeroParteVisualizar].Damnificados is not null)
         {
+            <b><label>Damnificados</label></b>
             foreach (Damnificado d in salidasViewModel[numeroParteVisualizar].Damnificados)
             {
                 <FormItem Label="Nombre">
@@ -772,21 +773,19 @@
                 <FormItem Label="Tipo material">
                     <EnumSelect TEnum="TipoDamnificado" @bind-Value="@d.Estado" />
                 </FormItem>
+                //VehiculoDamificado, de Damificados va?-----------------------------------
             }
         }
-        
-           
-        
         @*Moviles de salidas*@
         @*a la hora de pedir el chofer y movil,
         pedir dato unico para no cargar todo y buscarlo en la base de datos*@
         @*Moviles de salidas*@
-        <b><label>Datos de chofer</label></b>
+        <b><label>Datos de movil y chofer</label></b>
         <br />
-        @foreach (MovilSalida ms in salidasViewModel[numeroParteVisualizar].Moviles)
+        @for (int i = 0; i< salidasViewModel[numeroParteVisualizar].Moviles.Count; i++ )
         {
-            <FormItem Label="">
-                <Checkbox @bind-Checked="@ms.CargoCombustible"> Cargo combustible</Checkbox>
+            <FormItem Label="¿Cargo Combustible?">
+                <Checkbox @bind-Checked="@salidasViewModel[numeroParteVisualizar].Moviles[i].CargoCombustible"> Cargo combustible</Checkbox>
             </FormItem>
 
 
@@ -794,7 +793,7 @@
                 <Select TItem="BomberoViweModel"
                         TItemValue="int"
                         DataSource="@bomberoTodos"
-                        @bind-Value="@ms.Chofer"
+                @bind-Value="@BomberoLegajoCambiarChofer[i]"
                         LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                         ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                         Placeholder="Seleccione el bombero"
@@ -802,14 +801,12 @@
                         EnableSearch>
                 </Select>
             </FormItem>
-            <FormItem Label="Movil Id">
-                <AntDesign.InputNumber @bind-Value="ms.MovilId" />
-            </FormItem>
+
             <FormItem Label="Numero de movil">
                 <Select TItem="Movil"
                         TItemValue="string"
                         DataSource="@Moviles"
-                @bind-Value="@ms.Movil.NumeroMovil"
+                @bind-Value="@NumeroMovilCambiar[i]"
                         LabelName="@nameof(Movil.NumeroMovil)"
                         ValueName="@nameof(Movil.NumeroMovil)"
                         Placeholder="Seleccione el movil"
@@ -818,20 +815,20 @@
             </Select>
 
         </FormItem>
-            <FormItem Label="Lugar De nacimiento">
-                    <Input @bind-Value="@ms.NumeroFactura"/>
+            <FormItem Label="Numero Factura">
+                    <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[i].NumeroFactura"/>
              </FormItem>
-             <FormItem Label="Lugar De nacimiento">
-                    <Input @bind-Value="@ms.TipoConbustible" />
+             <FormItem Label="Tipo Conbustible">
+                    <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[i].TipoConbustible" />
              </FormItem>
-             <FormItem Label="Lugar De nacimiento">
-                    <Input @bind-Value="@ms.CantidadLitros" />
+             <FormItem Label="Cantidad Litros">
+                    <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[i].CantidadLitros" />
              </FormItem>
-             <FormItem Label="Lugar De nacimiento">
-                    <Input @bind-Value="@ms.QuienLleno" />
+             <FormItem Label="Quien Lleno">
+                    <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[i].QuienLleno" />
              </FormItem>
-             <FormItem Label="Lugar De nacimiento">
-                <Input @bind-Value="@ms.TelefonoQuienLleno" />
+             <FormItem Label="Telefono Quien Lleno">
+                <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[i].TelefonoQuienLleno" />
              </FormItem>
 
         }
@@ -840,25 +837,32 @@
 
         @*Cuerpos paraticipantes*@
         <b><label>Cuerpo Participante</label></b>
-        <FormItem Label="Elija el bombero">
-            <Select TItem="BomberoViweModel"
-                    TItemValue="int"
-                    DataSource="@bomberoTodos"
-                    @bind-Value="@BomberoCuerpo"
-                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                    Placeholder="Seleccione el bombero"
-                    DefaultActiveFirstOption="false"
-                    EnableSearch>
-            </Select>
-        </FormItem>
+
+        @for (int i = 0; i<salidasViewModel[numeroParteVisualizar].CuerpoParticipante.Count; i++ )
+        {
+            <FormItem Label="Elija el bombero">
+                <Select TItem="BomberoViweModel"
+                        TItemValue="int"
+                        DataSource="@bomberoTodos"
+                        @bind-Value="@BomberoLegajosCambiar[i]"
+                        LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                        ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                        Placeholder="Seleccione el bombero"
+                        DefaultActiveFirstOption="false"
+                        EnableSearch>
+                </Select>
+            </FormItem>
+            //traer datos de cada bombero
+            <Checkbox @bind-Checked="salidasViewModel[numeroParteVisualizar].CuerpoParticipante[i].Salio"> Salio</Checkbox>
+        }
+        
         @foreach (BomberoSalida b in salidasViewModel[numeroParteVisualizar].CuerpoParticipante)
         {
             <FormItem Label="Elija el bombero">
                 <Select TItem="BomberoViweModel"
                         TItemValue="int"
                         DataSource="@bomberoTodos"
-                @bind-Value="@BomberoLegajoCambiarReceptor"
+                @bind-Value="@BomberoLegajoCambiarQuienLLenoPlanilla"
                         LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                         ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                         Placeholder="Seleccione el bombero"
@@ -867,16 +871,15 @@
                 </Select>
             </FormItem>
             <p><b>Bombero: @b.Bombero.Nombre @b.Bombero.Apellido</b></p>
-            //traer datos de cada bombero
-            <Checkbox @bind-Checked="b.Salio"> Salio</Checkbox>
+            
         }
 
-        <b><label>Elija al encargado</label></b>
+        <b><label>Encargado</label></b>
         <FormItem Label="Encargado">
             <Select TItem="BomberoViweModel"
                     TItemValue="int"
                     DataSource="@bomberoTodos"
-                    @bind-Value="@BomberoEncargado"
+                    @bind-Value="@BomberoLegajoCambiarEncargado"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Seleccione un encargado"
@@ -889,7 +892,7 @@
             <Select TItem="BomberoViweModel"
                     TItemValue="int"
                     DataSource="@bomberoTodos"
-                    @bind-Value="@QuienLLenoPlanilla"
+                    @bind-Value="@BomberoLegajoQuienLLenoPlanilla"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Seleccione un encargado"
@@ -897,6 +900,101 @@
                     EnableSearch>
             </Select>
         </FormItem>
+        <FormItem Label="Tipo Servicio Salida">
+            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidasViewModel[numeroParteVisualizar].TipoServicio" />
+        </FormItem>
+        @*-----------------------Datos especificos de una salida----------------------*@
+        @switch (@salidasViewModel[numeroParteVisualizar].Discriminador)
+        {
+            case TipoSalida.Accidente:
+                Task.Run(async () =>
+            {   
+                await GetViewModelAccidentes(salidasViewModel[numeroParteVisualizar].SalidaId);
+            });
+            <p><b>Accidente: </b></p>
+            <FormItem Label="Tipo Accidente">
+                    <EnumSelect TEnum="TipoAccidente" @bind-Value="@accidenteViewModels.Tipo" />
+            </FormItem>
+                <FormItem Label="Cantidad de vehiculos:>
+                    <AntDesign.InputNumber @bind-Value="@accidenteViewModels.CantidadVheiculo" />
+                </FormItem>
+
+
+            if (@accidenteViewModels.VehiculosAfectado is not null)
+            {
+                foreach (VehiculoAfectadoAccidente v in @accidenteViewModels.VehiculosAfectado)
+                {
+                    <p><b>Vehiculos Afectado: </b></p>
+                    <FormItem Label="Patente">
+                        <Input @bind-Value="@v.Patente" />
+                    </FormItem>
+                    <FormItem Label="Marca">
+                        <Input @bind-Value="@v.Marca" />
+                    </FormItem>
+                    <FormItem Label="Modelo">
+                        <Input @bind-Value="@v.Modelo" />
+                    </FormItem>
+                    <FormItem Label="Tipo">
+                        <Input @bind-Value="@v.Tipo" />
+                    </FormItem>
+
+                    <p><b>Seguro:</b></p>
+                     //traer datos de seguroVehiculo
+                     <FormItem Label="Numero De Poliza">
+                        <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                    </FormItem>
+                    <FormItem Label="Compañia Aseguradora">
+                        <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                    </FormItem>
+                    <FormItem Label="Fecha De Vencimineto">
+                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                    </FormItem>
+                    <FormItem Label="">
+                        <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                    </FormItem>
+
+                }
+            }
+            <FormItem Label="Tipo Condiciones Climaticas">
+                    <EnumSelect TEnum="TipoCondicionesClimaticas" @bind-Value="@accidenteViewModels.CondicionesClimaticas" />
+            </FormItem>
+            <FormItem Label="Otro Condicion">
+                     <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
+            </FormItem>
+
+            break;
+            case TipoSalida.FactorClimatico:
+            break;
+            case TipoSalida.MaterialPeligroso:
+            break;
+            case TipoSalida.ServicioEspecialRepresentaciones:
+            break;
+            case TipoSalida.ServicioEspecialPrevencion:
+            break;
+            case TipoSalida.RescateAnimal:
+            break;
+            case TipoSalida.RescatePersona:
+            break;
+            case TipoSalida.Incendio:
+            break;
+            case TipoSalida.IncendioComercio:
+            break;
+            case TipoSalida.IncendioEstablecimientoEducativo:
+            break;
+            case TipoSalida.IncendioEstablecimientoPublico:
+            break;
+            case TipoSalida.IncendioForestal:
+            break;
+            case TipoSalida.IncendioHospitalesYClinicas:
+            break;
+            case TipoSalida.IncendioIndustria:
+            break;
+            case TipoSalida.IncendioVivienda:
+            break;
+            case TipoSalida.ServicioEspecial:
+            break;
+
+        }
     </Form>
 </Modal>
 
@@ -1580,20 +1678,13 @@
     string title = "Detalles Salida";
     bool _visible = false;
     int numeroParteVisualizar;
-    public List<BomberoViweModel> bomberoTodos = new();
-    //List<int> BomberoLegajoCambiar
-    int BomberoLegajoReceptor;
-    int BomberoLegajoCambiarReceptor;
-    bool ComprobarCambioLegajoReceptor;
+   
 
     private void ShowModalDetalle(int numeroParte)
     {
         numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == numeroParte);
 
-        //Datos para comprobar si se cambiio al receptor y asi volver a cargar los datos en la salida
-        BomberoLegajoReceptor=salidasViewModel[numeroParte].ReceptorBombero.NumeroLegajo;
-        BomberoLegajoCambiarReceptor = BomberoLegajoReceptor;
-        ComprobarCambioLegajoReceptor= false;
+        
 
         _visible = true;
     }
@@ -1617,7 +1708,28 @@
 
 @code {
     bool loading = false;
-
+    public List<BomberoViweModel> bomberoTodos = new();
+    //List<int> BomberoLegajoCambiar
+    //Comprobacion cambio en Encargado
+    int BomberoLegajoEncargado;
+    int BomberoLegajoCambiarEncargado;
+    bool ComprobarCambioLegajoEncargado;
+    //Comprobacion cambio en Quien lleno planilla
+    int BomberoLegajoQuienLLenoPlanilla;
+    int BomberoLegajoCambiarQuienLLenoPlanilla;
+    bool ComprobarCambioLegajoQuienLLenoPlanilla;
+    //Comprobacion cambio en Cuerpos Participantes
+    List<int> BomberoLegajos = new List<int>();
+    List<int> BomberoLegajosCambiar= new List<int>();
+    List<bool> ComprobarBomberoLegajos= new List<bool>();
+    //Comprobacion cambio en Chofer del vehiculo
+    List<int> BomberoLegajosChofer = new List<int>();
+    List<int> BomberoLegajoCambiarChofer = new List<int>();
+    List<bool> ComprobarBomberoLegajosChofer = new List<bool>();
+    //Comprobacion cambio en Cuerpos Participantes
+    List<string> NumeroMovil = new List<string>();
+    List<string> NumeroMovilCambiar = new List<string>();
+    List<bool> ComprobarNumeroMovil = new List<bool>();
     void toggle(bool value) => loading = value;
 
     bool _visibleEditar = false;
@@ -1633,6 +1745,32 @@
     private void ShowModalEditar(int numeroParte)
     {
         numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == numeroParte);
+
+        //Datos para comprobar si se cambiio al Encargado y asi volver a cargar los datos en la salida
+        BomberoLegajoEncargado = salidasViewModel[numeroParte].LegajoEncargado;
+        BomberoLegajoCambiarEncargado = BomberoLegajoEncargado;
+        ComprobarCambioLegajoEncargado = false;
+
+        //Datos para comprobar si se cambiio a Quien lleno planilla y asi volver a cargar los datos en la salida
+        BomberoLegajoQuienLLenoPlanilla = salidasViewModel[numeroParte].LegajoLLenoPlanilla;
+        BomberoLegajoCambiarQuienLLenoPlanilla = BomberoLegajoQuienLLenoPlanilla;
+        ComprobarCambioLegajoQuienLLenoPlanilla = false;
+
+        //Datos para comprobar si se cambiio a algun bombero y asi volver a cargar los datos en la salida
+        foreach(BomberoSalida bs in salidasViewModel[numeroParte].CuerpoParticipante){
+            BomberoLegajos.Add(bs.Bombero.NumeroLegajo);
+            ComprobarBomberoLegajos.Add(false);
+        }
+
+        //Datos para comprobar si se cambiio al Chofer y asi volver a cargar los datos en la salida
+        //Datos para comprobar si se cambiio a algun movil y asi volver a cargar los datos en la salida
+        foreach(MovilSalida ms in salidasViewModel[numeroParte].Moviles){
+            NumeroMovil.Add(ms.Movil.NumeroMovil);
+            ComprobarNumeroMovil.Add(false);
+            BomberoLegajosChofer.Add(ms.Chofer.NumeroLegajo);
+            ComprobarBomberoLegajosChofer.Add(false);
+        }
+
         _visibleEditar = true;
     }
 
