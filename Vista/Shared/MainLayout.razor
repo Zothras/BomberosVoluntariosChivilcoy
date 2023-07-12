@@ -4,43 +4,95 @@
 
 <PageTitle>Bomberos Chivilcoy</PageTitle>
 <style>
-    .ant-menu-vertical > .ant-menu-item, .ant-menu-vertical-left > .ant-menu-item, .ant-menu-vertical-right > .ant-menu-item, .ant-menu-inline > .ant-menu-item, .ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title{
+    .ant-menu-vertical > .ant-menu-item, .ant-menu-vertical-left > .ant-menu-item, .ant-menu-vertical-right > .ant-menu-item, .ant-menu-inline > .ant-menu-item, .ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
         width: 100%;
     }
+
     .ant-tooltip-content {
         display: none;
     }
-    .ant-menu-item-selected{
-        background-color: rgb(62, 24, 24)!important;
-        width: 100%;    
+
+    .ant-menu-item-selected {
+        background-color: rgb(62, 24, 24) !important;
+        width: 100%;
     }
-    .ant-menu-item{
-        padding-left: 32px!important;
+
+    .ant-menu-item {
+        padding-left: 32px !important;
     }
-    .ant-menu-item a:hover{
-        color: rgb(62, 24, 24) !important;
-    }
-    .ant-menu-item-selected a{
+
+        .ant-menu-item a:hover {
+            color: rgb(62, 24, 24) !important;
+        }
+
+    .ant-menu-item-selected a {
         color: rgb(230, 230, 230) !important;
     }
-    .ant-menu-item-selected anticon{
+
+    .ant-menu-item-selected anticon {
         color: rgb(230, 230, 230) !important;
     }
-    a.nav-link::before{
+
+    a.nav-link::before {
         margin-left: 8px !important;
     }
 
     .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
-        display: flex!important;
+        display: flex !important;
     }
 
-    .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected .icoSelected{
-        color: rgb(223, 223, 223) !important;
+        .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected .icoSelected {
+            color: rgb(223, 223, 223) !important;
+        }
+
+    .ant-menu-inline{
+        border: none!important;
     }
 
-    .ant-menu-inline .ant-menu-item::after{
+    .ant-menu-inline .ant-menu-item::after {
         border-right: rgb(62, 24, 24) !important;
     }
+
+    .ant-menu-submenu-title{
+        padding-left: 33px!important;
+    }
+
+        .ant-menu-submenu-title span{
+            padding-left: 0px!important;
+        }
+
+    .ant-menu-item-selected:hover, .ant-menu-submenu-selected:hover,{
+        color: #fff!important;
+    }
+    .ant-menu-sub.ant-menu-inline {
+        padding-left: 24px!important;
+        background: rgb(230, 230, 230)!important;
+    }
+
+    .ant-menu-light .ant-menu-submenu-title:hover, .ant-menu-light .ant-menu-title-content:hover {
+        color: black!important;
+    }
+
+    .ant-menu-light .ant-menu-submenu-arrow:hover{
+        background: black;
+    }
+    .ant-menu.ant-menu-inline-collapsed > .ant-menu-item{
+        display: flex;
+    }
+
+    .ant-menu-submenu-selected {
+        background: rgb(62, 24, 24) !important;
+        color: #fff!important;
+    }
+
+        .ant-menu-submenu-selected:hover {
+            color: #fff!important;
+        }
+
+    .ant-menu-item-selected, .ant-menu-item-selected i, .ant-menu-item-selected:hover {
+        color: #fff!important;
+    }
+
 </style>
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
@@ -53,7 +105,9 @@
                 }
                 else
                 {
-                    <Icon Type="menu-fold" Theme="outline" Style="font-size: 20px;"></Icon><i class="fa-solid fa-user-helmet-safety" style="color: #263040;"></i>
+                    <Icon Type="menu-fold" Theme="outline" Style="font-size: 20px;"></Icon>
+
+                    <i class="fa-solid fa-user-helmet-safety" style="color: #263040;"></i>
                 }
             </Button>
             <a class="navbar-brand" style="display: flex;align-items:center;gap: 5px;color: rgb(263040,255,255);font-size: 20px;" href="/"><img class="Logo" src="/Imagenes/Logo1.png" /> Bomberos Voluntarios Chivilcoy</a>
@@ -61,111 +115,110 @@
         </div>
     </Header>
     <Layout>
-            <div style="height: 100%;width: 200px;z-index: 100;position: fixed;">
-                <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;"
-                    Mode=MenuMode.Inline
-                    InlineCollapsed=collapsed >
-                    <MenuItem Key="0">
-                        <IconTemplate>
-                            <i class="fa-solid fa-user icoSelected" style="color: #263040;"></i>
-                        </IconTemplate>
-                        <ChildContent>
-                            <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
-                        </ChildContent>
-                    </MenuItem>
-                    <MenuItem Key="2" Icon="desktop">
-                        <IconTemplate>
-                            <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
-                        </IconTemplate>
-                        <ChildContent>
-                            <li class="nav-item"><a class="nav-link" href="bomberos">Bomberos</a></li>
-                        </ChildContent>
-                    </MenuItem>
-                    <MenuItem Key="3" Icon="container">
-                        <IconTemplate>
-                            <i class="fa-solid fa-truck-droplet icoSelected" style="color: #263040;"></i>
-                        </IconTemplate>
-                        <ChildContent>  
-                            <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
-                        </ChildContent>
-                    </MenuItem>
-                    <MenuItem Key="1" Icon="pie-chart">
-                        <IconTemplate>
-                            <i class="fa-solid fa-fire-extinguisher icoSelected" style="color: #263040;"></i>
-                        </IconTemplate>
-                        <ChildContent>
-                            <Dropdown>
-                                <Overlay>
-                                    <Menu>
-                                        <SubMenu Title=@("Incendios")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
-                                                <MenuItem>Comercio</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
-                                                <MenuItem>Forestal</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
-                                                <MenuItem>Industrial</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
-                                                <MenuItem>Vehiculares</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
-                                                <MenuItem>Establecimiento educativo</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
-                                                <MenuItem>Hospitales / Clinicas</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
-                                                <MenuItem>Establecimiento publico</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
-                                                <MenuItem>Vivienda</MenuItem>
-                                            </a>
-                                        </SubMenu>
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
-                                            <MenuItem Title=@("Factores climaticos")></MenuItem>
-                                        </a>
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
-                                            <MenuItem Title=@("Materiales peligrosos")></MenuItem>
-                                        </a>
-                                        <SubMenu Title=@("Servicios")>
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
-                                                <MenuItem>Representacion</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
-                                                <MenuItem>Prevencion</MenuItem>
-                                            </a>
-                                        </SubMenu>
-                                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
-                                            <MenuItem Title=@("Accidentes")></MenuItem>
-                                        </a>
-                                        <SubMenu Title=@("Rescates")>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
-                                                <MenuItem>Animal</MenuItem>
-                                            </a>
-                                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
-                                                <MenuItem>Persona</MenuItem>
-                                            </a>
-                                        </SubMenu>
-                                    </Menu>
-                                </Overlay>
-                                <ChildContent>
-                                    <li style="margin-left: 1em;">
-                                        <a class="ant-dropdown-link" @onclick:preventDefault>
-                                            Salidas <Icon Type="down" />
-                                        </a>
-                                    </li>
-                                </ChildContent>
-                            </Dropdown>
-                        </ChildContent>
-                    </MenuItem>
-                    <Sider Style="margin-top:5em; background-color: transparent;">
-                    </Sider>
+        <div style="height: 100%;width: 230px;z-index: 100;position: fixed;">
+            <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;overflow:auto;"
+                  Mode=MenuMode.Inline
+                  InlineCollapsed=collapsed>
+                <MenuItem Key="0">
+                    <IconTemplate>
+                        <i class="fa-solid fa-user icoSelected" style="color: #263040;"></i>
+                    </IconTemplate>
+                    <ChildContent>
+                        <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
+                    </ChildContent>
+                </MenuItem>
+                <MenuItem Key="2" Icon="desktop">
+                    <IconTemplate>
+                        <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
+                    </IconTemplate>
+                    <ChildContent>
+                        <li class="nav-item"><a class="nav-link" href="bomberos">Bomberos</a></li>
+                    </ChildContent>
+                </MenuItem>
+                <MenuItem Key="3" Icon="container">
+                    <IconTemplate>
+                        <i class="fa-solid fa-truck-droplet icoSelected" style="color: #263040;"></i>
+                    </IconTemplate>
+                    <ChildContent>
+                        <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
+                    </ChildContent>
+                </MenuItem>
+                <Menu Style="background: rgb(230, 230, 230);"
+                      Mode=@MenuMode.Inline
+                      InlineCollapsed=collapsed>
+                    <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                            <MenuItem Key="02" Title=@("Materiales peligrosos")>
+                                <IconTemplate>
+                                    <i class="fa-solid fa-circle-radiation" style="color: #263040;"></i>
+                                </IconTemplate>
+                            </MenuItem>
+                        </a>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
+                            <MenuItem Key="01" Title=@("Factores climaticos")>
+                                <IconTemplate>
+                                    <i class="fa-sharp fa-solid fa-cloud-bolt" style="color: #263040;"></i>
+                                </IconTemplate>
+                            </MenuItem>
+                        </a>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
+                            <MenuItem Key="03" Title=@("Accidentes")>
+                                <IconTemplate>
+                                    <i class="fa-solid fa-person-falling-burst" style="color: #263040;"></i>
+                                </IconTemplate>
+                            </MenuItem>
+                        </a>
+                        <SubMenu Key="sub2" TitleTemplate=@sub3Title>
+
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
+                                <MenuItem Key="04">Comercio</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
+                                <MenuItem Key="05">Forestal</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
+                                <MenuItem Key="06">Industria</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
+                                <MenuItem Key="07">Vehiculares</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
+                                <MenuItem Key="08">Establecimiento educativo</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
+                                <MenuItem Key="09">Hospitales / Clinicas</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
+                                <MenuItem Key="10">Establecimiento publico</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
+                                <MenuItem Key="11">Vivienda</MenuItem>
+                            </a>
+                        </SubMenu>
+                        <SubMenu Key="sub3" TitleTemplate=@sub4Title>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
+                                <MenuItem Key="12">Representacion</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
+                                <MenuItem Key="13">Prevencion</MenuItem>
+                            </a>
+                        </SubMenu>
+                        <SubMenu Key="sub4" TitleTemplate=@sub5Title>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
+                                <MenuItem Key="14">Animal</MenuItem>
+                            </a>
+                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
+                                <MenuItem Key="15">Persona</MenuItem>
+                            </a>
+                        </SubMenu>
+                    </SubMenu>
                 </Menu>
-            </div>
-        <Content Style="margin-top: 5em;margin-left: 80px;position: relative; background: rgb(220,220,220);height: 200%;">
-            <div style="display: flex; justify-content: center; align-items: center;flex-direction:column;">
+                <Sider Style="margin-top:5em; background-color: transparent;">
+                </Sider>
+            </Menu>
+        </div>
+        <Content Style="padding-top: 5em;margin-left: 80px;position: relative; background: rgb(220,220,220);height: 100%;overflow: auto;">
+            <div style="display: flex; justify-content: center; align-items: center;flex-direction:column;position:relative;">
                 @Body
             </div>
         </Content>
@@ -175,17 +228,36 @@
 @code {
     bool collapsed = false;
 
-    RenderFragment sub1Title =
-    @<span>
-        <i class="fa-solid fa-fire-extinguisher" style="color: #263040;"></i>
-        <span class="nav-item"><a style="color: black;" class="nav-link" href="salidas">Salidas</a></span>
-        </span>
-    ;
-
     void ToggleCollapsed()
     {
         collapsed = !collapsed;
     }
+
+    RenderFragment sub2Title =
+    @<span>
+        <i class="fa-sharp fa-solid fa-fire"></i>
+        <span style="padding-left: 27px!important;">Salidas</span>
+    </span>
+    ;
+
+    RenderFragment sub3Title =
+    @<span>
+        <i class="fa-sharp fa-solid fa-fire"></i>
+        <span>Incendios</span>
+    </span>
+    ;
+    RenderFragment sub4Title =
+    @<span>
+        <i class="fa-solid fa-helmet-safety"></i>
+        <span>Servicios</span>
+    </span>
+    ;
+    RenderFragment sub5Title =
+    @<span>
+        <i class="fa-solid fa-fire-extinguisher"></i>
+        <span>Rescates</span>
+    </span>
+    ;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -194,5 +266,4 @@
             await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_2735473_hi62ezq5579.js");
         }
     }
-   
 }

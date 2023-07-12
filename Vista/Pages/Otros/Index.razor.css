@@ -16,8 +16,9 @@ h2 {
     position: absolute;
     left: .1em;
     top: 75vh;
+    padding: 10px;
 }
-@media(width< 8 00px) {
+@media(width< 800px) {
     h2 {
         font-size: 3rem;
         transition: 1s;

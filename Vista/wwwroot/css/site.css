@@ -2,12 +2,12 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    display:flex;
-    min-height:100vh;
-    flex-direction:column;
-
+    display: flex;
+    /*min-height:100vh;*/
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
 }
-
 h1:focus {
     outline: none;
 }
