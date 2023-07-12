@@ -5,6 +5,7 @@
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
 @using System.Text.Json;
+<h2 style="text-align:center; text-decoration:underline;">Incendio Comercio</h2>
 
 <Form Model="@salidaIncendioComercioView"
       LabelColSpan="8"
@@ -292,11 +293,23 @@
     </div>
    
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio" >
             Cargar salida
         </Button>
     </FormItem>
+
 </Form>
+
+<Modal Title="@("success")"
+       Visible="@_visible1"
+       OnOk="@HandleOk1"
+       OnCancel="@HandleCancel1">
+    <Result Status="success"
+            Title="Se cargo correctamente la salida"
+            SubTitle="">
+    </Result>
+</Modal>
+
 <Modal Title="@("Datos de la carga de combustible")"
        Visible="@_visible"
        OnOk="@HandleOk"
@@ -362,12 +375,6 @@
     int BomberoEncargado;
     int QuienLLenoPlanilla;
 
-    protected override async void OnInitialized()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-        
-        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
-    }
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -376,6 +383,7 @@
         {
             salidaIncendioComercioView.NumeroParte = salida.NumeroParte + 1;
         }
+        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
         TodosBomberos = await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
         CargarBomberosView();
@@ -396,8 +404,10 @@
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
+
     public async void SubirIncendioComercio()
     {
+        ShowModal1();
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
         Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
@@ -498,6 +508,7 @@
                     salidaIncendioComercio.Damnificados.Add(damn);
                 }
                 await db.IncendiosComercios.AddAsync(salidaIncendioComercio);
+                StateHasChanged();
                 await db.SaveChangesAsync();
             }
         }
@@ -623,6 +634,23 @@
     {
 
         _visible = false;
+
+    }
+
+    bool _visible1;
+    public void ShowModal1()
+    {
+        _visible1 = true;
+    }
+    private void HandleCancel1(MouseEventArgs e)
+    {
+
+        _visible1 = false;
+    }
+    private void HandleOk1(MouseEventArgs e)
+    {
+        navigationManager.NavigateTo($"/legajo");
+        _visible1 = false;
 
     }
 }
