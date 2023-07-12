@@ -908,90 +908,1045 @@
         {
             case TipoSalida.Accidente:
                 Task.Run(async () =>
-            {   
-                await GetViewModelAccidentes(salidasViewModel[numeroParteVisualizar].SalidaId);
-            });
-            <p><b>Accidente: </b></p>
-            <FormItem Label="Tipo Accidente">
-                    <EnumSelect TEnum="TipoAccidente" @bind-Value="@accidenteViewModels.Tipo" />
-            </FormItem>
-                <FormItem Label="Cantidad de vehiculos:>
-                    <AntDesign.InputNumber @bind-Value="@accidenteViewModels.CantidadVheiculo" />
+                {   
+                    await GetViewModelAccidentes(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Accidente: </b></p>
+                <FormItem Label="Tipo Accidente">
+                        <EnumSelect TEnum="TipoAccidente" @bind-Value="@accidenteViewModels.Tipo" />
+                </FormItem>
+
+                <FormItem Label="Cantidad Vheiculo">
+                      <AntDesign.InputNumber @bind-Value="@accidenteViewModels.CantidadVheiculo" />
                 </FormItem>
 
 
-            if (@accidenteViewModels.VehiculosAfectado is not null)
-            {
-                foreach (VehiculoAfectadoAccidente v in @accidenteViewModels.VehiculosAfectado)
+                if (@accidenteViewModels.VehiculosAfectado is not null)
                 {
-                    <p><b>Vehiculos Afectado: </b></p>
-                    <FormItem Label="Patente">
-                        <Input @bind-Value="@v.Patente" />
-                    </FormItem>
-                    <FormItem Label="Marca">
-                        <Input @bind-Value="@v.Marca" />
-                    </FormItem>
-                    <FormItem Label="Modelo">
-                        <Input @bind-Value="@v.Modelo" />
-                    </FormItem>
-                    <FormItem Label="Tipo">
-                        <Input @bind-Value="@v.Tipo" />
-                    </FormItem>
+                    foreach (VehiculoAfectadoAccidente v in @accidenteViewModels.VehiculosAfectado)
+                    {
+                        <p><b>Vehiculos Afectado: </b></p>
+                        <FormItem Label="Patente">
+                            <Input @bind-Value="@v.Patente" />
+                        </FormItem>
+                        <FormItem Label="Marca">
+                            <Input @bind-Value="@v.Marca" />
+                        </FormItem>
+                        <FormItem Label="Modelo">
+                            <Input @bind-Value="@v.Modelo" />
+                        </FormItem>
+                        <FormItem Label="Tipo">
+                            <Input @bind-Value="@v.Tipo" />
+                        </FormItem>
 
-                    <p><b>Seguro:</b></p>
-                     //traer datos de seguroVehiculo
-                     <FormItem Label="Numero De Poliza">
-                        <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
-                    </FormItem>
-                    <FormItem Label="Compañia Aseguradora">
-                        <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
-                    </FormItem>
-                    <FormItem Label="Fecha De Vencimineto">
-                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
-                    </FormItem>
-                    <FormItem Label="">
-                        <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
-                    </FormItem>
+                        <p><b>Seguro:</b></p>
+                         //traer datos de seguroVehiculo
+                         <FormItem Label="Numero De Poliza">
+                            <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                        </FormItem>
+                        <FormItem Label="Compañia Aseguradora">
+                            <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                        </FormItem>
+                        <FormItem Label="Fecha De Vencimineto">
+                            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                        </FormItem>
+                        <FormItem Label="">
+                            <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                        </FormItem>
 
+                    }
                 }
-            }
-            <FormItem Label="Tipo Condiciones Climaticas">
-                    <EnumSelect TEnum="TipoCondicionesClimaticas" @bind-Value="@accidenteViewModels.CondicionesClimaticas" />
-            </FormItem>
-            <FormItem Label="Otro Condicion">
-                     <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
-            </FormItem>
+                <FormItem Label="Tipo Condiciones Climaticas">
+                        <EnumSelect TEnum="TipoCondicionesClimaticas" @bind-Value="@accidenteViewModels.CondicionesClimaticas" />
+                </FormItem>
+                <FormItem Label="Otro Condicion">
+                         <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
+                </FormItem>
 
             break;
             case TipoSalida.FactorClimatico:
+                Task.Run(async () =>
+                {
+                    await GetViewModelFactorClimatico(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Factor Climatico: </b></p>
+                <FormItem Label="Tipo">
+                        <EnumSelect TEnum="TipoFactoresClimaticos" @bind-Value="@factorClimaticoViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="Evacuacion">
+                        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@factorClimaticoViewModel.Evacuacion" />
+                </FormItem>
+                <FormItem Label="Superficie">
+                    <EnumSelect TEnum="TipoSuperficie" @bind-Value="@factorClimaticoViewModel.Superficie" />
+                </FormItem>
+                <FormItem Label="Detalle Superficie Dañada">
+                         <Input @bind-Value="@factorClimaticoViewModel.DetalleSuperficieDañada" />
+                </FormItem>
             break;
             case TipoSalida.MaterialPeligroso:
+                Task.Run(async () =>
+                {
+                    await GetViewModelMaterialPeligroso(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Material Peligroso: </b></p>
+                <FormItem Label="Tipo Material Peligroso">
+                    <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@materialPeligrosoViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="Sustancias">
+                         <Input @bind-Value="@materialPeligrosoViewModel.Sustancias" />
+                </FormItem>
+                <FormItem Label="Controlada">
+                         <Input @bind-Value="@materialPeligrosoViewModel.Controlada" />
+                </FormItem>
+                <FormItem Label="Venteo">
+                         <Input @bind-Value="@materialPeligrosoViewModel.Venteo" />
+                </FormItem>
+                <FormItem Label="Dilucion De Vapores">
+                         <Input @bind-Value="@materialPeligrosoViewModel.DilucionDeVapores" />
+                </FormItem>
+                <FormItem Label="Neutralizacion">
+                         <Input @bind-Value="@materialPeligrosoViewModel.Neutralizacion" />
+                </FormItem>
+                <FormItem Label="Trasvase">
+                         <Input @bind-Value="@materialPeligrosoViewModel.Trasvase" />
+                </FormItem>
+
+                <FormItem Label="Otra Acciones Materiales">
+                    <Input @bind-Value="@materialPeligrosoViewModel.OtraAccionesMateriales" />
+                </FormItem>
+                <FormItem Label="Detalles Acciones Materiales">
+                    <Input @bind-Value="@materialPeligrosoViewModel.DetallesAccionesMateriales" />
+                </FormItem>
+                <FormItem Label="Evacuacion">
+                     <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@materialPeligrosoViewModel.Evacuacion" />
+                </FormItem>
+                <FormItem Label="Descontaminacion">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Descontaminacion" />
+                </FormItem>
+                <FormItem Label="Confinamiento">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Confinamiento" />
+                </FormItem>
+                <FormItem Label="SinAccion">
+                    <Input @bind-Value="@materialPeligrosoViewModel.SinAccion" />
+                </FormItem>
+                <FormItem Label="Otra Acciones Personas">
+                    <Input @bind-Value="@materialPeligrosoViewModel.OtraAccionesPersonas" />
+                </FormItem>
+                <FormItem Label="Detalles Acciones Personas">
+                    <Input @bind-Value="@materialPeligrosoViewModel.DetallesAccionesPersonas" />
+                </FormItem>
+                <FormItem Label="Tipo Superficie">
+                    <EnumSelect TEnum="TipoSuperficie" @bind-Value="@materialPeligrosoViewModel.TipoSuperficie" />
+                </FormItem>
+                <FormItem Label="Detalle Superficie Afectada">
+                    <Input @bind-Value="@materialPeligrosoViewModel.DetalleSuperficieAfectada" />
+                </FormItem>
+                <FormItem Label="Tipo Situacion">
+                    <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@materialPeligrosoViewModel.TipoSituacion" />
+                </FormItem>
             break;
             case TipoSalida.ServicioEspecialRepresentaciones:
+                Task.Run(async () =>
+                {
+                    await GetViewModelServicioEspecialRepresentaciones(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+            
+                  <p><b>Servicio Especial Prevencion: </b></p>
+                <FormItem Label="Tipo Servicios Especiales">
+                    <EnumSelect TEnum="TipoServiciosEspeciales" @bind-Value="@ServicioEspecialRepresentacionViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="Tipo Representacion">
+                    <EnumSelect TEnum="TipoServicioRepresentacion" @bind-Value="@ServicioEspecialRepresentacionViewModel.TipoRepresentacion" />
+                </FormItem>
+                <FormItem Label="Otro Representacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.OtroRepresentacion" />
+                </FormItem>
+                <p><b>    Datos Capacitacion: </b></p>
+                <FormItem Label="Nivel Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.NivelCapacitacion" />
+                </FormItem>
+                <FormItem Label="Nivel Capacitacion Otro">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.NivelCapacitacionOtro" />
+                </FormItem>
+                <FormItem Label="Tipo Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.TipoCapacitacion" />
+                </FormItem>
+                <FormItem Label="Capacitacion Otra">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.CapacitacionOtra" />
+                </FormItem>
+                <FormItem Label="Dias Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.DiasCapacitacion" />
+                </FormItem>
+                <FormItem Label="Horarios Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.HorariosCapacitacion" />
+                </FormItem>
+                <FormItem Label="Tipo Organizacion">
+                    <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@ServicioEspecialRepresentacionViewModel.TipoOrganizacion" />
+                </FormItem>
             break;
             case TipoSalida.ServicioEspecialPrevencion:
+                Task.Run(async () =>
+                    {
+                    await GetViewModelServicioEspecialPrevencion(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+            
+                      <p><b>Servicio Especial Prevencion: </b></p>
+                    <FormItem Label="Tipo Servicios Especiales">
+                        <EnumSelect TEnum="TipoServiciosEspeciales" @bind-Value="@ServicioEspecialPrevencionViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="Tipo Servicio Prevencion">
+                        <EnumSelect TEnum="TipoServicioPrevencion" @bind-Value="@ServicioEspecialPrevencionViewModel.TipoPrevencion" />
+                    </FormItem>
+                    <FormItem Label="Otro Representacion">
+                        <Input @bind-Value="@ServicioEspecialPrevencionViewModel.OtroRepresentacion" />
+                    </FormItem>
+                    <p><b>    Datos Capacitacion: </b></p>
+                    <FormItem Label="Nivel Capacitacion">
+                        <Input @bind-Value="@ServicioEspecialPrevencionViewModel.NivelCapacitacion" />
+                    </FormItem>
+                    <FormItem Label="Nivel Capacitacion Otro">
+                        <Input @bind-Value="@ServicioEspecialPrevencionViewModel.NivelCapacitacionOtro" />
+                    </FormItem>
+                    <FormItem Label="Tipo Capacitacion">
+                        <Input @bind-Value="@ServicioEspecialPrevencionViewModel.TipoCapacitacion" />
+                    </FormItem>
+                    <FormItem Label="Capacitacion Otra">
+                        <Input @bind-Value="@ServicioEspecialPrevencionViewModel.CapacitacionOtra" />
+                    </FormItem>
+                    <FormItem Label="Dias Capacitacion">
+                        <Input @bind-Value="@ServicioEspecialPrevencionViewModel.DiasCapacitacion" />
+                    </FormItem>
+                    <FormItem Label="Horarios Capacitacion">
+                        <Input @bind-Value="@ServicioEspecialPrevencionViewModel.HorariosCapacitacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Situacion">
+                        <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@ServicioEspecialPrevencionViewModel.TipoOrganizacion" />
+                    </FormItem>
             break;
             case TipoSalida.RescateAnimal:
+                 Task.Run(async () =>
+                {
+                    await GetViewModelRescateAnimal(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+
+                <p><b>Rescate Animal: </b></p>
+                <FormItem Label="Tipo Rescate Animal">
+                        <EnumSelect TEnum="TipoRescateAnimal" @bind-Value="@rescateAnimalViewModel.TipoRescateAnimal" />
+                </FormItem>
+                <FormItem Label="Otro">
+                        <Input @bind-Value="@rescateAnimalViewModel.Otro" />
+                </FormItem>
+                
+                
             break;
             case TipoSalida.RescatePersona:
+                Task.Run(async () =>
+                {
+                    await GetViewModelRescatePersona(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Rescate Persona: </b></p>
+                <FormItem Label="Tipo Rescate Animal">
+                        <EnumSelect TEnum="TipoRescatePersona" @bind-Value="@rescatePersonaViewModel.TipoRescatePersona" />
+                </FormItem>
+                <FormItem Label="Otro">
+                        <Input @bind-Value="@rescatePersonaViewModel.Otro" />
+                </FormItem>
+  
             break;
             case TipoSalida.Incendio:
+                Task.Run(async () =>
+                {
+                    await GetViewModelIncendio(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Incendio: </b></p>
+                <FormItem Label="Tipo Incendio">
+                        <EnumSelect TEnum="TipoIncendio" @bind-Value="@IncendioViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="">
+                        <Checkbox @bind-Checked="@IncendioViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                </FormItem>
+                <FormItem Label="">
+                        <Checkbox @bind-Checked="@IncendioViewModel.Extintor">Extintor</Checkbox>
+                </FormItem>
+                <FormItem Label="">
+                        <Checkbox @bind-Checked="@IncendioViewModel.Hidrante">Hidrante</Checkbox>
+                </FormItem>
+                //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                if (@IncendioViewModel.VehiculoAfectados is not null)
+                {
+                    foreach (VehiculoAfectadoIncendio v in @IncendioViewModel.VehiculoAfectados)
+                    {
+                        <p><b>Vehiculos Afectado: </b></p>
+                        <FormItem Label="Patente">
+                            <Input @bind-Value="@v.Patente" />
+                        </FormItem>
+                        <FormItem Label="Marca">
+                            <Input @bind-Value="@v.Marca" />
+                        </FormItem>
+                        <FormItem Label="Modelo">
+                            <Input @bind-Value="@v.Modelo" />
+                        </FormItem>
+                        <FormItem Label="Tipo">
+                            <Input @bind-Value="@v.Tipo" />
+                        </FormItem>
+
+                        <p><b>Seguro:</b></p>
+                         //traer datos de seguroVehiculo
+                         <FormItem Label="Numero De Poliza">
+                            <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                        </FormItem>
+                        <FormItem Label="Compañia Aseguradora">
+                            <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                        </FormItem>
+                        <FormItem Label="Fecha De Vencimineto">
+                            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                        </FormItem>
+                        <FormItem Label="">
+                            <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                        </FormItem>
+
+                    }
+                }
+
+                <FormItem Label="Tipo Incendio">
+                        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@IncendioViewModel.TipoEvacuacion" />
+                </FormItem>
+                <FormItem Label="Tipo Incendio">
+                        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@IncendioViewModel.TipoSuperficieAfectada" />
+                </FormItem>
+                <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                        <Input @bind-Value="@IncendioViewModel.DetalleSuperficieAfectadaIncendio" />
+                </FormItem>
+                <FormItem Label="Superficie Afectada Causa">
+                    <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@IncendioViewModel.SuperficieAfectadaCausa" />
+                </FormItem>
+                <FormItem Label="Tipo Abertura">
+                        <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@IncendioViewModel.TipoAbertura" />
+                </FormItem>
+                <FormItem Label="Otra Abertura">
+                        <Input @bind-Value="@IncendioViewModel.OtraAbertura" />
+                </FormItem>
+                <FormItem Label="Tipo Techo">
+                        <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@IncendioViewModel.TipoTecho" />
+                </FormItem>
+                <FormItem Label="Otro Techo">
+                        <Input @bind-Value="@IncendioViewModel.OtroTecho" />
+                </FormItem>
+                <FormItem Label="Otro Lugar">
+                        <Input @bind-Value="@IncendioViewModel.OtroLugar" />
+                </FormItem>
+                <FormItem Label="Nombre Establecimiento">
+                        <Input @bind-Value="@IncendioViewModel.NombreEstablecimiento" />
+                </FormItem>
+                <FormItem Label="Cantidad Pisos">
+                        <Input @bind-Value="@IncendioViewModel.CantidadPisos" />
+                </FormItem>
+                <FormItem Label="Cantidad Ambientes">
+                        <Input @bind-Value="@IncendioViewModel.CantidadAmbientes" />
+                </FormItem>
+                
             break;
             case TipoSalida.IncendioComercio:
+                Task.Run(async () =>
+                    {
+                    await GetViewModelIncendioComercio(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+                    <p><b>Incendio Comercio: </b></p>
+                    <FormItem Label="Tipo Lugar Comercio Incendio">
+                            <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@IncendioComercioViewModel.TipoLugar" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoIncendio" @bind-Value="@IncendioComercioViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioComercioViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioComercioViewModel.Extintor">Extintor</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioComercioViewModel.Hidrante">Hidrante</Checkbox>
+                    </FormItem>
+                    //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                    if (@IncendioComercioViewModel.VehiculoAfectados is not null)
+                    {
+                        foreach (VehiculoAfectadoIncendio v in @IncendioComercioViewModel.VehiculoAfectados)
+                        {
+                            <p><b>Vehiculos Afectado: </b></p>
+                            <FormItem Label="Patente">
+                                <Input @bind-Value="@v.Patente" />
+                            </FormItem>
+                            <FormItem Label="Marca">
+                                <Input @bind-Value="@v.Marca" />
+                            </FormItem>
+                            <FormItem Label="Modelo">
+                                <Input @bind-Value="@v.Modelo" />
+                            </FormItem>
+                            <FormItem Label="Tipo">
+                                <Input @bind-Value="@v.Tipo" />
+                            </FormItem>
+
+                            <p><b>Seguro:</b></p>
+                             //traer datos de seguroVehiculo
+                             <FormItem Label="Numero De Poliza">
+                                <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                            </FormItem>
+                            <FormItem Label="Compañia Aseguradora">
+                                <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                            </FormItem>
+                            <FormItem Label="">
+                                <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                            </FormItem>
+
+                        }
+                    }
+
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@IncendioComercioViewModel.TipoEvacuacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@IncendioComercioViewModel.TipoSuperficieAfectada" />
+                    </FormItem>
+                    <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                            <Input @bind-Value="@IncendioComercioViewModel.DetalleSuperficieAfectadaIncendio" />
+                    </FormItem>
+                    <FormItem Label="Superficie Afectada Causa">
+                        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@IncendioComercioViewModel.SuperficieAfectadaCausa" />
+                    </FormItem>
+                    <FormItem Label="Tipo Abertura">
+                            <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@IncendioComercioViewModel.TipoAbertura" />
+                    </FormItem>
+                    <FormItem Label="Otra Abertura">
+                            <Input @bind-Value="@IncendioComercioViewModel.OtraAbertura" />
+                    </FormItem>
+                    <FormItem Label="Tipo Techo">
+                            <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@IncendioComercioViewModel.TipoTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Techo">
+                            <Input @bind-Value="@IncendioComercioViewModel.OtroTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Lugar">
+                            <Input @bind-Value="@IncendioComercioViewModel.OtroLugar" />
+                    </FormItem>
+                    <FormItem Label="Nombre Establecimiento">
+                            <Input @bind-Value="@IncendioComercioViewModel.NombreEstablecimiento" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Pisos">
+                            <Input @bind-Value="@IncendioComercioViewModel.CantidadPisos" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Ambientes">
+                            <Input @bind-Value="@IncendioComercioViewModel.CantidadAmbientes" />
+                    </FormItem>
             break;
             case TipoSalida.IncendioEstablecimientoEducativo:
+                    Task.Run(async () =>
+                    {
+                    await GetViewModelIncendioEstablecimientoEducativo(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+                    <p><b>Incendio Establecimiento Educativo: </b></p>
+                    <FormItem Label="Tipo Incendio Establecimiento Educativo">
+                            <EnumSelect TEnum="TipoIncendioEstablecimientoEducativo" @bind-Value="@IncendioComercioViewModel.TipoLugar" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoIncendio" @bind-Value="@IncendioComercioViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioComercioViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioComercioViewModel.Extintor">Extintor</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioComercioViewModel.Hidrante">Hidrante</Checkbox>
+                    </FormItem>
+                    //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                    if (@IncendioComercioViewModel.VehiculoAfectados is not null)
+                    {
+                        foreach (VehiculoAfectadoIncendio v in @IncendioComercioViewModel.VehiculoAfectados)
+                        {
+                            <p><b>Vehiculos Afectado: </b></p>
+                            <FormItem Label="Patente">
+                                <Input @bind-Value="@v.Patente" />
+                            </FormItem>
+                            <FormItem Label="Marca">
+                                <Input @bind-Value="@v.Marca" />
+                            </FormItem>
+                            <FormItem Label="Modelo">
+                                <Input @bind-Value="@v.Modelo" />
+                            </FormItem>
+                            <FormItem Label="Tipo">
+                                <Input @bind-Value="@v.Tipo" />
+                            </FormItem>
+
+                            <p><b>Seguro:</b></p>
+                             //traer datos de seguroVehiculo
+                             <FormItem Label="Numero De Poliza">
+                                <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                            </FormItem>
+                            <FormItem Label="Compañia Aseguradora">
+                                <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                            </FormItem>
+                            <FormItem Label="">
+                                <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                            </FormItem>
+
+                        }
+                    }
+
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@IncendioComercioViewModel.TipoEvacuacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@IncendioComercioViewModel.TipoSuperficieAfectada" />
+                    </FormItem>
+                    <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                            <Input @bind-Value="@IncendioComercioViewModel.DetalleSuperficieAfectadaIncendio" />
+                    </FormItem>
+                    <FormItem Label="Superficie Afectada Causa">
+                        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@IncendioComercioViewModel.SuperficieAfectadaCausa" />
+                    </FormItem>
+                    <FormItem Label="Tipo Abertura">
+                            <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@IncendioComercioViewModel.TipoAbertura" />
+                    </FormItem>
+                    <FormItem Label="Otra Abertura">
+                            <Input @bind-Value="@IncendioComercioViewModel.OtraAbertura" />
+                    </FormItem>
+                    <FormItem Label="Tipo Techo">
+                            <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@IncendioComercioViewModel.TipoTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Techo">
+                            <Input @bind-Value="@IncendioComercioViewModel.OtroTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Lugar">
+                            <Input @bind-Value="@IncendioComercioViewModel.OtroLugar" />
+                    </FormItem>
+                    <FormItem Label="Nombre Establecimiento">
+                            <Input @bind-Value="@IncendioComercioViewModel.NombreEstablecimiento" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Pisos">
+                            <Input @bind-Value="@IncendioComercioViewModel.CantidadPisos" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Ambientes">
+                            <Input @bind-Value="@IncendioComercioViewModel.CantidadAmbientes" />
+                    </FormItem>
             break;
             case TipoSalida.IncendioEstablecimientoPublico:
+                    Task.Run(async () =>
+                    {
+                    await GetViewModelIncendioEstablecimientoPublico(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+                    <p><b>Incendio Establecimiento Publico: </b></p>
+                    <FormItem Label="Tipo Incendio Establecimiento Educativo">
+                            <EnumSelect TEnum="TipoIncendioEstablecimientoPublico" @bind-Value="@incendioEstablecimientoPublicoViewModel.TipoLugar" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoIncendio" @bind-Value="@incendioEstablecimientoPublicoViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@incendioEstablecimientoPublicoViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@incendioEstablecimientoPublicoViewModel.Extintor">Extintor</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@incendioEstablecimientoPublicoViewModel.Hidrante">Hidrante</Checkbox>
+                    </FormItem>
+                    //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                    if (@incendioEstablecimientoPublicoViewModel.VehiculoAfectados is not null)
+                    {
+                        foreach (VehiculoAfectadoIncendio v in @incendioEstablecimientoPublicoViewModel.VehiculoAfectados)
+                        {
+                            <p><b>Vehiculos Afectado: </b></p>
+                            <FormItem Label="Patente">
+                                <Input @bind-Value="@v.Patente" />
+                            </FormItem>
+                            <FormItem Label="Marca">
+                                <Input @bind-Value="@v.Marca" />
+                            </FormItem>
+                            <FormItem Label="Modelo">
+                                <Input @bind-Value="@v.Modelo" />
+                            </FormItem>
+                            <FormItem Label="Tipo">
+                                <Input @bind-Value="@v.Tipo" />
+                            </FormItem>
+
+                            <p><b>Seguro:</b></p>
+                             //traer datos de seguroVehiculo
+                             <FormItem Label="Numero De Poliza">
+                                <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                            </FormItem>
+                            <FormItem Label="Compañia Aseguradora">
+                                <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                            </FormItem>
+                            <FormItem Label="">
+                                <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                            </FormItem>
+
+                        }
+                    }
+
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@incendioEstablecimientoPublicoViewModel.TipoEvacuacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@incendioEstablecimientoPublicoViewModel.TipoSuperficieAfectada" />
+                    </FormItem>
+                    <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                            <Input @bind-Value="@incendioEstablecimientoPublicoViewModel.DetalleSuperficieAfectadaIncendio" />
+                    </FormItem>
+                    <FormItem Label="Superficie Afectada Causa">
+                        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@incendioEstablecimientoPublicoViewModel.SuperficieAfectadaCausa" />
+                    </FormItem>
+                    <FormItem Label="Tipo Abertura">
+                            <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@incendioEstablecimientoPublicoViewModel.TipoAbertura" />
+                    </FormItem>
+                    <FormItem Label="Otra Abertura">
+                            <Input @bind-Value="@incendioEstablecimientoPublicoViewModel.OtraAbertura" />
+                    </FormItem>
+                    <FormItem Label="Tipo Techo">
+                            <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@incendioEstablecimientoPublicoViewModel.TipoTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Techo">
+                            <Input @bind-Value="@incendioEstablecimientoPublicoViewModel.OtroTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Lugar">
+                            <Input @bind-Value="@incendioEstablecimientoPublicoViewModel.OtroLugar" />
+                    </FormItem>
+                    <FormItem Label="Nombre Establecimiento">
+                            <Input @bind-Value="@incendioEstablecimientoPublicoViewModel.NombreEstablecimiento" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Pisos">
+                            <Input @bind-Value="@incendioEstablecimientoPublicoViewModel.CantidadPisos" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Ambientes">
+                            <Input @bind-Value="@incendioEstablecimientoPublicoViewModel.CantidadAmbientes" />
+                    </FormItem>
             break;
             case TipoSalida.IncendioForestal:
+                    Task.Run(async () =>
+                    {
+                    await GetViewModelIncendioForestal(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+                    <p><b>Incendio Forestal: </b></p>
+                    <FormItem Label="Tipo Incendio Establecimiento Educativo">
+                            <EnumSelect TEnum="TipoIncendioEstablecimientoPublico" @bind-Value="@IncendioForestalViewModel.TipoLugar" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoIncendio" @bind-Value="@IncendioForestalViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioForestalViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioForestalViewModel.Extintor">Extintor</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioForestalViewModel.Hidrante">Hidrante</Checkbox>
+                    </FormItem>
+                    //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                    if (@IncendioForestalViewModel.VehiculoAfectados is not null)
+                    {
+                        foreach (VehiculoAfectadoIncendio v in @IncendioForestalViewModel.VehiculoAfectados)
+                        {
+                            <p><b>Vehiculos Afectado: </b></p>
+                            <FormItem Label="Patente">
+                                <Input @bind-Value="@v.Patente" />
+                            </FormItem>
+                            <FormItem Label="Marca">
+                                <Input @bind-Value="@v.Marca" />
+                            </FormItem>
+                            <FormItem Label="Modelo">
+                                <Input @bind-Value="@v.Modelo" />
+                            </FormItem>
+                            <FormItem Label="Tipo">
+                                <Input @bind-Value="@v.Tipo" />
+                            </FormItem>
+
+                            <p><b>Seguro:</b></p>
+                             //traer datos de seguroVehiculo
+                             <FormItem Label="Numero De Poliza">
+                                <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                            </FormItem>
+                            <FormItem Label="Compañia Aseguradora">
+                                <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                            </FormItem>
+                            <FormItem Label="">
+                                <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                            </FormItem>
+
+                        }
+                    }
+
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@IncendioForestalViewModel.TipoEvacuacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@IncendioForestalViewModel.TipoSuperficieAfectada" />
+                    </FormItem>
+                    <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                            <Input @bind-Value="@IncendioForestalViewModel.DetalleSuperficieAfectadaIncendio" />
+                    </FormItem>
+                    <FormItem Label="Superficie Afectada Causa">
+                        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@IncendioForestalViewModel.SuperficieAfectadaCausa" />
+                    </FormItem>
+                    <FormItem Label="Tipo Abertura">
+                            <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@IncendioForestalViewModel.TipoAbertura" />
+                    </FormItem>
+                    <FormItem Label="Otra Abertura">
+                            <Input @bind-Value="@IncendioForestalViewModel.OtraAbertura" />
+                    </FormItem>
+                    <FormItem Label="Tipo Techo">
+                            <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@IncendioForestalViewModel.TipoTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Techo">
+                            <Input @bind-Value="@IncendioForestalViewModel.OtroTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Lugar">
+                            <Input @bind-Value="@IncendioForestalViewModel.OtroLugar" />
+                    </FormItem>
+                    <FormItem Label="Nombre Establecimiento">
+                            <Input @bind-Value="@IncendioForestalViewModel.NombreEstablecimiento" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Pisos">
+                            <Input @bind-Value="@IncendioForestalViewModel.CantidadPisos" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Ambientes">
+                            <Input @bind-Value="@IncendioForestalViewModel.CantidadAmbientes" />
+                    </FormItem>
             break;
             case TipoSalida.IncendioHospitalesYClinicas:
+                    Task.Run(async () =>
+                    {
+                    await GetViewModelIncendioHospitalesYClinicas(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+                    <p><b>Incendio Hospitales Y Clinicas: </b></p>
+                    <FormItem Label="Tipo Incendio Establecimiento Educativo">
+                            <EnumSelect TEnum="TipoIncendioHospitalesYClinicas" @bind-Value="@IncendioHospitalesYClinicasViewModel.TipoLugar" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoIncendio" @bind-Value="@IncendioHospitalesYClinicasViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioHospitalesYClinicasViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioHospitalesYClinicasViewModel.Extintor">Extintor</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioHospitalesYClinicasViewModel.Hidrante">Hidrante</Checkbox>
+                    </FormItem>
+                    //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                    if (@IncendioHospitalesYClinicasViewModel.VehiculoAfectados is not null)
+                    {
+                        foreach (VehiculoAfectadoIncendio v in @IncendioHospitalesYClinicasViewModel.VehiculoAfectados)
+                        {
+                            <p><b>Vehiculos Afectado: </b></p>
+                            <FormItem Label="Patente">
+                                <Input @bind-Value="@v.Patente" />
+                            </FormItem>
+                            <FormItem Label="Marca">
+                                <Input @bind-Value="@v.Marca" />
+                            </FormItem>
+                            <FormItem Label="Modelo">
+                                <Input @bind-Value="@v.Modelo" />
+                            </FormItem>
+                            <FormItem Label="Tipo">
+                                <Input @bind-Value="@v.Tipo" />
+                            </FormItem>
+
+                            <p><b>Seguro:</b></p>
+                             //traer datos de seguroVehiculo
+                             <FormItem Label="Numero De Poliza">
+                                <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                            </FormItem>
+                            <FormItem Label="Compañia Aseguradora">
+                                <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                            </FormItem>
+                            <FormItem Label="">
+                                <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                            </FormItem>
+
+                        }
+                    }
+
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@IncendioHospitalesYClinicasViewModel.TipoEvacuacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@IncendioHospitalesYClinicasViewModel.TipoSuperficieAfectada" />
+                    </FormItem>
+                    <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                            <Input @bind-Value="@IncendioHospitalesYClinicasViewModel.DetalleSuperficieAfectadaIncendio" />
+                    </FormItem>
+                    <FormItem Label="Superficie Afectada Causa">
+                        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@IncendioHospitalesYClinicasViewModel.SuperficieAfectadaCausa" />
+                    </FormItem>
+                    <FormItem Label="Tipo Abertura">
+                            <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@IncendioHospitalesYClinicasViewModel.TipoAbertura" />
+                    </FormItem>
+                    <FormItem Label="Otra Abertura">
+                            <Input @bind-Value="@IncendioHospitalesYClinicasViewModel.OtraAbertura" />
+                    </FormItem>
+                    <FormItem Label="Tipo Techo">
+                            <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@IncendioHospitalesYClinicasViewModel.TipoTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Techo">
+                            <Input @bind-Value="@IncendioHospitalesYClinicasViewModel.OtroTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Lugar">
+                            <Input @bind-Value="@IncendioHospitalesYClinicasViewModel.OtroLugar" />
+                    </FormItem>
+                    <FormItem Label="Nombre Establecimiento">
+                            <Input @bind-Value="@IncendioHospitalesYClinicasViewModel.NombreEstablecimiento" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Pisos">
+                            <Input @bind-Value="@IncendioHospitalesYClinicasViewModel.CantidadPisos" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Ambientes">
+                            <Input @bind-Value="@IncendioHospitalesYClinicasViewModel.CantidadAmbientes" />
+                    </FormItem>
             break;
             case TipoSalida.IncendioIndustria:
+                    Task.Run(async () =>
+                    {
+                    await GetViewModelIncendioIndustria(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+                    <p><b>Incendio Industria: </b></p>
+                    <FormItem Label="Tipo Incendio Establecimiento Educativo">
+                            <EnumSelect TEnum="TipoIncendioIndustria" @bind-Value="@IncendioIndustriaViewModel.TipoLugar" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoIncendio" @bind-Value="@IncendioIndustriaViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioIndustriaViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioIndustriaViewModel.Extintor">Extintor</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioIndustriaViewModel.Hidrante">Hidrante</Checkbox>
+                    </FormItem>
+                    //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                    if (@IncendioIndustriaViewModel.VehiculoAfectados is not null)
+                    {
+                        foreach (VehiculoAfectadoIncendio v in @IncendioIndustriaViewModel.VehiculoAfectados)
+                        {
+                            <p><b>Vehiculos Afectado: </b></p>
+                            <FormItem Label="Patente">
+                                <Input @bind-Value="@v.Patente" />
+                            </FormItem>
+                            <FormItem Label="Marca">
+                                <Input @bind-Value="@v.Marca" />
+                            </FormItem>
+                            <FormItem Label="Modelo">
+                                <Input @bind-Value="@v.Modelo" />
+                            </FormItem>
+                            <FormItem Label="Tipo">
+                                <Input @bind-Value="@v.Tipo" />
+                            </FormItem>
+
+                            <p><b>Seguro:</b></p>
+                             //traer datos de seguroVehiculo
+                             <FormItem Label="Numero De Poliza">
+                                <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                            </FormItem>
+                            <FormItem Label="Compañia Aseguradora">
+                                <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                            </FormItem>
+                            <FormItem Label="">
+                                <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                            </FormItem>
+
+                        }
+                    }
+
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@IncendioIndustriaViewModel.TipoEvacuacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@IncendioIndustriaViewModel.TipoSuperficieAfectada" />
+                    </FormItem>
+                    <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                            <Input @bind-Value="@IncendioIndustriaViewModel.DetalleSuperficieAfectadaIncendio" />
+                    </FormItem>
+                    <FormItem Label="Superficie Afectada Causa">
+                        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@IncendioIndustriaViewModel.SuperficieAfectadaCausa" />
+                    </FormItem>
+                    <FormItem Label="Tipo Abertura">
+                            <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@IncendioIndustriaViewModel.TipoAbertura" />
+                    </FormItem>
+                    <FormItem Label="Otra Abertura">
+                            <Input @bind-Value="@IncendioIndustriaViewModel.OtraAbertura" />
+                    </FormItem>
+                    <FormItem Label="Tipo Techo">
+                            <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@IncendioIndustriaViewModel.TipoTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Techo">
+                            <Input @bind-Value="@IncendioIndustriaViewModel.OtroTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Lugar">
+                            <Input @bind-Value="@IncendioIndustriaViewModel.OtroLugar" />
+                    </FormItem>
+                    <FormItem Label="Nombre Establecimiento">
+                            <Input @bind-Value="@IncendioIndustriaViewModel.NombreEstablecimiento" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Pisos">
+                            <Input @bind-Value="@IncendioIndustriaViewModel.CantidadPisos" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Ambientes">
+                            <Input @bind-Value="@IncendioIndustriaViewModel.CantidadAmbientes" />
+                    </FormItem>
             break;
             case TipoSalida.IncendioVivienda:
+                    Task.Run(async () =>
+                    {
+                    await GetViewModelIncendioVivienda(salidasViewModel[numeroParteVisualizar].SalidaId);
+                    });
+                    <p><b>Incendio Industria: </b></p>
+                    <FormItem Label="Tipo Incendio Establecimiento Educativo">
+                            <EnumSelect TEnum="TipoIncendioVivienda" @bind-Value="@IncendioViviendaViewModel.TipoLugar" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoIncendio" @bind-Value="@IncendioViviendaViewModel.Tipo" />
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioViviendaViewModel.DeteccionAutomaticaId"> Deteccion Automatica Id</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioViviendaViewModel.Extintor">Extintor</Checkbox>
+                    </FormItem>
+                    <FormItem Label="">
+                            <Checkbox @bind-Checked="@IncendioViviendaViewModel.Hidrante">Hidrante</Checkbox>
+                    </FormItem>
+                    //<p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+                    if (@IncendioViviendaViewModel.VehiculoAfectados is not null)
+                    {
+                        foreach (VehiculoAfectadoIncendio v in @IncendioViviendaViewModel.VehiculoAfectados)
+                        {
+                            <p><b>Vehiculos Afectado: </b></p>
+                            <FormItem Label="Patente">
+                                <Input @bind-Value="@v.Patente" />
+                            </FormItem>
+                            <FormItem Label="Marca">
+                                <Input @bind-Value="@v.Marca" />
+                            </FormItem>
+                            <FormItem Label="Modelo">
+                                <Input @bind-Value="@v.Modelo" />
+                            </FormItem>
+                            <FormItem Label="Tipo">
+                                <Input @bind-Value="@v.Tipo" />
+                            </FormItem>
+
+                            <p><b>Seguro:</b></p>
+                             //traer datos de seguroVehiculo
+                             <FormItem Label="Numero De Poliza">
+                                <Input @bind-Value="@v.Seguro.NumeroDePoliza" />
+                            </FormItem>
+                            <FormItem Label="Compañia Aseguradora">
+                                <Input @bind-Value="@v.Seguro.CompañiaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@v.Seguro.FechaDeVencimineto" />
+                            </FormItem>
+                            <FormItem Label="">
+                                <Checkbox @bind-Checked="@v.Airbag"> Air bag</Checkbox>
+                            </FormItem>
+
+                        }
+                    }
+
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@IncendioViviendaViewModel.TipoEvacuacion" />
+                    </FormItem>
+                    <FormItem Label="Tipo Incendio">
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@IncendioViviendaViewModel.TipoSuperficieAfectada" />
+                    </FormItem>
+                    <FormItem Label="DetalleSuperficieAfectadaIncendio">
+                            <Input @bind-Value="@IncendioViviendaViewModel.DetalleSuperficieAfectadaIncendio" />
+                    </FormItem>
+                    <FormItem Label="Superficie Afectada Causa">
+                        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@IncendioViviendaViewModel.SuperficieAfectadaCausa" />
+                    </FormItem>
+                    <FormItem Label="Tipo Abertura">
+                            <EnumSelect TEnum="TipoIncendioAbertura" @bind-Value="@IncendioViviendaViewModel.TipoAbertura" />
+                    </FormItem>
+                    <FormItem Label="Otra Abertura">
+                            <Input @bind-Value="@IncendioViviendaViewModel.OtraAbertura" />
+                    </FormItem>
+                    <FormItem Label="Tipo Techo">
+                            <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@IncendioViviendaViewModel.TipoTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Techo">
+                            <Input @bind-Value="@IncendioViviendaViewModel.OtroTecho" />
+                    </FormItem>
+                    <FormItem Label="Otro Lugar">
+                            <Input @bind-Value="@IncendioViviendaViewModel.OtroLugar" />
+                    </FormItem>
+                    <FormItem Label="Nombre Establecimiento">
+                            <Input @bind-Value="@IncendioViviendaViewModel.NombreEstablecimiento" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Pisos">
+                            <Input @bind-Value="@IncendioViviendaViewModel.CantidadPisos" />
+                    </FormItem>
+                    <FormItem Label="Cantidad Ambientes">
+                            <Input @bind-Value="@IncendioViviendaViewModel.CantidadAmbientes" />
+                    </FormItem>
             break;
             case TipoSalida.ServicioEspecial:
+            Task.Run(async () =>
+            {
+                await GetViewModelServicioEspecial(salidasViewModel[numeroParteVisualizar].SalidaId);
+
+            });
+            <p><b>Servicio Especial: </b></p>
+
+                <FormItem Label="Tipo Servicios Especiales">
+                    <EnumSelect TEnum="TipoServiciosEspeciales" @bind-Value="@ServicioEspecialViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="Otro Representacion">
+                    <Input @bind-Value="@ServicioEspecialViewModel.OtroRepresentacion" />
+                </FormItem>
+                <p><b>    Datos Capacitacion: </b></p>
+                <FormItem Label="Nivel Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialViewModel.NivelCapacitacion" />
+                </FormItem>
+                <FormItem Label="Nivel Capacitacion Otro">
+                    <Input @bind-Value="@ServicioEspecialViewModel.NivelCapacitacionOtro" />
+                </FormItem>
+                <FormItem Label="Tipo Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialViewModel.TipoCapacitacion" />
+                </FormItem>
+                <FormItem Label="Capacitacion Otra">
+                    <Input @bind-Value="@ServicioEspecialViewModel.CapacitacionOtra" />
+                </FormItem>
+                <FormItem Label="Dias Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialViewModel.DiasCapacitacion" />
+                </FormItem>
+                <FormItem Label="Horarios Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialViewModel.HorariosCapacitacion" />
+                </FormItem>
+                <FormItem Label="Tipo Organizacion">
+                    <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@ServicioEspecialViewModel.TipoOrganizacion" />
+                </FormItem>
             break;
 
         }
