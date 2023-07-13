@@ -45,55 +45,83 @@
             color: rgb(223, 223, 223) !important;
         }
 
-    .ant-menu-inline{
-        border: none!important;
+    .ant-menu-inline {
+        border-right: none !important;
+    }
+
+    .ant-menu-inline-collapsed {
+        border-right: none !important;
     }
 
     .ant-menu-inline .ant-menu-item::after {
-        border-right: rgb(62, 24, 24) !important;
+        border-right: none !important;
     }
 
-    .ant-menu-submenu-title{
-        padding-left: 33px!important;
+    .ant-menu-submenu-title {
+        padding-left: 33px !important;
     }
 
-        .ant-menu-submenu-title span{
-            padding-left: 0px!important;
+        .ant-menu-submenu-title span {
+            padding-left: 0px !important;
         }
 
-    .ant-menu-item-selected:hover, .ant-menu-submenu-selected:hover,{
-        color: #fff!important;
+    .ant-menu-item-selected:hover, .ant-menu-submenu-selected:hover {
+        color: #fff !important;
     }
+
     .ant-menu-sub.ant-menu-inline {
-        padding-left: 24px!important;
-        background: rgb(230, 230, 230)!important;
+        padding-left: 24px !important;
+        background: rgb(230, 230, 230) !important;
     }
 
     .ant-menu-light .ant-menu-submenu-title:hover, .ant-menu-light .ant-menu-title-content:hover {
-        color: black!important;
+        color: black !important;
     }
 
-    .ant-menu-light .ant-menu-submenu-arrow:hover{
-        background: black;
+    .ant-menu-light .ant-menu-submenu-arrow:hover {
+        background: black !important;
+        color: black !important;
     }
-    .ant-menu.ant-menu-inline-collapsed > .ant-menu-item{
+
+    .ant-menu.ant-menu-inline-collapsed > .ant-menu-item {
         display: flex;
     }
 
     .ant-menu-submenu-selected {
         background: rgb(62, 24, 24) !important;
-        color: #fff!important;
+        color: #fff !important;
     }
 
         .ant-menu-submenu-selected:hover {
-            color: #fff!important;
+            color: #fff !important;
+        }
+
+        .ant-menu-submenu-selected > .anticon-alert {
+            background-color: #fff !important;
+            top: 4px !important;
         }
 
     .ant-menu-item-selected, .ant-menu-item-selected i, .ant-menu-item-selected:hover {
-        color: #fff!important;
+        color: #fff !important;
     }
 
+    .ant-menu-submenu-title > .ant-menu-submenu-arrow { 
+        color: black !important;
+    }
+
+    /*acomodar para que sea por cada flecha(item seleccionado), no en todas*/
+    .ant-menu-submenu-selected:first-child .ant-menu-submenu-title > .ant-menu-submenu-arrow {
+        color: #fff !important;
+    }
+    .ant-menu-submenu-title .anticon {
+        min-width: 19px !important;
+    }
+
+    .ant-menu-inline-collapsed .spanContentSalidas {
+        padding-top: 10px!important;
+    }
 </style>
+
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
     <Header Style="position: fixed;box-shadow: 1px 1px 1px rgb(128, 128, 128);background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
@@ -121,7 +149,7 @@
                   InlineCollapsed=collapsed>
                 <MenuItem Key="0">
                     <IconTemplate>
-                        <i class="fa-solid fa-user icoSelected" style="color: #263040;"></i>
+                        <i class="fa-solid fa-user icoSelected" style="color: #263040;padding-right: 6px;"></i>
                     </IconTemplate>
                     <ChildContent>
                         <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
@@ -213,8 +241,7 @@
                         </SubMenu>
                     </SubMenu>
                 </Menu>
-                <Sider Style="margin-top:5em; background-color: transparent;">
-                </Sider>
+                <Sider Style="margin-top:5em; background-color: transparent;"></Sider>
             </Menu>
         </div>
         <Content Style="padding-top: 5em;margin-left: 80px;position: relative; background: rgb(220,220,220);height: 100%;overflow: auto;">
@@ -234,27 +261,27 @@
     }
 
     RenderFragment sub2Title =
-    @<span>
-        <i class="fa-sharp fa-solid fa-fire"></i>
-        <span style="padding-left: 27px!important;">Salidas</span>
+    @<span class="spanSalidas" style="position: relative;">
+        <Icon class="menuSalidas" Type="alert" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;" />
+        <span class="spanContentSalidas" style="padding-left: 32px!important;">Salidas</span>
     </span>
     ;
 
     RenderFragment sub3Title =
     @<span>
-        <i class="fa-sharp fa-solid fa-fire"></i>
+        <i class="fa-sharp fa-solid fa-fire" style="padding-right: 10px!important;"></i>
         <span>Incendios</span>
     </span>
     ;
     RenderFragment sub4Title =
     @<span>
-        <i class="fa-solid fa-helmet-safety"></i>
+        <i class="fa-solid fa-helmet-safety" style="padding-right: 10px!important;"></i>
         <span>Servicios</span>
     </span>
     ;
     RenderFragment sub5Title =
     @<span>
-        <i class="fa-solid fa-fire-extinguisher"></i>
+        <i class="fa-solid fa-fire-extinguisher" style="padding-right: 10px!important;"></i>
         <span>Rescates</span>
     </span>
     ;
