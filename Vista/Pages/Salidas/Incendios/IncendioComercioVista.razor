@@ -14,7 +14,7 @@
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
     <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.NumeroParte" Disabled/>
+        <AntDesign.InputNumber @bind-Value="salidaIncendioComercioView.NumeroParte" Disabled />
     </FormItem>
     <FormItem Label="Descripcion">
         <Input @bind-Value="@salidaIncendioComercioView.Descripcion" />
@@ -67,13 +67,13 @@
     <FormItem Label="Telefono receptor">
         <Input @bind-Value="@salidaIncendioComercioView.TelefonoReceptor" />
     </FormItem>
-    <div> 
+    <div>
         <div>
-           <b>
-               <FormItem Label="¿Tiene seguro el lugar?">
+            <b>
+                <FormItem Label="¿Tiene seguro el lugar?">
                     <Switch @bind-Checked="switchValueS" />
-               </FormItem>
-           </b>
+                </FormItem>
+            </b>
         </div>
         <div>
             @if (switchValueS == true)
@@ -90,7 +90,7 @@
                 </FormItem>
             }
         </div>
-    </div>      
+    </div>
     @*Datos de damnificados*@
     <FormItem Label="¿Hubo damnificados?">
         <Switch @bind-Checked="switchValue" />
@@ -139,7 +139,7 @@
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@bomberoTodos"
-                @bind-Value="@chofer"
+        @bind-Value="@chofer"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Seleccione el bombero"
@@ -224,7 +224,7 @@
         <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioComercioView.TipoZona" />
     </FormItem>
     <FormItem Label="Lugar">
-        <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar"/>  
+        <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar" />
         @if (salidaIncendioComercioView.TipoLugar == TipoLugarComercioIncendio.Otro)
         {
             <FormItem Label="OtroLugar">
@@ -291,9 +291,9 @@
         <b><label>Habia Hidrante?</label></b>
         <Checkbox @bind-Checked="salidaIncendioComercioView.Hidrante"></Checkbox>
     </div>
-   
+
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio" >
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@SubirIncendioComercio">
             Cargar salida
         </Button>
     </FormItem>
@@ -345,7 +345,7 @@
 
 
 
-@code{
+@code {
 
     public IncendioComercioViewModels salidaIncendioComercioView = new();
     private DamnificadoViewModels damnificado = new();
@@ -419,57 +419,57 @@
             if (salidaIncendioComercioView is not null)
             {
                 Vista.Data.Models.Salidas.Planillas.IncendioComercio salidaIncendioComercio = new()
-                {
-                    Tipo = salidaIncendioComercioView.Tipo,
-                    Descripcion = salidaIncendioComercioView.Descripcion,
-                    HoraSalida = salidaIncendioComercioView.HoraSalida,
-                    HoraLlegada = salidaIncendioComercioView.HoraLLegada,
-                    KmSalida = salidaIncendioComercioView.KmSalida,
-                    KmLlegada = salidaIncendioComercioView.KmLlegada,
-                    NumeroParte = salidaIncendioComercioView.NumeroParte,
-                    CalleORuta = salidaIncendioComercioView.CalleORuta,
-                    NumeroOKilometro = salidaIncendioComercioView.NumeroOKilometro,
-                    EntreCalles = salidaIncendioComercioView.EntreCalles,
-                    PisoNumero = salidaIncendioComercioView.PisoNumero,
-                    Depto = salidaIncendioComercioView.Depto,
-                    TipoZona = salidaIncendioComercioView.TipoZona,
-                    NombreSolicitante = salidaIncendioComercioView.NombreSolicitante,
-                    ApellidoSolicitante = salidaIncendioComercioView.ApellidoSolicitante,
-                    DniSolicitante = salidaIncendioComercioView.DniSolicitante,
-                    TelefonoSolicitante = salidaIncendioComercioView.TelefonoSolicitante,
-                    NombreYApellidoReceptor = salidaIncendioComercioView.NombreYApellidoReceptor,
-                    TelefonoReceptor = salidaIncendioComercioView.TelefonoReceptor,
-                    DeteccionAutomaticaId= salidaIncendioComercioView.DeteccionAutomaticaId,
-                    Extintor = salidaIncendioComercioView.Extintor,
-                    Hidrante = salidaIncendioComercioView.Hidrante,
-                    TipoLugar = salidaIncendioComercioView.TipoLugar,                
-                    TipoEvacuacion = salidaIncendioComercioView.TipoEvacuacion,
-                    TipoSuperficieAfectada = salidaIncendioComercioView.TipoSuperficieAfectada,
-                    DetalleSuperficieAfectadaIncendio = salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio,
-                    SuperficieAfectadaCausa = salidaIncendioComercioView.SuperficieAfectadaCausa,
-                    TipoServicio = salidaIncendioComercioView.TipoServicio,
-                    TipoAbertura = salidaIncendioComercioView.TipoAbertura,
-                    OtraAbertura= salidaIncendioComercioView.OtraAbertura,
-                    TipoTecho = salidaIncendioComercioView.TipoTecho,
-                    OtroTecho = salidaIncendioComercioView.OtroTecho,
-                    OtroLugar = salidaIncendioComercioView.OtroLugar,
-                    NombreEstablecimiento = salidaIncendioComercioView.NombreEstablecimiento,
-                    CantidadPisos = salidaIncendioComercioView.CantidadPisos,
-                    PisoAfectado = salidaIncendioComercioView.PisoAfectado,
-                    CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes,
-                    QuienLleno = BomberoLlenoPlanilla,
-                    ReceptorBombero = bomberoReceptor,
-                    Encargado = bomberoEncargado,
-                    Seguro = new()
                     {
-                        CompañiaAseguradora = salidaIncendioComercioView.CompaniaAseguradora,
-                        NumeroDePoliza = salidaIncendioComercioView.NumeroPoliza,
-                        FechaDeVencimineto = salidaIncendioComercioView.FechaVencimineto,
-                    },
-                    Damnificados = new(),
-                    Moviles = new(),
-                    CuerpoParticipante = new()
-                };
+                        Tipo = salidaIncendioComercioView.Tipo,
+                        Descripcion = salidaIncendioComercioView.Descripcion,
+                        HoraSalida = salidaIncendioComercioView.HoraSalida,
+                        HoraLlegada = salidaIncendioComercioView.HoraLLegada,
+                        KmSalida = salidaIncendioComercioView.KmSalida,
+                        KmLlegada = salidaIncendioComercioView.KmLlegada,
+                        NumeroParte = salidaIncendioComercioView.NumeroParte,
+                        CalleORuta = salidaIncendioComercioView.CalleORuta,
+                        NumeroOKilometro = salidaIncendioComercioView.NumeroOKilometro,
+                        EntreCalles = salidaIncendioComercioView.EntreCalles,
+                        PisoNumero = salidaIncendioComercioView.PisoNumero,
+                        Depto = salidaIncendioComercioView.Depto,
+                        TipoZona = salidaIncendioComercioView.TipoZona,
+                        NombreSolicitante = salidaIncendioComercioView.NombreSolicitante,
+                        ApellidoSolicitante = salidaIncendioComercioView.ApellidoSolicitante,
+                        DniSolicitante = salidaIncendioComercioView.DniSolicitante,
+                        TelefonoSolicitante = salidaIncendioComercioView.TelefonoSolicitante,
+                        NombreYApellidoReceptor = salidaIncendioComercioView.NombreYApellidoReceptor,
+                        TelefonoReceptor = salidaIncendioComercioView.TelefonoReceptor,
+                        DeteccionAutomaticaId = salidaIncendioComercioView.DeteccionAutomaticaId,
+                        Extintor = salidaIncendioComercioView.Extintor,
+                        Hidrante = salidaIncendioComercioView.Hidrante,
+                        TipoLugar = salidaIncendioComercioView.TipoLugar,
+                        TipoEvacuacion = salidaIncendioComercioView.TipoEvacuacion,
+                        TipoSuperficieAfectada = salidaIncendioComercioView.TipoSuperficieAfectada,
+                        DetalleSuperficieAfectadaIncendio = salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio,
+                        SuperficieAfectadaCausa = salidaIncendioComercioView.SuperficieAfectadaCausa,
+                        TipoServicio = salidaIncendioComercioView.TipoServicio,
+                        TipoAbertura = salidaIncendioComercioView.TipoAbertura,
+                        OtraAbertura = salidaIncendioComercioView.OtraAbertura,
+                        TipoTecho = salidaIncendioComercioView.TipoTecho,
+                        OtroTecho = salidaIncendioComercioView.OtroTecho,
+                        OtroLugar = salidaIncendioComercioView.OtroLugar,
+                        NombreEstablecimiento = salidaIncendioComercioView.NombreEstablecimiento,
+                        CantidadPisos = salidaIncendioComercioView.CantidadPisos,
+                        PisoAfectado = salidaIncendioComercioView.PisoAfectado,
+                        CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes,
+                        QuienLleno = BomberoLlenoPlanilla,
+                        ReceptorBombero = bomberoReceptor,
+                        Encargado = bomberoEncargado,
+                        Seguro = new()
+                        {
+                            CompañiaAseguradora = salidaIncendioComercioView.CompaniaAseguradora,
+                            NumeroDePoliza = salidaIncendioComercioView.NumeroPoliza,
+                            FechaDeVencimineto = salidaIncendioComercioView.FechaVencimineto,
+                        },
+                        Damnificados = new(),
+                        Moviles = new(),
+                        CuerpoParticipante = new()
+                    };
                 foreach (BomberoSalidaViewModels bom in bomberosSalida)
                 {
                     Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
@@ -482,23 +482,20 @@
                     salidaIncendioComercio.CuerpoParticipante.Add(BomSalida);
                 }
 
-                foreach (BomberoViweModel j in bomberoTodos)
+                foreach (MovilSalidaViewModels m in MovilesSalidasL)
                 {
-                    if(ChoferBool == j.Chofer)
-                        foreach (MovilSalidaViewModels m in MovilesSalidasL)
+                    Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
+                    Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+                    MovilSalida movilS = new()
                         {
-                            Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-                            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
-                            MovilSalida movilS = new()
-                                {
-                                    CargoCombustible = m.CargoCombustible,
-                                    Chofer = bomberoChofer,
-                                    Movil = Movilsalida
-                                };
-                            salidaIncendioComercio.Moviles.Add(movilS);
-                        }
+                            CargoCombustible = m.CargoCombustible,
+                            Chofer = bomberoChofer,
+                            Movil = Movilsalida
+                        };
+                    salidaIncendioComercio.Moviles.Add(movilS);
                 }
-                
+
+
                 foreach (DamnificadoViewModels d in DamnificadosSalida)
                 {
 
