@@ -1,0 +1,20 @@
+﻿@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@page "/Herramientas"
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using System.Text.Json;
+
+
+<div style="display: flex;gap: 20px;">
+    <Button Type="primary" OnClick="@(()=>{ navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
+        Brigadas
+    </Button>
+    <Button Type="primary" OnClick="@(()=>{ navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
+        Comunicacion
+    </Button>
+    <Button Type="primary" OnClick="@(()=>{ navigationManager.NavigateTo("/Herramientas/Deposito"); })">
+        Deposito
+    </Button>
+</div>

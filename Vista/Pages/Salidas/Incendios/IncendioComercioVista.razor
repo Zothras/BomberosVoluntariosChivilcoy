@@ -139,7 +139,7 @@
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@bomberoTodos"
-        @bind-Value="@chofer"
+                @bind-Value="@chofer"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Seleccione el bombero"
@@ -350,6 +350,7 @@
     public IncendioComercioViewModels salidaIncendioComercioView = new();
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
+    private BomberoViweModel bomberoViweModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
     public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
@@ -367,7 +368,7 @@
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
-
+    bool ChoferBool = true;
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
@@ -480,18 +481,24 @@
                         };
                     salidaIncendioComercio.CuerpoParticipante.Add(BomSalida);
                 }
-                foreach (MovilSalidaViewModels m in MovilesSalidasL)
+
+                foreach (BomberoViweModel j in bomberoTodos)
                 {
-                    Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-                    Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
-                    MovilSalida movilS = new()
+                    if(ChoferBool == j.Chofer)
+                        foreach (MovilSalidaViewModels m in MovilesSalidasL)
                         {
-                            CargoCombustible = m.CargoCombustible,
-                            Chofer = bomberoChofer,
-                            Movil = Movilsalida
-                        };
-                    salidaIncendioComercio.Moviles.Add(movilS);
+                            Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
+                            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+                            MovilSalida movilS = new()
+                                {
+                                    CargoCombustible = m.CargoCombustible,
+                                    Chofer = bomberoChofer,
+                                    Movil = Movilsalida
+                                };
+                            salidaIncendioComercio.Moviles.Add(movilS);
+                        }
                 }
+                
                 foreach (DamnificadoViewModels d in DamnificadosSalida)
                 {
 
