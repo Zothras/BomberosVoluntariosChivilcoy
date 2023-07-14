@@ -130,7 +130,7 @@
     <FormItem Label="Elija el chofer">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
-                DataSource="@bomberoTodos"
+                DataSource="@bomberoChoferes"
         @bind-Value="@chofer"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
@@ -341,7 +341,7 @@
     Bombero[] TodosBomberos;
     Movil[] Moviles;
     public List<BomberoViweModel> bomberoTodos = new();
-
+    public List<BomberoViweModel> bomberoChoferes = new();
     bool switchValue { get; set; }
     bool switchValueS { get; set; }
     bool chek { get; set; }
@@ -585,7 +585,50 @@
 
                 };
             bomberoTodos.Add(bombero);
+        }
+        foreach (Bombero c in TodosBomberos)
+        {
+            if (c.Chofer == true)
+            {
+                BomberoViweModel bomberoChofer = new()
+                    {
+                        FechaNacimiento = c.FechaNacimiento,
+                        Sexo = c.Sexo,
+                        Nombre = c.Nombre,
+                        Apellido = c.Apellido,
+                        Documento = c.Documento,
+                        NumeroLegajo = c.NumeroLegajo,
+                        NumeroIoma = c.NumeroIoma,
+                        LugarNacimiento = c.LugarNacimiento,
+                        Grado = c.Grado,
+                        //NombreImagen = b.NombreImagen,
+                        //TipoImagen = b.TipoImagen,
+                        //Base64Imagen = b.Base64,
+                        Dotacion = c.Dotacion,
+                        //Nombre = b.NombreBrigada,
+                        Resolucion1 = c.Resolucion1,
+                        Resolucion2 = c.Resolucion2,
+                        Resolucion3 = c.Resolucion3,
+                        Resolucion4 = c.Resolucion4,
+                        Resolucion5 = c.Resolucion5,
+                        Resolucion6 = c.Resolucion6,
+                        //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
+                        Estado = c.Estado,
+                        Chofer = c.Chofer,
+                        VencimientoRegistro = c.VencimientoRegistro,
+                        Direccion = c.Direccion,
+                        Observaciones = c.Observaciones,
+                        Profesion = c.Profesion,
+                        NivelEstudios = c.NivelEstudios,
+                        FechaAceptacion = c.FechaAceptacion,
+                        //TelefonoCel = b.TelefonoCel,
+                        //TelefonoFijo = b.TelefonoFijo,
+                        //TelefonoLaboral = b.TelefonoLaboral,
+                        //Email = b.Email,
 
+                    };
+                bomberoChoferes.Add(bomberoChofer);
+            }
         }
     }
 
