@@ -105,7 +105,7 @@
         color: #fff !important;
     }
 
-    .ant-menu-submenu-title > .ant-menu-submenu-arrow { 
+    .ant-menu-submenu-title > .ant-menu-submenu-arrow {
         color: black !important;
     }
 
@@ -113,12 +113,13 @@
     .ant-menu-submenu-selected:first-child .ant-menu-submenu-title > .ant-menu-submenu-arrow {
         color: #fff !important;
     }
+
     .ant-menu-submenu-title .anticon {
         min-width: 19px !important;
     }
 
     .ant-menu-inline-collapsed .spanContentSalidas {
-        padding-top: 10px!important;
+        padding-top: 10px !important;
     }
 </style>
 
@@ -171,76 +172,100 @@
                         <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
                     </ChildContent>
                 </MenuItem>
-                <Menu Style="background: rgb(230, 230, 230);"
-                      Mode=@MenuMode.Inline
-                      InlineCollapsed=collapsed>
-                    <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title>
-                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
-                            <MenuItem Key="02" Title=@("Materiales peligrosos")>
-                                <IconTemplate>
-                                    <i class="fa-solid fa-circle-radiation" style="color: #263040;"></i>
-                                </IconTemplate>
-                            </MenuItem>
+                <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                        <MenuItem Key="02" Title=@("Materiales peligrosos")>
+                            <IconTemplate>
+                                <i class="fa-solid fa-circle-radiation" style="color: #263040;"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
+                        <MenuItem Key="01" Title=@("Factores climaticos")>
+                            <IconTemplate>
+                                <i class="fa-sharp fa-solid fa-cloud-bolt" style="color: #263040;"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
+                        <MenuItem Key="03" Title=@("Accidentes")>
+                            <IconTemplate>
+                                <i class="fa-solid fa-person-falling-burst" style="color: #263040;"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
+                    <SubMenu Key="sub2" TitleTemplate=@sub3Title>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
+                            <MenuItem Key="04">Comercio</MenuItem>
                         </a>
-                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
-                            <MenuItem Key="01" Title=@("Factores climaticos")>
-                                <IconTemplate>
-                                    <i class="fa-sharp fa-solid fa-cloud-bolt" style="color: #263040;"></i>
-                                </IconTemplate>
-                            </MenuItem>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
+                            <MenuItem Key="05">Forestal</MenuItem>
                         </a>
-                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
-                            <MenuItem Key="03" Title=@("Accidentes")>
-                                <IconTemplate>
-                                    <i class="fa-solid fa-person-falling-burst" style="color: #263040;"></i>
-                                </IconTemplate>
-                            </MenuItem>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
+                            <MenuItem Key="06">Industria</MenuItem>
+                        </a>    
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
+                            <MenuItem Key="07">Vehiculares</MenuItem>
                         </a>
-                        <SubMenu Key="sub2" TitleTemplate=@sub3Title>
-
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
-                                <MenuItem Key="04">Comercio</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
-                                <MenuItem Key="05">Forestal</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
-                                <MenuItem Key="06">Industria</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
-                                <MenuItem Key="07">Vehiculares</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
-                                <MenuItem Key="08">Establecimiento educativo</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
-                                <MenuItem Key="09">Hospitales / Clinicas</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
-                                <MenuItem Key="10">Establecimiento publico</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
-                                <MenuItem Key="11">Vivienda</MenuItem>
-                            </a>
-                        </SubMenu>
-                        <SubMenu Key="sub3" TitleTemplate=@sub4Title>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
-                                <MenuItem Key="12">Representacion</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
-                                <MenuItem Key="13">Prevencion</MenuItem>
-                            </a>
-                        </SubMenu>
-                        <SubMenu Key="sub4" TitleTemplate=@sub5Title>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
-                                <MenuItem Key="14">Animal</MenuItem>
-                            </a>
-                            <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
-                                <MenuItem Key="15">Persona</MenuItem>
-                            </a>
-                        </SubMenu>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
+                            <MenuItem Key="08">Establecimiento educativo</MenuItem>
+                        </a>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
+                            <MenuItem Key="09">Hospitales / Clinicas</MenuItem>
+                        </a>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
+                            <MenuItem Key="10">Establecimiento publico</MenuItem>
+                        </a>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
+                            <MenuItem Key="11">Vivienda</MenuItem>
+                        </a>
                     </SubMenu>
-                </Menu>
+                    <SubMenu Key="sub3" TitleTemplate=@sub4Title>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
+                            <MenuItem Key="12">Representacion</MenuItem>
+                        </a>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
+                            <MenuItem Key="13">Prevencion</MenuItem>
+                        </a>
+                    </SubMenu>
+                    <SubMenu Key="sub4" TitleTemplate=@sub5Title>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
+                            <MenuItem Key="14">Animal</MenuItem>
+                        </a>
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
+                            <MenuItem Key="15">Persona</MenuItem>
+                        </a>
+                    </SubMenu>
+                </SubMenu>
+                <SubMenu class="xd" Key="sub6" Title="Salidas" TitleTemplate=@sub7Title>
+                    <MenuItem Key="20" Title=@("Historial de bomberos") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
+                        <IconTemplate>
+                            <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
+                        </IconTemplate>
+                    </MenuItem>
+                    <MenuItem Key="19" Title=@("Historial de moviles") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
+                        <IconTemplate>
+                            <i class="fa-solid fa-truck-droplet icoSelected" style="color: #263040;"></i>
+                        </IconTemplate>
+                    </MenuItem>
+                </SubMenu>
+                <SubMenu class="xd" Key="sub5" Title="Salidas" TitleTemplate=@sub6Title>
+                    <MenuItem Key="16" Title=@("Brigadas") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
+                        <IconTemplate>
+                            <i class="fa-solid fa-users-gear"></i>
+                        </IconTemplate>
+                    </MenuItem>
+                    <MenuItem Key="17" Title=@("Comunicacion") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
+                        <IconTemplate>
+                            <i class="fa-solid fa-walkie-talkie"></i>
+                        </IconTemplate>
+                    </MenuItem>
+                    <MenuItem Key="18" Title=@("Deposito") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
+                        <IconTemplate>
+                            <i class="fa-solid fa-file-signature"></i>
+                        </IconTemplate>
+                    </MenuItem>
+                </SubMenu>
                 <Sider Style="margin-top:5em; background-color: transparent;"></Sider>
             </Menu>
         </div>
@@ -283,6 +308,20 @@
     @<span>
         <i class="fa-solid fa-fire-extinguisher" style="padding-right: 10px!important;"></i>
         <span>Rescates</span>
+    </span>
+    ;
+
+    RenderFragment sub6Title =
+    @<span class="spanSalidas" style="position: relative;">
+        <Icon class="menuSalidas" Type="tool" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;" />
+        <span class="spanContentSalidas" style="padding-left: 32px!important;">Herramientas</span>
+    </span>
+    ;
+
+    RenderFragment sub7Title =
+    @<span class="spanSalidas" style="position: relative;">
+        <Icon Type="history" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;" />
+        <span class="spanContentSalidas" style="padding-left: 32px!important;">Reportes</span>
     </span>
     ;
 

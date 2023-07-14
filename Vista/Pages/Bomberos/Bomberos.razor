@@ -6,24 +6,14 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-
-
-<BSContainer id="agregar-bombero">
-    <a @onclick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">
-        <BSButton id="button-center" Color="BSColor.Danger">Agregar Bombero +</BSButton>
-    </a>
-</BSContainer>
-<br/>
-
 <Table @ref="table"
        TItem="Bombero"
        DataSource="@bomberos"
-       Total="_total"
-       @bind-PageIndex="_pageIndex"
-       @bind-PageSize="_pageSize"
        @bind-SelectedRows="selectedRows"
        OnChange="OnChange"
-       >
+       Total="_total"
+       @bind-PageIndex="_pageIndex"
+       @bind-PageSize="_pageSize">
     <TitleTemplate>
         <GridRow>
             <GridCol Span="4">
@@ -46,7 +36,7 @@
         <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
         <PropertyColumn Property="c=>c.Nombre" Sortable />
         <PropertyColumn Property="c=>c.Apellido" Sortable />
-        <PropertyColumn Property="c=>c.Grado" 
+        <PropertyColumn Property="c=>c.Grado"
                         SortDirections="new[] { SortDirection.Descending }"
                         Filters="EscalafonJerarquicoFilter"
                         OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
@@ -58,170 +48,168 @@
             </Space>
         </ActionColumn>
     </ColumnDefinitions>
- 
-
-
     @*--------------------------------------------Modal-----------------------------------------------*@
 </Table>
-                
+<Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="position: absolute;right: 32.5em;top: 56.9em;">Agregar Bombero</Button>
+
 <Modal Title="@("Bombero")"
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
-          <Form Loading="loading" Model="@bomberoVM"
+    <Form Loading="loading" Model="@bomberoVM"
           LabelColSpan="8"
           WrapperColSpan="16"
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed"
           @ref="@_form">
 
-                <FormItem Label="Nombre">
-                <Input DefaultValue="@bomberoVM.Nombre" @bind-Value="@bomberoVM.Nombre" />
-                </FormItem>
-                <FormItem Label="Apellido">
-                <Input DefaultValue="@bomberoVM.Apellido" @bind-Value="@bomberoVM.Apellido" />
-                </FormItem>
+        <FormItem Label="Nombre">
+            <Input DefaultValue="@bomberoVM.Nombre" @bind-Value="@bomberoVM.Nombre" />
+        </FormItem>
+        <FormItem Label="Apellido">
+            <Input DefaultValue="@bomberoVM.Apellido" @bind-Value="@bomberoVM.Apellido" />
+        </FormItem>
 
-                <FormItem Label="Fecha de Nacimiento">
-                    <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-                    @*<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" @bind-Value="@bomberoView.FechaNacimiento" Style="width: 100%;"/>*@
-                </FormItem>
+        <FormItem Label="Fecha de Nacimiento">
+            <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+            @*<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" @bind-Value="@bomberoView.FechaNacimiento" Style="width: 100%;"/>*@
+        </FormItem>
 
-                <FormItem Label="DNI">
+        <FormItem Label="DNI">
             <Input DefaultValue="@bomberoVM.Documento" @bind-Value="@bomberoVM.Documento" />
-                </FormItem>
-                <FormItem Label="Direccion">
+        </FormItem>
+        <FormItem Label="Direccion">
             <Input DefaultValue="@bomberoVM.Direccion" @bind-Value="@bomberoVM.Direccion" />
-                </FormItem>
-                <FormItem Label="Dotaciones">
-                    <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
-                </FormItem>
+        </FormItem>
+        <FormItem Label="Dotaciones">
+            <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
+        </FormItem>
 
-                <FormItem Label="Numero Legajo">
-                    <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
-                </FormItem>
+        <FormItem Label="Numero Legajo">
+            <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
+        </FormItem>
 
-                <FormItem Label="Fecha de Aceptacion">
-                    @*<DatePicker @bind-Value="@bomberoView.FechaAceptacion" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
+        <FormItem Label="Fecha de Aceptacion">
+            @*<DatePicker @bind-Value="@bomberoView.FechaAceptacion" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
             <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-                </FormItem>
+        </FormItem>
 
-                <FormItem Label="Numero IOMA">
-                    <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
-                </FormItem>
+        <FormItem Label="Numero IOMA">
+            <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
+        </FormItem>
 
-                <FormItem Label="Lugar de nacimiento">
-                    <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
-                </FormItem>
+        <FormItem Label="Lugar de nacimiento">
+            <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
+        </FormItem>
 
-                @*<FormItem Label="Grupo Sanguineo" >
-                <Input @bind-Value="@bomberoView.GrupoSanguineo"/>
-                </FormItem>*@
+        @*<FormItem Label="Grupo Sanguineo" >
+        <Input @bind-Value="@bomberoView.GrupoSanguineo"/>
+        </FormItem>*@
 
-                <FormItem Label="Dotaciones">
-                    <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
-                </FormItem>
+        <FormItem Label="Dotaciones">
+            <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
+        </FormItem>
 
-                <FormItem Label="Observaciones">
-                    <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
-                </FormItem>
+        <FormItem Label="Observaciones">
+            <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
+        </FormItem>
 
-                <FormItem Label="Nivel de estuduio">
-                    <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
-                </FormItem>
+        <FormItem Label="Nivel de estuduio">
+            <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
+        </FormItem>
 
-                <FormItem Label="Profesion">
-                    <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
-                </FormItem>
+        <FormItem Label="Profesion">
+            <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
+        </FormItem>
 
-                <FormItem Label="Resolucion 1">
+        <FormItem Label="Resolucion 1">
             <Input DefaultValue="@bomberoVM.Resolucion1" @bind-Value="@bomberoVM.Resolucion1" />
-                </FormItem>
-                <FormItem Label="Resolucion 2">
-                    <Input DefaultValue="@bomberoVM.Resolucion2" @bind-Value="@bomberoVM.Resolucion2" />
-                </FormItem>
-                <FormItem Label="Resolucion 3">
-                    <Input DefaultValue="@bomberoVM.Resolucion3" @bind-Value="@bomberoVM.Resolucion3" />
-                </FormItem>
-                <FormItem Label="Resolucion 4">
-                    <Input DefaultValue="@bomberoVM.Resolucion4" @bind-Value="@bomberoVM.Resolucion4" />
-                </FormItem>
-                <FormItem Label="Resolucion 5">
-                    <Input DefaultValue="@bomberoVM.Resolucion5" @bind-Value="@bomberoVM.Resolucion5" />
-                </FormItem>
-                <FormItem Label="Resolucion 6">
-                    <Input DefaultValue="@bomberoVM.Resolucion6" @bind-Value="@bomberoVM.Resolucion6" />
-                </FormItem>
+        </FormItem>
+        <FormItem Label="Resolucion 2">
+            <Input DefaultValue="@bomberoVM.Resolucion2" @bind-Value="@bomberoVM.Resolucion2" />
+        </FormItem>
+        <FormItem Label="Resolucion 3">
+            <Input DefaultValue="@bomberoVM.Resolucion3" @bind-Value="@bomberoVM.Resolucion3" />
+        </FormItem>
+        <FormItem Label="Resolucion 4">
+            <Input DefaultValue="@bomberoVM.Resolucion4" @bind-Value="@bomberoVM.Resolucion4" />
+        </FormItem>
+        <FormItem Label="Resolucion 5">
+            <Input DefaultValue="@bomberoVM.Resolucion5" @bind-Value="@bomberoVM.Resolucion5" />
+        </FormItem>
+        <FormItem Label="Resolucion 6">
+            <Input DefaultValue="@bomberoVM.Resolucion6" @bind-Value="@bomberoVM.Resolucion6" />
+        </FormItem>
 
-                <FormItem Label="Es chofer">
+        <FormItem Label="Es chofer">
             <Checkbox DefaultValue="@bomberoVM.Chofer" @bind-Checked="@bomberoVM.Chofer">
-                    </Checkbox>
-                    @if (bomberoVM.Chofer)
-                    {
-                        <label id="texto">Fecha vencimiento del carnet</label>
-                        <br>
-                        @*<DatePicker @bind-Value="@bomberoView.VencimientoRegistro" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
+            </Checkbox>
+            @if (bomberoVM.Chofer)
+            {
+                <label id="texto">Fecha vencimiento del carnet</label>
+                <br>
+                @*<DatePicker @bind-Value="@bomberoView.VencimientoRegistro" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
                 <DatePicker DefaultValue="@bomberoVM.VencimientoRegistro" @bind-Value="@bomberoVM.VencimientoRegistro" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-                    }
-                    @if (!bomberoVM.Chofer)
-                    {
-                        <label id="texto">No es chofer</label>
-                    }
-                </FormItem>
+            }
+            @if (!bomberoVM.Chofer)
+            {
+                <label id="texto">No es chofer</label>
+            }
+        </FormItem>
 
-                <FormItem Label="Grado">
-                    <EnumSelect DefaultValue="@bomberoVM.Grado" TEnum="EscalafonJerarquico" @bind-Value="@bomberoVM.Grado" />
-                </FormItem>
-
-
-                <FormItem Label="Estado">
-                    <EnumSelect DefaultValue="@bomberoVM.Estado" TEnum="EstadoBombero" @bind-Value="@bomberoVM.Estado" />
-                </FormItem>
-
-                <FormItem Label="Sexo">
-                    <EnumSelect DefaultValue="@bomberoVM.Sexo" TEnum="TipoSexo" @bind-Value="@bomberoVM.Sexo" />
-                </FormItem>
+        <FormItem Label="Grado">
+            <EnumSelect DefaultValue="@bomberoVM.Grado" TEnum="EscalafonJerarquico" @bind-Value="@bomberoVM.Grado" />
+        </FormItem>
 
 
-                 @* Carga Contacto-----------------------------------------------------------------------*@
-                <FormItem Label="Telefono Laboral">
-                    <Input DefaultValue="@bomberoVM.TelefonoLaboral" @bind-Value="@bomberoVM.TelefonoLaboral" />
-                </FormItem>
+        <FormItem Label="Estado">
+            <EnumSelect DefaultValue="@bomberoVM.Estado" TEnum="EstadoBombero" @bind-Value="@bomberoVM.Estado" />
+        </FormItem>
 
-                <FormItem Label="Telefono Celular">
-                    <Input DefaultValue="@bomberoVM.TelefonoCel" @bind-Value="@bomberoVM.TelefonoCel" />
-                </FormItem>
+        <FormItem Label="Sexo">
+            <EnumSelect DefaultValue="@bomberoVM.Sexo" TEnum="TipoSexo" @bind-Value="@bomberoVM.Sexo" />
+        </FormItem>
 
-                <FormItem Label="Telefono Fijo">
-                    <Input DefaultValue="@bomberoVM.TelefonoFijo" @bind-Value="@bomberoVM.TelefonoFijo" />
-                </FormItem>
 
-                <FormItem Label="Email">
-                    <Input DefaultValue="@bomberoVM.Email" @bind-Value="@bomberoVM.Email" />
-                </FormItem>
-                @*Carga Brigada-----------------------------------------------------------------------*@
-                <FormItem Label="Nombre Brigada">
-                    <Input DefaultValue="@bomberoVM.NombreBrigada" @bind-Value="@bomberoVM.NombreBrigada" />
-                </FormItem>
-                <FormItem Label="Nombre Brigada">
-                    <Select TItem="Brigada"
-                            TItemValue="string"
-                            DataSource="@brigadas"
-                            @bind-Value="@bomberoVM.NombreBrigada"
-                            DefaultValue="@bomberoVM.NombreBrigada"
-                            ValueName="@nameof(Brigada.Nombre)"
-                            LabelName="@nameof(Brigada.Nombre)"
-                            OnSelectedItemChanged="OnSelectedItemChangedHandler">
-                    </Select>
-                </FormItem>
-          </Form>
- </Modal>
- @{
+        @* Carga Contacto-----------------------------------------------------------------------*@
+        <FormItem Label="Telefono Laboral">
+            <Input DefaultValue="@bomberoVM.TelefonoLaboral" @bind-Value="@bomberoVM.TelefonoLaboral" />
+        </FormItem>
+
+        <FormItem Label="Telefono Celular">
+            <Input DefaultValue="@bomberoVM.TelefonoCel" @bind-Value="@bomberoVM.TelefonoCel" />
+        </FormItem>
+
+        <FormItem Label="Telefono Fijo">
+            <Input DefaultValue="@bomberoVM.TelefonoFijo" @bind-Value="@bomberoVM.TelefonoFijo" />
+        </FormItem>
+
+        <FormItem Label="Email">
+            <Input DefaultValue="@bomberoVM.Email" @bind-Value="@bomberoVM.Email" />
+        </FormItem>
+        @*Carga Brigada-----------------------------------------------------------------------*@
+        <FormItem Label="Nombre Brigada">
+            <Input DefaultValue="@bomberoVM.NombreBrigada" @bind-Value="@bomberoVM.NombreBrigada" />
+        </FormItem>
+        <FormItem Label="Nombre Brigada">
+            <Select TItem="Brigada"
+                    TItemValue="string"
+                    DataSource="@brigadas"
+            @bind-Value="@bomberoVM.NombreBrigada"
+                    DefaultValue="@bomberoVM.NombreBrigada"
+                    ValueName="@nameof(Brigada.Nombre)"
+                    LabelName="@nameof(Brigada.Nombre)"
+                    OnSelectedItemChanged="OnSelectedItemChangedHandler">
+            </Select>
+        </FormItem>
+    </Form>
+</Modal>
+@{
     RenderFragment footer = @<Template>
-    <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
-</Template>;
+        <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
+    </Template>;
 }
- <Modal Title="@("Detalles de bombero")"
+<Modal Title="@("Detalles de bombero")"
        Visible="@_visibleDetalle"
        OnCancel="@HandleCancelDetalle"
        Footer="@footer">
@@ -240,11 +228,11 @@
         <p>Chofer: Es Chofer</p>
         <p>VencimientoRegistro: @bomberoVM.VencimientoRegistro</p>
     }
-    else 
+    else
     {
         <p>Chofer: Es Chofer</p>
     }
-    
+
 
     <p>VencimientoRegistro: @bomberoVM.VencimientoRegistro</p>
     <p>Sexo: @bomberoVM.Sexo</p>
@@ -268,12 +256,7 @@
     <p>Email: @bomberoVM.Email</p>
     <p>NombreBrigada: @bomberoVM.NombreBrigada</p>
 </Modal>
-                <br />
-                <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
-
-                <br />
-                <h5>selections:</h5>
-                @if (selectedRows != null && selectedRows.Any())
+@if (selectedRows != null && selectedRows.Any())
 {
     <Button Danger Size="small" OnClick="@(e => { selectedRows = null; })">Clear</Button>
 
@@ -282,16 +265,12 @@
         <Tag @key="selected.NumeroLegajo" Closable OnClose="e=>RemoveSelection(selected.NumeroLegajo)">@selected.NumeroLegajo - @selected.NumeroLegajo</Tag>
     }
 }
-
-<Button OnClick="()=> { _pageIndex--; }">Previous page</Button>
-<Button OnClick="()=> { _pageIndex++; }">Next Page</Button>
-
 @code {
 
     #region "tabla"
 
     //Bombero[]? bomberos;
-    private Brigada[]? brigadas ;
+    private Brigada[]? brigadas;
     string searchString;
     IEnumerable<Bombero> dataSource;
     IEnumerable<Bombero> selectedRows;
@@ -324,7 +303,7 @@
             EscalafonJerarquicoFilter[i] = new() { Text = Enum.GetName(typeof(EscalafonJerarquico), value), Value = value };
             i++;
         }
-       
+
 
         StateHasChanged();
     }
@@ -332,7 +311,7 @@
     void OnRowClick(RowData<Bombero> row)
     {
         Console.WriteLine($"row {row.Data.Brigada.BrigadaId} was clicked");
-    }//Toma el valor del valor de la fila seleccionada 
+    }//Toma el valor del valor de la fila seleccionada
 
     private async Task OnChange(QueryModel<Bombero> queryModel)
     {
@@ -519,7 +498,7 @@
             .SingleOrDefaultAsync();
 
         BomberosViewModel BomeroPasajeVM = new()
-        {
+            {
                 FechaNacimiento = bombero.FechaNacimiento,
                 Sexo = bombero.Sexo,
                 Nombre = bombero.Nombre,
@@ -558,7 +537,7 @@
                 TelefonoFijo = bombero1.Contacto.TelefonoFijo,
                 TelefonoLaboral = bombero1.Contacto.TelefonoLaboral,
                 Email = bombero1.Contacto.Email
-        };
+            };
         bomberoVM = BomeroPasajeVM;
         StateHasChanged();
     }//Se obtienen los valores de la base de datos al view model
@@ -614,7 +593,7 @@
 
         await context.SaveChangesAsync();
         await OnInitializedAsync();
-         StateHasChanged();
+        StateHasChanged();
     }
 
     public string CargarImage(Bombero bombero)
