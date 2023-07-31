@@ -859,12 +859,12 @@
                 <Select TItem="BomberoViweModel"
                         TItemValue="int"
                         DataSource="@bomberoTodos"
-                @bind-Value="@bomberoSeleccionado"
+                @bind-Value="@cp.Bombero.NumeroLegajo"
                         LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                         ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                         Placeholder="Seleccionar numero movil"
                         DefaultActiveFirstOption="false"
-                        DefaultValue="@bomberoSeleccionado"
+                        DefaultValue="@cp.Bombero.NumeroLegajo"
                         EnableSearch
                             OnBlur="OnBlur"
                             OnFocus="OnFocus"
@@ -879,12 +879,12 @@
                 <Switch @bind-Value="@cp.Salio" CheckedChildren="Salio" UnCheckedChildren="No Salio" />@*Tengo un problema y este componente no se puede usar con lista sino con variales solas*@
             </FormItem>
 
-            if (contadorCuerposParticipantesSalidas < _selectedValueCuerpoParticipante.Count)//Lo pongo abajo del select ya que bombero seleccionado esta definido antes de abrir el modal, para que se muestre al primer bombero, y despues se verifica si hay mas bomberos a traves del if, si no hay mas, evita una exepcion de rango el if
+            @*if (contadorCuerposParticipantesSalidas < _selectedValueCuerpoParticipante.Count)//Lo pongo abajo del select ya que bombero seleccionado esta definido antes de abrir el modal, para que se muestre al primer bombero, y despues se verifica si hay mas bomberos a traves del if, si no hay mas, evita una exepcion de rango el if
             {
                 CargarDatosAsync();//utilizo otro metodo async para que me deje llamar a getBomberoSeleccionadoAsyn co el await, 
                                    //y asi asegurame de que realiza la operacion antes de que se abra el modal
                 
-            }
+            }*@
             
             
         }

@@ -13,9 +13,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
-    <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="modelFactorClimatico.NumeroParte" />
-    </FormItem>
+    
     <FormItem Label="Descripcion">
         <Input @bind-Value="@modelFactorClimatico.Descripcion" />
     </FormItem>
@@ -483,11 +481,6 @@
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-        if (salida is not null)
-        {
-            modelFactorClimatico.NumeroParte = salida.NumeroParte++;
-        }
         TodosBomberos = await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
         CargarBomberosView();
