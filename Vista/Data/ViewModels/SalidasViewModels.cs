@@ -53,6 +53,10 @@ namespace Vista.Data.ViewModels
         //bombero que lleno la planilla
         public string NombreLLenoPlanilla { get; set; }
         public string ApllidoLLenoPlanilla { get; set; }
+        public string NombreYApellidoLlenoPlanilla
+        {
+            get { return NombreLLenoPlanilla + " " + ApllidoLLenoPlanilla; }
+        }
         public int LegajoLLenoPlanilla { get; set; }
         public TipoServicioSalida TipoServicio { get; set; }
     }

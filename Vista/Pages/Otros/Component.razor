@@ -28,7 +28,7 @@
         <!-- Otros elementos del formulario se omiten para simplificar -->
         <!-- Aquí se encuentra el componente Select aislado -->
         <FormItem Label="Seleccionar Bombero">
-            <Select DataSource="@filteredBomberos"
+            @*<Select DataSource="@filteredBomberos"
                     ValueChanged="OnSelectedItemChangedHandler"
                     EnableSearch
                     Style="width: 200px;"
@@ -40,8 +40,23 @@
                     HideNotFoundContent="true"
                     SearchDebounceMilliseconds="350"
                     OnSearch="OnSearch">
+            </Select>*@
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberoTodos"
+                    @bind-Value="@_selectedValue"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Select a person"
+                    DefaultActiveFirstOption="false"
+                    EnableSearch
+                    OnBlur="OnBlur"
+                    OnFocus="OnFocus"
+                    OnSelectedItemChanged="OnSelectedItemChangedHandler"
+                    OnSearch="OnSearch">
             </Select>
         </FormItem>
+        
 
     </Form>
 </Modal>
@@ -148,17 +163,17 @@
         new BomberoViweModel { NumeroLegajo = 7, Nombre = "Santos", Apellido="Dias" }
     };
 
-    private void OnSearch(string value)
-    {
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            filteredBomberos = bomberoTodos.Where(b => b.NombreYApellido.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
-        else
-        {
-            filteredBomberos = new List<BomberoViweModel>(bomberoTodos);
-        }
-    }
+    //private void OnSearch(string value)
+    //{
+    //    if (!string.IsNullOrWhiteSpace(value))
+    //    {
+    //        filteredBomberos = bomberoTodos.Where(b => b.NombreYApellido.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+    //    }
+    //    else
+    //    {
+    //        filteredBomberos = new List<BomberoViweModel>(bomberoTodos);
+    //    }
+    //}
 
     private void OnSelectedItemChangedHandler(int value)
     {
@@ -169,5 +184,48 @@
        
 
         _visibleEditar = true;
+    }
+}
+@code
+{
+    class Person
+    {
+        public string Value { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<Person> _persons;
+    int _selectedValue;
+    BomberoViweModel _selectedItem;
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person>
+        {
+            new Person { Value = "jack", Name = "Jack" },
+            new Person { Value = "lucy", Name = "Lucy" },
+            new Person { Value = "tom" , Name = "Tom" }
+        };
+    }
+
+    private void OnSelectedItemChangedHandler(BomberoViweModel value)
+    {
+        _selectedItem = value;
+        Console.WriteLine($"selected: ${value?.NumeroLegajo}");
+    }
+
+    private void OnBlur()
+    {
+        Console.WriteLine("blur");
+    }
+
+    private void OnFocus()
+    {
+        Console.WriteLine("focus");
+    }
+
+    private void OnSearch(string value)
+    {
+        Console.WriteLine($"search: {value}");
     }
 }
