@@ -14,9 +14,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
-    <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="modelMateriales.NumeroParte" Disabled />
-    </FormItem>
+
     <FormItem Label="Descripcion">
         <Input @bind-Value="@modelMateriales.Descripcion" />
     </FormItem>
@@ -128,7 +126,7 @@
         @bind-Value="@chofer"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Select a person"
+                Placeholder="Selecione a un bombero"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
@@ -151,9 +149,6 @@
 
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
-    <FormItem Label="Tipo Escalafon">
-        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
-    </FormItem>
     <FormItem Label="Elija el bombero">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
@@ -161,7 +156,7 @@
                 @bind-Value="@BomberoCuerpo"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Selecione el movil"
+                Placeholder="Selecione el personal"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
@@ -170,7 +165,20 @@
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
     <br />
-
+    <div>
+        <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
+            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+            <ActionColumn Title="Action">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
     <b><label>Elija al encargado</label></b>
     <FormItem Label="Encargado">
         <Select TItem="BomberoViweModel"
@@ -323,6 +331,7 @@
         </FormItem>
     </Form>
 </Modal>
+
 @code
 {
 
@@ -422,7 +431,6 @@
             BomberoSalida BomSalida = new()
                 {
                     Salio = bom.Salio,
-                    Grado = bom.Grado,
                     Bombero = bomberoSalida
                 };
             materiales.CuerpoParticipante.Add(BomSalida);
@@ -458,23 +466,6 @@
                     LugarDeNacimiento = d.LugarDeNacimiento,
                     Edad = d.Edad,
                     Estado = d.Estado,
-
-                    VehiculoDamnificado = new()
-                    {
-                        Marca = vehiculo.Marca,
-                        Modelo = vehiculo.Modelo,
-                        Año = vehiculo.Año,
-                        Patente = vehiculo.Patente,
-                        Tipo = vehiculo.Tipo,
-                        Color = vehiculo.Color,
-                        Airbag = chek,
-                        Seguro = new()
-                        {
-                            CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                            NumeroDePoliza = vehiculo.NumeroDePoliza,
-                            FechaDeVencimineto = vehiculo.FechaDeVencimineto,
-                        },
-                    }
                 };
             materiales.Damnificados.Add(damn);
 
@@ -487,7 +478,7 @@
 
 
     }
-
+    
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -526,33 +517,37 @@
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();
+        
     }
 
     public async void AgregarCuerpoParticipante()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-
-        BomberoSalidaViewModels b = new()
+        foreach (var bom in TodosBomberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
             {
-                Salio = chekB,
-                Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = BomberoCuerpo
-            };
-        bomberosSalida.Add(b);
-        await db.SaveChangesAsync();
+                BomberoSalidaViewModels b = new()
+                {
+                    Salio = bomberoSalidaView.Salio,
+                    Nombre = bom.Nombre,
+                    Apellido = bom.Apellido,
+                    NumeroLegajo = BomberoCuerpo
+                };
+                bomberosSalida.Add(b);
+                await db.SaveChangesAsync();
+            }
+        }
+        
+        
     }
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-        if (salida is not null)
-        {
-            modelMateriales.NumeroParte = salida.NumeroParte + 1;
-        }
         TodosBomberos = await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
         CargarBomberosView();
-
+   
 
     }
 
@@ -710,6 +705,11 @@
         _visible1 = false;
 
     }
+    void deleteRow(int numlegajo)
+    {
+        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+   
 }
 
 
