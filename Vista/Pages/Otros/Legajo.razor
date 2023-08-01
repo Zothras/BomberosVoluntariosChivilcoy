@@ -849,7 +849,6 @@
         @*Cuerpos paraticipantes*@
         <b><label>Cuerpo Participante</label></b>
 
-        @*@for (int i = 0; i<salidasViewModel[numeroParteVisualizar].CuerpoParticipante.Count; i++ )*@
         @foreach (BomberoSalida cp in salidasViewModel[numeroParteVisualizar].CuerpoParticipante)
         {
             
@@ -873,18 +872,11 @@
                 </Select>
             </FormItem>
             //traer datos de cada bombero
-            @*<Checkbox @bind-Checked="salidasViewModel[numeroParteVisualizar].CuerpoParticipante[i].Salio"> Salio</Checkbox>*@
             <FormItem Label="¿Salio Bombero?">
-               @* <Switch @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[j].CargoCombustible"> </Switch>*@
                 <Switch @bind-Value="@cp.Salio" CheckedChildren="Salio" UnCheckedChildren="No Salio" />@*Tengo un problema y este componente no se puede usar con lista sino con variales solas*@
             </FormItem>
 
-            @*if (contadorCuerposParticipantesSalidas < _selectedValueCuerpoParticipante.Count)//Lo pongo abajo del select ya que bombero seleccionado esta definido antes de abrir el modal, para que se muestre al primer bombero, y despues se verifica si hay mas bomberos a traves del if, si no hay mas, evita una exepcion de rango el if
-            {
-                CargarDatosAsync();//utilizo otro metodo async para que me deje llamar a getBomberoSeleccionadoAsyn co el await, 
-                                   //y asi asegurame de que realiza la operacion antes de que se abra el modal
-                
-            }*@
+           
             
             
         }
@@ -932,7 +924,213 @@
         </FormItem>
         @*-----------------------Datos especificos de una salida----------------------*@
         
+        @switch (@salidasViewModel[numeroParteVisualizar].Discriminador)
+        {
+            case TipoSalida.Accidente:
+                Task.Run(async () =>
+                {
+                    await GetViewModelAccidentes(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Accidente: </b></p>
+                if(salidasViewModel[numeroParteVisualizar].Damnificados is not null)
+                {
+                    foreach(Damnificado dam in salidasViewModel[numeroParteVisualizar].Damnificados)
+                    {
+                        if (dam.VehiculoDamnificado is not null)
+                        {
+                            
+                                <p><b>Vehiculo Damificados: </b></p>
+                                <FormItem Label="Patente">
+                                    <Input @bind-Value="@dam.VehiculoDamnificado.Patente" />
+                                </FormItem>
+                                <FormItem Label="Marca">
+                                    <Input @bind-Value="@dam.VehiculoDamnificado.Marca" />
+                                </FormItem>
+                                <FormItem Label="Modelo">
+                                    <Input @bind-Value="@dam.VehiculoDamnificado.Modelo" />
+                                </FormItem>
+                                <FormItem Label="Tipo">
+                                    <Input @bind-Value="@dam.VehiculoDamnificado.Tipo" />
+                                </FormItem>
 
+                                <p><b>Seguro:</b></p>
+                                //traer datos de seguroVehiculo
+                                <FormItem Label="Numero De Poliza">
+                                    <Input @bind-Value="@dam.VehiculoDamnificado.Seguro.NumeroDePoliza" />
+                                </FormItem>
+                                <FormItem Label="Compañia Aseguradora">
+                                    <Input @bind-Value="@dam.VehiculoDamnificado.Seguro.CompañiaAseguradora" />
+                                </FormItem>
+                                <FormItem Label="Fecha De Vencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@dam.VehiculoDamnificado.Seguro.FechaDeVencimineto" />
+                                </FormItem>
+                                <FormItem Label="">
+                                <Checkbox @bind-Checked="@dam.VehiculoDamnificado.Airbag"> Air bag</Checkbox>
+                                </FormItem>
+
+                            
+                        }
+                    }
+                }
+                
+                @*Los datos del seguro lugar son los datos que estan en salidas ViewModel sobre seguro*@
+                <div>
+                    <div>
+                        @if(salidasViewModel[numeroParteVisualizar].NumeroPoliza is not null)
+                        {
+                            switchValueS = true;
+                        }
+                        <b>
+                            <FormItem Label="¿Tiene seguro el lugar?">
+                                <Switch @bind-Checked="switchValueS" />
+                            </FormItem>
+                        </b>
+                    </div>
+                    <div>
+                        @if (switchValueS == true)
+                        {
+                            <b><label>Seguro del lugar afectado</label></b>
+                            <FormItem Label="Compania Aseguradora">
+                                <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].CompaniaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="NumeroPoliza">
+                                <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].NumeroPoliza" />
+                            </FormItem>
+                            <FormItem Label="FechaVencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel[numeroParteVisualizar].FechaVencimineto" />
+                            </FormItem>
+                        }
+                    </div>
+                </div>
+          
+                <FormItem Label="Tipo Accidente">
+                    <EnumSelect TEnum="TipoAccidente" @bind-Value="@accidenteViewModels.Tipo" />
+                </FormItem>
+
+                <FormItem Label="Cantidad Vheiculo">
+                    <AntDesign.InputNumber @bind-Value="@accidenteViewModels.CantidadVheiculo" />
+                </FormItem>
+                <FormItem Label="Tipo Condiciones Climaticas">
+                    <EnumSelect TEnum="TipoCondicionesClimaticas" @bind-Value="@accidenteViewModels.CondicionesClimaticas" />
+                </FormItem>
+                <FormItem Label="Otro Condicion">
+                    <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
+                </FormItem>
+
+                break;
+            case TipoSalida.FactorClimatico:
+                Task.Run(async () =>
+                {
+                    await GetViewModelFactorClimatico(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Factor Climatico: </b></p>
+                <FormItem Label="Tipo">
+                    <EnumSelect TEnum="TipoFactoresClimaticos" @bind-Value="@factorClimaticoViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="Evacuacion">
+                    <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@factorClimaticoViewModel.Evacuacion" />
+                </FormItem>
+                <FormItem Label="Superficie">
+                    <EnumSelect TEnum="TipoSuperficie" @bind-Value="@factorClimaticoViewModel.Superficie" />
+                </FormItem>
+                <FormItem Label="Detalle Superficie Dañada">
+                    <Input @bind-Value="@factorClimaticoViewModel.DetalleSuperficieDañada" />
+                </FormItem>
+                break;
+            case TipoSalida.MaterialPeligroso:
+                Task.Run(async () =>
+                {
+                    await GetViewModelMaterialPeligroso(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Material Peligroso: </b></p>
+                <FormItem Label="Tipo Material Peligroso">
+                    <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@materialPeligrosoViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="Sustancias">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Sustancias" />
+                </FormItem>
+                @*-----------------------------------------------------------------------------------*@
+               @* <FormItem Label="Controlada">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Controlada" />
+                </FormItem>
+                <FormItem Label="Venteo">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Venteo" />
+                </FormItem>
+                <FormItem Label="Dilucion De Vapores">
+                    <Input @bind-Value="@materialPeligrosoViewModel.DilucionDeVapores" />
+                </FormItem>
+                <FormItem Label="Neutralizacion">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Neutralizacion" />
+                </FormItem>
+                <FormItem Label="Trasvase">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Trasvase" />
+                </FormItem>
+
+                <FormItem Label="Otra Acciones Materiales">
+                    <Input @bind-Value="@materialPeligrosoViewModel.OtraAccionesMateriales" />
+                </FormItem>*@
+                <b><label>Acciones sobre los materiales</label></b>
+
+                    <CheckboxGroup Style="width:100%" ValueChanged="@OnChangeCheckBox">
+
+                        <Row>
+                            <Checkbox Label="Controlada" @bind-Value="@materialPeligrosoViewModel.Controlada">Controlada</Checkbox>
+                            <Checkbox Label="Venteo" @bind-Value="@materialPeligrosoViewModel.Venteo">Venteo</Checkbox>
+                            <Checkbox Label="DilucionDeVapores" @bind-Value="@materialPeligrosoViewModel.DilucionDeVapores">DilucionDeVapores</Checkbox>
+                            <Checkbox Label="Neutralizacion" @bind-Value="@materialPeligrosoViewModel.Neutralizacion">Neutralizacion</Checkbox>
+                            <Checkbox Label="Trasvase" @bind-Value="@materialPeligrosoViewModel.Trasvase">Trasvase</Checkbox>
+                            <Checkbox Label="otro" @bind-Value="@materialPeligrosoViewModel.OtraAccionesMateriales">OtraAccionesMateriales</Checkbox>
+                        </Row>
+                    </CheckboxGroup>
+
+                <b><label>Acciones sobre personas</label></b>
+                <div>
+                    <CheckboxGroup Style="width:100%" ValueChanged="@OnChangeCheckBox">
+
+                        <Row> 
+                            @*No le pude poner los Col, porque me genera interfereincia co las etiquetas de cierre*@
+                            <Checkbox Label="Confinamiento" @bind-Value="@materialPeligrosoViewModel.Confinamiento">Confinamiento</Checkbox>
+                            <Checkbox Label="Descontaminacion" @bind-Value="@materialPeligrosoViewModel.Descontaminacion">Descontaminacion</Checkbox>
+                            <Checkbox Label="SinAccion" @bind-Value="@materialPeligrosoViewModel.SinAccion">SinAccion</Checkbox>
+                            <Checkbox Label="OtraAccionesPersonas" @bind-Value="@materialPeligrosoViewModel.OtraAccionesPersonas">OtraAccionesPersonas</Checkbox>
+                        </Row>
+                    </CheckboxGroup>
+                </div>
+                @*--------------------------------------------------------------------------------*@
+                <FormItem Label="Detalles Acciones Materiales">
+                    <Input @bind-Value="@materialPeligrosoViewModel.DetallesAccionesMateriales" />
+                </FormItem>
+                <FormItem Label="Evacuacion">
+                    <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@materialPeligrosoViewModel.Evacuacion" />
+                </FormItem>
+                <FormItem Label="Descontaminacion">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Descontaminacion" />
+                </FormItem>
+                <FormItem Label="Confinamiento">
+                    <Input @bind-Value="@materialPeligrosoViewModel.Confinamiento" />
+                </FormItem>
+                <FormItem Label="SinAccion">
+                    <Input @bind-Value="@materialPeligrosoViewModel.SinAccion" />
+                </FormItem>
+                <FormItem Label="Otra Acciones Personas">
+                    <Input @bind-Value="@materialPeligrosoViewModel.OtraAccionesPersonas" />
+                </FormItem>
+                <FormItem Label="Detalles Acciones Personas">
+                    <Input @bind-Value="@materialPeligrosoViewModel.DetallesAccionesPersonas" />
+                </FormItem>
+                <FormItem Label="Tipo Superficie">
+                    <EnumSelect TEnum="TipoSuperficie" @bind-Value="@materialPeligrosoViewModel.TipoSuperficie" />
+                </FormItem>
+                <FormItem Label="Detalle Superficie Afectada">
+                    <Input @bind-Value="@materialPeligrosoViewModel.DetalleSuperficieAfectada" />
+                </FormItem>
+                <FormItem Label="Tipo Situacion">
+                    <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@materialPeligrosoViewModel.TipoSituacion" />
+                </FormItem>
+                break;
+           
+
+        }
 
     </Form>
 </Modal>
@@ -953,6 +1151,10 @@
     List<Salida>? salidas;
     Bombero[] TodosBomberos;
     Movil[] Moviles;
+
+    bool switchValue { get; set; }
+    bool switchValueS { get; set; }
+    bool switchValueV { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -1083,7 +1285,7 @@
         foreach (Salida s in salidas)
         {
             List<Damnificado>? damificado = await context.Damnificados
-                .Where(D => D.SalidaId == s.SalidaId)
+                .Where(D => D.SalidaId == s.SalidaId).Include(vd => vd.VehiculoDamnificado).ThenInclude(seg =>seg.Seguro)
                 .ToListAsync();
             SalidasViewModel1 NuevaSalidaVM = new SalidasViewModel1()
             {
@@ -1685,9 +1887,8 @@
     int _selectedValueQuienLlenoPlanilla;
     int _selectedValueChofer;
     List<int> _selectedValueCuerpoParticipante = new List<int>();
-    int bomberoSeleccionado;
 
-    int contadorCuerposParticipantesSalidas;
+
     private void OnFinishFailedEditar(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidasEditarVM)}");
@@ -1696,7 +1897,6 @@
     private void ShowModalEditar(int numeroParte)
     {
         int contadorovilesBool = 0;
-        contadorCuerposParticipantesSalidas = 0;
         numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == numeroParte);
         foreach (MovilSalida mv in salidasViewModel[numeroParteVisualizar].Moviles)
         {
@@ -1709,7 +1909,6 @@
         {
             _selectedValueCuerpoParticipante.Add(bs.Bombero.NumeroLegajo);
         }
-        bomberoSeleccionado= 0;
 
         ////Datos para comprobar si se cambiio al Encargado y asi volver a cargar los datos en la salida
         //BomberoLegajoEncargado = salidasViewModel[numeroParteVisualizar].LegajoEncargado;
@@ -1911,20 +2110,8 @@
     {
         Console.WriteLine($"search: {value}");
     }
-    private async Task<int> getBomberoSeleccionadoAsync()
+    void OnChangeCheckBox(string[] checkedValues)
     {
-        bomberoSeleccionado = _selectedValueCuerpoParticipante[contadorCuerposParticipantesSalidas];
-        contadorCuerposParticipantesSalidas++;
-        await Task.Delay(100);
-
-        return bomberoSeleccionado;
-    }
-    private async Task CargarDatosAsync()
-    {
-      
-            // Llamamos a getBomberoSeleccionadoAsync para asegurarnos de que _selectedValueCuerpoParticipante tenga suficientes elementos
-            bomberoSeleccionado = await getBomberoSeleccionadoAsync();
-            StateHasChanged(); // Actualizamos la interfaz para reflejar el nuevo valor de bomberoSeleccionado
-        
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
 }
