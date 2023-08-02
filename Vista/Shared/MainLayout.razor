@@ -172,6 +172,14 @@
                         <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
                     </ChildContent>
                 </MenuItem>
+                <MenuItem Key="4" Icon="container">
+                    <IconTemplate>
+                        <i class="fa-solid fa-truck-droplet icoSelected" style="color: #263040;"></i>
+                    </IconTemplate>
+                    <ChildContent>
+                        <li class="nav-item"><a class="nav-link" href="/embarcaciones">Embarcaciones</a></li>
+                    </ChildContent>
+                </MenuItem>
                 <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title>
                     <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
                         <MenuItem Key="02" Title=@("Materiales peligrosos")>

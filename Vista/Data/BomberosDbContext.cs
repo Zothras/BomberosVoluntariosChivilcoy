@@ -37,7 +37,7 @@ namespace Vista.Data
         public DbSet<ServicioEspecialPrevencion> ServicioEspecialPrevenciones { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
-
+        public DbSet<Embarcacion> Embarcacion {get; set;}
 
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
             : base(options)
@@ -60,6 +60,9 @@ namespace Vista.Data
             modelBuilder.Entity<Persona>()
                 .ToTable("Personas");
 
+       
+                 
+
             modelBuilder.Entity<Seguro>()
                 .HasDiscriminator<int>("TipoSeguro")
                 .HasValue<SeguroSalida>(1)
@@ -70,7 +73,8 @@ namespace Vista.Data
             modelBuilder.Entity<Imagen>()
                 .HasDiscriminator<int>("TipoImagenDiscriminador")
                 .HasValue<ImagenBombero>(1)
-                .HasValue<ImagenMovil>(2);
+                .HasValue<ImagenMovil>(2)
+                .HasValue<ImagenEmbarcacion>(3);
             modelBuilder.Entity<Imagen>()
                 .ToTable("Imagenes");
 
@@ -102,8 +106,9 @@ namespace Vista.Data
                 .HasValue<VehiculoDamnificado>(3)
                 .HasValue<VehiculoPersonal>(4)
                 .HasValue<Movil>(5)
-                .HasValue<VehiculoAfectado>(6);
-
+                .HasValue<VehiculoAfectado>(6)
+                .HasValue<Embarcacion>(7);
+                
 
             modelBuilder.Entity<Bombero>()
                 .HasOne(b => b.Movil)
