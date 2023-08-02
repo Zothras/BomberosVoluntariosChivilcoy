@@ -15,9 +15,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
-    <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesRepresentacion.NumeroParte" />
-    </FormItem>
+
     <FormItem Label="Descripcion">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.Descripcion" />
     </FormItem>
@@ -369,6 +367,15 @@
 
 
     //direccion
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        TodosBomberos= await db.Bomberos.ToArrayAsync();
+        Moviles = await db.Moviles.ToArrayAsync();
+        CargarBomberosView();
+
+    }
+
     public async void CargarFactorClimatico()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -465,22 +472,23 @@
                     Edad = d.Edad,
                     Estado = d.Estado,
 
-                    VehiculoDamnificado = new()
-                    {
-                        Marca = vehiculo.Marca,
-                        Modelo = vehiculo.Modelo,
-                        Año = vehiculo.Año,
-                        Patente = vehiculo.Patente,
-                        Tipo = vehiculo.Tipo,
-                        Color = vehiculo.Color,
-                        Airbag = chek,
-                        Seguro = new()
-                        {
-                            CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                            NumeroDePoliza = vehiculo.NumeroDePoliza,
-                            FechaDeVencimineto = vehiculo.FechaDeVencimineto,
-                        },
-                    }
+                    //No es necesario vehiculos damificados aca
+                    //VehiculoDamnificado = new()
+                    //{
+                    //    Marca = vehiculo.Marca,
+                    //    Modelo = vehiculo.Modelo,
+                    //    Año = vehiculo.Año,
+                    //    Patente = vehiculo.Patente,
+                    //    Tipo = vehiculo.Tipo,
+                    //    Color = vehiculo.Color,
+                    //    Airbag = chek,
+                    //    Seguro = new()
+                    //    {
+                    //        CompañiaAseguradora = vehiculo.CompañiaAseguradora,
+                    //        NumeroDePoliza = vehiculo.NumeroDePoliza,
+                    //        FechaDeVencimineto = vehiculo.FechaDeVencimineto,
+                    //    },
+                    //}
                 };
             ServicioRepresentacion.Damnificados.Add(damn);
 
@@ -497,11 +505,17 @@
     public async void AgregarMovilSalida()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == movilSalidaViewModels.NumeroLegajo).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == movilSalidaViewModels.NumeroMovil).SingleOrDefaultAsync();
+        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
+        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
+                NumeroFactura = movilSalidaViewModels.NumeroFactura,
+                FechaFactura = movilSalidaViewModels.FechaFactura,
+                TipoConbustible = movilSalidaViewModels.TipoConbustible,
+                CantidadLitros = movilSalidaViewModels.CantidadLitros,
+                QuienLleno = movilSalidaViewModels.QuienLleno,
+                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
             };
@@ -515,23 +529,14 @@
 
         BomberoSalidaViewModels b = new()
             {
-                Salio = bomberoSalidaView.Salio,
+                Salio =chekB,
                 Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = bomberoSalidaView.NumeroLegajo
+                NumeroLegajo = BomberoCuerpo
             };
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
-    protected override async Task OnInitializedAsync()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-        if (salida is not null)
-        {
-            modelServiciosEspecialesRepresentacion.NumeroParte = salida.NumeroParte++;
-        }
-
-    }
+    
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();

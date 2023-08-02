@@ -49,7 +49,7 @@
         <EnumSelect TEnum="TipoZona" @bind-Value="@modelFactorClimatico.TipoZona" />
     </FormItem>
     @*Datos de damnificados*@
-    <FormItem Label="¿Ubo damnificados?">
+    <FormItem Label="¿Hubo damnificados?">
         <Switch @bind-Checked="switchValue" />
     </FormItem>
     @if (switchValue == true)
@@ -316,8 +316,8 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == modelFactorClimatico.LegajoReceptor).SingleOrDefaultAsync();
-        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == modelFactorClimatico.LegajoEncargado).SingleOrDefaultAsync();
-        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == modelFactorClimatico.LegajoLLenoPlanilla).SingleOrDefaultAsync();
+        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
+        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
 
         FactorClimatico factorClimatico = new()
         {
@@ -368,7 +368,7 @@
             Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
             BomberoSalida BomSalida = new()
             {
-                Salio = chekB,
+                Salio = bom.Salio,
                 Grado = bom.Grado,
                 Bombero = bomberoSalida
             };
@@ -472,7 +472,7 @@
 
         BomberoSalidaViewModels b = new()
             {
-                Salio = bomberoSalidaView.Salio,
+                Salio = chekB,
                 Grado = bomberoSalidaView.Grado,
                 NumeroLegajo = BomberoCuerpo
             };

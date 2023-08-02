@@ -687,7 +687,7 @@
             <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].NumeroParte" Disabled />
         </FormItem>
         <FormItem Label="Descripcion">
-            <Input @bind-Value="@salidasEditarVM.Descripcion" />
+            <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].Descripcion" />
         </FormItem>
         <FormItem Label="Dato Hora salida">
             <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel[numeroParteVisualizar].HoraSalida" />
@@ -745,7 +745,39 @@
         <FormItem Label="Legajo receptor">
             <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].LegajoReceptor" />
         </FormItem>
-        
+
+        @*Seguro del lugar*@
+        <div>
+            <div>
+                    <div>
+                        @if(salidasViewModel[numeroParteVisualizar].NumeroPoliza is not null)
+                        {
+                            switchValueS = true;
+                        }
+                        <b>
+                            <FormItem Label="¿Tiene seguro el lugar?">
+                                <Switch @bind-Checked="switchValueS" />
+                            </FormItem>
+                        </b>
+                    </div>
+                    <div>
+                        @if (switchValueS == true)
+                        {
+                            <b><label>Seguro del lugar afectado</label></b>
+                            <FormItem Label="Compania Aseguradora">
+                                <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].CompaniaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="NumeroPoliza">
+                                <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].NumeroPoliza" />
+                            </FormItem>
+                            <FormItem Label="FechaVencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel[numeroParteVisualizar].FechaVencimineto" />
+                            </FormItem>
+                        }
+                    </div>
+                </div>
+        </div>
+
         @*Datos de damnificados*@
         @if(salidasViewModel[numeroParteVisualizar].Damnificados is not null)
         {
@@ -787,20 +819,19 @@
         @foreach(MovilSalida mv in salidasViewModel[numeroParteVisualizar].Moviles)
         {
            
-            <FormItem Label="¿Cargo Combustible?">
-               @* <Switch @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[j].CargoCombustible"> </Switch>*@
-                <Switch @bind-Value="@mv.CargoCombustible" CheckedChildren="Cargo" UnCheckedChildren="No cargo" />@*Tengo un problema y este componente no se puede usar con lista sino con variales solas*@
-            </FormItem>
+            
 
-            @*poner lista de bpmberos que son choferes*@
+            @*poner lista de bpmberos que son choferes
+        _selectedValueChofer
+            *@
             <FormItem Label="Chofer: ">
                 <Select TItem="BomberoViweModel"
                         TItemValue="int"
                         DataSource="@bomberoTodos" 
-                @bind-Value="@_selectedValueChofer"
+                @bind-Value="@mv.Chofer.NumeroLegajo"
                         LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                         ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                        Placeholder="Selecciona al Chofer"
+                        Placeholder=""
                         DefaultActiveFirstOption="false"
                     EnableSearch
                         OnBlur="OnBlur"
@@ -827,21 +858,29 @@
                             OnSearch="OnSearch">
                 </Select>
             </FormItem>
-            <FormItem Label="Numero Factura">
-                    <Input @bind-Value="@mv.NumeroFactura"/>
-             </FormItem>
-             <FormItem Label="Tipo Conbustible">
-                    <Input @bind-Value="@mv.TipoConbustible" />
-             </FormItem>
-             <FormItem Label="Cantidad Litros">
-                    <Input @bind-Value="@mv.CantidadLitros" />
-             </FormItem>
-             <FormItem Label="Quien Lleno">
-                    <Input @bind-Value="@mv.QuienLleno" />
-             </FormItem>
-             <FormItem Label="Telefono Quien Lleno">
-                <Input @bind-Value="@mv.TelefonoQuienLleno" />
-             </FormItem>
+            <FormItem Label="¿Cargo Combustible?">
+               @* <Switch @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[j].CargoCombustible"> </Switch>*@
+                <Switch @bind-Value="@mv.CargoCombustible" CheckedChildren="Cargo" UnCheckedChildren="No cargo" />@*Tengo un problema y este componente no se puede usar con lista sino con variales solas*@
+            </FormItem>
+            if(mv.CargoCombustible == true)
+            {
+                 <FormItem Label="Numero Factura">
+                        <Input @bind-Value="@mv.NumeroFactura"/>
+                 </FormItem>
+                 <FormItem Label="Tipo Conbustible">
+                        <Input @bind-Value="@mv.TipoConbustible" />
+                 </FormItem>
+                 <FormItem Label="Cantidad Litros">
+                        <Input @bind-Value="@mv.CantidadLitros" />
+                 </FormItem>
+                 <FormItem Label="Quien Lleno">
+                        <Input @bind-Value="@mv.QuienLleno" />
+                 </FormItem>
+                 <FormItem Label="Telefono Quien Lleno">
+                    <Input @bind-Value="@mv.TelefonoQuienLleno" />
+                 </FormItem>
+            }
+            
 
         }
         @*---------------------------------------------------------Hasta aca funciona----------------------------------------------------*@
@@ -973,9 +1012,12 @@
                     }
                 }
                 
-                @*Los datos del seguro lugar son los datos que estan en salidas ViewModel sobre seguro*@
+                @*Los datos del seguro lugar son los datos que estan en salidas ViewModel sobre seguro
+                    -----------------------------------------------------------------------------------
+                    ¿Deberia ir en una salida especifica o en general?
+                *@
                 <div>
-                    <div>
+                    @*<div>
                         @if(salidasViewModel[numeroParteVisualizar].NumeroPoliza is not null)
                         {
                             switchValueS = true;
@@ -985,7 +1027,7 @@
                                 <Switch @bind-Checked="switchValueS" />
                             </FormItem>
                         </b>
-                    </div>
+                    </div>*@
                     <div>
                         @if (switchValueS == true)
                         {
@@ -1126,6 +1168,46 @@
                 </FormItem>
                 <FormItem Label="Tipo Situacion">
                     <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@materialPeligrosoViewModel.TipoSituacion" />
+                </FormItem>
+            break;
+
+            case TipoSalida.ServicioEspecialRepresentaciones:
+                Task.Run(async () =>
+                {
+                    await GetViewModelServicioEspecialRepresentaciones(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+
+                <p><b>Servicio Especial Prevencion: </b></p>
+                <FormItem Label="Tipo Servicios Especiales">
+                    <EnumSelect TEnum="TipoServiciosEspeciales" @bind-Value="@ServicioEspecialRepresentacionViewModel.Tipo" />
+                </FormItem>
+                <FormItem Label="Tipo Representacion">
+                    <EnumSelect TEnum="TipoServicioRepresentacion" @bind-Value="@ServicioEspecialRepresentacionViewModel.TipoRepresentacion" />
+                </FormItem>
+                <FormItem Label="Otro Representacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.OtroRepresentacion" />
+                </FormItem>
+                <p><b>    Datos Capacitacion: </b></p>
+                <FormItem Label="Nivel Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.NivelCapacitacion" /> @*Cambiar por un enum select*@
+                </FormItem>
+                <FormItem Label="Nivel Capacitacion OtroSS">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.NivelCapacitacionOtro" />
+                </FormItem>
+                <FormItem Label="Tipo Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.TipoCapacitacion" />@*Cambiar por un enum select*@
+                </FormItem>
+                <FormItem Label="Capacitacion Otra">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.CapacitacionOtra" />
+                </FormItem>
+                <FormItem Label="Dias Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.DiasCapacitacion" />
+                </FormItem>
+                <FormItem Label="Horarios Capacitacion">
+                    <Input @bind-Value="@ServicioEspecialRepresentacionViewModel.HorariosCapacitacion" />
+                </FormItem>
+                <FormItem Label="Tipo Organizacion">
+                    <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@ServicioEspecialRepresentacionViewModel.TipoOrganizacion" />
                 </FormItem>
                 break;
            
