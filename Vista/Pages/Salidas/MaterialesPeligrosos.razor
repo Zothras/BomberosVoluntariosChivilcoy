@@ -24,12 +24,7 @@
     <FormItem Label="Dato Hora llegada">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraLLegada" />
     </FormItem>
-    <FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="modelMateriales.KmSalida" />
-    </FormItem>
-    <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
-    </FormItem>
+    
     <FormItem Label="Calle/Ruta">
         <Input @bind-Value="@modelMateriales.CalleORuta" />
     </FormItem>
@@ -147,6 +142,24 @@
 
     </FormItem>
     <br />
+   @if (NumeroMovil is not null)
+    {
+        foreach (Movil m in Moviles)
+        {
+            if (m.NumeroMovil==NumeroMovil)
+            {
+                modelMateriales.KmSalida = m.KmSalida;
+                break;
+            }      
+        }
+    }
+    <FormItem Label="Kilometro salida">
+        <AntDesign.InputNumber  @bind-Value="modelMateriales.KmSalida" Disabled/>
+    </FormItem>
+    <FormItem Label="Kilometro llegada">
+        <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
+        
+    </FormItem>
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <div>
         <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
@@ -493,7 +506,7 @@
 
 
     }
-    
+
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -532,7 +545,7 @@
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();
-        
+
     }
 
     public async void AgregarCuerpoParticipante()
@@ -553,8 +566,8 @@
                 await db.SaveChangesAsync();
             }
         }
-        
-        
+
+
     }
     protected override async Task OnInitializedAsync()
     {
@@ -562,9 +575,12 @@
         TodosBomberos = await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
         CargarBomberosView();
-   
+
 
     }
+
+   
+    
 
     private void OnFinish(EditContext editContext)
     {
@@ -674,6 +690,9 @@
             }
         }
     }
+   
+    
+
     //metodos para el modal
 
     private void OnFinishFailedModel(EditContext editContext)
