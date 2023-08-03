@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService _message
-@page "/moviles"
+@page "/Moviles/Moviles-baja"
 
 <style>
     .cartaPropia:hover {
@@ -14,7 +14,8 @@
         box-shadow: none;
         border-bottom-color: #fff !important;
     }
-    .grid{
+
+    .grid {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -25,6 +26,7 @@
         margin: 1em 1em;
     }
 </style>
+
 <div style="display: flex;justify-content: space-between;margin: 1em 1em;width: 100vh;padding: 0; align-items: center;">
     <div style="position: relative;">
         <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;">
@@ -32,21 +34,19 @@
         </p>
     </div>
     <div>
-         <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Moviles-baja"); })">
-            <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Moviles de baja</Button>
-        </a>
-        <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
-            <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar Movil</Button>
+        <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles"); })">
+            <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Moviles activos</Button>
         </a>
     </div>
 </div>
-<hr style="background:#fff; margin: 1em 1em;width: 100vh;"/>
+<hr style="background:#fff; margin: 1em 1em;width: 100vh;" />
 <div class="grid">
-    @if (moviles is not null)
+    @if (moviles_de_baja is not null)
     {
-        @foreach(Movil m in moviles)
+        @foreach (Movil m in moviles_de_baja)
+
         {
-            if (m.Estado != TipoEstadoMovil.Activo) continue;
+            if (m.Estado != TipoEstadoMovil.Inactivo)continue;
             <card class="cartaPropia" style="display: flex; flex-direction: column;height: 280px; width: 180px;border-radius: 2px;border: 1px solid #BABABA;">
                 <div style="width: 100%;height: 75%;margin: 0; padding: 0;">
                     <img src="@CargarImage(m)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;">
@@ -62,16 +62,16 @@
                         <Button class="botonCarta" Style="border-radius: 0;border-top:1px solid #BABABA;border-left:1px solid #BABABA;border-right:1px solid #BABABA;height: 100%;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
                             <Icon Type="edit" Theme="outline" />
                         </Button>
-                        <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de dar de baja a este movil?"
-                                    OnConfirm="()=>CambiarEstado(m.VehiculoId,TipoEstadoMovil.Inactivo)"
-                                    OnCancel="Cancel">
-                            <Button class="botonCarta" Style="width: 100%!important;border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;">
-                                <Icon Type="down" Theme="outline" />
+                        <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de dar de alta a este movil?"
+                            OnConfirm="()=>CambiarEstado(m.VehiculoId,TipoEstadoMovil.Activo)"
+                            OnCancel="Cancel" >
+                            <Button class="botonCarta"  Style="width: 100%!important;border-radius: 0;border-top: 1px solid #BABABA;height: 100%;border-right-color: #fff;">
+                                <Icon Type="up" Theme="outline" /> 
                             </Button>
                         </Popconfirm>
                     </div>
                 </div>
-            </card>
+         </card>
         }
     }
     else
@@ -81,20 +81,22 @@
         </div>
         //Hay que ver si se puede cambiar el contenido despues del delay
         @code {
-            RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
-        }
+        RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+}
     }
 </div>
 
 @code {
-    public Movil[]? moviles;
+    bool flag = false;
+    public Movil[]? moviles_de_baja;
 
     protected override async Task OnInitializedAsync()
     {
         using var db = DbFactory.CreateDbContext();
 
-        moviles = await db.Moviles.ToArrayAsync();
+        moviles_de_baja = await db.Moviles.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
     }
+    
 
     public string CargarImage(Movil movil)
     {
@@ -111,32 +113,16 @@
 
         return src;
     }
-    public async void EliminarMovil(int id)
+    public async void CambiarEstado(int id, TipoEstadoMovil estado)
     {
-
-        using var context = DbFactory.CreateDbContext();
-        Movil? MovilAeliminnar = await context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
-        if (MovilAeliminnar is not null)
-        {
-            context.Remove(MovilAeliminnar);
-        }
-        await context.SaveChangesAsync();
-        //NumeroMovil.NumeroMovil = string.Empty;
-        moviles = await context.Moviles.ToArrayAsync();
-        StateHasChanged();
-    }
-    public async void CambiarEstado(int id,TipoEstadoMovil estado)
-    {
-
         using var context = DbFactory.CreateDbContext();
         Movil? movil_a_modificar = await context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
         if (movil_a_modificar is not null)
         {
             movil_a_modificar.Estado = estado;
         }
+        moviles_de_baja = await context.Moviles.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
         await context.SaveChangesAsync();
-        //NumeroMovil.NumeroMovil = string.Empty;
-        moviles = await context.Moviles.ToArrayAsync();
         StateHasChanged();
     }
     private void Cancel()
@@ -144,5 +130,3 @@
         _message.Error("Operacion cancelada");
     }
 }
-
-
