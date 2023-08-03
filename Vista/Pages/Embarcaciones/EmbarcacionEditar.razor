@@ -117,7 +117,7 @@
                             <label class="inpt-label">Tipo:</label>
                         </div>
                         <div class="inpt-container">
-                            <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
+                            <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de embarcación</label>
                             <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
                             <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre <Icon Type="eye" Theme="outline" /></h3>
                         </div>
@@ -140,7 +140,7 @@
                         </div>
                         <div class="inpt-container">
                             <select @bind="movilView.Estado" class="select-estadoMovil">
-                                <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
+                                <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado de la embarcación</option>
                                 <option value="@TipoEstadoMovil.Activo">Activo</option>
                                 <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
                                 <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
@@ -327,10 +327,10 @@
             }
         }
 
-        navigationManager.NavigateTo("/moviles");
+        navigationManager.NavigateTo("/embarcaciones");
     }
     //modal
-    string title = "Editar movil";
+    string title = "Editar Embarcación";
     bool _visible = true;
 
     private void HandleOk(MouseEventArgs e)

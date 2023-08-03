@@ -98,7 +98,7 @@
 							<label class="inpt-label">Patente:</label>
 						</div>
 						<div class="inpt-container">
-							<label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
+							<label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de la embarcación</label>
 							<InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
 							<h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre</h3>
 						</div>
@@ -117,12 +117,12 @@
 						</div>
 						<div class="inpt-container">
 							<input type="text" @bind="embarcacionView.NumeroMovil" placeholder=" " />
-							<label class="inpt-label">Nº movil:</label>
+							<label class="inpt-label">Nº Embarcación</label>
 						</div>
 
 						<div class="inpt-container">
 							<select @bind="embarcacionView.Estado" class="select-estadoMovil">
-								<option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
+								<option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado de la embarcación</option>
 								<option value="@TipoEstadoMovil.Activo">Activo</option>
 								<option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
 								<option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
@@ -130,35 +130,40 @@
 							</select>
 						</div>
 						<div class="inpt-container">
-							@*<Select TItem="BomberoViweModel"
+							
+							<Select TItem="BomberoViweModel"
 									TItemValue="int"
-									DataSource="@bomberoTodos"
+									DataSource="@BomberoTodos"
 									@bind-Value="@BomberoEncargado"
 									LabelName="@nameof(BomberoViweModel.NombreYApellido)"
 									ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-									Placeholder="Select a person"
+									Placeholder="Seleccione Bombero Encargado"
 									DefaultActiveFirstOption="false"
-											EnableSearch>
-							</Select>*@
+									EnableSearch>
+							</Select>
+							
 							
 						</div>
+						
+
+						<div class="inpt-container">
+						</div>
+						<div class="inpt-container">
+						</div>
 						@*<div class="inpt-container">
-							<input type="text" @bind="embarcacionView.Imagen" placeholder="" />
-							<label class="inpt-label">Foto Embarcación:</label>
+							<Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
 						</div>*@
 						<div class="inpt-container">
+							<Button Type="@ButtonType.Primary" @onclick="SubirMovil" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Crear Embarcación</Button>
 						</div>
-						<div class="inpt-container">
-						</div>
-						<div class="inpt-container">
-							<Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
-						</div>
+
 					</div>
+				
 				</Card>
 			</CarouselSlick>
 		</Carousel>
 	</div>
-	@*@if (bomberos is not null)
+	@*if (bomberos is not null)
 	{
 		@foreach (BomberoViewModel b in bomberoViews)
 		{
@@ -193,10 +198,10 @@
 		public int NumeroMovil { get; set; }
 		[Required, StringLength(255)]
 		public TipoEstadoMovil Estado { get; set; }
-		[Required, StringLength(255)]
+	
 
-		public int EncargadoId { get; set; }
-		//public ImagenMovil Imagen { get; set; }
+		
+		
 	}
 	public class SeguroViewModel
 	{
@@ -220,13 +225,15 @@
 	public EmbarcacionViewModel embarcacionView { get; set; } = new();
 	public SeguroViewModel seguroView { get; set; } = new();
 	public Bombero[]? bomberos;
-
+	Bombero[] TodosBomberos;
 
 	protected override async Task OnInitializedAsync()
 	{
 		using var db = DbFactory.CreateDbContext();
 
 		bomberos = await db.Bomberos.ToArrayAsync();
+
+		CargarBomberosView();
 	}
 
 	private async void SubirFoto(InputFileChangeEventArgs e)
@@ -279,10 +286,10 @@
 		}
 
 		StateHasChanged();
-		navigationManager.NavigateTo("/moviles");
+		navigationManager.NavigateTo("/embarcaciones");
 	}
 	Carousel _carousel;
-	List<BomberoViweModel> bomberoTodos = new List<BomberoViweModel>();
+	List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
 	public void CargarBomberosView()
 	{
 
@@ -325,7 +332,7 @@
 					//Email = b.Email,
 
 				};
-			bomberoTodos.Add(bombero);
+			BomberoTodos.Add(bombero);
 		}
 		
 	}
