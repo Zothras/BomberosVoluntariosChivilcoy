@@ -148,7 +148,20 @@
     </FormItem>
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
-
+    <div>
+        <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
+            <ActionColumn Title="Action">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
     <FormItem Label="Elija el bombero">
@@ -710,6 +723,10 @@
     void deleteRow(int numlegajo)
     {
         bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+    void deleteRowMovil(string NumMovil)
+    {
+        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
     }
    
 }
