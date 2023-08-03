@@ -12,8 +12,6 @@ namespace Vista.Data.Models.Salidas.Planillas
         public int SalidaId { get; set; }
         public DateTime HoraSalida { get; set; }
         public DateTime HoraLlegada { get; set; }
-        public int KmSalida { get; set; }
-        public int KmLlegada { get; set; }
         public int NumeroParte { get; set; }
         [Required, StringLength(255)]
         public string Descripcion { get; set; }
