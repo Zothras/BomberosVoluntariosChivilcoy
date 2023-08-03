@@ -4,11 +4,12 @@
 @page "/moviles/agregar"
 @using AntDesign;
 <style>
-    .inpt-container{
+    .inpt-container {
         position: relative;
         padding: .8em 0;
     }
-    input[type=text], input[type=number]{
+
+    input[type=text], input[type=number] {
         border: none;
         background: none;
         border-bottom: 1px solid #bdb8b8;
@@ -17,7 +18,8 @@
         width: 100%;
         height: .6em;
     }
-    .inpt-label{
+
+    .inpt-label {
         position: absolute;
         top: 0;
         left: 5px;
@@ -25,30 +27,35 @@
         color: #bdb8b8;
         transition: transform .5s, color .3s;
     }
-    input[type=text]:focus, input[type=number]:focus, input[type=file]:focus, input[type=date]:focus{
+
+    input[type=text]:focus, input[type=number]:focus, input[type=file]:focus, input[type=date]:focus {
         border-bottom: 1px solid rgb(62, 24, 24);
         transition: 1s;
     }
-    input[type = text]:focus + .inpt-label, input[type = text]:not(:placeholder-shown) + .inpt-label{
-        transform: translateY(-4px) scale(.9);
-        transform-origin: left top;
-        color: rgb(62, 24, 24);
-    }
-    .select-estadoMovil{
+
+        input[type = text]:focus + .inpt-label, input[type = text]:not(:placeholder-shown) + .inpt-label {
+            transform: translateY(-4px) scale(.9);
+            transform-origin: left top;
+            color: rgb(62, 24, 24);
+        }
+
+    .select-estadoMovil {
         padding: .8em 0;
         width: 100%;
         border: 1px solid #bdb8b8;
         outline: none;
         box-shadow: none;
     }
-        .select-estadoMovil option{
+
+        .select-estadoMovil option {
             border: 1px solid #bdb8b8;
         }
 
     .ant-carousel .slick-dots li {
-        display: none!important;
+        display: none !important;
     }
-    .lblInputFile{
+
+    .lblInputFile {
         border: 1px solid #403F3F;
         color: #403F3F;
         padding: .5em .8em;
@@ -58,116 +65,170 @@
         font-family: unset;
         font-size: 14px;
         width: 60%;
-        transform:translate(50% -50%);
+        transform: translate(50% -50%);
         text-align: center;
     }
-    .raro{
+
+    .raro {
         padding: 6em 0;
     }
 </style>
 @if (movilView is not null)
 {
-    <div style="width: 20%;height: 70%; background: #fff;">
-        <Carousel @ref="_carousel" Style="width: 100%;">
-            <CarouselSlick Style="height: 100%;width: 100%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;display: flex; flex-direction: column;margin: auto;">
-                <Card Title=@("Movil") Style="width: 100%;height: 100%;">
-                    <div style="height: 100%;">
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.Marca" placeholder=" " />
-                            <label class="inpt-label">Marca:</label>
+    <div style="width: 40%;">
+        <Steps Current="current">
+            @foreach (var item in steps)
+            {
+                <Step Title="@item.Title" Subtitle="@item.Content" />
+            }
+        </Steps>
+        <div class="steps-content" style="height: 100%;width: 100%;padding-top: 0;">
+            <div style="width: 100%;height: 100%; background: #fff;">
+                <Carousel @ref="_carousel" Style="width: 100%;">
+                    <CarouselSlick Style="height: 100%;width: 100%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;display: flex; flex-direction: column;margin: auto;">
+                        <div style="height: 100%;width: 100%;padding: 10px;">
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.Marca" placeholder=" " />
+                                <label class="inpt-label">Marca:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.Modelo" placeholder=" " />
+                                <label class="inpt-label">Modelo:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.Año" placeholder=" " />
+                                <label class="inpt-label">Año:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.Patente" placeholder=" " />
+                                <label class="inpt-label">Patente:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.Tipo" placeholder=" " />
+                                <label class="inpt-label">Tipo:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
+                                <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
+                                <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre</h3>
+                            </div>
                         </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.Modelo" placeholder=" " />
-                            <label class="inpt-label">Modelo:</label>
+                    </CarouselSlick>
+                    <CarouselSlick Style="height: 100%; width: 10%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
+                        <div style="height: 100%;width: 100%;padding: 10px;">
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
+                                <label class="inpt-label">Nº movil:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.NumeroMotor" placeholder=" " />
+                                <label class="inpt-label">Nº motor:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.NumeroChasis" placeholder=" " />
+                                <label class="inpt-label">Nº chasis:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.ModeloBomba" placeholder=" " />
+                                <label class="inpt-label">Modelo de bomba:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <select @bind="movilView.Estado" class="select-estadoMovil">
+                                    <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
+                                    <option value="@TipoEstadoMovil.Activo">Activo</option>
+                                    <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
+                                    <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
+                                    <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.Año" placeholder=" " />
-                            <label class="inpt-label">Año:</label>
+                    </CarouselSlick>
+                    <CarouselSlick Style="height: 100%; width: 10%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
+                        <div style="height: 100%;width: 100%;padding: 10px;">
+                            <div class="inpt-container">
+                                <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder=" " />
+                                <label class="inpt-label">Compañia:</label>
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="seguroView.NumeroDePoliza" placeholder=" " />
+                                <label class="inpt-label">Nº poliza:</label>
+                            </div>
+                            <div>
+                                <div>
+                                    <label>Vencimiento: </label>
+                                </div>
+                                <input type="date" @bind="seguroView.FechaDeVencimiento" />
+                            </div>
                         </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.Patente" placeholder=" " />
-                            <label class="inpt-label">Patente:</label>
-                        </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.Tipo" placeholder=" " />
-                            <label class="inpt-label">Tipo:</label>
-                        </div>
-                        <div class="inpt-container">
-                            <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;"/>Cargar foto de movil</label>
-                            <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
-                            <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre</h3>
-                        </div>
-                        <div class="inpt-container">
-                            <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
-                        </div>
-                    </div>
-                </Card>
-            </CarouselSlick>
-            <CarouselSlick Style="height: 100%; width: 10%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
-                <Card Title=@("Movil") Style="width: 100%;height: 100%;">
-                    <div style="height: 100%;">
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
-                            <label class="inpt-label">Nº movil:</label>
-                        </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.NumeroMotor" placeholder=" " />
-                            <label class="inpt-label">Nº motor:</label>
-                        </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.NumeroChasis" placeholder=" " />
-                            <label class="inpt-label">Nº chasis:</label>
-                        </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.ModeloBomba" placeholder=" " />
-                            <label class="inpt-label">Modelo de bomba:</label>
-                        </div>
-                        <div class="inpt-container">
-                            <select @bind="movilView.Estado" class="select-estadoMovil">
-                                <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
-                                <option value="@TipoEstadoMovil.Activo">Activo</option>
-                                <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
-                                <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
-                                <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
-                            </select>
-                        </div>
-                        <div class="inpt-container">
-                        </div>
-                        <div class="inpt-container">
-                        </div>
-                        <div class="inpt-container">
-                            <Button OnClick="@( _=>_carousel.Next())" Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Siguiente</Button>
-                        </div>
-                    </div>
-                </Card>
-            </CarouselSlick>
-            <CarouselSlick Style="height: 100%; width: 10%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
-                <Card Title=@("Seguro") Style="width: 100%;height: 100%;">
-                    <div class="inpt-container">
-                        <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder=" " />
-                        <label class="inpt-label">Compañia:</label>
-                    </div>
-                    <div class="inpt-container">
-                        <input type="text" @bind="seguroView.NumeroDePoliza" placeholder=" " />  
-                        <label class="inpt-label">Nº poliza:</label>
-                    </div>
-                    <div>
-                        <div>
-                            <label>Vencimiento: </label>
-                        </div>
-                        <input type="date" @bind="seguroView.FechaDeVencimiento" />
-                    </div>
-                    <div class="raro"></div>
-                    <div class="inpt-container">
-                        <Button Type="@ButtonType.Primary" @onclick="SubirMovil" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 100%;">Crear Movil</Button>
-                    </div>
-                </Card>
-            </CarouselSlick>
-        </Carousel>
+                    </CarouselSlick>
+                </Carousel>
+            </div>
+        </div>
+        <div class="steps-action">
+            @if (current > 0)
+            {
+                <Button Type="primary" OnClick="OnPreClick">Anterior</Button>
+            }
+            @if (current < steps.Length - 1)
+            {
+                <Button Type="primary" OnClick="OnNextClick">Siguiente</Button>
+            }
+            @if (current == steps.Length - 1)
+            {
+                <Button Type="primary" @onclick="SubirMovil">
+                    Agregar movil
+                </Button>
+            }
+        </div>
+        <style>
+            .steps-content {
+                margin-top: 16px;
+                border: 1px dashed #e9e9e9;
+                border-radius: 6px;
+                background-color: #fafafa;
+                min-height: 200px;
+                text-align: center;
+                padding-top: 80px;
+            }
+
+            .steps-action {
+                margin-top: 24px;
+            }
+        </style>
     </div>
+
+    
 }
 
 @code {
+
+    public class StepItem
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+    }
+
+    public int current { get; set; } = 0;
+
+    public StepItem[] steps =
+    {
+        new StepItem {Title = "First", Content = "First-content"},
+        new StepItem {Title = "Second", Content = "Second-content"},
+        //new StepItem {Title = "Third", Content = "Third-content"},
+        new StepItem {Title = "Last", Content = "Last-content"}
+    };
+
+    void OnPreClick()
+    {
+        current--;
+        _carousel.Previous();
+    }
+
+    void OnNextClick()
+    {
+        current++;
+        _carousel.Next();
+    }
 
     public class MovilViewModel
     {
@@ -239,30 +300,30 @@
             if (comprobante is null)
             {
                 Movil movil = new Movil()
+                {
+                    Marca = movilView.Marca,
+                    Modelo = movilView.Modelo,
+                    Año = movilView.Año,
+                    Patente = movilView.Patente,
+                    Tipo = movilView.Tipo,
+                    Imagen = new()
                     {
-                        Marca = movilView.Marca,
-                        Modelo = movilView.Modelo,
-                        Año = movilView.Año,
-                        Patente = movilView.Patente,
-                        Tipo = movilView.Tipo,
-                        Imagen = new()
-                        {
-                            NombreImagen = imagenView.Nombre,
-                            TipoImagen = imagenView.TipoImagen,
-                            Base64Imagen = imagenView.Base64
-                        },
-                        ModeloBomba = movilView.ModeloBomba,
-                        NumeroChasis = movilView.NumeroChasis,
-                        NumeroMotor = movilView.NumeroMotor,
-                        NumeroMovil = movilView.NumeroMovil,
-                        Estado = movilView.Estado,
-                        Seguro = new()
-                        {
-                            CompañiaAseguradora = seguroView.CompañiaAseguradora,
-                            FechaDeVencimineto = seguroView.FechaDeVencimiento,
-                            NumeroDePoliza = seguroView.NumeroDePoliza
-                        }
-                    };
+                        NombreImagen = imagenView.Nombre,
+                        TipoImagen = imagenView.TipoImagen,
+                        Base64Imagen = imagenView.Base64
+                    },
+                    ModeloBomba = movilView.ModeloBomba,
+                    NumeroChasis = movilView.NumeroChasis,
+                    NumeroMotor = movilView.NumeroMotor,
+                    NumeroMovil = movilView.NumeroMovil,
+                    Estado = movilView.Estado,
+                    Seguro = new()
+                    {
+                        CompañiaAseguradora = seguroView.CompañiaAseguradora,
+                        FechaDeVencimineto = seguroView.FechaDeVencimiento,
+                        NumeroDePoliza = seguroView.NumeroDePoliza
+                    }
+                };
                 db.Moviles.Add(movil);
                 await db.SaveChangesAsync();
             }
@@ -271,6 +332,6 @@
         StateHasChanged();
         navigationManager.NavigateTo("/moviles");
     }
-    Carousel _carousel; 
-    
+    Carousel _carousel;
+
 }
