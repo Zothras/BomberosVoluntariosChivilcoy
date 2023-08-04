@@ -135,21 +135,21 @@
                                 <Select TItem="BomberoViweModel"
                                         TItemValue="int"
                                         DataSource="@BomberoTodos"
-                                        @bind-Value="@BomberoEncargado"
+                                @bind-Value="@BomberoEncargado"
                                         LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                         ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                         Placeholder="Seleccione Bombero Encargado"
                                         DefaultActiveFirstOption="false"
-                                        EnableSearch>
-                                </Select>
-                            </div>
+                                                        EnableSearch>
+                            </Select>
                         </div>
-                    </CarouselSlick>
-                </Carousel>
-            </div>
+                    </div>
+                </CarouselSlick>
+            </Carousel>
         </div>
-        <div class="steps-action">
-            @if (current > 0)
+    </div>
+    <div class="steps-action">
+        @if (current > 0)
             {
                 <Button Type="primary" OnClick="OnPreClick">Anterior</Button>
             }
@@ -222,7 +222,7 @@
         public string Patente { get; set; }
         [Required, StringLength(255)]
         public string Tipo { get; set; }
-        public int NumeroMovil { get; set; }
+        public string NumeroMovil { get; set; }
         [Required, StringLength(255)]
         public TipoEstadoMovil Estado { get; set; }
 

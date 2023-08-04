@@ -9,10 +9,10 @@ namespace Vista.Data.Models.Salidas.Componentes
     {
         public int EmbarcacionId {get; set;}
 
-        public int NumeroMovil {get; set;}
+        [Required, StringLength(255)]
+        public string NumeroMovil {get; set;}
         [Required, StringLength(255)]
         public TipoEstadoMovil Estado { get; set;}
-        [Required, StringLength(255)]
 
         public int EncargadoId { get; set;}
 
@@ -23,6 +23,13 @@ namespace Vista.Data.Models.Salidas.Componentes
         [ForeignKey("ImagenId")]
         public ImagenMovil Imagen { get; set; }
 
+        public List<Firma> Firmas { get; set; }
+
+        public List<MovilBombero> Bomberos { get; set; } = new();
+
+        public List<MovilSalida> Salidas { get; set; } = new();
+
+        public List<Incidente> Incidentes { get; set; } = new();
     }
 
 
