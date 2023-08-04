@@ -142,28 +142,27 @@
 
     </FormItem>
     <br />
-   @*@if (NumeroMovil is not null)
+   @if (NumeroMovil is not null)
     {
         foreach (Movil m in Moviles)
         {
             if (m.NumeroMovil==NumeroMovil)
             {
-                modelMateriales.KmSalida = m.KmSalida;
+                <FormItem Label="Kilometro salida">
+                    <AntDesign.InputNumber @bind-Value="m.kilometraje" Disabled />
+                </FormItem>
+                <FormItem Label="Kilometro llegada">
+                    <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmLlegada" />
+                </FormItem>
                 break;
             }      
         }
-    }*@
-   @* <FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber  @bind-Value="modelMateriales.KmSalida" Disabled/>
-    </FormItem>
-    <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
-    </FormItem>*@
+    }
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <div>
         <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
             <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Chofer.Nombre"></PropertyColumn>
             <ActionColumn Title="Action">
                 <Popconfirm Title="Sure to delete?"
                             OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
@@ -185,7 +184,8 @@
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Selecione el personal"
                 DefaultActiveFirstOption="false"
-                EnableSearch>
+                EnableSearch
+                AllowClear>
         </Select>
     </FormItem>
     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
@@ -404,8 +404,6 @@
                 NumeroParte = modelMateriales.NumeroParte,
                 HoraSalida = modelMateriales.HoraSalida,
                 HoraLlegada = modelMateriales.HoraLLegada,
-                //KmSalida = modelMateriales.KmSalida,
-                //KmLlegada = modelMateriales.KmLlegada,
                 Descripcion = modelMateriales.Descripcion,
                 CalleORuta = modelMateriales.CalleORuta,
                 NumeroOKilometro = modelMateriales.NumeroOKilometro,
@@ -466,6 +464,7 @@
         {
             Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
             Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            
             MovilSalida movilS = new()
                 {
                     CargoCombustible = m.CargoCombustible,
@@ -475,9 +474,11 @@
                     CantidadLitros = movilSalidaViewModels.CantidadLitros,
                     QuienLleno = movilSalidaViewModels.QuienLleno,
                     TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                    KmLlegada = movilSalidaViewModels.KmLlegada,
                     Chofer = bomberoChofer,
                     Movil = Movilsalida
                 };
+            Movilsalida.kilometraje = movilSalidaViewModels.KmLlegada;
             materiales.Moviles.Add(movilS);
         }
 
@@ -530,6 +531,10 @@
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
         Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+        if (Movilsalida is not null)
+        {
+            Movilsalida.kilometraje = movilSalidaViewModels.KmLlegada;
+        }
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -539,6 +544,7 @@
                 CantidadLitros = movilSalidaViewModels.CantidadLitros,
                 QuienLleno = movilSalidaViewModels.QuienLleno,
                 TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                KmLlegada=movilSalidaViewModels.KmLlegada,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
             };
@@ -571,8 +577,8 @@
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        TodosBomberos = await db.Bomberos.ToArrayAsync();
-        Moviles = await db.Moviles.ToArrayAsync();
+        TodosBomberos = await db.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        Moviles = await db.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
         CargarBomberosView();
 
 
