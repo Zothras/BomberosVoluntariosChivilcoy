@@ -13,20 +13,20 @@
     }
 
     .ant-table-pagination.ant-pagination {
-        display: none!important;
+        display: none !important;
     }
 </style>
 @if (existe)
 {
     <div style="display: flex;gap: 20px;">
-        <Button Type="primary" OnClick="@(()=>{ navigationManager.NavigateTo("/moviles"); })">
+        <Button Type="primary" OnClick="@(()=>{ navigationManager.NavigateTo("/embarcaciones"); })">
             Volver
         </Button>
         <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
             Ver info
         </Button>
     </div>
-    
+
     <Modal Title="@title"
            Visible="@_visible"
            OnOk="@HandleOk"
@@ -37,18 +37,18 @@
         <br>
         <div>
             <Table TItem="Data" DataSource="data" Responsive>
-                <PropertyColumn Property="c=>c.Tipo"> @movilView.Tipo </PropertyColumn>
-                <PropertyColumn Property="c=>c.Encargado">@movilView.EncargadoNombre</PropertyColumn>
-                <PropertyColumn Property="c=>c.Marca"> @movilView.Marca </PropertyColumn>
-                <PropertyColumn Property="c=>c.Modelo">@movilView.Modelo</PropertyColumn>
-                <PropertyColumn Property="c=>c.Patente">@movilView.Patente</PropertyColumn>
-            </Table>
-        </div>
-    </Modal>
+            <PropertyColumn Property="c=>c.Tipo"> @embarcacionView.Tipo </PropertyColumn>
+            <PropertyColumn Property="c=>c.Encargado">@embarcacionView.EncargadoNombre</PropertyColumn>
+            <PropertyColumn Property="c=>c.Marca"> @embarcacionView.Marca </PropertyColumn>
+            <PropertyColumn Property="c=>c.Modelo">@embarcacionView.Modelo</PropertyColumn>
+            <PropertyColumn Property="c=>c.Patente">@embarcacionView.Patente</PropertyColumn>
+        </Table>
+    </div>
+</Modal>
 }
 else if (!existe)
 {
-    <h5>No existe este movil</h5>
+    <h5>No existe esta embarcación</h5>
 }
 
 @code {
@@ -81,7 +81,7 @@ else if (!existe)
     }
 }
 @code {
-    string title = "Movil info";
+    string title = "Embarcación info";
     bool _visible = true;
 
     private void HandleOk(MouseEventArgs e)
@@ -100,7 +100,7 @@ else if (!existe)
     [Parameter]
     public int? VehiculoId { get; set; }
 
-    public class MovilViewModel
+    public class EmbarcacionViewModel
     {
         public int EncargadoId { get; set; }
         [Required, StringLength(255)]
@@ -114,12 +114,6 @@ else if (!existe)
         public string Patente { get; set; }
         [Required, StringLength(255)]
         public string Tipo { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroMovil { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroMotor { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroChasis { get; set; }
         public TipoEstadoMovil Estado { get; set; }
     }
     public class ImagenViewModel
@@ -133,7 +127,7 @@ else if (!existe)
 
 
     public ImagenViewModel imagenView { get; set; } = new();
-    public MovilViewModel movilView { get; set; } = new();
+    public EmbarcacionViewModel embarcacionView { get; set; } = new();
     public bool existe;
 
 
@@ -141,28 +135,18 @@ else if (!existe)
     {
         using var db = DbFactory.CreateDbContext();
 
-        Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero).Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+        Embarcacion? embarcacion = await db.Embarcacion.Include(e => e.Encargado).Where(e => e.VehiculoId == VehiculoId).SingleOrDefaultAsync();
 
-        if (movil is not null)
+        if (embarcacion is not null)
         {
-            movilView.Marca = movil.Marca;
-            movilView.Modelo = movil.Modelo;
-            movilView.Año = movil.Año;
-            movilView.Patente = movil.Patente;
-            movilView.Tipo = movil.Tipo;
-            movilView.NumeroMovil = movil.NumeroMovil;
-            movilView.NumeroMotor = movil.NumeroMotor;
-            movilView.NumeroChasis = movil.NumeroChasis;
-            movilView.Estado = movil.Estado;
-            foreach (MovilBombero b in movil.Bomberos)
-            {
-                if (b.Rol == TipoRol.Encargado)
-                {
-                    movilView.EncargadoId = b.Bombero.PersonaId;
-                    movilView.EncargadoNombre = $"{b.Bombero.Nombre} {b.Bombero.Apellido}";
-                }
-            }
-            ImagenMovil? imagen = await db.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
+            embarcacionView.Marca = embarcacion.Marca;
+            embarcacionView.Modelo = embarcacion.Modelo;
+            embarcacionView.Año = embarcacion.Año;
+            embarcacionView.Patente = embarcacion.Patente;
+            embarcacionView.Tipo = embarcacion.Tipo;
+            embarcacionView.Estado = embarcacion.Estado;
+     
+            ImagenMovil? imagen = await db.ImagenesMoviles.Where(i => i.ImagenId == embarcacion.ImagenId).SingleOrDefaultAsync();
 
             if (imagen is not null)
             {
@@ -172,23 +156,23 @@ else if (!existe)
             }
             existe = true;
         }
-        else if (movil is null)
+        else if (embarcacion is null)
         {
             existe = false;
         }
     }
 
-    public async void EliminarMovil()
+    public async void EliminarEmbarcacion()
     {
         using var db = DbFactory.CreateDbContext();
 
-        Movil? movil = await db.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
+        Embarcacion? embarcacion = await db.Embarcacion.Where(e => e.NumeroMovil == embarcacionView.EncargadoId).SingleOrDefaultAsync();
 
-        if (movil is not null)
-            db.Remove(movil);
+        if (embarcacion is not null)
+            db.Remove(embarcacion);
         await db.SaveChangesAsync();
 
-        navigationManager.NavigateTo("/moviles");
+        navigationManager.NavigateTo("/embarcaciones");
     }
 
 }
