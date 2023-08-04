@@ -138,9 +138,9 @@
         </Select>
 
     </FormItem>
-    <FormItem Label="Numero de movil">
+    @*<FormItem Label="Numero de movil">
         <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmSalida" Disabled="true"/>
-    </FormItem>
+    </FormItem>*@
     <FormItem Label="Numero de movil">
         <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmLlegada"/>
     </FormItem>
@@ -339,7 +339,7 @@
     private ServicioEspecialRepresentacionViewModels modelServiciosEspecialesRepresentacion = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    private VehiculoDamnificadoViewModels vehiculo = new();
+    //private VehiculoDamnificadoViewModels vehiculo = new();
     public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
@@ -451,16 +451,39 @@
         foreach (MovilSalidaViewModels m in MovilesSalidasL)
         {
             Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).Include(s=>s.Seguro).SingleOrDefaultAsync();
             MovilSalida movilS = new()
                 {
                     CargoCombustible = m.CargoCombustible,
+                    NumeroFactura = m.NumeroFactura,
+                    FechaFactura = m.FechaFactura,
+                    TipoConbustible = m.TipoConbustible,
+                    CantidadLitros = m.CantidadLitros,
+                    QuienLleno = m.QuienLleno,
+                    TelefonoQuienLleno = m.TelefonoQuienLleno,
                     Chofer = bomberoChofer,
                     Movil = new(){
                         NumeroMovil= movilsalida.NumeroMovil,
                         NumeroMotor= movilsalida.NumeroMotor,
                         ModeloBomba = movilsalida.ModeloBomba,
                         NumeroChasis= movilsalida.NumeroChasis,
+                        Estado = movilsalida.Estado,
+                        //KmSalida = m.KmSalida,
+                        //KmLlegada = m.KmLlegada,
+                        ImagenId = movilsalida.ImagenId,
+                        Imagen = movilsalida.Imagen,
+                        Firmas = movilsalida.Firmas,
+                        Bomberos = movilsalida.Bomberos,
+                        Salidas = movilsalida.Salidas,
+                        Incidentes = movilsalida.Incidentes,
+                        Marca = movilsalida.Marca,
+                        Modelo = movilsalida.Modelo,
+                        Año = movilsalida.Año,
+                        Patente = movilsalida.Patente,
+                        Tipo = movilsalida.Tipo,
+                        Seguro = movilsalida.Seguro,
+                        SeguroId = movilsalida.SeguroId
+
                     }
                    //encontrar forma de meter kilometros en movil de arriba
                     
@@ -526,7 +549,7 @@
                 TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
-                KmSalida= movilSalidaViewModels.KmSalida,
+                //KmSalida= movilSalidaViewModels.KmSalida,
                 KmLlegada= movilSalidaViewModels.KmLlegada
             };
         MovilesSalidasL.Add(m);

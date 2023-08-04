@@ -10,8 +10,6 @@ namespace Vista.Data.ViewModels
     {
         public DateTime HoraSalida { get; set; }
         public DateTime HoraLLegada { get; set; }
-        public int KmSalida { get; set; }
-        public int KmLlegada { get; set; }
         public int NumeroParte { get; set; }
         [Required, StringLength(255)]
         public string Descripcion { get; set; }

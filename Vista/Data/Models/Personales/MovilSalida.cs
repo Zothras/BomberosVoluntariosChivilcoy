@@ -24,5 +24,6 @@ namespace Vista.Data.Models.Personales
 
         public int SalidaId { get; set; }
         public Salida Salida { get; set; }
+        public int KmLlegada { get; set; }//Lo pusimos aca, porque el movil solo tiene la variables kilometraje, o le interesa tener el km de llegada, esta ultima es una variable auxiliar que sirve para incrementar el kilometraje de un movil
     }
 }

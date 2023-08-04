@@ -15,9 +15,7 @@ namespace Vista.Data.ViewModels.Personal
         public int NumeroLegajo { get; set; }
         public Movil MovilesSalida { get; set; }
         public string NumeroMovil { get; set; }
-        public int KmSalida { get; set; }
-        public int? KmLlegada { get; set; }
-
+        public int KmLlegada { get; set; }
 
     }
 }
