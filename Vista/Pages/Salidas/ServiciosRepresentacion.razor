@@ -20,16 +20,10 @@
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.Descripcion" />
     </FormItem>
     <FormItem Label="Dato Hora salida">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesRepresentacion.HoraSalida" />
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesRepresentacion.HoraSalida"/>
     </FormItem>
     <FormItem Label="Dato Hora llegada">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesRepresentacion.HoraLLegada" />
-    </FormItem>
-    <FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesRepresentacion.KmSalida" />
-    </FormItem>
-    <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesRepresentacion.KmLlegada" />
     </FormItem>
     @*Datos Localizacion*@
     <FormItem Label="Calle/Ruta">
@@ -143,6 +137,12 @@
                 EnableSearch>
         </Select>
 
+    </FormItem>
+    <FormItem Label="Numero de movil">
+        <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmSalida" Disabled="true"/>
+    </FormItem>
+    <FormItem Label="Numero de movil">
+        <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmLlegada"/>
     </FormItem>
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
@@ -451,12 +451,19 @@
         foreach (MovilSalidaViewModels m in MovilesSalidasL)
         {
             Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
             MovilSalida movilS = new()
                 {
                     CargoCombustible = m.CargoCombustible,
                     Chofer = bomberoChofer,
-                    Movil = Movilsalida
+                    Movil = new(){
+                        NumeroMovil= movilsalida.NumeroMovil,
+                        NumeroMotor= movilsalida.NumeroMotor,
+                        ModeloBomba = movilsalida.ModeloBomba,
+                        NumeroChasis= movilsalida.NumeroChasis,
+                    }
+                   //encontrar forma de meter kilometros en movil de arriba
+                    
                 };
             ServicioRepresentacion.Moviles.Add(movilS);
         }
@@ -519,6 +526,8 @@
                 TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
+                KmSalida= movilSalidaViewModels.KmSalida,
+                KmLlegada= movilSalidaViewModels.KmLlegada
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();
