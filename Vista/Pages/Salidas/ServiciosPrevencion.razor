@@ -26,12 +26,12 @@
     <FormItem Label="Dato Hora llegada">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesPrevencion.HoraLLegada" />
     </FormItem>
-    <FormItem Label="Kilometro salida">
+    @*<FormItem Label="Kilometro salida">
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.KmSalida" />
     </FormItem>
     <FormItem Label="Kilometro llegada">
         <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.KmLlegada" />
-    </FormItem>
+    </FormItem>*@
     @*Datos Localizacion*@
     <FormItem Label="Calle/Ruta">
         <Input @bind-Value="@modelServiciosEspecialesPrevencion.CalleORuta" />

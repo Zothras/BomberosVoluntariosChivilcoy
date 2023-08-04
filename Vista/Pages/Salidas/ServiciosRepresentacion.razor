@@ -141,9 +141,9 @@
     @*<FormItem Label="Numero de movil">
         <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmSalida" Disabled="true"/>
     </FormItem>*@
-    <FormItem Label="Numero de movil">
+    @*<FormItem Label="Numero de movil">
         <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmLlegada"/>
-    </FormItem>
+    </FormItem>*@
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <br />
@@ -550,7 +550,7 @@
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
                 //KmSalida= movilSalidaViewModels.KmSalida,
-                KmLlegada= movilSalidaViewModels.KmLlegada
+                //KmLlegada= movilSalidaViewModels.KmLlegada
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();

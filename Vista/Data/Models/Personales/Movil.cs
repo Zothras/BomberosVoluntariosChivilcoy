@@ -18,8 +18,7 @@ namespace Vista.Data.Models.Personales
         [Required, StringLength(255)]
         public string NumeroChasis { get; set; }
         public TipoEstadoMovil Estado { get; set; }
-        public int KmSalida { get; set; }
-        
+        public int kilometraje { get; set; }
         public int ImagenId { get; set; }
         [ForeignKey("ImagenId")]
         public ImagenMovil Imagen { get; set; }

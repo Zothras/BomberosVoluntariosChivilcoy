@@ -114,8 +114,8 @@
         <p>Tipo movil: @ms.Movil.Tipo</p>//traer datos de movil en llamada de salidas
         <p>Modelo movil: @ms.Movil.Modelo</p>
         <p>NumeroMovil movil: @ms.Movil.NumeroMovil</p>
-        <p>KmSalida: @ms.Movil.KmSalida</p>
-        <p>KmLlegada: @ms.Movil.KmLlegada</p>
+        @*<p>KmSalida: @ms.Movil.KmSalida</p>
+        <p>KmLlegada: @ms.Movil.KmLlegada</p>*@
         @if (ms.CargoCombustible)
         {
             <p><b>Cargo Combustible: si</b></p>
@@ -697,12 +697,12 @@
         <FormItem Label="Dato Hora llegada">
             <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel[numeroParteVisualizar].HoraLLegada" />
         </FormItem>
-        <FormItem Label="Kilometro salida">
+        @*<FormItem Label="Kilometro salida">
             <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmSalida" />
         </FormItem>
         <FormItem Label="Kilometro llegada">
             <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmLlegada" />
-        </FormItem>
+        </FormItem>*@
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].CalleORuta" />
         </FormItem>
