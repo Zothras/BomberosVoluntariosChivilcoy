@@ -34,6 +34,9 @@
             </p>
         </div>
         <div>
+            <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Embarcaciones-baja"); })">
+                <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Embarcaciones de baja</Button>
+            </a>
             <a @onclick="@(() => { navigationManager.NavigateTo($"/embarcaciones/agregarembarcacion"); })">
                 <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar Embarcacion</Button>
             </a>
@@ -45,6 +48,7 @@
         {
             @foreach(Embarcacion e in embarcaciones)
             {
+                if (e.Estado != TipoEstadoMovil.Activo) continue;
                 <card class="cartaPropia" style="display: flex; flex-direction: column;height: 345px;width: 250px;border-radius: 3px;box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
                     <div style="width: 100%;height: 75%;margin: 0; padding: 0;">
                         <img src="@CargarImage(e)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;border-radius: 3px 3px 0 0;">
@@ -61,7 +65,7 @@
                                 <Icon Type="edit" Theme="outline" />
                             </Button>
                             <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de dar de baja a este movil?"
-                                        OnConfirm="()=>EliminarEmbarcacion(e.VehiculoId)"
+                                        OnConfirm="()=>CambiarEstado(e.VehiculoId,TipoEstadoMovil.Inactivo)"
                                         OnCancel="Cancel">
                                 <Button class="botonCarta" Style="width: 100%!important;height: 100%;border-radius: 0 0 3px 0;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;">
                                     <Icon Type="down" Theme="outline" />
@@ -87,7 +91,7 @@
 
 @code {
     public Embarcacion[]? embarcaciones;
-
+    
     protected override async Task OnInitializedAsync()
     {
         using var db = DbFactory.CreateDbContext();
@@ -109,6 +113,18 @@
         }
 
         return src;
+    }
+    public async void CambiarEstado(int id, TipoEstadoMovil estado)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Embarcacion? movil_a_modificar = await context.Embarcacion.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
+        if (movil_a_modificar is not null)
+        {
+            movil_a_modificar.Estado = estado;
+        }
+        embarcaciones = await context.Embarcacion.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
+        await context.SaveChangesAsync();
+        StateHasChanged();
     }
     public async void EliminarEmbarcacion(int id)
     {
