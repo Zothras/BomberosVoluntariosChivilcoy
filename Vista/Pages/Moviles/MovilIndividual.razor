@@ -97,8 +97,7 @@ else if (!existe)
     }
 }
 @code {
-    [Parameter]
-    public int? VehiculoId { get; set; }
+
 
     public class MovilViewModel
     {
@@ -135,12 +134,18 @@ else if (!existe)
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
     public bool existe;
-
+    [Parameter]
+    public int? VehiculoId { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
-        using var db = DbFactory.CreateDbContext();
 
+        MostrarDatos();
+
+    }
+    public async void MostrarDatos()
+    {
+        using var db = DbFactory.CreateDbContext();
         Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero).Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
 
         if (movil is not null)
@@ -154,6 +159,7 @@ else if (!existe)
             movilView.NumeroMotor = movil.NumeroMotor;
             movilView.NumeroChasis = movil.NumeroChasis;
             movilView.Estado = movil.Estado;
+            
             foreach (MovilBombero b in movil.Bomberos)
             {
                 if (b.Rol == TipoRol.Encargado)
@@ -177,7 +183,6 @@ else if (!existe)
             existe = false;
         }
     }
-
     public async void EliminarMovil()
     {
         using var db = DbFactory.CreateDbContext();
