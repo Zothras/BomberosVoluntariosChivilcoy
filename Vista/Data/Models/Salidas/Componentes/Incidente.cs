@@ -11,11 +11,9 @@ namespace Vista.Data.Models.Salidas.Componentes
         [Required, StringLength(255)]
         public string Observacion { get; set; }
         public DateTime Fecha { get; set; }
-
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]
         public Bombero QuienHizo { get; set; }
-        public int EmbarcacionId { get; set; }
-        public Embarcacion Embarcacion { get; set; }
+   
     }
 }

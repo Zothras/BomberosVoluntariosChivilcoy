@@ -10,15 +10,10 @@ namespace Vista.Data.Models.Personales
     public class MovilBombero
     {
         public int MovilBomberoId { get; set; }
-        
         public TipoRol Rol { get; set; }
-
         public int VehiculoId { get; set; }
         [ForeignKey("VehiculoId")]
         public Movil Movil { get; set; }
-        public int EmbarcacionId { get; set; }
-        public Embarcacion Embarcacion { get; set; }
-
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]
         public Bombero Bombero { get; set; }

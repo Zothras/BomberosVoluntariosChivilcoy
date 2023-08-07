@@ -19,13 +19,8 @@ namespace Vista.Data.Models.Personales
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]
         public Bombero Chofer { get; set; }
-
         public int MovilId { get; set; }
-
-        
         public Movil Movil { get; set; }
-        public int EmbarcacionId { get; set; }
-        public Embarcacion Embarcacion { get; set; }
         public int SalidaId { get; set; }
         public Salida Salida { get; set; }
         public int KmLlegada { get; set; }//Lo pusimos aca, porque el movil solo tiene la variables kilometraje, o le interesa tener el km de llegada, esta ultima es una variable auxiliar que sirve para incrementar el kilometraje de un movil
