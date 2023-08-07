@@ -6,6 +6,15 @@
 <style>
     .ant-menu-vertical > .ant-menu-item, .ant-menu-vertical-left > .ant-menu-item, .ant-menu-vertical-right > .ant-menu-item, .ant-menu-inline > .ant-menu-item, .ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
         width: 100%;
+        padding: 0 2.3em!important;
+    }
+
+    .ant-menu-submenu-title{
+        
+    }
+
+    .ant-menu-sub.ant-menu-inline{
+        background: rgb(230, 230, 230) !important;
     }
 
     .ant-tooltip-content {
@@ -17,8 +26,11 @@
         width: 100%;
     }
 
-    .ant-menu-item {
-        padding-left: 32px !important;
+    .ant-menu-submenu .ant-menu-item-selected {
+        padding-left: 45px !important;
+        border-left: 3px solid rgb(62, 24, 24) !important;
+        background-color: rgb(190, 190, 190) !important;
+        width: 100%;
     }
 
         .ant-menu-item a:hover {
@@ -65,13 +77,21 @@
             padding-left: 0px !important;
         }
 
+    .ant-menu-title-content{
+        
+    }
+
     .ant-menu-item-selected:hover, .ant-menu-submenu-selected:hover {
         color: #fff !important;
     }
 
-    .ant-menu-sub.ant-menu-inline {
+    .ant-menu-sub .ant-menu-inline {
         padding-left: 24px !important;
         background: rgb(230, 230, 230) !important;
+    }
+
+    .ant-menu-item-selected a:active {
+        border-left: 3px solid rgb(62, 24, 24) !important;
     }
 
     .ant-menu-light .ant-menu-submenu-title:hover, .ant-menu-light .ant-menu-title-content:hover {
@@ -96,9 +116,18 @@
             color: #fff !important;
         }
 
+        .ant-menu-submenu-selected .ant-menu-item-selected li {
+            border-left: 3px solid rgb(62, 24, 24) !important;
+        }
+
+    
         .ant-menu-submenu-selected > .anticon-alert {
             background-color: #fff !important;
             top: 4px !important;
+        }
+
+        .ant-menu-submenu-selected ul .ant-menu-item-selected li{
+            border-left: 3px solid rgb(62, 24, 24) !important;
         }
 
     .ant-menu-item-selected, .ant-menu-item-selected i, .ant-menu-item-selected:hover {
@@ -120,6 +149,10 @@
 
     .ant-menu-inline-collapsed .spanContentSalidas {
         padding-top: 10px !important;
+    }
+
+    .ant-menu .ant-menu-item{
+        /*padding: 0!important;*/
     }
 </style>
 
@@ -202,7 +235,7 @@
                             </IconTemplate>
                         </MenuItem>
                     </a>
-                    <SubMenu Key="sub2" TitleTemplate=@sub3Title>
+                    <SubMenu Key="sub2" TitleTemplate=@sub3Title Style="padding-left: 0!important;">
                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
                             <MenuItem Key="04">Comercio</MenuItem>
                         </a>
@@ -228,7 +261,7 @@
                             <MenuItem Key="11">Vivienda</MenuItem>
                         </a>
                     </SubMenu>
-                    <SubMenu Key="sub3" TitleTemplate=@sub4Title>
+                    <SubMenu Key="sub3" TitleTemplate=@sub4Title Style="padding-left: 0!important;">
                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
                             <MenuItem Key="12">Representacion</MenuItem>
                         </a>
@@ -236,7 +269,7 @@
                             <MenuItem Key="13">Prevencion</MenuItem>
                         </a>
                     </SubMenu>
-                    <SubMenu Key="sub4" TitleTemplate=@sub5Title>
+                    <SubMenu Key="sub4" TitleTemplate=@sub5Title Style="padding-left: 0!important;">
                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
                             <MenuItem Key="14">Animal</MenuItem>
                         </a>
@@ -295,40 +328,40 @@
 
     RenderFragment sub2Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon class="menuSalidas" Type="alert" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;" />
+        <Icon class="menuSalidas" Type="alert" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Salidas</span>
     </span>
     ;
 
     RenderFragment sub3Title =
     @<span>
-        <i class="fa-sharp fa-solid fa-fire" style="padding-right: 10px!important;"></i>
+        <i class="fa-sharp fa-solid fa-fire" style="padding-right: 10px!important;color: #263040;"></i>
         <span>Incendios</span>
     </span>
     ;
     RenderFragment sub4Title =
     @<span>
-        <i class="fa-solid fa-helmet-safety" style="padding-right: 10px!important;"></i>
+        <i class="fa-solid fa-helmet-safety" style="padding-right: 10px!important;color: #263040;"></i>
         <span>Servicios</span>
     </span>
     ;
     RenderFragment sub5Title =
     @<span>
-        <i class="fa-solid fa-fire-extinguisher" style="padding-right: 10px!important;"></i>
+        <i class="fa-solid fa-fire-extinguisher" style="padding-right: 10px!important;color: #263040;"></i>
         <span>Rescates</span>
     </span>
     ;
 
     RenderFragment sub6Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon class="menuSalidas" Type="tool" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;" />
+        <Icon class="menuSalidas" Type="tool" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Herramientas</span>
     </span>
     ;
 
     RenderFragment sub7Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon Type="history" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;" />
+        <Icon Type="history" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Reportes</span>
         </span>
     ;

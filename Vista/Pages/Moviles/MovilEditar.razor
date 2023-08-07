@@ -93,7 +93,8 @@
         <Modal Title="@title"
                Visible="@_visible"
                OnOk="@HandleOk"
-               OnCancel="@HandleCancel">
+               OnCancel="@HandleCancel"
+               Style="width: 100%!important;">
             <div style="width: 100%;">
                 <Steps Current="current">
                     @foreach (var item in steps)
