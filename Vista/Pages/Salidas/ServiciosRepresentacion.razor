@@ -147,10 +147,13 @@
     <b><label>Datos de chofer</label></b>
     <br />
     <FormItem Label="" style="display: grid;place-items: center;">
-        <Checkbox @bind-Checked="@chekM"> Cargo combustible</Checkbox>
-        <Button Type="primary" OnClick="@ShowModal">
+        <Checkbox @bind-Checked="@chekM" >
+            @($"{(chekM ? _visible=true : _visible=false)}") 
+            Cargo combustible
+        </Checkbox>
+        @*<Button Type="primary" OnClick="@ShowModal">
             Cargo Combustible
-        </Button>
+        </Button>*@
     </FormItem>
     <FormItem Label="Elija el chofer">
         <Select TItem="BomberoViweModel"
@@ -186,6 +189,12 @@
             if (m.NumeroMovil==NumeroMovil)
             {
                @* m. = m.;*@
+                <FormItem>
+                    <AntDesign.InputNumber @bind-Value="@m.kilometraje" Disabled="true" />
+                </FormItem>
+                <FormItem>
+                    <AntDesign.InputNumber @bind-Value="@movilSalidaViewModels.KmLlegada" />
+                </FormItem>
                 break;
             }
         }
@@ -440,6 +449,8 @@
         TodosBomberos= await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
         CargarBomberosView();
+        chekM = false;
+        StateHasChanged();
 
     }
 
@@ -501,6 +512,7 @@
                     HorariosCapacitacion = modelServiciosEspecialesRepresentacion.HorariosCapacitacion
 
                 }
+                
 
             };
         foreach (BomberoSalidaViewModels bom in bomberosSalida)
@@ -517,7 +529,13 @@
         foreach (MovilSalidaViewModels m in MovilesSalidasL)
         {
             Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).Include(s=>s.Seguro).SingleOrDefaultAsync();
+            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).
+            Include(s=>s.Seguro).
+            Include(i=>i.Imagen).
+            Include(f=>f.Firmas).
+            Include(b=>b.Bomberos).    
+            Include(i=>i.Incidentes).
+            SingleOrDefaultAsync();
             MovilSalida movilS = new()
                 {
                     CargoCombustible = m.CargoCombustible,
@@ -527,6 +545,8 @@
                     CantidadLitros = m.CantidadLitros,
                     QuienLleno = m.QuienLleno,
                     TelefonoQuienLleno = m.TelefonoQuienLleno,
+                    KmLlegada= m.KmLlegada,
+
                     Chofer = bomberoChofer,
                     Movil = new(){
                         NumeroMovil= movilsalida.NumeroMovil,
@@ -540,7 +560,6 @@
                         Imagen = movilsalida.Imagen,
                         Firmas = movilsalida.Firmas,
                         Bomberos = movilsalida.Bomberos,
-                        Salidas = movilsalida.Salidas,
                         Incidentes = movilsalida.Incidentes,
                         Marca = movilsalida.Marca,
                         Modelo = movilsalida.Modelo,
@@ -548,11 +567,13 @@
                         Patente = movilsalida.Patente,
                         Tipo = movilsalida.Tipo,
                         Seguro = movilsalida.Seguro,
-                        SeguroId = movilsalida.SeguroId
+                        SeguroId = movilsalida.SeguroId,
+                        kilometraje= m.KmLlegada
+
 
                     }
                    //encontrar forma de meter kilometros en movil de arriba
-                    
+
                 };
             ServicioRepresentacion.Moviles.Add(movilS);
         }
@@ -603,7 +624,7 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).Include(s=>s.Seguro).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -617,6 +638,26 @@
                 MovilesSalida = Movilsalida,
                 //KmSalida= movilSalidaViewModels.KmSalida,
                 //KmLlegada= movilSalidaViewModels.KmLlegada
+                KmLlegada=movilSalidaViewModels.KmLlegada,
+                //MovilesSalida=new(){
+                //    Marca = Movilsalida.Marca,
+                //    Modelo = Movilsalida.Modelo,
+                //    Año = Movilsalida.Año,
+                //    Patente = Movilsalida.Patente,
+                //    Tipo = Movilsalida.Tipo,
+                //    ModeloBomba = Movilsalida.ModeloBomba,
+                //    NumeroChasis = Movilsalida.NumeroChasis,
+                //    NumeroMotor = Movilsalida.NumeroMotor,
+                //    NumeroMovil = Movilsalida.NumeroMovil,
+                //    Estado = Movilsalida.Estado,
+                //    kilometraje= movilSalidaViewModels.MovilesSalida.kilometraje,
+                //    Seguro = new()
+                //    {
+                //        CompañiaAseguradora = Movilsalida.Seguro.CompañiaAseguradora,
+                //        FechaDeVencimineto = Movilsalida.Seguro.FechaDeVencimineto,
+                //        NumeroDePoliza = Movilsalida.Seguro.NumeroDePoliza
+                //    }
+                //}
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();
@@ -635,7 +676,7 @@
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
-    
+
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -719,6 +760,7 @@
             bomberoTodos.Add(bombero);
 
         }
+
         foreach (Bombero c in TodosBomberos)
         {
             if (c.Chofer == true)
@@ -764,6 +806,7 @@
             }
         }
     }
+
     bool loading = false;
 
     void toggle(bool value) => loading = value;
