@@ -118,14 +118,12 @@
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
-    <FormItem Label="">
+    <FormItem Label="" style="display: grid;place-items: center;">
         <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-        <br />
         <Button Type="primary" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
     </FormItem>
-
 
     <FormItem Label="Elija el chofer">
         <Select TItem="BomberoViweModel"
@@ -139,7 +137,6 @@
                 EnableSearch>
         </Select>
     </FormItem>
-
 
     <FormItem Label="Numero de movil">
         <Select TItem="Movil"
@@ -155,15 +152,40 @@
 
     </FormItem>
     <br />
+    @if (NumeroMovil is not null)
+    {
+        foreach (Movil m in Moviles)
+        {
+            if (m.NumeroMovil == NumeroMovil)
+            {
+                <FormItem Label="Kilometro salida">
+                    <AntDesign.InputNumber @bind-Value="m.kilometraje" Disabled />
+                </FormItem>
+                <FormItem Label="Kilometro llegada">
+                    <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmLlegada" />
+                </FormItem>
+                break;
+            }
+        }
+    }
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
-    <br />
-
+    <div>
+        <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Chofer.Nombre"></PropertyColumn>
+            <ActionColumn Title="Action">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
 
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
-    <FormItem Label="Tipo Escalafon">
-        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
-    </FormItem>
     <FormItem Label="Elija el bombero">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
@@ -180,7 +202,20 @@
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
     <br />
-
+    <div>
+        <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
+            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+            <ActionColumn Title="Action">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
     <b><label>Elija al encargado</label></b>
     <FormItem Label="Encargado">
         <Select TItem="BomberoViweModel"
@@ -343,7 +378,7 @@
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
-
+    bool _visible1;
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
@@ -450,7 +485,6 @@
                     BomberoSalida BomSalida = new()
                         {
                             Salio = bom.Salio,
-                            Grado = bom.Grado,
                             Bombero = bomberoSalida
                         };
                     salidaIncendioIndustria.CuerpoParticipante.Add(BomSalida);
@@ -510,6 +544,10 @@
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
         Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+        if (Movilsalida is not null)
+        {
+            Movilsalida.kilometraje = movilSalidaViewModels.KmLlegada;
+        }
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -526,18 +564,28 @@
         await db.SaveChangesAsync();
     }
 
+    void OnChange(string[] checkedValues)
+    {
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
     public async void AgregarCuerpoParticipante()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-
-        BomberoSalidaViewModels b = new()
+        foreach (var bom in TodosBomberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
             {
-                Salio = bomberoSalidaView.Salio,
-                Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = BomberoCuerpo
-            };
-        bomberosSalida.Add(b);
-        await db.SaveChangesAsync();
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+                await db.SaveChangesAsync();
+            }
+        }
     }
     public void CargarBomberosView()
     {
@@ -627,9 +675,14 @@
                     };
                 bomberoChoferes.Add(bomberoChofer);
             }
+
+
         }
     }
-
+    private void OnFinishFailedModel(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
+    }
     bool loading = false;
 
     void toggle(bool value) => loading = value;
@@ -638,6 +691,10 @@
     private void ShowModal()
     {
         _visible = true;
+    }
+    public void ShowModal1()
+    {
+        _visible1 = true;
     }
     private void HandleCancel(MouseEventArgs e)
     {
@@ -654,5 +711,24 @@
 
         _visible = false;
 
+    }
+    private void HandleCancel1(MouseEventArgs e)
+    {
+
+        _visible1 = false;
+    }
+    private void HandleOk1(MouseEventArgs e)
+    {
+        navigationManager.NavigateTo($"/legajo");
+        _visible1 = false;
+
+    }
+    void deleteRow(int numlegajo)
+    {
+        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+    void deleteRowMovil(string NumMovil)
+    {
+        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
     }
 }
