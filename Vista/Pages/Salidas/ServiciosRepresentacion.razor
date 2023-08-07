@@ -102,7 +102,7 @@
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
-    <FormItem Label="">
+    @*<FormItem Label="">
         <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
         <br />
         <Button Type="primary" OnClick="@ShowModal">
@@ -137,12 +137,78 @@
                 EnableSearch>
         </Select>
 
-    </FormItem>
+    </FormItem>*@
     @*<FormItem Label="Numero de movil">
         <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmSalida" Disabled="true"/>
     </FormItem>*@
     @*<FormItem Label="Numero de movil">
         <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmLlegada"/>
+    </FormItem>*@
+    <b><label>Datos de chofer</label></b>
+    <br />
+    <FormItem Label="" style="display: grid;place-items: center;">
+        <Checkbox @bind-Checked="@chekM"> Cargo combustible</Checkbox>
+        <Button Type="primary" OnClick="@ShowModal">
+            Cargo Combustible
+        </Button>
+    </FormItem>
+    <FormItem Label="Elija el chofer">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberoChoferes"
+        @bind-Value="@chofer"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Selecione a un bombero"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
+    </FormItem>
+    <FormItem Label="Numero de movil">
+        <Select TItem="Movil"
+                TItemValue="string"
+                DataSource="@Moviles"
+                @bind-Value="@NumeroMovil"
+                LabelName="@nameof(Movil.NumeroMovil)"
+                ValueName="@nameof(Movil.NumeroMovil)"
+                Placeholder="Selecione el movil"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
+
+    </FormItem>
+    <br />
+    @if (NumeroMovil is not null)
+    {
+        foreach (Movil m in Moviles)
+        {
+            //Tendria que recorrer a movilSalida para poner el km de llegada
+            if (m.NumeroMovil==NumeroMovil)
+            {
+               @* m. = m.;*@
+                break;
+            }
+        }
+    }
+    <div>
+        @*<Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
+            <ActionColumn Title="Action">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>*@
+    </div>
+    @* <FormItem Label="Kilometro salida">
+    <AntDesign.InputNumber  @bind-Value="modelMateriales.KmSalida" Disabled/>
+    </FormItem>
+    <FormItem Label="Kilometro llegada">
+    <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
     </FormItem>*@
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>

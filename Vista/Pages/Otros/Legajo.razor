@@ -699,10 +699,8 @@
         </FormItem>
         @*<FormItem Label="Kilometro salida">
             <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmSalida" />
-        </FormItem>
-        <FormItem Label="Kilometro llegada">
-            <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmLlegada" />
         </FormItem>*@
+        
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@salidasViewModel[numeroParteVisualizar].CalleORuta" />
         </FormItem>
@@ -859,6 +857,12 @@
                             OnSelectedItemChanged="OnSelectedItemChangedHandlerNumeroMovil"
                             OnSearch="OnSearch">
                 </Select>
+            </FormItem>
+            <FormItem>
+                <AntDesign.InputNumber @bind-Value="@mv.Movil.KmSalida" Disabled="true" />
+            </FormItem>
+            <FormItem>
+                <AntDesign.InputNumber @bind-Value="@mv.KmLlegada" />
             </FormItem>
             <FormItem Label="¿Cargo Combustible?">
                @* <Switch @bind-Value="@salidasViewModel[numeroParteVisualizar].Moviles[j].CargoCombustible"> </Switch>*@
