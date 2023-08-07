@@ -7,7 +7,6 @@ namespace Vista.Data.Models.Salidas.Componentes
 {
     public class Embarcacion : Vehiculo
     {
-        public int EmbarcacionId {get; set;}
 
         [Required, StringLength(255)]
         public string NumeroMovil {get; set;}
