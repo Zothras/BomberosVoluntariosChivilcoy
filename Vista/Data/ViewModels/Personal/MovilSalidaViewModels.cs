@@ -16,6 +16,7 @@ namespace Vista.Data.ViewModels.Personal
         public Movil MovilesSalida { get; set; }
         public string NumeroMovil { get; set; }
         public int KmLlegada { get; set; }
+        public int Kilometraje { get; set; }//preguntar a fede, para asi no cargar datos a mano de un movil, solo para pner el kilometraje
 
     }
 }
