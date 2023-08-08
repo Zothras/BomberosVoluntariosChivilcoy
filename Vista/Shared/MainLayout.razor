@@ -235,7 +235,7 @@
                             </IconTemplate>
                         </MenuItem>
                     </a>
-                    <SubMenu Key="sub2" TitleTemplate=@sub3Title Style="padding-left: 0!important;">
+                    <SubMenu Key="sub2" TitleTemplate=@sub3Title>
                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
                             <MenuItem Key="04">Comercio</MenuItem>
                         </a>
@@ -279,34 +279,34 @@
                     </SubMenu>
                 </SubMenu>
                 <SubMenu class="xd" Key="sub6" Title="Salidas" TitleTemplate=@sub7Title>
-                    <MenuItem Key="20" Title=@("Historial de bomberos") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
+                    <MenuItem Style="padding-left: 3.2em!important;" Key="20" Title=@("Historial de bomberos") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
                         <IconTemplate>
                             <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
                         </IconTemplate>
                     </MenuItem>
-                    <MenuItem Key="24" Title=@("Reporte de Choferes") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
+                    <MenuItem Style="padding-left: 3.2em!important;" Key="24" Title=@("Reporte de Choferes") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
                         <IconTemplate>
                             <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
                         </IconTemplate>
                     </MenuItem>
-                    <MenuItem Key="19" Title=@("Historial de moviles") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
+                    <MenuItem Style="padding-left: 3.2em!important;" Key="19" Title=@("Historial de moviles") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
                         <IconTemplate>
                             <i class="fa-solid fa-truck-droplet icoSelected" style="color: #263040;"></i>
                         </IconTemplate>
                     </MenuItem>
                 </SubMenu>
                 <SubMenu class="xd" Key="sub5" Title="Salidas" TitleTemplate=@sub6Title>
-                    <MenuItem Key="16" Title=@("Brigadas") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
+                    <MenuItem Style="padding-left: 3.2em!important;" Key="16" Title=@("Brigadas") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
                         <IconTemplate>
                             <i class="fa-solid fa-users-gear"></i>
                         </IconTemplate>
                     </MenuItem>
-                    <MenuItem Key="17" Title=@("Comunicacion") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
+                    <MenuItem Style="padding-left: 3.2em!important;" Key="17" Title=@("Comunicacion") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
                         <IconTemplate>
                             <i class="fa-solid fa-walkie-talkie"></i>
                         </IconTemplate>
                     </MenuItem>
-                    <MenuItem Key="18" Title=@("Deposito") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
+                    <MenuItem Style="padding-left: 3.2em!important;" Key="18" Title=@("Deposito") @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
                         <IconTemplate>
                             <i class="fa-solid fa-file-signature"></i>
                         </IconTemplate>
@@ -339,19 +339,19 @@
     ;
 
     RenderFragment sub3Title =
-    @<span>
+    @<span style="margin-left: 1.2em;">
         <i class="fa-sharp fa-solid fa-fire" style="padding-right: 10px!important;color: #263040;"></i>
         <span>Incendios</span>
     </span>
     ;
     RenderFragment sub4Title =
-    @<span>
+    @<span style="margin-left: 1.2em;">
         <i class="fa-solid fa-helmet-safety" style="padding-right: 10px!important;color: #263040;"></i>
         <span>Servicios</span>
     </span>
     ;
     RenderFragment sub5Title =
-    @<span>
+    @<span style="margin-left: 1.2em;">
         <i class="fa-solid fa-fire-extinguisher" style="padding-right: 10px!important;color: #263040;"></i>
         <span>Rescates</span>
     </span>

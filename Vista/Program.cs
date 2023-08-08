@@ -1,5 +1,4 @@
 using Vista.Data;
-using BlazorStrap;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +6,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration["ConnectionString"];
-//if (string.IsNullOrEmpty(connectionString))
-//{
-//    connectionString = "server=localhost;user=root;password=;database=bomberos";    
-//}
 
 var serverVersion = ServerVersion.AutoDetect(connectionString);
 
@@ -25,7 +20,6 @@ builder.Services.AddDbContextFactory<BomberosDbContext>(
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddBlazorStrap();
 builder.Services.AddAntDesign();
 
 var app = builder.Build();
