@@ -146,7 +146,7 @@ else if (!existe)
     public async void MostrarDatos()
     {
         using var db = DbFactory.CreateDbContext();
-        Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero).Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+        Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero).Where(ma => ma.VehiculoId == VehiculoId).SingleOrDefaultAsync();
 
         if (movil is not null)
         {
@@ -159,6 +159,7 @@ else if (!existe)
             movilView.NumeroMotor = movil.NumeroMotor;
             movilView.NumeroChasis = movil.NumeroChasis;
             movilView.Estado = movil.Estado;
+            
             
             foreach (MovilBombero b in movil.Bomberos)
             {

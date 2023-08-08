@@ -20,7 +20,7 @@ namespace Vista.Data.Models.Salidas.Componentes
 
         public int ImagenId { get; set; }
         [ForeignKey("ImagenId")]
-        public ImagenMovil Imagen { get; set; }
+        public ImagenEmbarcacion imagenEmbarcacion { get; set; }
 
         public List<Firma> Firmas { get; set; }
 

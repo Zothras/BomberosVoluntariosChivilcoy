@@ -108,12 +108,21 @@
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
-    <FormItem Label="">
+    @*<FormItem Label="">
         <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
         <br />
         <Button Type="primary" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
+    </FormItem>*@
+    <FormItem Label="" style="display: grid;place-items: center;">
+        <Checkbox @bind-Checked="@chekM">
+            @($"{(chekM ? _visible = true : _visible = false)}")
+            Cargo combustible
+        </Checkbox>
+        @*<Button Type="primary" OnClick="@ShowModal">
+        Cargo Combustible
+        </Button>*@
     </FormItem>
 
 
@@ -144,6 +153,25 @@
         </Select>
 
     </FormItem>
+    <br />
+    @if (NumeroMovil is not null)
+    {
+        foreach (Movil m in Moviles)
+        {
+            //Tendria que recorrer a movilSalida para poner el km de llegada
+            if (m.NumeroMovil == NumeroMovil)
+            {
+                @* m. = m.;*@
+                <FormItem>
+                    <AntDesign.InputNumber @bind-Value="@m.kilometraje" Disabled="true" />
+                </FormItem>
+                <FormItem>
+                    <AntDesign.InputNumber @bind-Value="@movilSalidaViewModels.KmLlegada" />
+                </FormItem>
+                break;
+            }
+        }
+    }
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <br />
@@ -368,6 +396,16 @@
     int BomberoEncargado;
     int QuienLLenoPlanilla;
 
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        TodosBomberos = await db.Bomberos.ToArrayAsync();
+        Moviles = await db.Moviles.ToArrayAsync();
+        CargarBomberosView();
+        chekM = false;
+        StateHasChanged();
+    }
     //direccion
     public async void CargarFactorClimatico()
     {
@@ -443,13 +481,53 @@
         foreach (MovilSalidaViewModels m in MovilesSalidasL)
         {
             Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).
+            Include(s => s.Seguro).
+            Include(i => i.Imagen).
+            Include(f => f.Firmas).
+            Include(b => b.Bomberos).
+            Include(i => i.Incidentes).
+            SingleOrDefaultAsync();
             MovilSalida movilS = new()
-                {
+            {
                     CargoCombustible = m.CargoCombustible,
+                    NumeroFactura = m.NumeroFactura,
+                    FechaFactura = m.FechaFactura,
+                    TipoConbustible = m.TipoConbustible,
+                    CantidadLitros = m.CantidadLitros,
+                    QuienLleno = m.QuienLleno,
+                    TelefonoQuienLleno = m.TelefonoQuienLleno,
+                    KmLlegada = m.KmLlegada,
+
                     Chofer = bomberoChofer,
-                    Movil = Movilsalida
-                };
+                    Movil = new()
+                    {
+                        NumeroMovil = movilsalida.NumeroMovil,
+                        NumeroMotor = movilsalida.NumeroMotor,
+                        ModeloBomba = movilsalida.ModeloBomba,
+                        NumeroChasis = movilsalida.NumeroChasis,
+                        Estado = movilsalida.Estado,
+                        //KmSalida = m.KmSalida,
+                        //KmLlegada = m.KmLlegada,
+                        ImagenId = movilsalida.ImagenId,
+                        Imagen = movilsalida.Imagen,
+                        Firmas = movilsalida.Firmas,
+                        Bomberos = movilsalida.Bomberos,
+                        Incidentes = movilsalida.Incidentes,
+                        Marca = movilsalida.Marca,
+                        Modelo = movilsalida.Modelo,
+                        Año = movilsalida.Año,
+                        Patente = movilsalida.Patente,
+                        Tipo = movilsalida.Tipo,
+                        Seguro = movilsalida.Seguro,
+                        SeguroId = movilsalida.SeguroId,
+                        kilometraje = m.KmLlegada
+
+
+                    }
+                    //encontrar forma de meter kilometros en movil de arriba
+
+            };
             ServicioPrevenicion.Moviles.Add(movilS);
         }
         foreach (DamnificadoViewModels d in DamnificadosSalida)
@@ -501,8 +579,15 @@
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
+                NumeroFactura = movilSalidaViewModels.NumeroFactura,
+                FechaFactura = movilSalidaViewModels.FechaFactura,
+                TipoConbustible = movilSalidaViewModels.TipoConbustible,
+                CantidadLitros = movilSalidaViewModels.CantidadLitros,
+                QuienLleno = movilSalidaViewModels.QuienLleno,
+                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
+                KmLlegada=movilSalidaViewModels.KmLlegada
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();
@@ -521,18 +606,7 @@
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
-    protected override async Task OnInitializedAsync()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-        if (salida is not null)
-        {
-            modelServiciosEspecialesPrevencion.NumeroParte = salida.NumeroParte++;
-        }
-        TodosBomberos = await db.Bomberos.ToArrayAsync();
-        Moviles = await db.Moviles.ToArrayAsync();
-        CargarBomberosView();
-    }
+    
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
