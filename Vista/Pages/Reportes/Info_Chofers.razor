@@ -1,155 +1,138 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/Reportes/Reportes_Choferes"
+@implements IDisposable
+@using System.ComponentModel
+@using System.Reflection
+@using System.Web
 
-@using AntDesign.TableModels
-@using System.ComponentModel.DataAnnotations
+<div class="router-pagging-table">
+    <Input @bind-Value="_url" OnPressEnter="() => _navigation.NavigateTo(_url, true)" />
+    <Table DataSource="@_forecasts"
+           Total="_total"
+           Loading="_loading"
+           PageIndex="@_pageIndex"
+           PageSize="@_pageSize"
+           OnPageIndexChange="PageIndexChanged">
+        <PropertyColumn Property="c=>c.Id" />
+        <PropertyColumn Property="c=>c.Date" Format="yyyy-MM-dd" />
+        <PropertyColumn Property="c=>c.TemperatureC" />
+        <PropertyColumn Title="Temp. (F)" Field="@context.TemperatureF" />
+        <PropertyColumn Property="c=>c.Summary" />
+    </Table>
 
-<Table TItem="TestData" DataSource="@testData">
-    <Column @bind-Field="@context.Id" Sortable />
-    <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable />
-    <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)" Filters="DayOfWeekFilter" OnFilter="(a, b) => a == b" />
-    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12['test'].N2A") Sortable />
-    <PropertyColumn Title="N1.N12.N2A Property" Property="@(c=>c.N1.N12["test"].N2A)" Sortable />
-    <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt" />
-    <Column Title="Time" TData="DateTime?" DataIndex=@(@"N1.N12['test'].Time") Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="_dateTimeCompare">
-        <CellRender Context="cell">@(cell.FieldValue == default ? "--" : cell.FormattedValue)</CellRender>
-    </Column>
-</Table>
+    <br />
+    <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
+</div>
+
+@inject NavigationManager _navigation
 
 @code {
 
-    TestData[] testData;
+    WeatherForecast[] _forecasts;
 
-    public class TestData
+    int _pageIndex = 1;
+
+    int _pageSize = 5;
+
+    int _total = 0;
+
+    string _url;
+
+    bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _url = _navigation.Uri;
+        _total = 50;
+        _navigation.LocationChanged += LocationChanged;
+        LoadTableParameter();
+        await LoadDataAsync();
+    }
+
+    private async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        _url = e.Location;
+        LoadTableParameter();
+        await LoadDataAsync();
+    }
+
+    private void LoadTableParameter()
+    {
+        var uri = _navigation.ToAbsoluteUri(_url);
+        var query = HttpUtility.ParseQueryString(uri.Query);
+        _pageIndex = int.TryParse(query["page"], out var index) ? index > 0 ? index : 1 : 1;
+        _pageSize = int.TryParse(query["size"], out var size) ? size > 0 ? size : 5 : 5;
+    }
+
+    private void PageIndexChanged(PaginationEventArgs args)
+    {
+        _navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.Page}&size={args.PageSize}");
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _loading = true;
+        StateHasChanged();
+        _forecasts = await GetForecastAsync(_pageIndex, _pageSize);
+        _loading = false;
+        StateHasChanged();
+    }
+
+    public class WeatherForecast
     {
         public int Id { get; set; }
 
-        public int DayOfWeek { get; set; }
+        [DisplayName("Date")]
+        public DateTime Date { get; set; }
 
-        public int Jobs { get; set; }
+        [DisplayName("Temp. (C)")]
+        public int TemperatureC { get; set; }
 
-        public int Popularity { get; set; }
+        [DisplayName("Summary")]
+        public string Summary { get; set; }
 
-        public Nested1 N1 { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public bool Hot { get; set; }
     }
 
-    public class Nested1
+    private static readonly string[] Summaries = new[]
     {
-        public int? N1A { get; set; }
-
-        public Dictionary<string, Nested2> N12 { get; set; }
-    }
-
-    public class Nested2
-    {
-        public string N2A { get; set; }
-
-        [Display(Name = "myTime")]
-        public DateTime? Time { get; set; }
-    }
-
-    public TableFilter<int>[] DayOfWeekFilter =
-        {
-        new() {Text = "Monday", Value = 1},
-        new() {Text = "Tuesday", Value = 2},
-        new() {Text = "Wednesdays", Value = 3},
-        new() {Text = "Thursday", Value = 4},
-        new() {Text = "Friday", Value = 5},
-        new() {Text = "Saturday", Value = 6},
-        new() {Text = "Sunday", Value = 7},
-  };
-
-    public string[] DayName = { "None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday" };
-
-    Func<DateTime?, DateTime?, int> _dateTimeCompare = (t1, t2) =>
-    {
-        if (t1.HasValue && t2.HasValue)
-            return DateTime.Compare(t1.Value, t2.Value);
-        if (t1.HasValue)
-            return 1;
-        if (t2.HasValue)
-            return -1;
-
-        return 0;
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    /// <inheritdoc />
-    protected override void OnInitialized()
+    public async Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
     {
-        testData = GetForecastAsync();
-        base.OnInitialized();
-    }
-
-    public TestData[] GetForecastAsync()
-    {
-        var rng = new Random(42);
-        var startDate = new DateTime(DateTime.Today.Year - 5, 1, 1);
-        var range = (DateTime.Today - startDate).TotalSeconds;
-        return Enumerable.Range(0, 5).Select(index =>
+        await Task.Delay(200);
+        var rng = new Random();
+        return await Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index =>
         {
-            var data = new TestData
+            var temperatureC = rng.Next(-20, 55);
+            return new WeatherForecast
                 {
                     Id = index,
-                    DayOfWeek = rng.Next(1, 8),
-                    Jobs = rng.Next(0, 20),
-                    Popularity = rng.Next(0, 30),
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = temperatureC,
+                    Summary = Summaries[rng.Next(Summaries.Length)],
+                    Hot = temperatureC > 30,
                 };
-            data.N1 = new()
-                {
-                    N1A = (index & 1) == 0 ? index : null,
-                    N12 = new()
-                          {
-                        { "no used", null },
-                        {
-                            "test",
-                            new Nested2()
-                            {
-                                N2A = DayName[data.DayOfWeek] + " - DI",
-                                Time = (index & 1) == 0 ? startDate.AddSeconds(rng.Next((int)range)) : null,
-                            }
-                        }
-                          }
-                };
-            return data;
-        }).ToArray();
+        }).ToArray());
     }
 
-    public int CompareNullableInt(int? a, int? b)
+    public void Dispose()
     {
-        if (a is null && b is null)
-        {
-            return 0;
-        }
-        if (a is null)
-        {
-            return -1;
-        }
-        if (b is null)
-        {
-            return 1;
-        }
-        return (a - b).Value;
+        _navigation.LocationChanged -= LocationChanged;
     }
 
 }
 
-@code {
-    public class info_chofer
-    {
-        public int Nro_Legajo { get; set; }
-
-        public string NombreyApellido { get; set; }
-
-        public int Dotacion { get; set; }
-
-        public int Celular { get; set; }
-        
-        public int Particular { get; set; }
-
-        public DateTime Vencimiento { get; set; }
-
+<style>
+    .router-pagging-table {
+        padding: 1em;
     }
 
-
-}
+        .router-pagging-table input {
+            margin-bottom: 1em;
+        }
+</style>
