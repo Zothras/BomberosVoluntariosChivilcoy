@@ -150,7 +150,7 @@
                             <CarouselSlick Style="padding: .2em;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
                                 @if (bomberos is not null)
                                 {
-                                    @foreach (BomberoViewModel b in bomberoViews)
+                                    @*@foreach (BomberoViewModel b in bomberoViews)
                                     {
                                         <div class="inpt-container">
                                             <select class="select-estadoMovil" @bind="b.PersonaId">
@@ -164,7 +164,7 @@
                                     }
                                     <div style="display: flex;justify-content: flex-end;">
                                         <Button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 40%;text-align: center,">Confirmar roles</Button>
-                                    </div>
+                                    </div>*@
                                 }
                             </CarouselSlick>
                         </Carousel>
@@ -229,6 +229,7 @@
         [Required, StringLength(255)]
         public string NumeroMovil { get; set; }
         public TipoEstadoMovil Estado { get; set; }
+        public Bombero Encargado { get; set; }
     }
     public class ImagenViewModel
     {
@@ -319,7 +320,7 @@
                 embarcacion.Año = embarcacionView.Año;
                 embarcacion.Patente = embarcacionView.Patente;
                 embarcacion.Tipo = embarcacionView.Tipo;
-                embarcacion.imagenEmbarcacion = new()
+                embarcacion.ImagenEmbarcacion = new()
                     {
                       NombreImagen = imagenView.Nombre,
                       TipoImagen = imagenView.TipoImagen,
@@ -327,19 +328,19 @@
                     };
                 embarcacion.NumeroMovil = embarcacionView.NumeroMovil;
                 embarcacion.Estado = embarcacionView.Estado;
-
-            foreach (BomberoViewModel m in bomberoViews)
-            {
-                if (m.PersonaId != 0)
-                {
-                    MovilBombero bombero = new()
-                        {
-                            Rol = m.Rol,
-                            PersonaId = m.PersonaId
-                        };
-                    embarcacion.Bomberos.Add(bombero);
-                }
-            }
+                embarcacion.Encargado.Grado = embarcacionView.Encargado.Grado;
+            //foreach (BomberoViewModel m in bomberoViews)
+            //{
+            //    if (m.PersonaId != 0)
+            //    {
+            //        MovilBombero bombero = new()
+            //            {
+            //                Rol = m.Rol,
+            //                PersonaId = m.PersonaId
+            //            };
+            //        embarcacion.Bomberos.Add(bombero);
+            //    }
+            //}
             await db.SaveChangesAsync();
             }
         

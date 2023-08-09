@@ -332,7 +332,7 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-                .Entity<Movil>()
+                .Entity<VehiculoSalida>()
                 .Property(m => m.Estado)
                 .HasConversion<string>()
                 .HasMaxLength(255);
