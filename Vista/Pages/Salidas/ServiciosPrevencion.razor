@@ -574,8 +574,8 @@
     public async void AgregarMovilSalida()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == movilSalidaViewModels.NumeroLegajo).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == movilSalidaViewModels.NumeroMovil).SingleOrDefaultAsync();
+        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
+        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).Include(s => s.Seguro).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -588,6 +588,7 @@
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
                 KmLlegada=movilSalidaViewModels.KmLlegada
+
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();

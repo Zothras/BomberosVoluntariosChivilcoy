@@ -1199,7 +1199,7 @@
                 </FormItem>*@
 
                 <FormItem Label="Datos Capacitacion">
-                    <Select @bind-Value="@servicioEspecialRepresentacionViewModel.NivelCapacitacion"
+                    @*<Select @bind-Value="@servicioEspecialRepresentacionViewModel.NivelCapacitacion"
                             DefaultValue="@servicioEspecialRepresentacionViewModel.NivelCapacitacion"
 		                TItemValue="string"
                         TItem="string"
@@ -1214,7 +1214,20 @@
                                 <SelectOption TItemValue="string" TItem="string" Value="@("Regional")" Label="Regional" />
                             <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
 		                </SelectOptions>
-                    </Select> 
+                    </Select> *@
+                    <Select TItem="NivelCapacitacion"
+                        TItemValue="string"
+                            DataSource="@_NivelCapacitacion"
+                    @bind-Value="@servicioEspecialRepresentacionViewModel.NivelCapacitacion"
+                        ValueName="@nameof(NivelCapacitacion.nivelCapacitacion)"
+                            LabelName="@nameof(NivelCapacitacion.nivelCapacitacion)"
+                        DefaultActiveFirstOption
+		                Style="width: 200px;"
+		                OnSelectedItemChanged="OnSelectedItemChangedHandler">
+                        @*<ItemTemplate>
+                            <span>@((context as ServicioEspecialRepresentacionViewModels).DisplayName)</span>
+                        </ItemTemplate>*@
+                    </Select>
                 </FormItem>
                 @if ( servicioEspecialRepresentacionViewModel.NivelCapacitacion == "Otro")
                 {
@@ -1227,7 +1240,7 @@
                 </FormItem>*@
 
                 <FormItem Label="Tipo Capacitacion">
-                    <Select @bind-Value="@servicioEspecialRepresentacionViewModel.TipoCapacitacion"
+                    @*<Select @bind-Value="@servicioEspecialRepresentacionViewModel.TipoCapacitacion"
                             DefaultValue="servicioEspecialRepresentacionViewModel.TipoCapacitacion"
                             TItemValue="string"
                             TItem="string"
@@ -1251,6 +1264,19 @@
                             <SelectOption TItemValue="string" TItem="string" Value="@("SeguridadDelBombero")" Label="SeguridadDelBombero" />
                             <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
                         </SelectOptions>
+                    </Select>*@
+                    <Select TItem="TipoCapacitacion"
+                        TItemValue="string"
+                            DataSource="@_TipoCapacitacion"
+                        @bind-Value="@_selectedValueTipoCapacitacion"
+                        ValueName="@nameof(TipoCapacitacion.tipoCapacitacion)"
+                            LabelName="@nameof(TipoCapacitacion.tipoCapacitacion)"
+                        DefaultActiveFirstOption
+		                Style="width: 200px;"
+		                OnSelectedItemChanged="OnSelectedItemChangedHandler">
+                        @*<ItemTemplate>
+                            <span>@((context as ServicioEspecialRepresentacionViewModels).DisplayName)</span>
+                        </ItemTemplate>*@
                     </Select>
                 </FormItem>
                 @if (servicioEspecialRepresentacionViewModel.TipoCapacitacion == "Otro")
@@ -2011,7 +2037,7 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         ServicioEspecial? servicioEspecial = await db.Set<ServicioEspecial>().Where(s => s.SalidaId == Id)
-        .Include(sal => sal.DatosCapacitacion).ThenInclude(servicio => servicio.ServicioEspecial)
+        .Include(sal => sal.DatosCapacitacion)/*.ThenInclude(servicio => servicio.ServicioEspecial)*/
         .SingleOrDefaultAsync();
 
          servicioEspecialViewModel = new()
@@ -2036,7 +2062,7 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         ServicioEspecialRepresentaciones? servicioEspecialRepresentaciones = await db.ServicioEspecialesRespresentaciones.Where(s => s.SalidaId == Id)
-        .Include(sal => sal.DatosCapacitacion).ThenInclude(servicio => servicio.ServicioEspecial)
+        .Include(sal => sal.DatosCapacitacion)
         .SingleOrDefaultAsync();
 
          servicioEspecialRepresentacionViewModel = new()
@@ -2394,5 +2420,63 @@
     void OnChangeCheckBox(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
+}
+@code
+{
+    public class TipoCapacitacion
+    {
+        public string tipoCapacitacion { get; set; }
+    }
+        public class NivelCapacitacion
+    {
+        public string nivelCapacitacion { get; set; }
+    }
+    List<NivelCapacitacion> _NivelCapacitacion;
+    List<TipoCapacitacion> _TipoCapacitacion;
+    string _selectedValueNivelCapacitacion;
+    string _selectedValueTipoCapacitacion;
+    NivelCapacitacion _selectedItemCapacitacion;
+    TipoCapacitacion _selectedItemTipoCapacitacion;
+
+    protected override void OnInitialized()
+    {
+        _NivelCapacitacion = new List<NivelCapacitacion>
+        {
+            new NivelCapacitacion { nivelCapacitacion = "Cuartel" },
+            new NivelCapacitacion { nivelCapacitacion = "Federativa" },
+            new NivelCapacitacion { nivelCapacitacion = "Nacional" },
+            new NivelCapacitacion { nivelCapacitacion = "Internacional" },
+            new NivelCapacitacion{ nivelCapacitacion = "Regional" },
+            new NivelCapacitacion { nivelCapacitacion = "Otro" }
+        };
+        _TipoCapacitacion = new List<TipoCapacitacion>
+        {
+            new TipoCapacitacion { tipoCapacitacion = "RescateConCuerda" },
+            new TipoCapacitacion { tipoCapacitacion = "RescateEnAltura" },
+            new TipoCapacitacion { tipoCapacitacion = "ComandoDeIncidente" },
+            new TipoCapacitacion { tipoCapacitacion = "EstructurasColapsadas" },
+            new TipoCapacitacion{ tipoCapacitacion = "IncendiosEstructurales" },
+            new TipoCapacitacion { tipoCapacitacion = "IncendiosForestales" },
+            new TipoCapacitacion { tipoCapacitacion = "MaterialesPeligrosos" },
+            new TipoCapacitacion { tipoCapacitacion = "PedagogiaYDidactiva" },
+            new TipoCapacitacion{ tipoCapacitacion = "RescateAcuatico" },
+            new TipoCapacitacion { tipoCapacitacion = "Socorrismo" },
+             new TipoCapacitacion { tipoCapacitacion = "DepartamentoDeOperaciones" },
+            new TipoCapacitacion { tipoCapacitacion = "EscuelaDeCadetes" },
+            new TipoCapacitacion { tipoCapacitacion = "MaterialesPeligrosos" },
+            new TipoCapacitacion{ tipoCapacitacion = "SeguridadDelBombero" },
+            new TipoCapacitacion { tipoCapacitacion = "Otro" }
+        };
+    }
+    private void OnSelectedItemChangedHandler(NivelCapacitacion value)
+    {
+        _selectedItemCapacitacion = value;
+        Console.WriteLine($"selected: ${value?.nivelCapacitacion}");
+    }
+    private void OnSelectedItemChangedHandler(TipoCapacitacion value)
+    {
+        _selectedItemTipoCapacitacion = value;
+        Console.WriteLine($"selected: ${value?.tipoCapacitacion}");
     }
 }
