@@ -49,5 +49,9 @@ namespace Vista.Data.Models.Personales
 
         public List<BomberoSalida> Salidas { get; set; } = new();
 
+        public int EquipoId { get; set; }
+        [ForeignKey("EquipoId")]
+
+        public Comunicacion? ComunicacionEquipo { get; set; }   
     }
 }

@@ -38,6 +38,7 @@ namespace Vista.Data
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<Embarcacion> Embarcacion {get; set;}
+        public DbSet<Comunicacion> Comunicacion { get; set; }
 
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
             : base(options)
@@ -52,6 +53,11 @@ namespace Vista.Data
             modelBuilder.Entity<Bombero>()
                 .HasIndex(b => b.NumeroLegajo)
                 .IsUnique();
+
+            modelBuilder.Entity<Comunicacion>()
+                .HasKey(c => c.EquipoId);
+            modelBuilder.Entity<Comunicacion>()
+                .ToTable("Comunicacion");
 
             modelBuilder.Entity<Persona>()
                 .HasDiscriminator<int>("TipoPersona")
@@ -108,12 +114,17 @@ namespace Vista.Data
                 .HasValue<Movil>(5)
                 .HasValue<VehiculoAfectado>(6)
                 .HasValue<Embarcacion>(7);
-                
+
 
             modelBuilder.Entity<Bombero>()
                 .HasOne(b => b.Movil)
                 .WithOne(m => m.Bombero)
                 .HasForeignKey<MovilBombero>(mb => mb.PersonaId);
+            
+            modelBuilder.Entity<Bombero>()
+                .HasOne(c => c.ComunicacionEquipo)
+                .WithOne(b => b.Bombero)
+                .HasForeignKey<Comunicacion>(cb => cb.EquipoId);
 
             modelBuilder.Entity<ServicioEspecial>()
                 .HasOne(se => se.DatosCapacitacion)
@@ -346,6 +357,12 @@ namespace Vista.Data
             modelBuilder
                 .Entity<Accidente>()
                 .Property(a => a.CondicionesClimaticas)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+
+            modelBuilder
+                .Entity<Comunicacion>()
+                .Property(c => c.Estado)
                 .HasConversion<string>()
                 .HasMaxLength(255);
         }
