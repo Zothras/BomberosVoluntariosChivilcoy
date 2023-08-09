@@ -29,7 +29,7 @@
                         SortDirections="new[] { SortDirection.Descending }"                       
                         OnFilter="((value,apellido)=>apellido.StartsWith(value))" /> 
                         
-        <PropertyColumn Property="c=>c.Telefonos" />
+        <PropertyColumn Property="c=>c.Telefono" />
         <PropertyColumn Property="c=>c.Particular" />
     </ColumnDefinitions>
 </Table>
@@ -41,19 +41,19 @@
 
     class Data
     {
-        public Data(string nombres,string apellidos, string legajo, string telefono,string particular )
+        public Data(string nombres,string apellidos, string legajo, string telefonos,string particular )
         {
             Nombre = nombres;
             Apellido = apellidos;
             Nro_legajo= legajo;
-            telefonos = telefono;
+            Telefono = telefonos;
             Particular = particular;
         }
 
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Nro_legajo { get; set; }
-        public string telefonos { get; set; }
+        public string Telefono { get; set; }
         public string Particular { get; set; }
     }
 
