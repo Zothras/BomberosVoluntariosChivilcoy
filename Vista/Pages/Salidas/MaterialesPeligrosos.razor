@@ -10,16 +10,19 @@
 <h2 style="text-align:center; text-decoration:underline;">Materiales Peligrosos</h2>
 
 <style>
-    .slick-dots slick-dots-bottom{
+    .ant-carousel .slick-dots li {
         display: none!important;    
     }
 
+
     .slick-contenedor{
-        height: 100%!important;
         width: 100%;
         padding: 10px;
+        display: flex!important;
+        flex-direction: column;
     }
-</style>
+
+</style>    
 
 <div style="width: 50%;">
         <Steps Current="current">
@@ -34,14 +37,14 @@
                       WrapperColSpan="16"
                       OnFinish="OnFinish"
                       OnFinishFailed="OnFinishFailed"
-                      Style="width: 100%;height: 100%; background: #fff;">
+                      Style="width: 100%;height: 100%;">
                 <Carousel @ref="_carousel" Style="width: 100%;">
                 
                     @*Datos generales de las salidas*@
                     <CarouselSlick Style="height: 100%;width: 100%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;display: flex; flex-direction: column;margin: auto;">
                         <div class="slick-contenedor">
-                            <FormItem Label="Descripcion">
-                                <Input @bind-Value="@modelMateriales.Descripcion" />
+                            <FormItem Label="Descripcion" Style="display: block!important;">
+                                <Input @bind-Value="@modelMateriales.Descripcion" Style="width: 50%!important;"/>
                             </FormItem>
                             <FormItem Label="Dato Hora salida">
                                 <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraSalida" />

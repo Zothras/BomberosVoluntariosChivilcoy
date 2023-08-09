@@ -86,7 +86,7 @@
     }
 
     .ant-menu-sub .ant-menu-inline {
-        padding-left: 24px !important;
+        /*padding-left: 24px !important;*/
         background: rgb(230, 230, 230) !important;
     }
 
@@ -161,7 +161,7 @@
     <Header Style="position: fixed;box-shadow: 1px 1px 1px rgb(128, 128, 128);background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
         <div style="display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
             <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
-                @if (collapsed)
+                @if (collapsedMenu)
                 {
                     <Icon Type="menu-unfold" Theme="outline" Style="font-size: 20px;"></Icon>
                 }
@@ -180,7 +180,7 @@
         <div style="height: 100%;width: 230px;z-index: 100;position: fixed;">
             <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;overflow:auto;"
                   Mode=MenuMode.Inline
-                  InlineCollapsed=collapsed>
+                  InlineCollapsed=collapsedMenu>
                 <MenuItem Key="0">
                     <IconTemplate>
                         <i class="fa-solid fa-user icoSelected" style="color: #263040;padding-right: 6px;"></i>
@@ -324,13 +324,13 @@
 </Layout>
 
 @code {
-    bool collapsed = false;
+    bool collapsedMenu;
 
     void ToggleCollapsed()
     {
-        collapsed = !collapsed;
+        collapsedMenu = !collapsedMenu;
     }
-
+    
     RenderFragment sub2Title =
     @<span class="spanSalidas" style="position: relative;">
         <Icon class="menuSalidas" Type="alert" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
