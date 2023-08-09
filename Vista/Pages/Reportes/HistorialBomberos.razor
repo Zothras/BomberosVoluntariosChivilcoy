@@ -1,6 +1,278 @@
-﻿@page "/Reportes/HistorialBomberos"
-<h3>HistorialBomberos</h3>
+﻿@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@page "/Reportes/HistorialBomberos"
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using System.Text.Json;
+
+<Table @ref="table"
+       TItem="Bombero"
+       DataSource="@bomberos"
+       @bind-SelectedRows="selectedRows"
+       OnChange="OnChange"
+       Total="_total"
+       @bind-PageIndex="_pageIndex"
+       @bind-PageSize="_pageSize">
+    <TitleTemplate>
+        <GridRow>
+            <GridCol Span="4">
+                <Title Level="3">Bomberos</Title>
+            </GridCol>
+        </GridRow>
+    </TitleTemplate>
+    <ColumnDefinitions> 
+        <PropertyColumn Property="c=>c.NumeroLegajo"
+                        DefaultSortOrder="@SortDirection.Descending"
+                        SorterCompare="@((a,b)=> a - b)" />
+        <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+        <PropertyColumn Property="c=>c.Nombre" Sortable />
+        <PropertyColumn Property="c=>c.Apellido" Sortable />
+        <PropertyColumn Property="c=>c.Documento" Sortable />
+        <PropertyColumn Property="c=>c.Contacto" Sortable />
+        <PropertyColumn Property="c=>c.Grado"
+                        SortDirections="new[] { SortDirection.Descending }"
+                        Filters="EscalafonJerarquicoFilter"
+                        OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+    </ColumnDefinitions>
+</Table>
+<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialBomberos/Imprimir"); })" Style="position: absolute;right: 20.4em;top: 49.5em;">Imprimir</Button>
+
+<Modal Title="@("Bombero")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <Form Loading="loading" Model="@bomberoVM"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed"
+          @ref="@_form">
+    </Form>
+</Modal>
+
 
 @code {
 
+    #region "tabla"
+
+    //Bombero[]? bomberos;
+    private Brigada[]? brigadas;
+    string searchString;
+    IEnumerable<Bombero> dataSource;
+    IEnumerable<Bombero> selectedRows;
+    ITable table;
+    List<Bombero>? bomberos = new List<Bombero>();//lo hago con lista porque no me deja usar el buscador en OnChange por pasar valores nulos
+    List<Bombero>? bomberosRespaldo = new List<Bombero>();
+    List<string>? bomberosFiltro = new List<string>();
+    private List<Bombero> bomberosFiltrados = new List<Bombero>();
+    private bool busquedaVacia = true;
+
+    private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
+
+    int _pageIndex = 1;
+    int _pageSize = 10;
+    int _total = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        brigadas = await db.Brigadas.ToArrayAsync();
+        bomberos = await db.Bomberos.ToListAsync();
+
+        bomberosRespaldo = bomberos;
+
+        EscalafonJerarquicoFilter = new TableFilter<EscalafonJerarquico>[Enum.GetValues(typeof(EscalafonJerarquico)).Length];
+        int i = 0;
+        foreach (EscalafonJerarquico value in Enum.GetValues(typeof(EscalafonJerarquico)))
+        {
+            EscalafonJerarquicoFilter[i] = new() { Text = Enum.GetName(typeof(EscalafonJerarquico), value), Value = value };
+            i++;
+        }
+
+
+        StateHasChanged();
+    }
+
+    void OnRowClick(RowData<Bombero> row)
+    {
+        Console.WriteLine($"row {row.Data.Brigada.BrigadaId} was clicked");
+    }//Toma el valor del valor de la fila seleccionada
+
+    private async Task OnChange(QueryModel<Bombero> queryModel)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(queryModel));
+        //dataSource = queryModel.ExecuteQuery(bomberos.AsQueryable())
+        //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+        //arreglar busqueda-----------------------------------------------------------------------------------------------------------------------------------------
+        OnInitializedAsync();
+    }
+
+    public void RemoveSelection(int id)
+    {
+        var selected = selectedRows.Where(x => x.NumeroLegajo != id);
+        selectedRows = selected;
+    }
+
+    private async void Delete(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        context.Remove(bombero);
+        bomberos = bomberos.Where(x => x.NumeroLegajo != id).ToList();
+        _total = bomberos.Count;
+        await context.SaveChangesAsync();
+        StateHasChanged();
+    }
+    #endregion
+   
+    #region "ViewModel"
+    private class BomberosViewModel
+    {
+       
+    }
+    #endregion
+    #region Primera parte Modal
+
+    private BomberosViewModel bomberoVM = new BomberosViewModel();
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(bomberoVM)}");
+    }
+
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    #endregion
+
+    #region Acciones Modal
+
+    bool _visible = false;
+    bool _visibleDetalle = false;
+    int idBombero;
+    private async void ShowModalEditar(int id)
+    {
+
+        GetBomberoViewModel(id);
+        await Task.Delay(200);
+        _visible = true;
+        idBombero = id;
+    }//Abre el modal editar
+
+    private async void ShowModalDetalle(int id)
+    {
+        GetBomberoViewModel(id);
+        await Task.Delay(200);
+        _visibleDetalle = true;
+
+
+    }//Abre modal ver detalles
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+    private void HandleCancelDetalle(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visibleDetalle = false;
+    }
+
+    #endregion
+    private Form<BomberosViewModel> _form;
+
+    /// <summary>
+    /// when form is submited, close the modal
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+
+    private async void HandleOk(MouseEventArgs e)
+    {
+        //bomberoVM.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
+        //_form.Submit();
+
+        EditarBombero(idBombero);
+        //navigationManager.NavigateTo($"/bomberos");
+
+        //StateHasChanged();
+        //await Task.Delay(500);
+        //NevigateToYourUrl();
+        _visible = false;
+    }
+
+    private void NevigateToYourUrl()
+    {
+        navigationManager.NavigateTo($"/bomberos", true);
+    }
+
+    private async void GetBomberoViewModel(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
+        //Bombero? imagen = await context.Bomberos.Include(i => i.ImagenId).SingleOrDefaultAsync();
+        Bombero? bombero1 = await context.Bomberos
+            .Include(b => b.Contacto)
+            .Where(b => b.NumeroLegajo == id)
+            .SingleOrDefaultAsync();
+
+        BomberosViewModel BomeroPasajeVM = new()
+            {
+            };
+        bomberoVM = BomeroPasajeVM;
+        StateHasChanged();
+    }//Se obtienen los valores de la base de datos al view model
+
+    private async void EditarBombero(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
+        Bombero? bombero1 = await context.Bomberos
+            .Include(b => b.Contacto)
+            .Where(b => b.NumeroLegajo == id)
+            .SingleOrDefaultAsync();
+
+        await context.SaveChangesAsync();
+        await OnInitializedAsync();
+        StateHasChanged();
+    }
+
+    private void OnSelectedItemChangedHandler(Brigada value)
+    {
+        Console.WriteLine($"selected: ${value?.Nombre}");
+    }
+
+    private void search(string value)
+    {
+        int number;
+
+        bomberosFiltrados = bomberos.Where(d =>
+        d.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        Enum.GetName(typeof(EscalafonJerarquico), d.Grado).Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        d.Apellido.Contains(value, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+        if (int.TryParse(value, out number))
+        {
+            bomberosFiltrados = bomberos.Where(d =>
+            d.NumeroLegajo.Equals(number)).ToList();
+        }
+        bomberos = bomberosFiltrados;
+
+    }
+
+    private void UpdateSearchStatus()
+    {
+        busquedaVacia = string.IsNullOrWhiteSpace(searchString);
+        if (busquedaVacia) bomberos = bomberosRespaldo;
+    }
 }
