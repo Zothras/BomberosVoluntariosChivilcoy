@@ -1,11 +1,7 @@
-﻿@inject NavigationManager navigationManager
+﻿@implements IDisposable
+@inject IMessageService message
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.AspNetCore.Components
-@using System.ComponentModel.DataAnnotations;
-@using System.Text.Json;
-@using System.ComponentModel
-@using Vista.Data.ViewModels.Personal;
 @page "/Herramientas/Comunicacion/agregar"
 
 <style>
@@ -55,52 +51,50 @@
     }
 </style>
 
-<Form Model="@comunicacionView"
+<Form Model="@ComunicacionVM"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     <FormItem Label="Nro Equipo">
-        <Input @bind-Value="@comunicacionView.NroEquipo" />
+        <Input @bind-Value="@ComunicacionVM.NroEquipo" />
     </FormItem>
     <FormItem Label="Modelo">
-        <Input @bind-Value="@comunicacionView.Modelo" />
+        <Input @bind-Value="@ComunicacionVM.Modelo" />
     </FormItem>
     <FormItem Label="Marca">
-        <Input @bind-Value="@comunicacionView.Marca" />
+        <Input @bind-Value="@ComunicacionVM.Marca" />
     </FormItem>
     <FormItem Label="Nro Serie">
-        <Input @bind-Value="@comunicacionView.NroSerie" />
+        <Input @bind-Value="@ComunicacionVM.NroSerie" />
     </FormItem>
     <FormItem Label="Estado">
-        <EnumSelect TEnum="TipoEstadoHandie" @bind-Value="@comunicacionView.Estado" />
+        <EnumSelect TEnum="TipoEstadoHandie" @bind-Value="@ComunicacionVM.Estado" />
     </FormItem>
     <div>
         <FormItem Label="Elija el bombero que sera asignado">
             <Select TItem="BomberoViweModel"
-                    TItemValue="int"
-                    DataSource="@bomberoTodos"
-            @bind-Value="@BomberoAsignado"
+                    TItemValue="int?"
+                    DataSource="@BomberosVM"
+            @bind-Value="@ComunicacionVM.NroLegajo"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Selecione a un bombero"
                     DefaultActiveFirstOption="false"
-                    EnableSearch>
+                    EnableSearch
+                    AllowClear="true">
             </Select>
         </FormItem>
     </div>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="CrearComunicacion">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
             Agregar Bombero
         </Button>
     </FormItem>
 </Form>
 
 @code {
-    [Parameter]
-    public string? NroEquipo { get; set; }
-
     private class ComunicacionViewModel
     {
         [Required, StringLength(255)]
@@ -109,71 +103,90 @@
         public string? Marca { get; set; }
         public string? NroSerie { get; set; }
         public TipoEstadoHandie Estado { get; set; }
+        public int? NroLegajo { get; set; }
     }
-    ComunicacionViewModel comunicacionView { get; set; } = new();
-    public List<BomberoViweModel> bomberoTodos = new();
-    public List<BomberoViweModel> bomberosAsignados = new();
-    public Comunicacion[]? comunicaciones;
-    Bombero[] TodosBomberos;
-    public int BomberoAsignado;
-    public bool existe;
+
+    BomberosDbContext Context { get; set; }
+
+    ComunicacionViewModel ComunicacionVM { get; set; } = new();
+    List<BomberoViweModel> BomberosVM { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        using var db = DbFactory.CreateDbContext();
-        comunicaciones = await db.Comunicacion.ToArrayAsync();
-        TodosBomberos = await db.Bomberos.ToArrayAsync();
-        CargarBomberosView();
+        await Init();
     }
 
-    public async void CrearComunicacion()
+    private async Task Init()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoSelec = await db.Bomberos.Where(bom => bom.NumeroLegajo == BomberoAsignado).SingleOrDefaultAsync();
-        Comunicacion comunicacion = new()
-            {
-                NroEquipo = comunicacionView.NroEquipo,
-                Modelo = comunicacionView.Modelo,
-                Marca = comunicacionView.Marca,
-                NroSerie = comunicacionView.NroSerie,
-                Estado = comunicacionView.Estado,
-                Bombero = bomberoSelec
-            };
-        await db.Comunicacion.AddAsync(comunicacion);
-        await db.SaveChangesAsync();
-        comunicacionView = new();
-
-        StateHasChanged();
-        navigationManager.NavigateTo($"/Comunicacion/agregar", true);
+        ComunicacionVM = new();
+        Context = DbFactory.CreateDbContext();
+        await CargarBomberosView();
     }
-    public void CargarBomberosView()
+
+    public async Task CargarBomberosView()
     {
-        foreach (Bombero b in TodosBomberos)
+        BomberosVM = new();
+        var bomberos = await Context.Bomberos.Where(b => b.EquipoId == null).ToArrayAsync();
+
+        foreach (Bombero b in bomberos)
         {
-            BomberoViweModel bombero = new()
+            BomberoViweModel bomberoVM = new()
                 {
                     Nombre = b.Nombre,
                     Apellido = b.Apellido,
+                    NumeroLegajo = b.NumeroLegajo
                 };
-            bomberoTodos.Add(bombero);
+            BomberosVM.Add(bomberoVM);
         }
     }
-    private void OnFinish(EditContext editContext)
+
+    private async void OnFinish(EditContext editContext)
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(comunicacionView)}");
+        try
+        {
+            if (await Context.Comunicacion.SingleOrDefaultAsync(c => c.NroEquipo == ComunicacionVM.NroEquipo) != null)
+            {
+                await message.Error("Número de equipo repetido");
+                return;
+            }
+
+            Bombero? bomberoSelec = await Context.Bomberos.SingleOrDefaultAsync(bom => bom.NumeroLegajo == ComunicacionVM.NroLegajo);
+            Comunicacion comunicacion = new()
+                {
+                    NroEquipo = ComunicacionVM.NroEquipo,
+                    Modelo = ComunicacionVM.Modelo,
+                    Marca = ComunicacionVM.Marca,
+                    NroSerie = ComunicacionVM.NroSerie,
+                    Estado = ComunicacionVM.Estado,
+                    Bombero = bomberoSelec
+                };
+            Context.Comunicacion.Add(comunicacion);
+            await Context.SaveChangesAsync();
+
+            //navigationManager.NavigateTo($"/Herramientas/Comunicacion", true);
+
+            await Init();
+            StateHasChanged();
+            await message.Success("Handie agregado correctamente");
+        }
+        catch (Exception ex)
+        {
+            await Init();
+            StateHasChanged();
+            if (ex.InnerException != null)
+                await message.Error(ex.InnerException.Message, 5);
+            else
+                await message.Error(ex.Message, 5);
+        }
     }
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(comunicacionView)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(ComunicacionVM)}");
     }
 
-    private void OnSelectedItemChangedHandler(Brigada value)
+    public void Dispose()
     {
-        Console.WriteLine($"selected: ${value?.Nombre}");
-    }
-    void deleteRow(int numlegajo)
-    {
-        bomberosAsignados = bomberosAsignados.Where(d => d.NumeroLegajo != numlegajo).ToList();
+        Context?.Dispose();
     }
 }
