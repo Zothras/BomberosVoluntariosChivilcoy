@@ -1344,7 +1344,7 @@
                 </FormItem>*@
                 <FormItem Label="Tipo Capacitacion">
                     <Select @bind-Value="@servicioEspecialPrevencionViewModel.TipoCapacitacion"
-                            DefaultValue="servicioEspecialPrevencionViewModel.TipoCapacitacion"
+                            DefaultValue="@servicioEspecialPrevencionViewModel.TipoCapacitacion"
                             TItemValue="string"
                             TItem="string"
                             LabelInValue="true"
@@ -2012,7 +2012,7 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         ServicioEspecialPrevencion? servicioEspecialPrevencion = await db.ServicioEspecialPrevenciones.Where(s => s.SalidaId == Id)
-        .Include(sal => sal.DatosCapacitacion).ThenInclude(servicio => servicio.ServicioEspecial)
+        .Include(sal => sal.DatosCapacitacion)/*.ThenInclude(servicio => servicio.ServicioEspecial)*/
         .SingleOrDefaultAsync();
 
          servicioEspecialPrevencionViewModel = new()

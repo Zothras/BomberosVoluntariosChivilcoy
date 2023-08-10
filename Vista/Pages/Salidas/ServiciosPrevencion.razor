@@ -14,9 +14,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
-    <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.NumeroParte" />
-    </FormItem>
+
     <FormItem Label="Descripcion">
         <Input @bind-Value="@modelServiciosEspecialesPrevencion.Descripcion" />
     </FormItem>
@@ -265,7 +263,7 @@
     </FormItem>
     @if (modelServiciosEspecialesPrevencion.NivelCapacitacion == "Otro")
     {
-        modelServiciosEspecialesPrevencion.NivelCapacitacion = null;
+       @* modelServiciosEspecialesPrevencion.NivelCapacitacion = null;*@
         <FormItem Label="Otra">
             <Input @bind-Value="modelServiciosEspecialesPrevencion.NivelCapacitacionOtro" />
         </FormItem>
@@ -300,7 +298,7 @@
     </FormItem>
     @if (modelServiciosEspecialesPrevencion.TipoCapacitacion == "Otro")
     {
-        modelServiciosEspecialesPrevencion.TipoCapacitacion= null;
+       @* modelServiciosEspecialesPrevencion.TipoCapacitacion= null;*@
         <FormItem Label="Otra">
             <Input @bind-Value="modelServiciosEspecialesPrevencion.CapacitacionOtra" />
         </FormItem>
@@ -313,7 +311,7 @@
     </FormItem>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarFactorClimatico">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarServicioPrevencion">
             Cargar salida
         </Button>
     </FormItem>
@@ -407,7 +405,7 @@
         StateHasChanged();
     }
     //direccion
-    public async void CargarFactorClimatico()
+    public async void CargarServicioPrevencion()
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
@@ -543,22 +541,22 @@
                     Edad = d.Edad,
                     Estado = d.Estado,
 
-                    VehiculoDamnificado = new()
-                    {
-                        Marca = vehiculo.Marca,
-                        Modelo = vehiculo.Modelo,
-                        Año = vehiculo.Año,
-                        Patente = vehiculo.Patente,
-                        Tipo = vehiculo.Tipo,
-                        Color = vehiculo.Color,
-                        Airbag = chek,
-                        Seguro = new()
-                        {
-                            CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                            NumeroDePoliza = vehiculo.NumeroDePoliza,
-                            FechaDeVencimineto = vehiculo.FechaDeVencimineto,
-                        },
-                    }
+                    //VehiculoDamnificado = new()
+                    //{
+                    //    Marca = vehiculo.Marca,
+                    //    Modelo = vehiculo.Modelo,
+                    //    Año = vehiculo.Año,
+                    //    Patente = vehiculo.Patente,
+                    //    Tipo = vehiculo.Tipo,
+                    //    Color = vehiculo.Color,
+                    //    Airbag = chek,
+                    //    Seguro = new()
+                    //    {
+                    //        CompañiaAseguradora = vehiculo.CompañiaAseguradora,
+                    //        NumeroDePoliza = vehiculo.NumeroDePoliza,
+                    //        FechaDeVencimineto = vehiculo.FechaDeVencimineto,
+                    //    },
+                    //}
                 };
             ServicioPrevenicion.Damnificados.Add(damn);
 

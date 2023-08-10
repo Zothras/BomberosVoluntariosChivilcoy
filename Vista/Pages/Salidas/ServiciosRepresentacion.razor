@@ -359,7 +359,7 @@
     </FormItem>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarFactorClimatico">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarServicioRepresentacion">
             Cargar salida
         </Button>
     </FormItem>
@@ -430,7 +430,7 @@
     bool switchValueS { get; set; }
     bool switchValueV { get; set; }
     bool chek { get; set; }
-    bool chekM { get; set; }
+    bool chekM { get; set; } = false;//probe poniendolo en el OnInitializedAsync, pero cada vez qque cambio un dato creo que se ejecuta y se me cierra el modal
     bool chekB { get; set; }
 
     int BomberoReceptor;
@@ -441,7 +441,6 @@
     int QuienLLenoPlanilla;
 
 
-
     //direccion
     protected override async Task OnInitializedAsync()
     {
@@ -449,12 +448,12 @@
         TodosBomberos= await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
         CargarBomberosView();
-        chekM = false;
+        
         StateHasChanged();
 
     }
 
-    public async void CargarFactorClimatico()
+    public async void CargarServicioRepresentacion()
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
