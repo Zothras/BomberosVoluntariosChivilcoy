@@ -2,6 +2,7 @@
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Models.Salidas.Planillas;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace Vista.Data
 {
@@ -50,7 +51,7 @@ namespace Vista.Data
                 .HasIndex(m => m.NumeroMovil)
                 .IsUnique();
 
-            modelBuilder.Entity<Bombero>()
+            modelBuilder.Entity<Bombero>()   
                 .HasIndex(b => b.NumeroLegajo)
                 .IsUnique();
 
@@ -120,11 +121,13 @@ namespace Vista.Data
                 .HasOne(b => b.Movil)
                 .WithOne(m => m.Bombero)
                 .HasForeignKey<MovilBombero>(mb => mb.PersonaId);
-            
-            modelBuilder.Entity<Bombero>()
-                .HasOne(c => c.ComunicacionEquipo)
-                .WithOne(b => b.Bombero)
-                .HasForeignKey<Comunicacion>(cb => cb.EquipoId);
+
+            modelBuilder.Entity<Comunicacion>()
+                .HasOne(c => c.Bombero)
+                .WithOne(b => b.Handie)
+                .HasForeignKey<Bombero>(ei => ei.EquipoId)
+                .IsRequired(false);
+
 
             modelBuilder.Entity<ServicioEspecial>()
                 .HasOne(se => se.DatosCapacitacion)

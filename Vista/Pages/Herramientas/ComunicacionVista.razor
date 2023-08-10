@@ -4,10 +4,282 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
-@using System.Text.Json;
+@using System.Text.Json
+@using Microsoft.EntityFrameworkCore.Metadata.Internal;
+@using Vista.Data.ViewModels.Personal;
 
 <h3>Comunicacion</h3>
+<Table @ref="table"
+       TItem="ComunicacionViewModel"
+       DataSource="@comunicacionesViewModel"
+        @bind-SelectedRows="selectedRows"
+       OnChange="OnChange"
+       Total="_total"
+        @bind-PageIndex="_pageIndex"
+        @bind-PageSize="_pageSize">
+    <TitleTemplate>
+        <GridRow>
+            <GridCol Span="4">
+                <Title Level="3">Comunicacion</Title>
+            </GridCol>
+            <GridCol Span="8" Offset="12">
+                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+                @if (String.IsNullOrWhiteSpace(searchString))
+                {
+                    comunicaciones = comunicacionRespaldo;
+                }
+            </GridCol>
+        </GridRow>
+    </TitleTemplate>
+    <ColumnDefinitions>
+
+        <Selection Key="@(context.NroEquipo)" />
+        <PropertyColumn Property="c=>c.NroEquipo"
+                        DefaultSortOrder="@SortDirection.Descending" />
+        <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+        <PropertyColumn Property="c=>c.Marca" Sortable />
+        <PropertyColumn Property="c=>c.Modelo" Sortable />
+        <PropertyColumn Property="c=>c.NroSerie" />
+        <PropertyColumn Property="c=>c.Estado" />
+        <PropertyColumn Property="c=>c.NombreYApellido" />
+        <ActionColumn Title="Action">
+            <Space>
+                <SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
+                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
+                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NroEquipo)">Detalles</Button></SpaceItem>
+            </Space>
+        </ActionColumn>
+    </ColumnDefinitions>
+    @*--------------------------------------------Modal-----------------------------------------------*@
+</Table>
+<Button OnClick="@(() => { navigationManager.NavigateTo($"/Herramientas/Comunicacion/agregar"); })" Style="position: absolute;right: 32.5em;top: 56.9em;">Agregar Handie</Button>
+<Modal Title="@("Comunicacion")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <Form Loading="loading" Model="@comunicacionVM"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed"
+        @ref="@_form">
+
+        <FormItem Label="Nro Equipo">
+            <Input DefaultValue="@comunicacionVM.NroEquipo" @bind-Value="@comunicacionVM.NroEquipo" />
+        </FormItem>
+        <FormItem Label="Modelo">
+            <Input DefaultValue="@comunicacionVM.Modelo" @bind-Value="@comunicacionVM.Modelo" />
+        </FormItem>
+        <FormItem Label="Nro Equipo">
+            <Input DefaultValue="@comunicacionVM.Marca" @bind-Value="@comunicacionVM.Marca" />
+        </FormItem>
+        <FormItem Label="Nro Serie">
+            <Input DefaultValue="@comunicacionVM.NroSerie" @bind-Value="@comunicacionVM.NroSerie" />
+        </FormItem>
+        <FormItem Label="Estado">
+            <EnumSelect DefaultValue="@comunicacionVM.Estado" TEnum="TipoEstadoHandie" @bind-Value="@comunicacionVM.Estado" />
+        </FormItem>
+    </Form>
+</Modal>
 
 @code {
 
+
+
+
+    string searchString;
+    IEnumerable<ComunicacionViewModel> dataSource;
+    IEnumerable<ComunicacionViewModel> selectedRows;
+    ITable table;
+
+    List<Bombero>? bomberos = new List<Bombero>();
+    List<string>? comunicacionFiltro = new List<string>();
+    private List<Comunicacion>? comunicaciones = new ();
+    private List<ComunicacionViewModel>? comunicacionesViewModel = new();
+    private List<Comunicacion>? ComunicacionFiltrados = new ();
+    List<Comunicacion>? comunicacionRespaldo = new ();
+    private bool busquedaVacia = true;
+    int _pageIndex = 1;
+    int _pageSize = 10;
+    int _total = 0;
+    
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        comunicaciones = await db.Comunicacion.ToListAsync();
+        bomberos = await db.Bomberos.ToListAsync();
+        StateHasChanged();
+    }
+
+    void OnRowClick(RowData<ComunicacionViewModel> row)
+    {
+        Console.WriteLine($"row {row.Data.NroEquipo} was clicked");
+    }//Toma el valor del valor de la fila seleccionada
+
+    private async Task OnChange(QueryModel<ComunicacionViewModel> queryModel)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(queryModel));
+        //dataSource = queryModel.ExecuteQuery(bomberos.AsQueryable())
+        //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+        //arreglar busqueda-----------------------------------------------------------------------------------------------------------------------------------------
+        OnInitializedAsync();
+    }
+
+    public void RemoveSelection(string id)
+    {
+        var selected = selectedRows.Where(x => x.NroEquipo != id);
+        selectedRows = selected;
+    }
+
+    private async void Delete(string id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == id).SingleOrDefaultAsync();
+        context.Remove(comunicacion);
+        comunicaciones = comunicaciones.Where(x => x.NroEquipo != id).ToList();
+        _total = comunicaciones.Count;
+        await context.SaveChangesAsync();
+        StateHasChanged();
+    }
+
+
+
+
+
+    private ComunicacionViewModel comunicacionVM = new ComunicacionViewModel();
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(comunicacionVM)}");
+    }
+
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    bool _visible = false;
+    bool _visibleDetalle = false;
+    string NroEquipo;
+    private async void ShowModalEditar(string id)
+    {
+
+        GetComunicacionViewModel(id);
+        await Task.Delay(200);
+        _visible = true;
+        NroEquipo = id;
+    }//Abre el modal editar
+
+    private async void ShowModalDetalle(string id)
+    {
+        GetComunicacionViewModel(NroEquipo);
+        await Task.Delay(200);
+        _visibleDetalle = true;
+
+
+    }//Abre modal ver detalles
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+    private void HandleCancelDetalle(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visibleDetalle = false;
+    }
+
+    private Form<ComunicacionViewModel> _form;
+
+    /// <summary>
+    /// when form is submited, close the modal
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+
+    private async void HandleOk(MouseEventArgs e)
+    {
+        //bomberoVM.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
+        //_form.Submit();
+
+        EditarBombero(NroEquipo);
+        //navigationManager.NavigateTo($"/bomberos");
+
+        //StateHasChanged();
+        //await Task.Delay(500);
+        //NevigateToYourUrl();
+        _visible = false;
+    }
+
+    private void NevigateToYourUrl()
+    {
+        navigationManager.NavigateTo($"/Comunicacion", true);
+    }
+
+    private async void GetComunicacionViewModel(string NroEquipo)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == NroEquipo).SingleOrDefaultAsync();
+
+
+        ComunicacionViewModel ComunicacionPasajeVM = new()
+            {
+                NroEquipo = comunicacion.NroEquipo,
+                Modelo = comunicacion.Modelo,
+                Marca = comunicacion.Marca,
+                NroSerie = comunicacion.NroSerie,
+                Estado = comunicacion.Estado,
+            };
+        comunicacionVM = ComunicacionPasajeVM;
+        comunicacionesViewModel.Add(ComunicacionPasajeVM);
+        StateHasChanged();
+    }//Se obtienen los valores de la base de datos al view model
+
+    private async void EditarBombero(string id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == id).SingleOrDefaultAsync();
+
+        comunicacion.NroEquipo = comunicacionVM.NroEquipo;
+        comunicacion.Modelo = comunicacionVM.Modelo;
+        comunicacion.Marca = comunicacionVM.Marca;
+        comunicacion.NroSerie = comunicacionVM.NroSerie;
+        comunicacion.Estado = comunicacionVM.Estado;
+
+        await context.SaveChangesAsync();
+        await OnInitializedAsync();
+        StateHasChanged();
+    }
+
+
+    private void search(string value)
+    {
+        int number;
+
+        ComunicacionFiltrados = comunicaciones.Where(d =>
+        d.NroEquipo.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        Enum.GetName(typeof(TipoEstadoHandie), d.Estado).Contains(value, StringComparison.OrdinalIgnoreCase) ||
+        d.Modelo.Contains(value, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+        if (int.TryParse(value, out number))
+        {
+            ComunicacionFiltrados = comunicaciones.Where(d =>
+            d.NroEquipo.Equals(number)).ToList();
+        }
+        comunicaciones = ComunicacionFiltrados;
+
+    }
+
+    private void UpdateSearchStatus()
+    {
+        busquedaVacia = string.IsNullOrWhiteSpace(searchString);
+        if (busquedaVacia) comunicaciones = comunicacionRespaldo;
+    }
 }

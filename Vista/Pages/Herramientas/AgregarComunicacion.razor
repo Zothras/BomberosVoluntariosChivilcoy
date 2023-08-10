@@ -1,0 +1,179 @@
+﻿@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+@using System.ComponentModel
+@using Vista.Data.ViewModels.Personal;
+@page "/Herramientas/Comunicacion/agregar"
+
+<style>
+    /* tile uploaded pictures */
+    .upload-list-inline .ant-upload-list-item {
+        float: left;
+        width: 200px;
+        margin-right: 8px;
+    }
+
+    .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
+        float: right;
+    }
+
+    .upload-list-inline .ant-upload-animate-enter {
+        animation-name: uploadAnimateInlineIn;
+    }
+
+    .upload-list-inline .ant-upload-animate-leave {
+        animation-name: uploadAnimateInlineOut;
+    }
+
+    #crear-comunicacion {
+        background-color: #C43A3A;
+        color: white;
+        font-size: 20px;
+        font-family: calibri light;
+        border: 0px;
+        border-radius: 8px;
+    }
+
+    #blancoA {
+        width: 100%;
+        padding: 15px;
+    }
+
+    #estilo {
+        border: 1px;
+        border-radius: 8px;
+        background-color: #AFAFAF;
+    }
+
+    #texto {
+        font-size: 20px;
+        font-family: calibri light;
+        Font-Weight: bold;
+    }
+</style>
+
+<Form Model="@comunicacionView"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Nro Equipo">
+        <Input @bind-Value="@comunicacionView.NroEquipo" />
+    </FormItem>
+    <FormItem Label="Modelo">
+        <Input @bind-Value="@comunicacionView.Modelo" />
+    </FormItem>
+    <FormItem Label="Marca">
+        <Input @bind-Value="@comunicacionView.Marca" />
+    </FormItem>
+    <FormItem Label="Nro Serie">
+        <Input @bind-Value="@comunicacionView.NroSerie" />
+    </FormItem>
+    <FormItem Label="Estado">
+        <EnumSelect TEnum="TipoEstadoHandie" @bind-Value="@comunicacionView.Estado" />
+    </FormItem>
+    <div>
+        <FormItem Label="Elija el bombero que sera asignado">
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberoTodos"
+            @bind-Value="@BomberoAsignado"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Selecione a un bombero"
+                    DefaultActiveFirstOption="false"
+                    EnableSearch>
+            </Select>
+        </FormItem>
+    </div>
+
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="CrearComunicacion">
+            Agregar Bombero
+        </Button>
+    </FormItem>
+</Form>
+
+@code {
+    [Parameter]
+    public string? NroEquipo { get; set; }
+
+    private class ComunicacionViewModel
+    {
+        [Required, StringLength(255)]
+        public string NroEquipo { get; set; }
+        public string? Modelo { get; set; }
+        public string? Marca { get; set; }
+        public string? NroSerie { get; set; }
+        public TipoEstadoHandie Estado { get; set; }
+    }
+    ComunicacionViewModel comunicacionView { get; set; } = new();
+    public List<BomberoViweModel> bomberoTodos = new();
+    public List<BomberoViweModel> bomberosAsignados = new();
+    public Comunicacion[]? comunicaciones;
+    Bombero[] TodosBomberos;
+    public int BomberoAsignado;
+    public bool existe;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = DbFactory.CreateDbContext();
+        comunicaciones = await db.Comunicacion.ToArrayAsync();
+        TodosBomberos = await db.Bomberos.ToArrayAsync();
+        CargarBomberosView();
+    }
+
+    public async void CrearComunicacion()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        Bombero? bomberoSelec = await db.Bomberos.Where(bom => bom.NumeroLegajo == BomberoAsignado).SingleOrDefaultAsync();
+        Comunicacion comunicacion = new()
+            {
+                NroEquipo = comunicacionView.NroEquipo,
+                Modelo = comunicacionView.Modelo,
+                Marca = comunicacionView.Marca,
+                NroSerie = comunicacionView.NroSerie,
+                Estado = comunicacionView.Estado,
+                Bombero = bomberoSelec
+            };
+        await db.Comunicacion.AddAsync(comunicacion);
+        await db.SaveChangesAsync();
+        comunicacionView = new();
+
+        StateHasChanged();
+        navigationManager.NavigateTo($"/Comunicacion/agregar", true);
+    }
+    public void CargarBomberosView()
+    {
+        foreach (Bombero b in TodosBomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                };
+            bomberoTodos.Add(bombero);
+        }
+    }
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(comunicacionView)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(comunicacionView)}");
+    }
+
+    private void OnSelectedItemChangedHandler(Brigada value)
+    {
+        Console.WriteLine($"selected: ${value?.Nombre}");
+    }
+    void deleteRow(int numlegajo)
+    {
+        bomberosAsignados = bomberosAsignados.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+}
