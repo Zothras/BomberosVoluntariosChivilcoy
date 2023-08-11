@@ -1391,7 +1391,36 @@
                     <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@servicioEspecialPrevencionViewModel.TipoOrganizacion" />
                 </FormItem>
                 break;
+            case TipoSalida.RescateAnimal:
+                Task.Run(async () =>
+                {
+                    await GetViewModelRescateAnimal(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
 
+                <p><b>Rescate Animal: </b></p>
+                <FormItem Label="Tipo Rescate Animal">
+                    <EnumSelect TEnum="TipoRescateAnimal" @bind-Value="@rescateAnimalViewModel.TipoRescateAnimal" />
+                </FormItem>
+                <FormItem Label="Otro">
+                    <Input @bind-Value="@rescateAnimalViewModel.Otro" />
+                </FormItem>
+
+
+            break;
+            case TipoSalida.RescatePersona:
+                Task.Run(async () =>
+                {
+                    await GetViewModelRescatePersona(salidasViewModel[numeroParteVisualizar].SalidaId);
+                });
+                <p><b>Rescate Persona: </b></p>
+                <FormItem Label="Tipo Rescate Animal">
+                    <EnumSelect TEnum="TipoRescatePersona" @bind-Value="@rescatePersonaViewModel.TipoRescatePersona" />
+                </FormItem>
+                <FormItem Label="Otro">
+                    <Input @bind-Value="@rescatePersonaViewModel.Otro" />
+                </FormItem>
+
+            break;
         }
 
     </Form>
