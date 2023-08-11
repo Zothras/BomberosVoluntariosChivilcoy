@@ -9,76 +9,86 @@
 @using Vista.Data.ViewModels.Personal;
 
 <h3>Comunicacion</h3>
-<Table @ref="table"
-       TItem="ComunicacionViewModel"
-       DataSource="@comunicacionesViewModel"
-        @bind-SelectedRows="selectedRows"
-       OnChange="OnChange"
-       Total="_total"
-        @bind-PageIndex="_pageIndex"
-        @bind-PageSize="_pageSize">
-    <TitleTemplate>
+
+<Table DataSource="comunicacionesViewModel" Bordered 
+    @bind-SelectedRows="selectedRows"
+     Total="_total"   
+    @bind-PageIndex="_pageIndex"
+    @bind-PageSize="_pageSize">
+    
+    <TitleTemplate >
         <GridRow>
             <GridCol Span="4">
-                <Title Level="3">Comunicacion</Title>
+                <Title Level="3">Comunicaciones</Title>
             </GridCol>
             <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+                @*<Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
                 @if (String.IsNullOrWhiteSpace(searchString))
                 {
-                    comunicaciones = comunicacionRespaldo;
-                }
+                    bomberos = bomberosRespaldo;
+                }*@
             </GridCol>
         </GridRow>
     </TitleTemplate>
     <ColumnDefinitions>
-
-        <Selection Key="@(context.NroEquipo)" />
-        <PropertyColumn Property="c=>c.NroEquipo"
-                        DefaultSortOrder="@SortDirection.Descending" />
-        <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-        <PropertyColumn Property="c=>c.Marca" Sortable />
-        <PropertyColumn Property="c=>c.Modelo" Sortable />
-        <PropertyColumn Property="c=>c.NroSerie" />
-        <PropertyColumn Property="c=>c.Estado" />
-        <PropertyColumn Property="c=>c.NombreYApellido" />
+        <PropertyColumn Property="c=>c.NroEquipo"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Modelo"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Marca"></PropertyColumn>
+        <PropertyColumn Property="c=>c.NroSerie"></PropertyColumn>  
+        @*<PropertyColumn Property="b=>b.Bombero.Nombre"></PropertyColumn>*@
         <ActionColumn Title="Action">
             <Space>
                 <SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
+                <SpaceItem><Button Danger OnClick="()=>Desasignar(context.EquipoId)">Desasignar</Button></SpaceItem>
                 <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
-                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NroEquipo)">Detalles</Button></SpaceItem>
             </Space>
         </ActionColumn>
-    </ColumnDefinitions>
-    @*--------------------------------------------Modal-----------------------------------------------*@
+     </ColumnDefinitions >
 </Table>
+
+
 <Button OnClick="@(() => { navigationManager.NavigateTo($"/Herramientas/Comunicacion/agregar"); })" Style="position: absolute;right: 32.5em;top: 56.9em;">Agregar Handie</Button>
 <Modal Title="@("Comunicacion")"
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
-    <Form Loading="loading" Model="@comunicacionVM"
+    <Form Loading="loading" Model="@ComunicacionVM"
           LabelColSpan="8"
           WrapperColSpan="16"
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed"
-        @ref="@_form">
+    @ref="@_form">
 
         <FormItem Label="Nro Equipo">
-            <Input DefaultValue="@comunicacionVM.NroEquipo" @bind-Value="@comunicacionVM.NroEquipo" />
+            <Input DefaultValue="@ComunicacionVM.NroEquipo" @bind-Value="@ComunicacionVM.NroEquipo" />
         </FormItem>
         <FormItem Label="Modelo">
-            <Input DefaultValue="@comunicacionVM.Modelo" @bind-Value="@comunicacionVM.Modelo" />
+            <Input DefaultValue="@ComunicacionVM.Modelo" @bind-Value="@ComunicacionVM.Modelo" />
         </FormItem>
         <FormItem Label="Nro Equipo">
-            <Input DefaultValue="@comunicacionVM.Marca" @bind-Value="@comunicacionVM.Marca" />
+            <Input DefaultValue="@ComunicacionVM.Marca" @bind-Value="@ComunicacionVM.Marca" />
         </FormItem>
         <FormItem Label="Nro Serie">
-            <Input DefaultValue="@comunicacionVM.NroSerie" @bind-Value="@comunicacionVM.NroSerie" />
+            <Input DefaultValue="@ComunicacionVM.NroSerie" @bind-Value="@ComunicacionVM.NroSerie" />
         </FormItem>
         <FormItem Label="Estado">
-            <EnumSelect DefaultValue="@comunicacionVM.Estado" TEnum="TipoEstadoHandie" @bind-Value="@comunicacionVM.Estado" />
+            <EnumSelect DefaultValue="@ComunicacionVM.Estado" TEnum="TipoEstadoHandie" @bind-Value="@ComunicacionVM.Estado" />
         </FormItem>
+        <div>
+            <FormItem Label="Elija el bombero que sera asignado">
+                <Select TItem="BomberoViewModel"
+                        TItemValue="int"
+                        DataSource="@BomberosVM"
+                @bind-Value="@ComunicacionVM.NroLegajo"
+                        LabelName="@nameof(bomberosViewModel.NombreYApellido)"
+                        ValueName="@nameof(bomberosViewModel.NumeroLegajo)"
+                        Placeholder="Selecione a un bombero"
+                        DefaultActiveFirstOption="false"
+                        EnableSearch
+                        AllowClear="true">
+                </Select>
+            </FormItem>
+        </div>
     </Form>
 </Modal>
 
@@ -86,32 +96,98 @@
 
 
 
+    private class ComunicacionViewModel
+    {
+
+        public int EquipoId { get; set; }
+        [Required, StringLength(255)]
+        public string NroEquipo { get; set; }
+        public string? Modelo { get; set; }
+        public string? Marca { get; set; }
+        public string? NroSerie { get; set; }
+        public TipoEstadoHandie Estado { get; set; }
+        public int NroLegajo { get; set; }
+        public Bombero? Bombero { get; set; }
+    }
+
+    private class BomberoViewModel
+    {
+        public string Nombre { get; set; }
+        public string? Apellido { get; set; }
+        public int? NumeroLegajo { get; set; }
+        public int? EquipoId { get; set; }
+        public string? NombreYApellido { get; set; }
+        public Comunicacion? Handie { get; set; }
+    }
+
 
     string searchString;
-    IEnumerable<ComunicacionViewModel> dataSource;
     IEnumerable<ComunicacionViewModel> selectedRows;
-    ITable table;
 
-    List<Bombero>? bomberos = new List<Bombero>();
-    List<string>? comunicacionFiltro = new List<string>();
-    private List<Comunicacion>? comunicaciones = new ();
-    private List<ComunicacionViewModel>? comunicacionesViewModel = new();
-    private List<Comunicacion>? ComunicacionFiltrados = new ();
-    List<Comunicacion>? comunicacionRespaldo = new ();
-    private bool busquedaVacia = true;
+
+    List<Comunicacion>? comunicaciones { get; set;}  = new ();
+
+    List<Bombero> bomberos { get; set; } = new List<Bombero>();
+
+    private ComunicacionViewModel ComunicacionVM { get; set; } = new();
+
+    List<ComunicacionViewModel> comunicacionesViewModel { get; set; }
+
+    private BomberoViewModel bomberosViewModel = new BomberoViewModel();
+    List<BomberoViewModel> BomberosVM { get; set; } = new();
+    BomberosDbContext Context { get; set; }
+
     int _pageIndex = 1;
     int _pageSize = 10;
     int _total = 0;
-    
+
 
 
     protected override async Task OnInitializedAsync()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
+        Context = DbFactory.CreateDbContext();
+        await CargarComunicacionVM();
 
-        comunicaciones = await db.Comunicacion.ToListAsync();
-        bomberos = await db.Bomberos.ToListAsync();
-        StateHasChanged();
+    }
+
+
+
+    public async Task CargarComunicacionVM()
+    {
+        comunicacionesViewModel = new();
+        var comunicacionesDB = await Context.Comunicacion.ToListAsync();
+        BomberosVM = new();
+        var bomberos = await Context.Bomberos.ToArrayAsync();
+        Bombero? bomberoSelec = await Context.Bomberos.SingleOrDefaultAsync(bom => bom.EquipoId == ComunicacionVM.EquipoId);
+
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViewModel bomberoVM = new()
+                {
+                    Nombre = b.Nombre,
+                    Apellido = b?.Apellido,
+                    NumeroLegajo = b?.NumeroLegajo,
+                    EquipoId = b?.EquipoId,
+
+
+                };
+            BomberosVM.Add(bomberoVM);
+        }
+
+        foreach (Comunicacion c in comunicacionesDB)
+        {
+            ComunicacionViewModel comunicacion = new()
+                {
+                    NroEquipo = c.NroEquipo,
+                    Marca = c.Marca,
+                    Modelo = c.Modelo,
+                    NroSerie = c.NroSerie,
+                    Estado = c.Estado,
+                    Bombero = c.Bombero
+                };
+            comunicacionesViewModel.Add(comunicacion);
+        }
+
     }
 
     void OnRowClick(RowData<ComunicacionViewModel> row)
@@ -128,32 +204,73 @@
         OnInitializedAsync();
     }
 
-    public void RemoveSelection(string id)
+    public void RemoveSelection(string NroEquipoBorrar, int? EquipoIdBorrar)
     {
-        var selected = selectedRows.Where(x => x.NroEquipo != id);
+        var selected = selectedRows.Where(x => x.NroEquipo != NroEquipoBorrar);
+        var selected1 = selectedRows.Where(x => x.EquipoId != EquipoIdBorrar);
         selectedRows = selected;
+        selectedRows = selected1;
     }
 
-    private async void Delete(string id)
+    private async Task Delete(string NroEquipoBorrar)
     {
         using var context = DbFactory.CreateDbContext();
-        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == id).SingleOrDefaultAsync();
+
+        Comunicacion? comunicacion = await context.Comunicacion.FirstOrDefaultAsync(c => c.NroEquipo == NroEquipoBorrar);
         context.Remove(comunicacion);
-        comunicaciones = comunicaciones.Where(x => x.NroEquipo != id).ToList();
-        _total = comunicaciones.Count;
+        
+        comunicacionesViewModel = comunicacionesViewModel.Where(x => x.NroEquipo != NroEquipoBorrar).ToList();
+        _total = comunicacionesViewModel.Count;
+        await context.SaveChangesAsync();
+        StateHasChanged();
+    }
+    private async Task Desasignar(int? EquipoIdBorrar)
+    {
+        using var context = DbFactory.CreateDbContext();
+
+       
+        Bombero? bombero = await context.Bomberos.FirstOrDefaultAsync(b => b.EquipoId == EquipoIdBorrar);
+        BomberosVM = BomberosVM.Where(x => x.EquipoId != EquipoIdBorrar).ToList();
+        _total = comunicacionesViewModel.Count;
+        context.Remove(bombero?.Handie);
+
+
         await context.SaveChangesAsync();
         StateHasChanged();
     }
 
+    private async void EditarBombero(string NroEquipoEdit)
+    {
+        using var context = DbFactory.CreateDbContext();
+        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == NroEquipoEdit).SingleOrDefaultAsync();
+
+        comunicacion.NroEquipo = ComunicacionVM.NroEquipo;
+        comunicacion.Modelo = ComunicacionVM.Modelo;
+        comunicacion.Marca = ComunicacionVM.Marca;
+        comunicacion.NroSerie = ComunicacionVM.NroSerie;
+        comunicacion.Estado = ComunicacionVM.Estado;
+
+        await context.SaveChangesAsync();
+        await OnInitializedAsync();
+        StateHasChanged();
+    }
+    string NroEquipoEdit;
+    private async void ShowModalEditar(string NroEquipo)
+    {
+
+        GetComunicacionViewModel(NroEquipo);
+        await Task.Delay(200);
+        _visible = true;
+        NroEquipoEdit = NroEquipo;
+    }
 
 
 
 
-    private ComunicacionViewModel comunicacionVM = new ComunicacionViewModel();
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(comunicacionVM)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(ComunicacionVM)}");
     }
 
     bool loading = false;
@@ -162,24 +279,6 @@
 
     bool _visible = false;
     bool _visibleDetalle = false;
-    string NroEquipo;
-    private async void ShowModalEditar(string id)
-    {
-
-        GetComunicacionViewModel(id);
-        await Task.Delay(200);
-        _visible = true;
-        NroEquipo = id;
-    }//Abre el modal editar
-
-    private async void ShowModalDetalle(string id)
-    {
-        GetComunicacionViewModel(NroEquipo);
-        await Task.Delay(200);
-        _visibleDetalle = true;
-
-
-    }//Abre modal ver detalles
 
     private void HandleCancel(MouseEventArgs e)
     {
@@ -209,7 +308,7 @@
         //bomberoVM.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
         //_form.Submit();
 
-        EditarBombero(NroEquipo);
+        EditarBombero(NroEquipoEdit);
         //navigationManager.NavigateTo($"/bomberos");
 
         //StateHasChanged();
@@ -237,49 +336,11 @@
                 NroSerie = comunicacion.NroSerie,
                 Estado = comunicacion.Estado,
             };
-        comunicacionVM = ComunicacionPasajeVM;
+        ComunicacionVM = ComunicacionPasajeVM;
         comunicacionesViewModel.Add(ComunicacionPasajeVM);
         StateHasChanged();
     }//Se obtienen los valores de la base de datos al view model
 
-    private async void EditarBombero(string id)
-    {
-        using var context = DbFactory.CreateDbContext();
-        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == id).SingleOrDefaultAsync();
+    
 
-        comunicacion.NroEquipo = comunicacionVM.NroEquipo;
-        comunicacion.Modelo = comunicacionVM.Modelo;
-        comunicacion.Marca = comunicacionVM.Marca;
-        comunicacion.NroSerie = comunicacionVM.NroSerie;
-        comunicacion.Estado = comunicacionVM.Estado;
-
-        await context.SaveChangesAsync();
-        await OnInitializedAsync();
-        StateHasChanged();
-    }
-
-
-    private void search(string value)
-    {
-        int number;
-
-        ComunicacionFiltrados = comunicaciones.Where(d =>
-        d.NroEquipo.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-        Enum.GetName(typeof(TipoEstadoHandie), d.Estado).Contains(value, StringComparison.OrdinalIgnoreCase) ||
-        d.Modelo.Contains(value, StringComparison.OrdinalIgnoreCase))
-        .ToList();
-        if (int.TryParse(value, out number))
-        {
-            ComunicacionFiltrados = comunicaciones.Where(d =>
-            d.NroEquipo.Equals(number)).ToList();
-        }
-        comunicaciones = ComunicacionFiltrados;
-
-    }
-
-    private void UpdateSearchStatus()
-    {
-        busquedaVacia = string.IsNullOrWhiteSpace(searchString);
-        if (busquedaVacia) comunicaciones = comunicacionRespaldo;
-    }
 }

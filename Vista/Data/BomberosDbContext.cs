@@ -126,6 +126,7 @@ namespace Vista.Data
                 .HasOne(c => c.Bombero)
                 .WithOne(b => b.Handie)
                 .HasForeignKey<Bombero>(ei => ei.EquipoId)
+                .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
 
