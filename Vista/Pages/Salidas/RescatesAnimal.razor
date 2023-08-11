@@ -13,9 +13,6 @@
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed">
         @*Datos generales de las salidas*@
-        <FormItem Label="Numero de parte">
-            <AntDesign.InputNumber @bind-Value="AnimalViewModel.NumeroParte" Disabled />
-        </FormItem>
         <FormItem Label="Descripcion">
             <Input @bind-Value="@AnimalViewModel.Descripcion" />
         </FormItem>
@@ -105,11 +102,8 @@
         @*Moviles de salidas*@
         <b><label>Datos de chofer</label></b>
         <br />
-        <FormItem Label="" style="display: grid;place-items: center;">
-            <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-            <Button Type="primary" OnClick="@ShowModal">
-                Cargo Combustible
-            </Button>
+        <FormItem Label="¿Cargo Combustible?" style="display: grid;place-items: center;">
+            <Switch DefaultChecked="false" @bind-Checked="@chekM" CheckedChildren="Cargo" UnCheckedChildren="No Cargo" OnChange="OnChangeChofer" />
         </FormItem>
         <FormItem Label="Elija el chofer">
             <Select TItem="BomberoViweModel"
@@ -137,6 +131,24 @@
 
         </FormItem>
         <br />
+        @if (NumeroMovil is not null)
+        {
+            foreach (Movil m in Moviles)
+            {
+                //Tendria que recorrer a movilSalida para poner el km de llegada
+                if (m.NumeroMovil == NumeroMovil)
+                {
+                    @* m. = m.;*@
+                    <FormItem>
+                        <AntDesign.InputNumber @bind-Value="@m.kilometraje" Disabled="true" />
+                    </FormItem>
+                    <FormItem>
+                        <AntDesign.InputNumber @bind-Value="@movilSalidaViewModels.KmLlegada" />
+                    </FormItem>
+                    break;
+                }
+            }
+        }
         <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
         @*Cuerpos paraticipantes*@
         <b><label>Cuerpo Participante</label></b>
@@ -316,12 +328,52 @@
         foreach (MovilSalidaViewModels m in MovilesSalidasL)
         {
             Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).
+            Include(s => s.Seguro).
+            Include(i => i.Imagen).
+            Include(f => f.Firmas).
+            Include(b => b.Bomberos).
+            Include(i => i.Incidentes).
+            SingleOrDefaultAsync();
             MovilSalida movilS = new()
                 {
                     CargoCombustible = m.CargoCombustible,
+                    NumeroFactura = m.NumeroFactura,
+                    FechaFactura = m.FechaFactura,
+                    TipoConbustible = m.TipoConbustible,
+                    CantidadLitros = m.CantidadLitros,
+                    QuienLleno = m.QuienLleno,
+                    TelefonoQuienLleno = m.TelefonoQuienLleno,
+                    KmLlegada = m.KmLlegada,
                     Chofer = bomberoChofer,
-                    Movil = Movilsalida
+                    Movil = new()
+                    {
+                        NumeroMovil = movilsalida.NumeroMovil,
+                        NumeroMotor = movilsalida.NumeroMotor,
+                        ModeloBomba = movilsalida.ModeloBomba,
+                        NumeroChasis = movilsalida.NumeroChasis,
+                        Estado = movilsalida.Estado,
+                        //KmSalida = m.KmSalida,
+                        //KmLlegada = m.KmLlegada,
+                        ImagenId = movilsalida.ImagenId,
+                        Imagen = movilsalida.Imagen,
+                        Firmas = movilsalida.Firmas,
+                        Bomberos = movilsalida.Bomberos,
+                        Incidentes = movilsalida.Incidentes,
+                        Marca = movilsalida.Marca,
+                        Modelo = movilsalida.Modelo,
+                        Año = movilsalida.Año,
+                        Patente = movilsalida.Patente,
+                        Tipo = movilsalida.Tipo,
+                        Seguro = movilsalida.Seguro,
+                        SeguroId = movilsalida.SeguroId,
+                        kilometraje = m.KmLlegada,
+
+
+                    }
+
+                    //encontrar forma de meter kilometros en movil de arriba
+
                 };
             Rescates.Moviles.Add(movilS);
         }
@@ -372,7 +424,7 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).Include(s => s.Seguro).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -384,6 +436,8 @@
                 TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
+                KmLlegada = movilSalidaViewModels.KmLlegada
+
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();
@@ -395,9 +449,9 @@
 
         BomberoSalidaViewModels b = new()
             {
-                Salio = bomberoSalidaView.Salio,
+                Salio = chekB,
                 Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = BomberoCuerpo
+                NumeroLegajo = bomberoSalidaView.NumeroLegajo
             };
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
@@ -405,11 +459,6 @@
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
-        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-        if (salida is not null)
-        {
-            AnimalViewModel.NumeroParte = salida.NumeroParte + 1;
-        }
         TodosBomberos = await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
         CargarBomberosView();
@@ -432,6 +481,10 @@
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
+    private void OnChangeChofer(bool checkedValue)
+    {
+        if (checkedValue) ShowModal();
     }
     public void CargarBomberosView()
     {

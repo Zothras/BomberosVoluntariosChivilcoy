@@ -113,16 +113,10 @@
             Cargo Combustible
         </Button>
     </FormItem>*@
-    <FormItem Label="" style="display: grid;place-items: center;">
-        <Checkbox @bind-Checked="@chekM">
-            @($"{(chekM ? _visible = true : _visible = false)}")
-            Cargo combustible
-        </Checkbox>
-        @*<Button Type="primary" OnClick="@ShowModal">
-        Cargo Combustible
-        </Button>*@
-    </FormItem>
+    <FormItem Label="¿Cargo Combustible?" style="display: grid;place-items: center;">
 
+        <Switch DefaultChecked="false" @bind-Checked="@chekM" CheckedChildren="Cargo" UnCheckedChildren="No Cargo" OnChange="OnChangeChofer" />
+    </FormItem>
 
     <FormItem Label="Elija el chofer">
         <Select TItem="BomberoViweModel"
@@ -184,7 +178,7 @@
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@bomberoTodos"
-                @bind-Value="@BomberoCuerpo"
+        @bind-Value="@bomberoSalidaView.NumeroLegajo"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Seleccione el bombero"
@@ -467,12 +461,12 @@
             };
         foreach (BomberoSalidaViewModels bom in bomberosSalida)
         {
-            Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
+            Bombero? bomberoSal = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
             BomberoSalida BomSalida = new()
                 {
                     Salio = bom.Salio,
                     Grado = bom.Grado,
-                    Bombero = bomberoSalida
+                    Bombero = bomberoSal
                 };
             ServicioPrevenicion.CuerpoParticipante.Add(BomSalida);
         }
@@ -598,14 +592,14 @@
 
         BomberoSalidaViewModels b = new()
             {
-                Salio = bomberoSalidaView.Salio,
+                Salio = chekB,
                 Grado = bomberoSalidaView.Grado,
                 NumeroLegajo = bomberoSalidaView.NumeroLegajo
             };
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
-    
+
     public async void AgregarDamnificado()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -638,6 +632,10 @@
     {
         Console.WriteLine($"Selected Time: {args.Date}");
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+    private void OnChangeChofer(bool checkedValue)
+    {
+        if (checkedValue) ShowModal();
     }
     void OnChange(string[] checkedValues)
     {

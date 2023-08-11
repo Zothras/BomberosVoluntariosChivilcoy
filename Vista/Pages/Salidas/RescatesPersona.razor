@@ -1,4 +1,6 @@
-﻿@inject NavigationManager navigationManager
+﻿@implements IDisposable
+@inject IMessageService message
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/rescates-persona"
 @using Vista.Data.ViewModels.Personal;
@@ -13,9 +15,6 @@
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed">
         @*Datos generales de las salidas*@
-        <FormItem Label="Numero de parte">
-            <AntDesign.InputNumber @bind-Value="PersonaViewModel.NumeroParte" Disabled />
-        </FormItem>
         <FormItem Label="Descripcion">
             <Input @bind-Value="@PersonaViewModel.Descripcion" />
         </FormItem>
@@ -73,7 +72,7 @@
         </FormItem>
 
         @*Datos de damnificados*@
-        <FormItem Label="¿Ubo damnificados?">
+        <FormItem Label="¿Hubo damnificados?">
             <Switch @bind-Checked="switchValue" />
         </FormItem>
         @if (switchValue == true)
@@ -106,11 +105,8 @@
         @*Moviles de salidas*@
         <b><label>Datos de chofer</label></b>
         <br />
-        <FormItem Label="" style="display: grid;place-items: center;">
-            <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-            <Button Type="primary" OnClick="@ShowModal">
-                Cargo Combustible
-            </Button>
+        <FormItem Label="¿Cargo Combustible?" style="display: grid;place-items: center;">
+            <Switch DefaultChecked="false" @bind-Checked="@chekM" CheckedChildren="Cargo" UnCheckedChildren="No Cargo" OnChange="OnChangeChofer" />
         </FormItem>
         <FormItem Label="Elija el chofer">
             <Select TItem="BomberoViweModel"
@@ -138,6 +134,24 @@
 
         </FormItem>
         <br />
+        @if (NumeroMovil is not null)
+        {
+            foreach (Movil m in Moviles)
+            {
+                //Tendria que recorrer a movilSalida para poner el km de llegada
+                if (m.NumeroMovil == NumeroMovil)
+                {
+                    @* m. = m.;*@
+                    <FormItem>
+                        <AntDesign.InputNumber @bind-Value="@m.kilometraje" Disabled="true" />
+                    </FormItem>
+                    <FormItem>
+                        <AntDesign.InputNumber @bind-Value="@movilSalidaViewModels.KmLlegada" />
+                    </FormItem>
+                    break;
+                }
+            }
+        }
         <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
         @*Cuerpos paraticipantes*@
         <b><label>Cuerpo Participante</label></b>
@@ -148,10 +162,10 @@
             <Select TItem="BomberoViweModel"
                     TItemValue="int"
                     DataSource="@bomberoTodos"
-                    @bind-Value="@BomberoCuerpo"
+            @bind-Value="@bomberoSalidaView.NumeroLegajo"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                    Placeholder="Selecione el movil"
+                    Placeholder="Selecione el bombero"
                     DefaultActiveFirstOption="false"
                     EnableSearch>
             </Select>
@@ -234,7 +248,7 @@
 
 @code {
         private DamnificadoViewModels damnificado = new();
-        private RescatePersonaViewModels PersonaViewModel = new();
+        private RescatePersonaViewModels PersonaViewModel;
         private MovilSalidaViewModels movilSalidaViewModels = new();
         private BomberoSalidaViewModels bomberoSalidaView = new();
         private VehiculoDamnificadoViewModels vehiculo = new();
@@ -259,6 +273,21 @@
         int BomberoEncargado;
         int QuienLLenoPlanilla;
 
+    BomberosDbContext db { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+        
+
+    }
+    private async Task Init()
+    {
+        PersonaViewModel = new();
+        db = DbFactory.CreateDbContext();
+        TodosBomberos = await db.Bomberos.ToArrayAsync();
+        Moviles = await db.Moviles.ToArrayAsync();
+        await CargarBomberosView();
+    }
     public async void CargarRescatePersona()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -318,18 +347,51 @@
         foreach (MovilSalidaViewModels m in MovilesSalidasL)
         {
             Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
+            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).
+            Include(s=>s.Seguro).
+            Include(i=>i.Imagen).
+            Include(f=>f.Firmas).
+            Include(b=>b.Bomberos).    
+            Include(i=>i.Incidentes).
+            SingleOrDefaultAsync();
             MovilSalida movilS = new()
                 {
                     CargoCombustible = m.CargoCombustible,
-                    NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                    FechaFactura = movilSalidaViewModels.FechaFactura,
-                    TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                    CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                    QuienLleno = movilSalidaViewModels.QuienLleno,
-                    TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                    NumeroFactura = m.NumeroFactura,
+                    FechaFactura = m.FechaFactura,
+                    TipoConbustible = m.TipoConbustible,
+                    CantidadLitros = m.CantidadLitros,
+                    QuienLleno = m.QuienLleno,
+                    TelefonoQuienLleno = m.TelefonoQuienLleno,
+                    KmLlegada= m.KmLlegada,
                     Chofer = bomberoChofer,
-                    Movil = Movilsalida
+                    Movil = new(){
+                        NumeroMovil= movilsalida.NumeroMovil,
+                        NumeroMotor= movilsalida.NumeroMotor,
+                        ModeloBomba = movilsalida.ModeloBomba,
+                        NumeroChasis= movilsalida.NumeroChasis,
+                        Estado = movilsalida.Estado,
+                        //KmSalida = m.KmSalida,
+                        //KmLlegada = m.KmLlegada,
+                        ImagenId = movilsalida.ImagenId,
+                        Imagen = movilsalida.Imagen,
+                        Firmas = movilsalida.Firmas,
+                        Bomberos = movilsalida.Bomberos,
+                        Incidentes = movilsalida.Incidentes,
+                        Marca = movilsalida.Marca,
+                        Modelo = movilsalida.Modelo,
+                        Año = movilsalida.Año,
+                        Patente = movilsalida.Patente,
+                        Tipo = movilsalida.Tipo,
+                        Seguro = movilsalida.Seguro,
+                        SeguroId = movilsalida.SeguroId,
+                        kilometraje= m.KmLlegada,
+                       
+
+                    }
+ 
+                   //encontrar forma de meter kilometros en movil de arriba
+
                 };
             Rescates.Moviles.Add(movilS);
         }
@@ -380,7 +442,7 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).Include(s => s.Seguro).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -392,6 +454,8 @@
                 TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
+                KmLlegada = movilSalidaViewModels.KmLlegada
+
             };
         MovilesSalidasL.Add(m);
         await db.SaveChangesAsync();
@@ -403,26 +467,14 @@
 
         BomberoSalidaViewModels b = new()
             {
-                Salio = bomberoSalidaView.Salio,
+                Salio =chekB,
                 Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = BomberoCuerpo
+                NumeroLegajo = bomberoSalidaView.NumeroLegajo
             };
         bomberosSalida.Add(b);
         await db.SaveChangesAsync();
     }
-    protected override async Task OnInitializedAsync()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-        if (salida is not null)
-        {
-            PersonaViewModel.NumeroParte = salida.NumeroParte + 1;
-        }
-        TodosBomberos = await db.Bomberos.ToArrayAsync();
-        Moviles = await db.Moviles.ToArrayAsync();
-        CargarBomberosView();
-
-    }
+    
 
     private void OnFinish(EditContext editContext)
     {
@@ -442,7 +494,11 @@
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
-    public void CargarBomberosView()
+    private void OnChangeChofer(bool checkedValue)
+    {
+        if (checkedValue) ShowModal();
+    }
+    public async Task CargarBomberosView()
     {
 
         foreach (Bombero b in TodosBomberos)
@@ -561,5 +617,9 @@
 
         _visible = false;
 
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
     }
 }
