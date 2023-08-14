@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Vista.Data.Models.Personales
 {
     [Index(nameof(NumeroLegajo))]
-    [Index(nameof(EquipoId), IsUnique = true)]
     public class Bombero : Persona
     {
         [Required]
@@ -49,7 +48,12 @@ namespace Vista.Data.Models.Personales
         public List<Incidente> Incidentes { get; set; } = new();
 
         public List<BomberoSalida> Salidas { get; set; } = new();
-        public int? EquipoId { get; set; }
-        public Comunicacion? Handie { get; set; }   
+
+        public int EquipoId { get; set; }
+        [ForeignKey("EquipoId")]
+
+        public Comunicacion? ComunicacionEquipo { get; set; }
+
+
     }
 }
