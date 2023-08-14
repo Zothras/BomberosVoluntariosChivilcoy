@@ -126,7 +126,7 @@
     public async Task CargarBomberosView()
     {
         BomberosVM = new();
-        var bomberos = await Context.Bomberos.Where(b => b.EquipoId == null).ToArrayAsync();
+        var bomberos = await Context.Bomberos.Where(b => b.EquipoId != null).ToArrayAsync();
 
         foreach (Bombero b in bomberos)
         {
