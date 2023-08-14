@@ -1,0 +1,1192 @@
+﻿@implements IDisposable
+@inject IMessageService message
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using System.Text.Json;
+@using Vista.Data.ViewModels.FactorClimatico;
+@using Vista.Data.ViewModels.Incendios;
+@using Vista.Data.ViewModels.MaterialesPeligrosos;
+@using Vista.Data.ViewModels.Personal;
+@using Vista.Data.ViewModels.Accidente;
+@using Vista.Data.ViewModels;
+@using Vista.Data.ViewModels.Rescates;
+@using System.Windows;
+
+<Modal Title="Detalles Salida"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+
+
+    <p><b>NumeroParte: @salidasViewModel.NumeroParte</b></p>
+    <p>Tipo De Salida: @salidasViewModel.Discriminador</p>
+
+    <p>HoraLlegada: @salidasViewModel.HoraLLegada</p>
+    @*    <p>KmSalida: @salidasViewModel[numeroParteVisualizar].KmSalida</p>
+    <p>KmLlegada: @salidasViewModel[numeroParteVisualizar].KmLlegada</p>*@
+    <p>Descripcion: @salidasViewModel.Descripcion</p>
+    <p>CalleORuta: @salidasViewModel.CalleORuta</p>
+    <p>NumeroOKilometro: @salidasViewModel.NumeroOKilometro</p>
+    <p>EntreCalles: @salidasViewModel.EntreCalles</p>
+    <p>PisoNumero: @salidasViewModel.PisoNumero</p>
+    <p>Depto: @salidasViewModel.Depto</p>
+    <p>TipoZona: @salidasViewModel.TipoZona</p>
+
+    <p>NombreSolicitante: @salidasViewModel.NombreSolicitante</p>
+    <p>ApellidoSolicitante: @salidasViewModel.NombreSolicitante</p>
+    <p>DniSolicitante: @salidasViewModel].DniSolicitante</p>
+    <p>TelefonoSolicitante: @salidasViewModel.TelefonoSolicitante</p>
+
+    <p><b>Receptor:</b> @salidasViewModel.NombreYApellidoReceptor</p>
+    <p><b>Telefono Receptor:</b> @salidasViewModel.TelefonoReceptor</p>
+
+    <p><b>ReceptorBombero:</b> @salidasViewModel.ReceptorBombero</p>
+
+
+    @if (salidasViewModel.Damnificados is not null)
+    {
+        <p><b>Damnificado:</b></p>
+        @foreach (Damnificado d in salidasViewModel.Damnificados)
+        {
+            <p>Nombre: @d.Nombre</p>
+            <p>Apellido: @d.Apellido</p>
+            <p>Dni: @d.Dni</p>
+            <p>Sexo: @d.Sexo</p>
+            <p>LugarDeNacimiento: @d.LugarDeNacimiento</p>
+            <p>Estado: @d.Estado</p>
+            <p>VehiculoDamnificado:</p>
+            //Añadir este objeto a la hora de traer salidas
+            <p>Edad: @d.Edad</p>
+            <p>Estado: @d.Estado</p>
+        }
+    }
+
+
+    <p><b>Moviles:</b></p>
+
+    @foreach (MovilSalida ms in salidasViewModel.Moviles)
+    {
+        <p><b>Chofer: @ms.Chofer.Nombre @ms.Chofer.Apellido</b></p>
+
+        <p>MovilId: @ms.MovilId</p>
+        <p>Tipo movil: @ms.Movil.Tipo</p>
+        //traer datos de movil en llamada de salidas
+        <p>Modelo movil: @ms.Movil.Modelo</p>
+        <p>NumeroMovil movil: @ms.Movil.NumeroMovil</p>
+        @*<p>KmSalida: @ms.Movil.KmSalida</p>
+    <p>KmLlegada: @ms.Movil.KmLlegada</p>*@
+        @if (ms.CargoCombustible)
+        {
+            <p><b>Cargo Combustible: si</b></p>
+            <p>Quien lleno planilla movil: @ms.NumeroFactura</p>
+            <p>Quien lleno planilla movil: @ms.FechaFactura</p>
+            <p>Quien lleno planilla movil: @ms.TipoConbustible</p>
+            <p>Quien lleno planilla movil: @ms.CantidadLitros</p>
+            <p>Quien lleno planilla movil: @ms.QuienLleno</p>
+            <p>Telefono: @ms.TelefonoQuienLleno</p>
+        }
+
+    }
+    <p><b>CuerpoParticipante:</b></p>
+    @foreach (BomberoSalida b in salidasViewModel.CuerpoParticipante)
+    {
+        <p><b>Bombero: @b.Bombero.Nombre @b.Bombero.Apellido</b></p>
+        //traer datos de cada bombero
+        <p>Numero de Legajo: @b.Bombero.NumeroLegajo</p>
+        <p>Salio: @b.Salio</p>
+        <p>Grado: @b.Grado</p>
+    }
+
+    <p><b>Encargado:</b></p>
+    <p>Bombero: @salidasViewModel.Encargado.Nombre @salidasViewModel.Encargado.Apellido</p>
+    <p>Encargado:  @salidasViewModel.Encargado.NumeroLegajo</p>
+
+    <p><b>QuienLleno:</b></p>
+    <p>Bombero: @salidasViewModel.QuienLleno.Nombre @salidasViewModel.QuienLleno.Apellido</p>
+    <p>Numero de Parte: @salidasViewModel.QuienLleno.NumeroLegajo</p>
+
+    <p>TipoServicio: @salidasViewModel.TipoServicio</p>
+
+    @switch (@salidasViewModel.Discriminador)
+    {
+        case TipoSalida.Accidente:
+            Task.Run(async () =>
+            {
+                await GetViewModelAccidentes(salidasViewModel.SalidaId);
+            });
+            <p><b>Accidente: </b></p>
+            <p>Tipo: @accidenteViewModels.Tipo</p>
+            <p>Cantidad de vehiculos: @accidenteViewModels.CantidadVheiculo</p>
+            if (@accidenteViewModels.VehiculosAfectado is not null)
+            {
+                foreach (VehiculoAfectadoAccidente v in @accidenteViewModels.VehiculosAfectado)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Condiciones Climaticas: @accidenteViewModels.CondicionesClimaticas</p>
+            <p>Otro Condicion: @accidenteViewModels.OtroCondicion</p>
+            break;
+
+        case TipoSalida.FactorClimatico:
+            Task.Run(async () =>
+            {
+                await GetViewModelFactorClimatico(salidasViewModel.SalidaId);
+            });
+            <p><b>Factor Climatico: </b></p>
+            <p>Tipo Factor Climatico: @factorClimaticoViewModel.Tipo</p>
+            <p>Evacuacion: @factorClimaticoViewModel.Evacuacion</p>
+            <p>Superficie: @factorClimaticoViewModel.Superficie</p>
+            <p>Detalle de Superficie dañada: @factorClimaticoViewModel.DetalleSuperficieDañada</p>
+            break;
+        case TipoSalida.MaterialPeligroso:
+            Task.Run(async () =>
+            {
+                await GetViewModelMaterialPeligroso(salidasViewModel.SalidaId);
+            });
+            <p><b>Material Peligroso: </b></p>
+            <p>Tipo Material Peligroso: @materialPeligrosoViewModel.Tipo</p>
+            <p>Sustancias: @materialPeligrosoViewModel.Sustancias</p>
+            <p>Controlada: @materialPeligrosoViewModel.Controlada</p>
+            <p>Venteo: @materialPeligrosoViewModel.Venteo</p>
+            <p>Dilucion De Vapores: @materialPeligrosoViewModel.DilucionDeVapores</p>
+            <p>Neutralizacion: @materialPeligrosoViewModel.Neutralizacion</p>
+            <p>Trasvase: @materialPeligrosoViewModel.Trasvase</p>
+            <p>Otra Acciones Materiales: @materialPeligrosoViewModel.OtraAccionesMateriales</p>
+            <p>Detalles Acciones Materiales: @materialPeligrosoViewModel.DetallesAccionesMateriales</p>
+            <p>Evacuacion: @materialPeligrosoViewModel.Evacuacion</p>
+            <p>Descontaminacion: @materialPeligrosoViewModel.Descontaminacion</p>
+            <p>Confinamiento: @materialPeligrosoViewModel.Confinamiento</p>
+            <p>SinAccion: @materialPeligrosoViewModel.SinAccion</p>
+            <p>Otra Acciones Personas: @materialPeligrosoViewModel.OtraAccionesPersonas</p>
+            <p>Detalles Acciones Personas: @materialPeligrosoViewModel.DetallesAccionesPersonas</p>
+            <p>Tipo Superficie: @materialPeligrosoViewModel.TipoSuperficie</p>
+            <p>Detalle Superficie Afectada: @materialPeligrosoViewModel.DetalleSuperficieAfectada</p>
+            <p>Tipo Situacion: @materialPeligrosoViewModel.TipoSituacion</p>
+            break;
+        case TipoSalida.ServicioEspecialRepresentaciones:
+            Task.Run(async () =>
+            {
+                await GetViewModelServicioEspecialRepresentaciones(salidasViewModel.SalidaId);
+            });
+
+            <p><b>Servicio Especial Prevencion: </b></p>
+            <p>Tipo Servicio Especial: @servicioEspecialRepresentacionViewModel.Tipo</p>
+            <p>Tipo Organizacion: @servicioEspecialRepresentacionViewModel.TipoOrganizacion</p>
+            <p>Tipo Representacion: @servicioEspecialRepresentacionViewModel.TipoRepresentacion</p>
+            <p>Otro Representacion: @servicioEspecialRepresentacionViewModel.OtroRepresentacion</p>
+            <p><b>    Datos Capacitacion: </b></p>
+            <p>Nivel Capacitacion: @servicioEspecialRepresentacionViewModel.NivelCapacitacion</p>
+            <p>Nivel Capacitacion Otro: @servicioEspecialRepresentacionViewModel.NivelCapacitacionOtro</p>
+            <p>Tipo Capacitacion: @servicioEspecialRepresentacionViewModel.TipoCapacitacion</p>
+            <p>Capacitacion Otra: @servicioEspecialRepresentacionViewModel.CapacitacionOtra</p>
+            <p>Dias Capacitacion: @servicioEspecialRepresentacionViewModel.DiasCapacitacion</p>
+            <p>Horarios Capacitacion: @servicioEspecialRepresentacionViewModel.HorariosCapacitacion</p>
+            break;
+        case TipoSalida.RescateAnimal:
+            Task.Run(async () =>
+            {
+                await GetViewModelRescateAnimal(salidasViewModel.SalidaId);
+            });
+            <p><b>Rescate Animal: </b></p>
+            <p>Tipo Rescate Animal: @rescateAnimalViewModel.TipoRescateAnimal</p>
+            <p>Otro: @rescateAnimalViewModel.Otro</p>
+            break;
+        case TipoSalida.RescatePersona:
+            Task.Run(async () =>
+            {
+                await GetViewModelRescatePersona(salidasViewModel.SalidaId);
+            });
+            <p><b>Rescate Persona: </b></p>
+            <p>DeteccionAutomaticaId: @rescatePersonaViewModel.TipoRescatePersona</p>
+            <p>Otro: @rescatePersonaViewModel.Otro</p>
+            break;
+        case TipoSalida.IncendioComercio:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendioComercio(salidasViewModel.SalidaId);
+            });
+            <p><b>Incendio: </b></p>
+            <p>Tipo Lugar: @IncendioComercioViewModel.TipoLugar</p>
+            <p>Deteccion Automatica Id: @IncendioComercioViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @IncendioComercioViewModel.Extintor</p>
+            <p>Hidrante: @IncendioComercioViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @IncendioComercioViewModel.VehiculoAfectados</p>
+            if (@IncendioComercioViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @IncendioComercioViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @IncendioComercioViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @IncendioComercioViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @IncendioComercioViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @IncendioComercioViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @IncendioComercioViewModel.Tipo</p>
+            <p>Tipo Abertura: @IncendioComercioViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @IncendioComercioViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @IncendioComercioViewModel.TipoTecho</p>
+            <p>Otro Techo: @IncendioComercioViewModel.OtroTecho</p>
+            <p>Otro Lugar: @IncendioComercioViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @IncendioComercioViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @IncendioComercioViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @IncendioComercioViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @IncendioComercioViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.IncendioEstablecimientoEducativo:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendioEstablecimientoEducativo(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Incendio Establecimiento Educativo: </b></p>
+            <p>Tipo Lugar: @incendioEstablecimientoEducativoViewModel.TipoLugar</p>
+            <p>Deteccion Automatica Id: @incendioEstablecimientoEducativoViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @incendioEstablecimientoEducativoViewModel.Extintor</p>
+            <p>Hidrante: @incendioEstablecimientoEducativoViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @incendioEstablecimientoEducativoViewModel.VehiculoAfectados</p>
+            if (@incendioEstablecimientoEducativoViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @incendioEstablecimientoEducativoViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @incendioEstablecimientoEducativoViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @incendioEstablecimientoEducativoViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @incendioEstablecimientoEducativoViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @incendioEstablecimientoEducativoViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @incendioEstablecimientoEducativoViewModel.Tipo</p>
+            <p>Tipo Abertura: @incendioEstablecimientoEducativoViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @incendioEstablecimientoEducativoViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @incendioEstablecimientoEducativoViewModel.TipoTecho</p>
+            <p>Otro Techo: @incendioEstablecimientoEducativoViewModel.OtroTecho</p>
+            <p>Otro Lugar: @incendioEstablecimientoEducativoViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @incendioEstablecimientoEducativoViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @incendioEstablecimientoEducativoViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @incendioEstablecimientoEducativoViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @incendioEstablecimientoEducativoViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.IncendioEstablecimientoPublico:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendioEstablecimientoPublico(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Incendio Establecimiento Educativo: </b></p>
+            <p>Tipo Lugar: @incendioEstablecimientoPublicoViewModel.TipoLugar</p>
+            <p>Deteccion Automatica Id: @incendioEstablecimientoPublicoViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @incendioEstablecimientoPublicoViewModel.Extintor</p>
+            <p>Hidrante: @incendioEstablecimientoPublicoViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @incendioEstablecimientoPublicoViewModel.VehiculoAfectados</p>
+            if (@incendioEstablecimientoPublicoViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @incendioEstablecimientoPublicoViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @incendioEstablecimientoPublicoViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @incendioEstablecimientoPublicoViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @incendioEstablecimientoPublicoViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @incendioEstablecimientoPublicoViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @incendioEstablecimientoPublicoViewModel.Tipo</p>
+            <p>Tipo Abertura: @incendioEstablecimientoPublicoViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @incendioEstablecimientoPublicoViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @incendioEstablecimientoPublicoViewModel.TipoTecho</p>
+            <p>Otro Techo: @incendioEstablecimientoPublicoViewModel.OtroTecho</p>
+            <p>Otro Lugar: @incendioEstablecimientoPublicoViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @incendioEstablecimientoPublicoViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @incendioEstablecimientoPublicoViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @incendioEstablecimientoPublicoViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @incendioEstablecimientoPublicoViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.IncendioForestal:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendioForestal(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Incendio Forestal: </b></p>
+            <p>Tipo Lugar: @IncendioForestalViewModel.TipoLugar</p>
+            <p>Deteccion Automatica Id: @IncendioForestalViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @IncendioForestalViewModel.Extintor</p>
+            <p>Hidrante: @IncendioForestalViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @IncendioForestalViewModel.VehiculoAfectados</p>
+            if (@IncendioForestalViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @IncendioForestalViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @IncendioForestalViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @IncendioForestalViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @IncendioForestalViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @IncendioForestalViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @IncendioForestalViewModel.Tipo</p>
+            <p>Tipo Abertura: @IncendioForestalViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @IncendioForestalViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @IncendioForestalViewModel.TipoTecho</p>
+            <p>Otro Techo: @IncendioForestalViewModel.OtroTecho</p>
+            <p>Otro Lugar: @IncendioForestalViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @IncendioForestalViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @IncendioForestalViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @IncendioForestalViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @IncendioForestalViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.IncendioHospitalesYClinicas:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendioHospitalesYClinicas(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Incendio Hospitales Y Clinicas: </b></p>
+            <p>Tipo Lugar: @IncendioHospitalesYClinicasViewModel.TipoLugar</p>
+            <p>Deteccion Automatica Id: @IncendioHospitalesYClinicasViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @IncendioHospitalesYClinicasViewModel.Extintor</p>
+            <p>Hidrante: @IncendioHospitalesYClinicasViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @IncendioHospitalesYClinicasViewModel.VehiculoAfectados</p>
+            if (@IncendioHospitalesYClinicasViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @IncendioHospitalesYClinicasViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @IncendioHospitalesYClinicasViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @IncendioHospitalesYClinicasViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @IncendioHospitalesYClinicasViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @IncendioHospitalesYClinicasViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @IncendioHospitalesYClinicasViewModel.Tipo</p>
+            <p>Tipo Abertura: @IncendioHospitalesYClinicasViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @IncendioHospitalesYClinicasViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @IncendioHospitalesYClinicasViewModel.TipoTecho</p>
+            <p>Otro Techo: @IncendioHospitalesYClinicasViewModel.OtroTecho</p>
+            <p>Otro Lugar: @IncendioHospitalesYClinicasViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @IncendioHospitalesYClinicasViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @IncendioHospitalesYClinicasViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @IncendioHospitalesYClinicasViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @IncendioHospitalesYClinicasViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.IncendioIndustria:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendioIndustria(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Incendio Industria: </b></p>
+            <p>Tipo Lugar: @IncendioIndustriaViewModel.TipoLugar</p>
+            <p>Deteccion Automatica Id: @IncendioIndustriaViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @IncendioIndustriaViewModel.Extintor</p>
+            <p>Hidrante: @IncendioIndustriaViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @IncendioIndustriaViewModel.VehiculoAfectados</p>
+            if (@IncendioIndustriaViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @IncendioIndustriaViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @IncendioIndustriaViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @IncendioIndustriaViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @IncendioIndustriaViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @IncendioIndustriaViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @IncendioIndustriaViewModel.Tipo</p>
+            <p>Tipo Abertura: @IncendioIndustriaViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @IncendioIndustriaViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @IncendioIndustriaViewModel.TipoTecho</p>
+            <p>Otro Techo: @IncendioIndustriaViewModel.OtroTecho</p>
+            <p>Otro Lugar: @IncendioIndustriaViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @IncendioIndustriaViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @IncendioIndustriaViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @IncendioIndustriaViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @IncendioIndustriaViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.IncendioVivienda:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendioVivienda(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Incendio Vivienda: </b></p>
+            <p>Tipo Lugar: @IncendioViviendaViewModel.TipoLugar</p>
+            <p>Deteccion Automatica Id: @IncendioViviendaViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @IncendioViviendaViewModel.Extintor</p>
+            <p>Hidrante: @IncendioViviendaViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @IncendioViviendaViewModel.VehiculoAfectados</p>
+            if (@IncendioViviendaViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @IncendioViviendaViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @IncendioViviendaViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @IncendioViviendaViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @IncendioViviendaViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @IncendioViviendaViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @IncendioViviendaViewModel.Tipo</p>
+            <p>Tipo Abertura: @IncendioViviendaViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @IncendioViviendaViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @IncendioViviendaViewModel.TipoTecho</p>
+            <p>Otro Techo: @IncendioViviendaViewModel.OtroTecho</p>
+            <p>Otro Lugar: @IncendioViviendaViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @IncendioViviendaViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @IncendioViviendaViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @IncendioViviendaViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @IncendioViviendaViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.ServicioEspecialPrevencion:
+            Task.Run(async () =>
+            {
+                await GetViewModelServicioEspecialPrevencion(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Servicio Especial Prevencion: </b></p>
+            <p>Tipo Servicio Especial: @servicioEspecialPrevencionViewModel.Tipo</p>
+            <p>Tipo Organizacion: @servicioEspecialPrevencionViewModel.TipoOrganizacion</p>
+            <p>Tipo Prevencion: @servicioEspecialPrevencionViewModel.TipoPrevencion</p>
+            <p>Otro Representacion: @servicioEspecialPrevencionViewModel.OtroRepresentacion</p>
+            <p><b>    Datos Capacitacion: </b></p>
+            <p>Nivel Capacitacion: @servicioEspecialPrevencionViewModel.NivelCapacitacion</p>
+            <p>Nivel Capacitacion Otro: @servicioEspecialPrevencionViewModel.NivelCapacitacionOtro</p>
+            <p>Tipo Capacitacion: @servicioEspecialPrevencionViewModel.TipoCapacitacion</p>
+            <p>Capacitacion Otra: @servicioEspecialPrevencionViewModel.CapacitacionOtra</p>
+            <p>Dias Capacitacion: @servicioEspecialPrevencionViewModel.DiasCapacitacion</p>
+            <p>Horarios Capacitacion: @servicioEspecialPrevencionViewModel.HorariosCapacitacion</p>
+            break;
+        case TipoSalida.Incendio:
+            Task.Run(async () =>
+            {
+                await GetViewModelIncendio(salidasViewModel.SalidaId);
+            });
+            <p><b>Incendio: </b></p>
+            <p>Deteccion Automatica Id: @IncendioViewModel.DeteccionAutomaticaId</p>
+            <p>Extintor: @IncendioViewModel.Extintor</p>
+            <p>Hidrante: @IncendioViewModel.Hidrante</p>
+            <p>VehiculoAfectados: @IncendioViewModel.VehiculoAfectados</p>
+            if (@IncendioViewModel.VehiculoAfectados is not null)
+            {
+                foreach (VehiculoAfectadoIncendio v in @IncendioViewModel.VehiculoAfectados)
+                {
+                    <p><b>Vehiculos Afectados: </b></p>
+                    <p>Patente: @v.Patente</p>
+                    <p>Patente: @v.Marca</p>
+                    <p>Patente: @v.Modelo</p>
+                    <p>Patente: @v.Tipo</p>
+
+                    <p><b>Seguro:</b></p>
+                    //traer datos de seguroVehiculo
+                    <p>Numero Poliza: @v.Seguro.NumeroDePoliza</p>
+                    <p>Compañia Aseguradora: @v.Seguro.CompañiaAseguradora</p>
+                    <p>Fecha de Vencimiento: @v.Seguro.FechaDeVencimineto</p>
+                    <p>Air Bag: @v.Airbag</p>
+
+                }
+            }
+
+            <p>Tipo Evacuacion: @IncendioViewModel.TipoEvacuacion</p>
+            <p>Tipo Superficie Afectada: @IncendioViewModel.TipoSuperficieAfectada</p>
+            <p>Detalle Superficie AfectadaIncendio: @IncendioViewModel.DetalleSuperficieAfectadaIncendio</p>
+            <p>Superficie Afectada Causa: @IncendioViewModel.SuperficieAfectadaCausa</p>
+            <p>Tipo: @IncendioViewModel.Tipo</p>
+            <p>Tipo Abertura: @IncendioViewModel.TipoAbertura</p>
+            <p>Otra Abertura: @IncendioViewModel.OtraAbertura</p>
+            <p>Tipo Techo: @IncendioViewModel.TipoTecho</p>
+            <p>Otro Techo: @IncendioViewModel.OtroTecho</p>
+            <p>Otro Lugar: @IncendioViewModel.OtroLugar</p>
+            <p>Nombre Establecimiento: @IncendioViewModel.NombreEstablecimiento</p>
+            <p>Cantidad Pisos: @IncendioViewModel.CantidadPisos</p>
+            <p>Piso Afectado: @IncendioViewModel.PisoAfectado</p>
+            <p>Cantidad Ambientes: @IncendioViewModel.CantidadAmbientes</p>
+            break;
+        case TipoSalida.ServicioEspecial:
+            Task.Run(async () =>
+            {
+                await GetViewModelServicioEspecial(salidasViewModel.SalidaId);
+
+            });
+            <p><b>Servicio Especial: </b></p>
+            <p>Tipo Servicio Especial: @servicioEspecialViewModel.Tipo</p>
+            <p>Tipo Organizacion: @servicioEspecialViewModel.TipoOrganizacion</p>
+            <p>Otro Representacion: @servicioEspecialViewModel.OtroRepresentacion</p>
+            <p><b>    Datos Capacitacion: </b></p>
+            <p>Nivel Capacitacion: @servicioEspecialViewModel.NivelCapacitacion</p>
+            <p>Nivel Capacitacion Otro: @servicioEspecialViewModel.NivelCapacitacionOtro</p>
+            <p>Tipo Capacitacion: @servicioEspecialViewModel.TipoCapacitacion</p>
+            <p>Capacitacion Otra: @servicioEspecialViewModel.CapacitacionOtra</p>
+            <p>Dias Capacitacion: @servicioEspecialViewModel.DiasCapacitacion</p>
+            <p>Horarios Capacitacion: @servicioEspecialViewModel.HorariosCapacitacion</p>
+            break;
+    }
+
+</Modal>
+@code {
+    [Parameter]
+    public int numeroParteVisualizar { get; set; }
+    [Parameter]
+    public SalidasViewModel1 salidasViewModel { get; set; }
+    bool _visible = false;
+    BomberosDbContext db { get; set; }
+
+    private AccidenteViewModels accidenteViewModels = new();
+    private FactorClimaticoViewModels factorClimaticoViewModel = new();
+    private MaterialPeligrosoViewModels materialPeligrosoViewModel = new();
+    private RescateAnimaViewModels rescateAnimalViewModel = new();
+    private RescatePersonaViewModels rescatePersonaViewModel = new();
+    private IncendioViewModels IncendioViewModel = new();
+    private IncendioEstablecimientoEducativoViewModels incendioEstablecimientoEducativoViewModel = new();
+    private IncendioEstablecimientoPublicoViewModels incendioEstablecimientoPublicoViewModel = new();
+    private IncendioForestaViewModels IncendioForestalViewModel = new();
+    private IncendioHospitalesYClinicasViewModels IncendioHospitalesYClinicasViewModel = new();
+    private IncendioIndustriaViewModels IncendioIndustriaViewModel = new();
+    private IncendioViviendaViewModels IncendioViviendaViewModel = new();
+    private IncendioComercioViewModels IncendioComercioViewModel = new();
+
+    private Data.ViewModels.Servicios.ServicioEspecialPrevencionViewModels servicioEspecialPrevencionViewModel = new();
+    private Data.ViewModels.Servicios.ServicioEspecialRepresentacionViewModels servicioEspecialRepresentacionViewModel = new();
+    private Data.ViewModels.Servicios.ServicioEspecialPrevencionViewModels servicioEspecialViewModel = new();
+
+    List<AccidenteViewModels> accidentesVM = new List<AccidenteViewModels>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+
+
+    }
+    private async Task Init()
+    {
+        //PersonaViewModel = new();
+        //db = DbFactory.CreateDbContext();
+        //TodosBomberos = await db.Bomberos.ToArrayAsync();
+        //Moviles = await db.Moviles.ToArrayAsync();
+        //await CargarBomberosView();
+    }
+
+   
+
+
+    private void ShowModalDetalle(int numeroParte)
+    {
+
+
+
+
+        _visible = true;
+    }
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+   
+    public void Dispose()
+    {
+        db?.Dispose();
+    }
+}
+@code{
+    private async Task GetViewModelFactorClimatico(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        FactorClimatico? factorClimatico = await db.FactoresClimaticos.Where(s => s.SalidaId == Id)
+        .SingleOrDefaultAsync();
+
+        factorClimaticoViewModel = new()
+            {
+                Tipo = factorClimatico.Tipo,
+                Evacuacion = factorClimatico.Evacuacion,
+                Superficie = factorClimatico.Superficie,
+                DetalleSuperficieDañada = factorClimatico.DetalleSuperficieDañada
+
+            };
+        StateHasChanged();
+
+    }
+    private async Task GetViewModelAccidentes(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        Accidente? accidente = await db.Accidentes.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculosAfectado).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoAccidente> vehiculosAccidentesAfectados = await db.VehiculosAfectadosAccidentes.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        accidenteViewModels = new()
+            {
+                Tipo = accidente.Tipo,
+                CantidadVheiculo = accidente.CantidadVehiculos,
+
+                VehiculosAfectado = accidente.VehiculosAfectado,
+                CondicionesClimaticas = accidente.CondicionesClimaticas,
+                OtroCondicion = accidente.OtroCondicion
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelMaterialPeligroso(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        MaterialPeligroso? materialPeligroso = await db.MaterialesPeligrosos.Where(s => s.SalidaId == Id)
+        .SingleOrDefaultAsync();
+
+        materialPeligrosoViewModel = new()
+            {
+                Tipo = materialPeligroso.Tipo,
+                Sustancias = materialPeligroso.Sustancias,
+                Controlada = materialPeligroso.Controlada,
+                Venteo = materialPeligroso.Venteo,
+                DilucionDeVapores = materialPeligroso.DilucionDeVapores,
+                Neutralizacion = materialPeligroso.Neutralizacion,
+                Trasvase = materialPeligroso.Trasvase,
+                OtraAccionesMateriales = materialPeligroso.OtraAccionesMateriales,
+                DetallesAccionesMateriales = materialPeligroso.DetallesAccionesMateriales,
+                Evacuacion = materialPeligroso.Evacuacion,
+                Descontaminacion = materialPeligroso.Descontaminacion,
+                Confinamiento = materialPeligroso.Confinamiento,
+                SinAccion = materialPeligroso.SinAccion,
+                OtraAccionesPersonas = materialPeligroso.OtraAccionesPersonas,
+                DetallesAccionesPersonas = materialPeligroso.DetallesAccionesPersonas,
+                TipoSuperficie = materialPeligroso.TipoSuperficie,
+                DetalleSuperficieAfectada = materialPeligroso.DetalleSuperficieAfectada,
+                TipoSituacion = materialPeligroso.TipoSituacion
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelRescateAnimal(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        RescateAnimal? rescateAnimal = await db.RescateAnimales.Where(s => s.SalidaId == Id)
+        .SingleOrDefaultAsync();
+        rescateAnimalViewModel = new()
+            {
+                TipoRescateAnimal = rescateAnimal.TipoRescateAnimal,
+                Otro = rescateAnimal.Otro
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelRescatePersona(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        RescatePersona? rescatePersona = await db.RescatePersonas.Where(s => s.SalidaId == Id)
+        .SingleOrDefaultAsync();
+        rescatePersonaViewModel = new()
+            {
+                TipoRescatePersona = rescatePersona.TipoRescatePersona,
+                Otro = rescatePersona.Otro
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelIncendio(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        Incendio? incendio = await db.Set<Incendio>().Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        IncendioViewModel = new()
+            {
+                DeteccionAutomaticaId = incendio.DeteccionAutomaticaId,
+                Extintor = incendio.Extintor,
+                VehiculoAfectados = incendio.VehiculoAfectados,
+                Hidrante = incendio.Hidrante,
+                TipoEvacuacion = incendio.TipoEvacuacion,
+                TipoSuperficieAfectada = incendio.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendio.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendio.SuperficieAfectadaCausa,
+                Tipo = incendio.Tipo,
+                TipoAbertura = incendio.TipoAbertura,
+                OtraAbertura = incendio.OtraAbertura,
+                TipoTecho = incendio.TipoTecho,
+                OtroTecho = incendio.OtroTecho,
+                OtroLugar = incendio.OtroLugar,
+                NombreEstablecimiento = incendio.NombreEstablecimiento,
+                CantidadPisos = incendio.CantidadPisos,
+                PisoAfectado = incendio.PisoAfectado,
+                CantidadAmbientes = incendio.CantidadAmbientes,
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelIncendioEstablecimientoEducativo(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        IncendioEstablecimientoEducativo? incendioEstablecimientoEducativo = await db.IncendiosEstablecimientosEducativos.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        incendioEstablecimientoEducativoViewModel = new()
+            {
+                DeteccionAutomaticaId = incendioEstablecimientoEducativo.DeteccionAutomaticaId,
+                Extintor = incendioEstablecimientoEducativo.Extintor,
+                VehiculoAfectados = incendioEstablecimientoEducativo.VehiculoAfectados,
+                Hidrante = incendioEstablecimientoEducativo.Hidrante,
+                TipoEvacuacion = incendioEstablecimientoEducativo.TipoEvacuacion,
+                TipoSuperficieAfectada = incendioEstablecimientoEducativo.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendioEstablecimientoEducativo.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendioEstablecimientoEducativo.SuperficieAfectadaCausa,
+                Tipo = incendioEstablecimientoEducativo.Tipo,
+                TipoAbertura = incendioEstablecimientoEducativo.TipoAbertura,
+                OtraAbertura = incendioEstablecimientoEducativo.OtraAbertura,
+                TipoTecho = incendioEstablecimientoEducativo.TipoTecho,
+                OtroTecho = incendioEstablecimientoEducativo.OtroTecho,
+                OtroLugar = incendioEstablecimientoEducativo.OtroLugar,
+                NombreEstablecimiento = incendioEstablecimientoEducativo.NombreEstablecimiento,
+                CantidadPisos = incendioEstablecimientoEducativo.CantidadPisos,
+                PisoAfectado = incendioEstablecimientoEducativo.PisoAfectado,
+                CantidadAmbientes = incendioEstablecimientoEducativo.CantidadAmbientes,
+                TipoLugar = incendioEstablecimientoEducativo.TipoLugar
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelIncendioEstablecimientoPublico(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        IncendioEstablecimientoPublico? incendioEstablecimientoPublico = await db.IncendiosEstablecimientosPublicos.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        incendioEstablecimientoPublicoViewModel = new()
+            {
+                DeteccionAutomaticaId = incendioEstablecimientoPublico.DeteccionAutomaticaId,
+                Extintor = incendioEstablecimientoPublico.Extintor,
+                VehiculoAfectados = incendioEstablecimientoPublico.VehiculoAfectados,
+                Hidrante = incendioEstablecimientoPublico.Hidrante,
+                TipoEvacuacion = incendioEstablecimientoPublico.TipoEvacuacion,
+                TipoSuperficieAfectada = incendioEstablecimientoPublico.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendioEstablecimientoPublico.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendioEstablecimientoPublico.SuperficieAfectadaCausa,
+                Tipo = incendioEstablecimientoPublico.Tipo,
+                TipoAbertura = incendioEstablecimientoPublico.TipoAbertura,
+                OtraAbertura = incendioEstablecimientoPublico.OtraAbertura,
+                TipoTecho = incendioEstablecimientoPublico.TipoTecho,
+                OtroTecho = incendioEstablecimientoPublico.OtroTecho,
+                OtroLugar = incendioEstablecimientoPublico.OtroLugar,
+                NombreEstablecimiento = incendioEstablecimientoPublico.NombreEstablecimiento,
+                CantidadPisos = incendioEstablecimientoPublico.CantidadPisos,
+                PisoAfectado = incendioEstablecimientoPublico.PisoAfectado,
+                CantidadAmbientes = incendioEstablecimientoPublico.CantidadAmbientes,
+                TipoLugar = incendioEstablecimientoPublico.TipoLugar
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelIncendioForestal(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        IncendioForestal? incendioForestal = await db.IncendiosForestales.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        IncendioForestalViewModel = new()
+            {
+                DeteccionAutomaticaId = incendioForestal.DeteccionAutomaticaId,
+                Extintor = incendioForestal.Extintor,
+                VehiculoAfectados = incendioForestal.VehiculoAfectados,
+                Hidrante = incendioForestal.Hidrante,
+                TipoEvacuacion = incendioForestal.TipoEvacuacion,
+                TipoSuperficieAfectada = incendioForestal.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendioForestal.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendioForestal.SuperficieAfectadaCausa,
+                Tipo = incendioForestal.Tipo,
+                TipoAbertura = incendioForestal.TipoAbertura,
+                OtraAbertura = incendioForestal.OtraAbertura,
+                TipoTecho = incendioForestal.TipoTecho,
+                OtroTecho = incendioForestal.OtroTecho,
+                OtroLugar = incendioForestal.OtroLugar,
+                NombreEstablecimiento = incendioForestal.NombreEstablecimiento,
+                CantidadPisos = incendioForestal.CantidadPisos,
+                PisoAfectado = incendioForestal.PisoAfectado,
+                CantidadAmbientes = incendioForestal.CantidadAmbientes,
+                TipoLugar = incendioForestal.TipoLugar
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelIncendioHospitalesYClinicas(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        IncendioHospitalesYClinicas? incendioHospitalesYClinicas = await db.IncendiosHospitalesYClinicas.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        IncendioHospitalesYClinicasViewModel = new()
+            {
+                DeteccionAutomaticaId = incendioHospitalesYClinicas.DeteccionAutomaticaId,
+                Extintor = incendioHospitalesYClinicas.Extintor,
+                VehiculoAfectados = incendioHospitalesYClinicas.VehiculoAfectados,
+                Hidrante = incendioHospitalesYClinicas.Hidrante,
+                TipoEvacuacion = incendioHospitalesYClinicas.TipoEvacuacion,
+                TipoSuperficieAfectada = incendioHospitalesYClinicas.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendioHospitalesYClinicas.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendioHospitalesYClinicas.SuperficieAfectadaCausa,
+                Tipo = incendioHospitalesYClinicas.Tipo,
+                TipoAbertura = incendioHospitalesYClinicas.TipoAbertura,
+                OtraAbertura = incendioHospitalesYClinicas.OtraAbertura,
+                TipoTecho = incendioHospitalesYClinicas.TipoTecho,
+                OtroTecho = incendioHospitalesYClinicas.OtroTecho,
+                OtroLugar = incendioHospitalesYClinicas.OtroLugar,
+                NombreEstablecimiento = incendioHospitalesYClinicas.NombreEstablecimiento,
+                CantidadPisos = incendioHospitalesYClinicas.CantidadPisos,
+                PisoAfectado = incendioHospitalesYClinicas.PisoAfectado,
+                CantidadAmbientes = incendioHospitalesYClinicas.CantidadAmbientes,
+                TipoLugar = incendioHospitalesYClinicas.TipoLugar
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelIncendioIndustria(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        IncendioIndustria? incendioIndustria = await db.IncendiosIndustrias.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        IncendioIndustriaViewModel = new()
+            {
+                DeteccionAutomaticaId = incendioIndustria.DeteccionAutomaticaId,
+                Extintor = incendioIndustria.Extintor,
+                VehiculoAfectados = incendioIndustria.VehiculoAfectados,
+                Hidrante = incendioIndustria.Hidrante,
+                TipoEvacuacion = incendioIndustria.TipoEvacuacion,
+                TipoSuperficieAfectada = incendioIndustria.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendioIndustria.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendioIndustria.SuperficieAfectadaCausa,
+                Tipo = incendioIndustria.Tipo,
+                TipoAbertura = incendioIndustria.TipoAbertura,
+                OtraAbertura = incendioIndustria.OtraAbertura,
+                TipoTecho = incendioIndustria.TipoTecho,
+                OtroTecho = incendioIndustria.OtroTecho,
+                OtroLugar = incendioIndustria.OtroLugar,
+                NombreEstablecimiento = incendioIndustria.NombreEstablecimiento,
+                CantidadPisos = incendioIndustria.CantidadPisos,
+                PisoAfectado = incendioIndustria.PisoAfectado,
+                CantidadAmbientes = incendioIndustria.CantidadAmbientes,
+                TipoLugar = incendioIndustria.TipoLugar
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelIncendioVivienda(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        IncendioVivienda? incendioVivienda = await db.IncendiosViviendas.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        IncendioViviendaViewModel = new()
+            {
+                DeteccionAutomaticaId = incendioVivienda.DeteccionAutomaticaId,
+                Extintor = incendioVivienda.Extintor,
+                VehiculoAfectados = incendioVivienda.VehiculoAfectados,
+                Hidrante = incendioVivienda.Hidrante,
+                TipoEvacuacion = incendioVivienda.TipoEvacuacion,
+                TipoSuperficieAfectada = incendioVivienda.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendioVivienda.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendioVivienda.SuperficieAfectadaCausa,
+                Tipo = incendioVivienda.Tipo,
+                TipoAbertura = incendioVivienda.TipoAbertura,
+                OtraAbertura = incendioVivienda.OtraAbertura,
+                TipoTecho = incendioVivienda.TipoTecho,
+                OtroTecho = incendioVivienda.OtroTecho,
+                OtroLugar = incendioVivienda.OtroLugar,
+                NombreEstablecimiento = incendioVivienda.NombreEstablecimiento,
+                CantidadPisos = incendioVivienda.CantidadPisos,
+                PisoAfectado = incendioVivienda.PisoAfectado,
+                CantidadAmbientes = incendioVivienda.CantidadAmbientes,
+                TipoLugar = incendioVivienda.TipoLugar
+
+            };
+        StateHasChanged();
+
+    }
+    private async Task GetViewModelIncendioComercio(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        IncendioComercio? incendioComercio = await db.IncendiosComercios.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.VehiculoAfectados).ThenInclude(vehiculo => vehiculo.Seguro)
+        .SingleOrDefaultAsync();
+        List<VehiculoAfectadoIncendio> vehiculosAfectados = await db.VehiculosAfectadoIncendios.
+        Where(va => va.SalidaId == Id)
+
+        .ToListAsync();
+        IncendioComercioViewModel = new()
+            {
+                DeteccionAutomaticaId = incendioComercio.DeteccionAutomaticaId,
+                Extintor = incendioComercio.Extintor,
+                VehiculoAfectados = incendioComercio.VehiculoAfectados,
+                Hidrante = incendioComercio.Hidrante,
+                TipoEvacuacion = incendioComercio.TipoEvacuacion,
+                TipoSuperficieAfectada = incendioComercio.TipoSuperficieAfectada,
+                DetalleSuperficieAfectadaIncendio = incendioComercio.DetalleSuperficieAfectadaIncendio,
+                SuperficieAfectadaCausa = incendioComercio.SuperficieAfectadaCausa,
+                Tipo = incendioComercio.Tipo,
+                TipoAbertura = incendioComercio.TipoAbertura,
+                OtraAbertura = incendioComercio.OtraAbertura,
+                TipoTecho = incendioComercio.TipoTecho,
+                OtroTecho = incendioComercio.OtroTecho,
+                OtroLugar = incendioComercio.OtroLugar,
+                NombreEstablecimiento = incendioComercio.NombreEstablecimiento,
+                CantidadPisos = incendioComercio.CantidadPisos,
+                PisoAfectado = incendioComercio.PisoAfectado,
+                CantidadAmbientes = incendioComercio.CantidadAmbientes,
+                TipoLugar = incendioComercio.TipoLugar
+
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelServicioEspecialPrevencion(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        ServicioEspecialPrevencion? servicioEspecialPrevencion = await db.ServicioEspecialPrevenciones.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.DatosCapacitacion)/*.ThenInclude(servicio => servicio.ServicioEspecial)*/
+        .SingleOrDefaultAsync();
+
+        servicioEspecialPrevencionViewModel = new()
+            {
+                Tipo = servicioEspecialPrevencion.Tipo,
+                TipoOrganizacion = servicioEspecialPrevencion.TipoOrganizacion,
+                OtroRepresentacion = servicioEspecialPrevencion.OtroRepresentacion,
+                //TipoPrevencion = servicioEspecialPrevencion.TipoPrevencion,
+                NivelCapacitacion = servicioEspecialPrevencion.DatosCapacitacion.NivelCapacitacion.ToString(),
+                NivelCapacitacionOtro = servicioEspecialPrevencion.DatosCapacitacion.NivelCapacitacionOtro,
+                TipoCapacitacion = servicioEspecialPrevencion.DatosCapacitacion.TipoCapacitacion.ToString(),
+                CapacitacionOtra = servicioEspecialPrevencion.DatosCapacitacion.CapacitacionOtra,
+                DiasCapacitacion = servicioEspecialPrevencion.DatosCapacitacion.DiasCapacitacion,
+                HorariosCapacitacion = servicioEspecialPrevencion.DatosCapacitacion.HorariosCapacitacion,
+                TipoPrevencion = servicioEspecialPrevencion.TipoPrevencion
+            };
+        StateHasChanged();
+
+    }
+    private async Task GetViewModelServicioEspecial(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        ServicioEspecial? servicioEspecial = await db.Set<ServicioEspecial>().Where(s => s.SalidaId == Id)
+        .Include(sal => sal.DatosCapacitacion)/*.ThenInclude(servicio => servicio.ServicioEspecial)*/
+        .SingleOrDefaultAsync();
+
+        servicioEspecialViewModel = new()
+            {
+                Tipo = servicioEspecial.Tipo,
+                TipoOrganizacion = servicioEspecial.TipoOrganizacion,
+                OtroRepresentacion = servicioEspecial.OtroRepresentacion,
+                //TipoPrevencion = servicioEspecialPrevencion.TipoPrevencion,
+                NivelCapacitacion = servicioEspecial.DatosCapacitacion.NivelCapacitacion.ToString(),
+                NivelCapacitacionOtro = servicioEspecial.DatosCapacitacion.NivelCapacitacionOtro,
+                TipoCapacitacion = servicioEspecial.DatosCapacitacion.TipoCapacitacion.ToString(),
+                CapacitacionOtra = servicioEspecial.DatosCapacitacion.CapacitacionOtra,
+                DiasCapacitacion = servicioEspecial.DatosCapacitacion.DiasCapacitacion,
+                HorariosCapacitacion = servicioEspecial.DatosCapacitacion.HorariosCapacitacion
+            };
+        StateHasChanged();
+
+    }
+
+    private async Task GetViewModelServicioEspecialRepresentaciones(int Id)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+
+        ServicioEspecialRepresentaciones? servicioEspecialRepresentaciones = await db.ServicioEspecialesRespresentaciones.Where(s => s.SalidaId == Id)
+        .Include(sal => sal.DatosCapacitacion)
+        .SingleOrDefaultAsync();
+
+        servicioEspecialRepresentacionViewModel = new()
+            {
+                TipoRepresentacion = servicioEspecialRepresentaciones.TipoRepresentacion,
+                TipoOrganizacion = servicioEspecialRepresentaciones.TipoOrganizacion,
+                OtroRepresentacion = servicioEspecialRepresentaciones.OtroRepresentacion,
+                //TipoPrevencion = servicioEspecialPrevencion.TipoPrevencion,
+                NivelCapacitacion = servicioEspecialRepresentaciones.DatosCapacitacion.NivelCapacitacion.ToString(),
+                NivelCapacitacionOtro = servicioEspecialRepresentaciones.DatosCapacitacion.NivelCapacitacionOtro,
+                TipoCapacitacion = servicioEspecialRepresentaciones.DatosCapacitacion.TipoCapacitacion.ToString(),
+                CapacitacionOtra = servicioEspecialRepresentaciones.DatosCapacitacion.CapacitacionOtra,
+                DiasCapacitacion = servicioEspecialRepresentaciones.DatosCapacitacion.DiasCapacitacion,
+                HorariosCapacitacion = servicioEspecialRepresentaciones.DatosCapacitacion.HorariosCapacitacion,
+                Tipo = servicioEspecialRepresentaciones.Tipo
+            };
+        StateHasChanged();
+
+    }
+}
