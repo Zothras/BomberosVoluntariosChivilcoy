@@ -6,7 +6,6 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-
 <Table DataSource="bomberChofer"  TItem="Bombero">
     <TitleTemplate>
         <GridRow>
@@ -33,17 +32,16 @@
     </ColumnDefinitions>
 </Table>
 
-
 @code {    
     List<Bombero> bomberChofer= new List<Bombero>();
-    
+
 
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
         bomberChofer = await db.Bomberos.Where(b => b.Chofer == true).ToListAsync();
-       
+
         StateHasChanged();
-    }    
+    }     
 }

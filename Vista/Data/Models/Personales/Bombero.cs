@@ -52,8 +52,6 @@ namespace Vista.Data.Models.Personales
         public int EquipoId { get; set; }
         [ForeignKey("EquipoId")]
 
-        public Comunicacion? ComunicacionEquipo { get; set; }
-
-
+        public Comunicacion? ComunicacionEquipo { get; set; }   
     }
 }
