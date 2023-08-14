@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService _message
 @page "/Herramientas/Comunicacion"
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
@@ -8,7 +9,6 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal;
 @using Vista.Data.ViewModels.Personal;
 
-<h3>Comunicacion</h3>
 
 <Table DataSource="comunicacionesViewModel" Bordered
     @bind-SelectedRows="selectedRows"
@@ -18,8 +18,9 @@
 
     <TitleTemplate>
         <GridRow>
-            <GridCol Span="4">
+            <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
                 <Title Level="3">Comunicaciones</Title>
+                <Button Type="primary" OnClick="()=>ShowModalAgregar()">Agregar Handie</Button>
             </GridCol>
         </GridRow>
     </TitleTemplate>
@@ -32,15 +33,42 @@
         <PropertyColumn Property="b=>b.Apellido"></PropertyColumn>
         <ActionColumn Title="Action">
             <Space>
-                <SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
-                <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>
+                <SpaceItem>
+                    <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas borrar el handie?"
+                                OnConfirm="()=>Delete(context.NroEquipo)"
+                                OnCancel="Cancel">
+                        <Button Danger>
+                            Eliminar
+                        </Button>
+                    </Popconfirm>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas desasignar el bombero?"
+                                OnConfirm="()=>Desasignar(context.NroEquipo)"
+                                OnCancel="Cancel">
+                        <Button Danger>
+                            Desasignar
+                        </Button>
+                    </Popconfirm>
+                </SpaceItem>
+                @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
+                <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
                 <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
             </Space>
         </ActionColumn>
     </ColumnDefinitions>
 </Table>
 
-<Button OnClick="@(() => { navigationManager.NavigateTo($"/Herramientas/Comunicacion/agregar"); })" Style="position: absolute;right: 32.5em;top: 56.9em;">Agregar Handie</Button>
+<Modal Footer="null" Title="@("Comunicacion")"
+       Visible="@_visibleAgregar"
+       OnOk="@HandleOkAgregar"
+       OnCancel="@HandleCancelAgregar">
+       <AgregarComunicacion/>
+       <Button Style="margin-right: 134px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
+            Volver
+       </Button>
+</Modal>
+ 
 <Modal Title="@("Comunicacion")"
        Visible="@_visible"
        OnOk="@HandleOk"
@@ -50,7 +78,7 @@
           WrapperColSpan="16"
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed"
-    @ref="@_form">
+          @ref="@_form">
 
         <FormItem Label="Nro Equipo">
             <Input DefaultValue="@ComunicacionVM.NroEquipo" @bind-Value="@ComunicacionVM.NroEquipo" />
@@ -72,7 +100,7 @@
                 <Select TItem="BomberoViewModel"
                         TItemValue="int"
                         DataSource="@BomberosVM"
-                @bind-Value="@ComunicacionVM.NroLegajo"
+                        @bind-Value="@ComunicacionVM.NroLegajo"
                         LabelName="@nameof(bomberosViewModel.NombreYApellido)"
                         ValueName="@nameof(bomberosViewModel.NumeroLegajo)"
                         Placeholder="Selecione a un bombero"
@@ -133,18 +161,23 @@
     BomberosDbContext Context { get; set; }
 
     int _pageIndex = 1;
-    int _pageSize = 10;
+    int _pageSize = 6;
     int _total = 0;
-
 
 
     protected override async Task OnInitializedAsync()
     {
+        await Init();
+    }
+
+    private async Task Init()
+    {
+        ComunicacionVM = new();
+        bomberosViewModel = new();
         Context = DbFactory.CreateDbContext();
         await CargarComunicacionVM();
         await CargarBomberoViewModel();
     }
-
 
 
     public async Task CargarComunicacionVM()
@@ -199,7 +232,7 @@
         //dataSource = queryModel.ExecuteQuery(bomberos.AsQueryable())
         //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
         //arreglar busqueda-----------------------------------------------------------------------------------------------------------------------------------------
-        OnInitializedAsync();
+        await Init();
     }
 
     public void RemoveSelection(string NroEquipoBorrar)
@@ -231,8 +264,9 @@
         {
             bombero.Handie = null; // Desvincula la entidad relacionada Handie
             await context.SaveChangesAsync();
-            
+
         }
+        await Init();
         StateHasChanged();
     }
 
@@ -249,16 +283,15 @@
         comunicacion.Estado = ComunicacionVM.Estado;
         comunicacion.Bombero = bomberos;
         await context.SaveChangesAsync();
-        await OnInitializedAsync();
+        await Init();
         StateHasChanged();
     }
 
     string NroEquipoEdit;
-    private async void ShowModalEditar(string NroEquipo)
+    private void ShowModalEditar(string NroEquipo)
     {
-
-        GetComunicacionViewModel(NroEquipo);
         NroEquipoEdit = NroEquipo;
+        GetComunicacionViewModel(NroEquipo);
         _visible = true;
     }
 
@@ -276,17 +309,28 @@
     void toggle(bool value) => loading = value;
 
     bool _visible = false;
-    bool _visibleDetalle = false;
+    bool _visibleAgregar = false;
 
+
+    private void ShowModalAgregar()
+    {
+        _visibleAgregar = true;
+    }
     private void HandleCancel(MouseEventArgs e)
     {
         Console.WriteLine("e");
         _visible = false;
     }
-    private void HandleCancelDetalle(MouseEventArgs e)
+
+
+    private async void HandleOkAgregar(MouseEventArgs e)
+    {
+        _visibleAgregar = false;
+    }
+    public void HandleCancelAgregar(MouseEventArgs e)
     {
         Console.WriteLine(e);
-        _visibleDetalle = false;
+        _visibleAgregar = false;
     }
 
     private Form<ComunicacionViewModel> _form;
@@ -324,22 +368,23 @@
     {
         using var context = DbFactory.CreateDbContext();
         Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == NroEquipo).SingleOrDefaultAsync();
-
-
-        ComunicacionViewModel ComunicacionPasajeVM = new()
-            {
-                NroEquipo = comunicacion.NroEquipo,
-                Modelo = comunicacion.Modelo,
-                Marca = comunicacion.Marca,
-                NroSerie = comunicacion.NroSerie,
-                Estado = comunicacion.Estado,
-
-            };
-        ComunicacionVM = ComunicacionPasajeVM;
-        comunicacionesViewModel.Add(ComunicacionPasajeVM);
+        var comunicacionExistente = comunicacionesViewModel.FirstOrDefault(c => c.NroEquipo == NroEquipo);
+        if (comunicacionExistente != null)
+        {
+            NroEquipo = comunicacion.NroEquipo;
+            comunicacionExistente.Modelo = comunicacion.Modelo;
+            comunicacionExistente.Marca = comunicacion.Marca;
+            comunicacionExistente.NroSerie = comunicacion.NroSerie;
+            comunicacionExistente.Estado = comunicacion.Estado;
+        }
+        ComunicacionVM = comunicacionExistente;
         StateHasChanged();
+
     }//Se obtienen los valores de la base de datos al view model
 
-
+    private void Cancel()
+    {
+        _message.Error("Operacion cancelada");
+    }
 
 }

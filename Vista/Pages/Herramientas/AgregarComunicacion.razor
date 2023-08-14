@@ -2,7 +2,7 @@
 @inject IMessageService message
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/Herramientas/Comunicacion/agregar"
+
 
 <style>
     /* tile uploaded pictures */
@@ -86,10 +86,17 @@
             </Select>
         </FormItem>
     </div>
-
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
-            Agregar Bombero
+    <style>
+        .ant-col-offset-8 {
+            margin-left:0px !important;
+        }
+    </style>
+    <FormItem Style="width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary"  HtmlType="submit">
+            Agregar Handie
         </Button>
     </FormItem>
 </Form>
@@ -126,7 +133,7 @@
     public async Task CargarBomberosView()
     {
         BomberosVM = new();
-        var bomberos = await Context.Bomberos.Where(b => b.EquipoId != null).ToArrayAsync();
+        var bomberos = await Context.Bomberos.Where(b => b.EquipoId == null).ToArrayAsync();
 
         foreach (Bombero b in bomberos)
         {
@@ -140,7 +147,7 @@
         }
     }
 
-    private async void OnFinish(EditContext editContext)
+    public async void OnFinish(EditContext editContext)
     {
         try
         {
