@@ -235,54 +235,24 @@
         }
         StateHasChanged();
     }
+
     private async void EditarBombero(string NroEquipoEdit)
     {
         using var context = DbFactory.CreateDbContext();
         Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == NroEquipoEdit).SingleOrDefaultAsync();
         Bombero? bomberos = await context.Bomberos.Where(b => b.NumeroLegajo == ComunicacionVM.NroLegajo).SingleOrDefaultAsync();
 
-        if (comunicacion != null)
-        {
-            comunicacion.NroEquipo = ComunicacionVM.NroEquipo;
-            comunicacion.Modelo = ComunicacionVM.Modelo;
-            comunicacion.Marca = ComunicacionVM.Marca;
-            comunicacion.NroSerie = ComunicacionVM.NroSerie;
-            comunicacion.Estado = ComunicacionVM.Estado;
-            comunicacion.Bombero = bomberos;
-            await context.SaveChangesAsync();
-
-            // Actualiza los valores en la lista comunicacionesViewModel
-            var itemToUpdate = comunicacionesViewModel.FirstOrDefault(c => c.NroEquipo == NroEquipoEdit);
-            if (itemToUpdate != null)
-            {
-                itemToUpdate.NroEquipo = ComunicacionVM.NroEquipo;
-                itemToUpdate.Modelo = ComunicacionVM.Modelo;
-                itemToUpdate.Marca = ComunicacionVM.Marca;
-                itemToUpdate.NroSerie = ComunicacionVM.NroSerie;
-                itemToUpdate.Estado = ComunicacionVM.Estado;
-                itemToUpdate.Nombre = bomberos?.Nombre;
-                itemToUpdate.Apellido = bomberos?.Apellido;
-            }
-
-            StateHasChanged();
-        }
+        comunicacion.NroEquipo = ComunicacionVM.NroEquipo;
+        comunicacion.Modelo = ComunicacionVM.Modelo;
+        comunicacion.Marca = ComunicacionVM.Marca;
+        comunicacion.NroSerie = ComunicacionVM.NroSerie;
+        comunicacion.Estado = ComunicacionVM.Estado;
+        comunicacion.Bombero = bomberos;
+        await context.SaveChangesAsync();
+        await OnInitializedAsync();
+        StateHasChanged();
     }
-    //private async void EditarBombero(string NroEquipoEdit)
-    //{
-    //    using var context = DbFactory.CreateDbContext();
-    //    Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == NroEquipoEdit).SingleOrDefaultAsync();
-    //    Bombero? bomberos = await context.Bomberos.Where(b => b.NumeroLegajo == ComunicacionVM.NroLegajo).SingleOrDefaultAsync();
 
-    //    comunicacion.NroEquipo = ComunicacionVM.NroEquipo;
-    //    comunicacion.Modelo = ComunicacionVM.Modelo;
-    //    comunicacion.Marca = ComunicacionVM.Marca;
-    //    comunicacion.NroSerie = ComunicacionVM.NroSerie;
-    //    comunicacion.Estado = ComunicacionVM.Estado;
-    //    comunicacion.Bombero = bomberos;
-    //    await context.SaveChangesAsync();
-    //    await OnInitializedAsync();
-    //    StateHasChanged();
-    //}
     string NroEquipoEdit;
     private async void ShowModalEditar(string NroEquipo)
     {
