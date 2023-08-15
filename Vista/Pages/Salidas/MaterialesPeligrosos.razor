@@ -185,16 +185,16 @@
                             {
                                 if (m.NumeroMovil == NumeroMovil)
                                 {
-                                    modelMateriales.Kmssalida= m.kilometraje;
+                                    modelMateriales.Kilometraje= m.kilometraje;
                                     break;
                                 }
                             }
                         }
                         <FormItem Label="Kilometro salida">
-                            <AntDesign.InputNumber @bind-Value="modelMateriales.Kmssalida" Disabled />
+                            <AntDesign.InputNumber @bind-Value="modelMateriales.Kilometraje" Disabled />
                         </FormItem>
                         <FormItem Label="Kilometro llegada">
-                            <AntDesign.InputNumber @bind-Value="modelMateriales.Kilometraje" />
+                            <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
                         </FormItem>
                         <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
                         <div>
@@ -348,16 +348,18 @@
                         <FormItem Label="Tipo Evacuacion">
                             <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
                         </FormItem>
-                        <Button Type="@ButtonType.Primary" HtmlType="submit">
-                            Cargar salida
-                        </Button>
+                        <FormItem Label="">
+                            <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
+                                Cargar salida
+                            </Button>
+                        </FormItem>
                     </div>
 
                 </CarouselSlick>
 
 
             </Carousel>
-
+            
         </Form>
 
         <Modal Title="@("success")"
@@ -469,6 +471,8 @@
 
     Carousel _carousel;
 
+
+    BomberosDbContext Context { get; set; }
     private DamnificadoViewModels damnificado = new();
     private MaterialPeligrosoViewModels modelMateriales = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
@@ -478,10 +482,10 @@
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
     public List<BomberoViweModel> bomberoTodos = new();
-    private Form<MovilSalidaViewModels> _form1;
+    private Form<MovilSalidaViewModels>? _form1;
     public List<BomberoViweModel> bomberoChoferes = new();
-    Movil[] Moviles;
-    BomberosDbContext Context { get; set; }
+    Movil[]? Moviles;
+
 
     bool switchValue { get; set; }
     bool chek { get; set; }
@@ -497,7 +501,7 @@
     bool _visible1;
 
 
-    public async void AgregarDamnificado()
+    public async Task AgregarDamnificado()
     {
 
         DamnificadoViewModels dp = new()
@@ -515,15 +519,11 @@
 
     }
 
-    public async void AgregarMovilSalida()
+    public async Task AgregarMovilSalida()
     {
 
         Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
         Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
-        if (Movilsalida is not null)
-        {
-            Movilsalida.kilometraje = movilSalidaViewModels.KmLlegada;
-        }
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -533,16 +533,17 @@
                 CantidadLitros = movilSalidaViewModels.CantidadLitros,
                 QuienLleno = movilSalidaViewModels.QuienLleno,
                 TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                KmLlegada = movilSalidaViewModels.KmLlegada,
+                KmLlegada = modelMateriales.KmLlegada,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
+                
             };
         MovilesSalidasL.Add(m);
         StateHasChanged();
 
     }
 
-    public async void AgregarCuerpoParticipante()
+    public async Task AgregarCuerpoParticipante()
     {
         var boberos = await Context.Bomberos.ToArrayAsync();
         foreach (var bom in boberos)
@@ -575,9 +576,7 @@
         await CargarBomberosView();
     }
 
-
-
-    private async void OnFinish(EditContext editContext)
+    public async Task Cargarmaterial()
     {
         try
         {
@@ -633,7 +632,9 @@
                         NumeroDePoliza = modelMateriales.NumeroPoliza,
                         FechaDeVencimineto = modelMateriales.FechaVencimineto,
                     },
-                   
+                    Damnificados = new(),
+                    Moviles = new(),
+                    CuerpoParticipante = new()
 
                 };
             foreach (BomberoSalidaViewModels bom in bomberosSalida)
@@ -642,16 +643,21 @@
                 BomberoSalida BomSalida = new()
                     {
                         Salio = bom.Salio,
-                        Bombero = bomberoSalida
+                        Bombero = bomberoSalida,
+                        Grado = bomberoSalida.Grado
                     };
                 materiales.CuerpoParticipante.Add(BomSalida);
-                
+
             }
             foreach (MovilSalidaViewModels m in MovilesSalidasL)
             {
+                
                 Bombero? bomberoChofer = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
                 Movil? Movilsalida = await Context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil);
-
+                if (Movilsalida is not null)
+                {
+                    Movilsalida.kilometraje = m.KmLlegada;
+                }
                 MovilSalida movilS = new()
                     {
                         CargoCombustible = m.CargoCombustible,
@@ -661,13 +667,13 @@
                         CantidadLitros = movilSalidaViewModels.CantidadLitros,
                         QuienLleno = movilSalidaViewModels.QuienLleno,
                         TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                        KmLlegada = movilSalidaViewModels.KmLlegada,
+                        KmLlegada = m.KmLlegada,
                         Chofer = bomberoChofer,
                         Movil = Movilsalida
                     };
-                Movilsalida.kilometraje = movilSalidaViewModels.KmLlegada;
-                materiales.Moviles.Add(movilS);
                 
+                materiales.Moviles.Add(movilS);
+
             }
 
             foreach (DamnificadoViewModels d in DamnificadosSalida)
@@ -681,7 +687,7 @@
                         Sexo = d.Sexo,
                         LugarDeNacimiento = d.LugarDeNacimiento,
                         Edad = d.Edad,
-                        Estado = d.Estado,
+                        Estado = d.Estado
                     };
                 materiales.Damnificados.Add(damn);
 
@@ -705,6 +711,11 @@
                 await message.Error(e.Message, 5);
 
         }
+    }
+
+    private async void OnFinish(EditContext editContext)
+    {
+        
     }
 
     private void OnFinishFailed(EditContext editContext)

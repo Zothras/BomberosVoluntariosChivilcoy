@@ -9,7 +9,7 @@ namespace Vista.Data.ViewModels.MaterialesPeligrosos
         public TipoMaterialPeligroso Tipo { get; set; }
         [Required, StringLength(255)]
         public string Sustancias { get; set; }
-        public int Kmssalida { get; set; }  
+        public int KmLlegada { get; set; }  
         public int Kilometraje { get; set; }
         //Acciones sobre los materiales
         public bool Controlada { get; set; }
