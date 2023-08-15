@@ -10,7 +10,7 @@
 @using Vista.Data.ViewModels.Personal;
 
 
-<Table DataSource="comunicacionesViewModel" Bordered
+<Table DataSource="ComunicacionesViewModel" Bordered
     @bind-SelectedRows="selectedRows"
            Total="_total"
     @bind-PageIndex="_pageIndex"
@@ -105,8 +105,8 @@
                         ValueName="@nameof(bomberosViewModel.NumeroLegajo)"
                         Placeholder="Selecione a un bombero"
                         DefaultActiveFirstOption="false"
-                        EnableSearch
-                        AllowClear="true">
+                    EnableSearch
+                    AllowClear="true">
                 </Select>
             </FormItem>
         </div>
@@ -154,7 +154,7 @@
 
     private ComunicacionViewModel ComunicacionVM { get; set; } = new();
 
-    List<ComunicacionViewModel> comunicacionesViewModel { get; set; }
+    List<ComunicacionViewModel> ComunicacionesViewModel { get; set; } = new();
 
     private BomberoViewModel bomberosViewModel = new BomberoViewModel();
     List<BomberoViewModel> BomberosVM { get; set; } = new();
@@ -182,10 +182,9 @@
 
     public async Task CargarComunicacionVM()
     {
-        comunicacionesViewModel = new();
+        ComunicacionesViewModel.Clear();
         var bomberos = await Context.Bomberos.ToArrayAsync();
         var comunicacionesDB = await Context.Comunicacion.ToListAsync();
-
 
         foreach (Comunicacion c in comunicacionesDB)
         {
@@ -199,14 +198,14 @@
                     Nombre = c.Bombero?.Nombre,
                     Apellido = c.Bombero?.Apellido
                 };
-            comunicacionesViewModel.Add(comunicacion);
+            ComunicacionesViewModel.Add(comunicacion);
         }
 
     }
     public async Task CargarBomberoViewModel()
     {
         BomberosVM = new();
-        var bomberos = await Context.Bomberos.ToArrayAsync();
+        var bomberos = await Context.Bomberos.Where(b => b.EquipoId == null).ToArrayAsync();
 
         foreach (Bombero b in bomberos)
         {
@@ -246,8 +245,8 @@
         using var context = DbFactory.CreateDbContext();
         Comunicacion? comunicacion = await context.Comunicacion.FirstOrDefaultAsync(c => c.NroEquipo == NroEquipoBorrar);
         context.Remove(comunicacion);
-        comunicacionesViewModel = comunicacionesViewModel.Where(x => x.NroEquipo != NroEquipoBorrar).ToList();
-        _total = comunicacionesViewModel.Count;
+        ComunicacionesViewModel = ComunicacionesViewModel.Where(x => x.NroEquipo != NroEquipoBorrar).ToList();
+        _total = ComunicacionesViewModel.Count;
         await context.SaveChangesAsync();
         StateHasChanged();
     }
@@ -272,17 +271,16 @@
 
     private async void EditarBombero(string NroEquipoEdit)
     {
-        using var context = DbFactory.CreateDbContext();
-        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == NroEquipoEdit).SingleOrDefaultAsync();
-        Bombero? bomberos = await context.Bomberos.Where(b => b.NumeroLegajo == ComunicacionVM.NroLegajo).SingleOrDefaultAsync();
+        Comunicacion? comunicacion = await Context.Comunicacion.SingleOrDefaultAsync(b => b.NroEquipo == NroEquipoEdit);
+        Bombero? bombero = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == ComunicacionVM.NroLegajo);
 
         comunicacion.NroEquipo = ComunicacionVM.NroEquipo;
         comunicacion.Modelo = ComunicacionVM.Modelo;
         comunicacion.Marca = ComunicacionVM.Marca;
         comunicacion.NroSerie = ComunicacionVM.NroSerie;
         comunicacion.Estado = ComunicacionVM.Estado;
-        comunicacion.Bombero = bomberos;
-        await context.SaveChangesAsync();
+        comunicacion.Bombero = bombero;
+        await Context.SaveChangesAsync();
         await Init();
         StateHasChanged();
     }
@@ -366,20 +364,8 @@
 
     private async void GetComunicacionViewModel(string NroEquipo)
     {
-        using var context = DbFactory.CreateDbContext();
-        Comunicacion? comunicacion = await context.Comunicacion.Where(b => b.NroEquipo == NroEquipo).SingleOrDefaultAsync();
-        var comunicacionExistente = comunicacionesViewModel.FirstOrDefault(c => c.NroEquipo == NroEquipo);
-        if (comunicacionExistente != null)
-        {
-            NroEquipo = comunicacion.NroEquipo;
-            comunicacionExistente.Modelo = comunicacion.Modelo;
-            comunicacionExistente.Marca = comunicacion.Marca;
-            comunicacionExistente.NroSerie = comunicacion.NroSerie;
-            comunicacionExistente.Estado = comunicacion.Estado;
-        }
-        ComunicacionVM = comunicacionExistente;
+        ComunicacionVM = ComunicacionesViewModel.Single(c => c.NroEquipo == NroEquipo);
         StateHasChanged();
-
     }//Se obtienen los valores de la base de datos al view model
 
     private void Cancel()
