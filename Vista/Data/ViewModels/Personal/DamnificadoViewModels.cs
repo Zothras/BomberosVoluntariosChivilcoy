@@ -11,6 +11,7 @@ namespace Vista.Data.ViewModels.Personal
         public string Nombre { get; set; }
         [Required, StringLength(255)]
         public string Apellido { get; set; }
+        public string NombreYApellido { get { return Nombre + "," + Apellido; } }
         [Required, StringLength(255)]
         public string Dni { get; set; }
         public TipoSexo Sexo { get; set; }

@@ -123,6 +123,21 @@
                                 <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
                             </FormItem>
                             <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+                            <div>
+                                <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+                                <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                                <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                                <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                                <ActionColumn Title="Acciones">
+                                    <Popconfirm Title="Sure to delete?"
+                                                OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                                OkText="Yes"
+                                                CancelText="No">
+                                        <a>Delete</a>
+                                    </Popconfirm>
+                                </ActionColumn>
+                            </Table>
+                        </div>
                         }
                     </div>
                 </CarouselSlick>
@@ -201,7 +216,7 @@
                             <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
                                 <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
                                 <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
-                                <ActionColumn Title="Action">
+                                <ActionColumn Title="Acciones">
                                     <Popconfirm Title="Sure to delete?"
                                                 OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
                                                 OkText="Yes"
@@ -237,7 +252,7 @@
                             <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
                                 <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
                                 <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-                                <ActionColumn Title="Action">
+                                <ActionColumn Title="Acciones">
                                     <Popconfirm Title="Sure to delete?"
                                                 OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
                                                 OkText="Yes"
@@ -516,7 +531,7 @@
 
             };
         DamnificadosSalida.Add(dp);
-
+        StateHasChanged();
     }
 
     public async Task AgregarMovilSalida()
@@ -879,6 +894,10 @@
     void deleteRowMovil(string NumMovil)
     {
         MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
+    }
+    void deleteRowDamnificados(string Dni)
+    {
+        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
     }
     public void Dispose()
     {
