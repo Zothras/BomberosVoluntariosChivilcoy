@@ -16,7 +16,7 @@ namespace Vista.Data.ViewModels.Personal
         public Movil MovilesSalida { get; set; }
         public string NumeroMovil { get; set; }
         public int KmLlegada { get; set; }
-        
+        public string ChoferNombreCompleto { get { return Chofer.Nombre + "," + Chofer.Apellido; } }
 
     }
 }
