@@ -1,4 +1,4 @@
-﻿@page "/legajo/{SalidaIndiceId}"
+﻿@page "/legajo"
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @using Microsoft.AspNetCore.Components.Forms
@@ -56,7 +56,12 @@
 
 @if (mostrarDetalle is true)
 {
-    <DetalleSalida salidasViewModel="@salidasViewModel[numeroParteVisualizar]" />
+    <DetalleSalida salidaId="salidaId" />
+}
+@if (mostrarEditar is true)
+{
+    <EditarSalida salidaId="salidaId" />
+    mostrarEditar = false;
 }
 
 
@@ -79,13 +84,6 @@
     Movil[] Moviles;
     public List<BomberoViweModel> bomberoChoferes = new();
 
-    bool switchValue { get; set; }
-    bool switchValueS { get; set; }
-    bool switchValueV { get; set; }
-     string _selectedValueCapacitacion;
-    string _selectedItem;
-    string _selectedValue1;
-    string _selectedItem1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -247,19 +245,25 @@
 
 @code {
     int numeroParteVisualizar;
-    bool mostrarDetalle= false;
+    public bool mostrarDetalle= false;
+    public bool mostrarEditar= false;
+    int salidaId;
+
     public List<BomberoViweModel> bomberoTodos = new();
     private void ShowModalDetalle(int Id)
     {
 
         numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == Id);
         mostrarDetalle = true;
+        salidaId = Id;
 
 
     }
     private void ShowModalEditar(int Id)
     {
-        
+        numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == Id);
+        mostrarEditar= true;
+        salidaId = Id;
     }
 
     

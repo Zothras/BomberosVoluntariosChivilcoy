@@ -37,7 +37,7 @@
 
     <p>NombreSolicitante: @salidasViewModel.NombreSolicitante</p>
     <p>ApellidoSolicitante: @salidasViewModel.NombreSolicitante</p>
-    <p>DniSolicitante: @salidasViewModel].DniSolicitante</p>
+    <p>DniSolicitante: @salidasViewModel.DniSolicitante</p>
     <p>TelefonoSolicitante: @salidasViewModel.TelefonoSolicitante</p>
 
     <p><b>Receptor:</b> @salidasViewModel.NombreYApellidoReceptor</p>
@@ -632,7 +632,7 @@
 </Modal>
 @code {
     [Parameter]
-    public int numeroParteVisualizar { get; set; }
+    public int salidaId { get; set; }
     [Parameter]
     public SalidasViewModel1 salidasViewModel { get; set; }
     bool _visible = false;
@@ -663,12 +663,12 @@
     {
         await Init();
 
-
+        _visible = true;
     }
     private async Task Init()
     {
         //PersonaViewModel = new();
-        //db = DbFactory.CreateDbContext();
+        db = DbFactory.CreateDbContext();
         //TodosBomberos = await db.Bomberos.ToArrayAsync();
         //Moviles = await db.Moviles.ToArrayAsync();
         //await CargarBomberosView();
