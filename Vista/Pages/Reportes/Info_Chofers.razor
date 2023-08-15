@@ -1,11 +1,32 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService _message
 @page "/Reportes/Reportes_Choferes"
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.Json;
 
+mes:
+@tomarenteromes(date1);
+dia:
+@tomarenterodia(date1);
+año:
+@tomarenteroanio(date1);
+
+
+<h7 style="display: flex;justify-content:left;align-items:flex-start;height: 50%;width:50%;">
+    Desde:<DatePicker DefaultValue="@date1" @bind-Value="@date1" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
+    Hasta:<DatePicker DefaultValue="@date2" @bind-Value="@date2" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
+</h7>
+
+<Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de dar de alta a este movil?"
+            OnConfirm="()=>set_preferencia(date1,date2,bomberChofer)"
+            OnCancel="Cancel">
+    <Button>
+        Buscar
+    </Button>
+</Popconfirm>
 
 <Table DataSource="bomberChofer"  TItem="Bombero">
     <TitleTemplate>
@@ -21,7 +42,7 @@
          <PropertyColumn Property="c=>c.NumeroLegajo"
                          DefaultSortOrder="@SortDirection.Descending"
                          SorterCompare="@((a,b)=> a - b)" />
-        <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+        @*<TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />*@
         <PropertyColumn Property="c=>c.Nombre" Sortable />
 
         <PropertyColumn Property="c=>c.Apellido" Sortable />
@@ -30,20 +51,80 @@
 
         <PropertyColumn Property="c=>c.VencimientoRegistro" Sortable />
 
+        <PropertyColumn Property="c=>c.Contacto.TelefonoCel" Sortable />
+
+        <PropertyColumn Property="c=>c.Contacto.TelefonoLaboral" Sortable />
+
     </ColumnDefinitions>
 </Table>
 
 
-@code {    
-    List<Bombero> bomberChofer= new List<Bombero>();
-    
+
+@code {
+    List<Bombero> bomberChofer = new List<Bombero>();
+    List<Bombero> preferencia = new List<Bombero>();
+    static string dateString = "5/1/2008 8:30:52 AM";
+    DateTime date1 = DateTime.Parse(dateString,
+    System.Globalization.CultureInfo.InvariantCulture);
+    DateTime date2 = DateTime.Parse(dateString,
+    System.Globalization.CultureInfo.InvariantCulture);
+
+    void set_preferencia(DateTime d, DateTime h, List<Bombero> b)
+    {
+        preferencia.Clear();
+        for (int i = 0; i < b.Count; i++)
+        {
+            if (b[i].VencimientoRegistro is null)continue;
+            if (tomarenterodia(d) > tomarenterodia((DateTime)b[i].VencimientoRegistro) && tomarenteromes(d) > tomarenteromes((DateTime)b[i].VencimientoRegistro) && tomarenteroanio(d) > tomarenteroanio((DateTime)b[i].VencimientoRegistro))
+            {
+                if (tomarenterodia(h) < tomarenterodia((DateTime)b[i].VencimientoRegistro) && tomarenteromes(h) < tomarenteromes((DateTime)b[i].VencimientoRegistro) && tomarenteroanio(h) < tomarenteroanio((DateTime)b[i].VencimientoRegistro))
+                {
+                    preferencia.Add(b[i]);
+                }
+            }
+        }
+        StateHasChanged();
+    }
+
+    int tomarenterodia(DateTime date)
+    {
+        string d = date.ToString("MM/dd/yyyy");
+        char pdia = d[3];
+        char sdia = d[4];
+        return (int)Char.GetNumericValue(sdia) + 10 * (int)Char.GetNumericValue(pdia);
+    }
+
+     int tomarenteromes(DateTime date)
+    {
+
+        string d = date.ToString("MM/dd/yyyy");
+        char pmes = d[0];
+        char smes = d[1];
+        return (int)Char.GetNumericValue(smes) + 10*(int)Char.GetNumericValue(pmes);
+    }
+     int tomarenteroanio(DateTime date)
+    {
+
+        string d = date.ToString("MM/dd/yyyy");
+        char panio = d[6];
+        char sanio = d[7];
+        char tanio = d[8];
+        char canio = d[9];
+        return 1000*(int)Char.GetNumericValue(panio) + 100 * (int)Char.GetNumericValue(sanio) + 10 * (int)Char.GetNumericValue(tanio) + (int)Char.GetNumericValue(canio);
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
-        bomberChofer = await db.Bomberos.Where(b => b.Chofer == true).ToListAsync();
-       
+        bomberChofer = await db.Bomberos
+            .Where(c => c.Chofer == true)
+            .ToListAsync(); 
         StateHasChanged();
-    }    
+    }
+    private void Cancel()
+    {
+        _message.Error("Operacion cancelada");
+    }
 }
