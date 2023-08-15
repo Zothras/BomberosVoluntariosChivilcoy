@@ -24,11 +24,9 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build Vista/Vista.csproj --configuration Release
-        working-directory: Vista
 
       - name: dotnet publish
         run: dotnet publish Vista/Vista.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
-        working-directory: Vista
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
