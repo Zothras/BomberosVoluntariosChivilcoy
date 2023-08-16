@@ -1,8 +1,6 @@
-﻿@inject NavigationManager navigationManager
-@inject IDbContextFactory<BomberosDbContext> DbFactory
-@using System.ComponentModel
+﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
 @using AntDesign.TableModels
-@page "/moviles/movil/{VehiculoId:int?}"
+
 <style>
     #ImagenMovil {
         border: 1px solid #BABABA;
@@ -18,33 +16,19 @@
 </style>
 @if (existe)
 {
-    <div style="display: flex;gap: 20px;">
-        <Button Type="primary" OnClick="@(()=>{ navigationManager.NavigateTo("/moviles"); })">
-            Volver
-        </Button>
-        <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
-            Ver info
-        </Button>
+    <div>
+        <img id="ImagenMovil" src="data:@imagenView.TipoImagen;base64,@imagenView.Base64" />
     </div>
-    
-    <Modal Title="@title"
-           Visible="@_visible"
-           OnOk="@HandleOk"
-           OnCancel="@HandleCancel">
-        <div>
-            <img id="ImagenMovil" src="data:@imagenView.TipoImagen;base64,@imagenView.Base64" />
-        </div>
-        <br>
-        <div>
-            <Table TItem="Data" DataSource="data" Responsive>
-                <PropertyColumn Property="c=>c.Tipo"> @movilView.Tipo </PropertyColumn>
-                <PropertyColumn Property="c=>c.Encargado">@movilView.EncargadoNombre</PropertyColumn>
-                <PropertyColumn Property="c=>c.Marca"> @movilView.Marca </PropertyColumn>
-                <PropertyColumn Property="c=>c.Modelo">@movilView.Modelo</PropertyColumn>
-                <PropertyColumn Property="c=>c.Patente">@movilView.Patente</PropertyColumn>
-            </Table>
-        </div>
-    </Modal>
+    <br>
+    <div>
+        <Table TItem="Data" DataSource="data" Responsive>
+            <PropertyColumn Property="c=>c.Tipo"> @movilView.Tipo </PropertyColumn>
+            <PropertyColumn Property="c=>c.Encargado">@movilView.EncargadoNombre</PropertyColumn>
+            <PropertyColumn Property="c=>c.Marca"> @movilView.Marca </PropertyColumn>
+            <PropertyColumn Property="c=>c.Modelo">@movilView.Modelo</PropertyColumn>
+            <PropertyColumn Property="c=>c.Patente">@movilView.Patente</PropertyColumn>
+        </Table>
+    </div>
 }
 else if (!existe)
 {
@@ -52,6 +36,14 @@ else if (!existe)
 }
 
 @code {
+    [Parameter]
+    public int? VehiculoId { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    string title = "Movil info";
+
     Data[] data = new Data[]
     {
         new()
@@ -79,25 +71,6 @@ else if (!existe)
 
         public string Patente { get; set; }
     }
-}
-@code {
-    string title = "Movil info";
-    bool _visible = true;
-
-    private void HandleOk(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
-    }
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visible = false;
-    }
-}
-@code {
-
 
     public class MovilViewModel
     {
@@ -130,20 +103,16 @@ else if (!existe)
         public string Nombre { get; set; }
     }
 
-
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
     public bool existe;
-    [Parameter]
-    public int? VehiculoId { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
-
-        MostrarDatos();
-
+        await MostrarDatos();
     }
-    public async void MostrarDatos()
+
+    public async Task MostrarDatos()
     {
         using var db = DbFactory.CreateDbContext();
         Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero). Where(ma => ma.VehiculoId == VehiculoId).SingleOrDefaultAsync();
@@ -184,17 +153,4 @@ else if (!existe)
             existe = false;
         }
     }
-    public async void EliminarMovil()
-    {
-        using var db = DbFactory.CreateDbContext();
-
-        Movil? movil = await db.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
-
-        if (movil is not null)
-            db.Remove(movil);
-        await db.SaveChangesAsync();
-
-        navigationManager.NavigateTo("/moviles");
-    }
-
 }

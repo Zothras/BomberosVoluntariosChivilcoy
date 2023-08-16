@@ -253,7 +253,6 @@
 
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
-    // public List<MovilViewModel> movilesview { get; set; } = new();
     public List<BomberoViewModel> bomberoViews { get; set; } = new();
     public Bombero[]? bomberos;
     public bool existe;
@@ -297,53 +296,6 @@
 
         StateHasChanged();
     }
-
-    // public async Task CargarMovilVM()
-    // {
-    //     bomberos = await Context.Bomberos.ToArrayAsync();
-
-    //     Movil? movil = await Context.Moviles.Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
-
-    //     if (movil is not null)
-    //     {
-    //         movilView.Marca = movil.Marca;
-    //         movilView.Modelo = movil.Modelo;
-    //         movilView.Año = movil.Año;
-    //         movilView.Patente = movil.Patente;
-    //         movilView.Tipo = movil.Tipo;
-    //         movilView.NumeroMovil = movil.NumeroMovil;
-    //         movilView.NumeroMotor = movil.NumeroMotor;
-    //         movilView.NumeroChasis = movil.NumeroChasis;
-    //         movilView.Estado = movil.Estado;
-    //         ImagenMovil? imagen = await Context.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
-
-    //         if (imagen is not null)
-    //         {
-    //             imagenView.Nombre = imagen.NombreImagen;
-    //             imagenView.TipoImagen = imagen.TipoImagen;
-    //             imagenView.Base64 = imagen.Base64Imagen;
-    //             StateHasChanged();
-    //         }
-    //         existe = true;
-    //     }
-    //     else if (movil is null)
-    //     {
-    //         existe = false;
-    //     }
-
-    //     AgregarALista(TipoRol.Encargado);
-    //     AgregarALista(TipoRol.Subalterno);
-
-    //     await Init();
-    //     StateHasChanged();
-    // }
-
-    // public async void GetMovilesViewModel(string NroMovil)
-    // {
-    //     movilView = movilesview.Single(c => c.NumeroMovil == NroMovil);
-    //     StateHasChanged();
-    // }
-
     public void AgregarALista(TipoRol tipo)
     {
         BomberoViewModel b = new()

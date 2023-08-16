@@ -61,7 +61,7 @@
                             <p style="height: 100%;background: #fff;font-size: 14px;display:flex;justify-content: center;align-items: center;font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';">Movil nº @m.NumeroMovil</p>
                         </div>
                         <div style="display: flex; flex-direction: row;height: 50%;background: transparent;">
-                            <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/movil/{m.VehiculoId}"); })">
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="()=>DetallesMovilModal(m.VehiculoId)">
                                 <Icon Type="ellipsis" Theme="outline" />
                             </Button>
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>EditarMovilModal(m.VehiculoId)">
@@ -84,7 +84,14 @@
                 <Modal Title="Editar" OnCancel="@HandleCancel" Visible="true">
                     <MovilEditar VehiculoId="@EditarPorId" OnClose="@CerrarModal" />
                 </Modal>
-            }            
+            }
+
+            @if (DetallesVisible)
+            {
+                <Modal Title="Detalles" OnCancel="@HandleDCancel" Visible="true">
+                    <MovilIndividual VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
+                </Modal>
+            }
         }
         else
         {
@@ -102,7 +109,9 @@
 @code {
     Movil[]? moviles;
     bool EditarVisible { get; set; }
+    bool DetallesVisible { get; set; }
     int EditarPorId { get; set; }
+    int DetallesPorId { get; set; }
     // string xeditar;
     // public MovilEditar? movilEditar = new();
     BomberosDbContext Context { get; set; }
@@ -134,9 +143,12 @@
     {
         EditarPorId = id;
         EditarVisible = true;
-        // MovilEditar.GetMovilesViewModel(xeditar);
-        // await movilEditar.Init();
-        // movilEditar.LimpiarDatos();
+        StateHasChanged();
+    }
+    public async void DetallesMovilModal(int id)
+    {
+        DetallesPorId = id;
+        DetallesVisible = true;
         StateHasChanged();
     }
 
@@ -166,6 +178,16 @@
     private void CerrarModal()
     {
         EditarVisible = false;
+    }
+
+    private void HandleDCancel(MouseEventArgs e)
+    {
+        CerrarDModal();
+    }
+
+    private void CerrarDModal()
+    {
+        DetallesVisible = false;
     }
 
     public void Dispose()
