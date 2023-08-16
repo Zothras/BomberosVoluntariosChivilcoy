@@ -9,10 +9,6 @@
         padding: 0 2.3em!important;
     }
 
-    .ant-menu-submenu-title{
-        
-    }
-
     .ant-menu-sub.ant-menu-inline{
         background: rgb(230, 230, 230) !important;
     }
@@ -25,23 +21,32 @@
         background-color: rgb(62, 24, 24) !important;
         width: 100%;
     }
-
     .ant-menu-submenu .ant-menu-item-selected {
         padding-left: 45px !important;
         border-left: 3px solid rgb(62, 24, 24) !important;
-        background-color: rgb(190, 190, 190) !important;
+        color: rgb(62, 24, 24) !important;
+        font-size: 1em!important;
+        background-color: rgb(210, 210, 210) !important; 
         width: 100%;
     }
 
+        .ant-menu-item-selected .ant-menu-item-selected anticon {
+                background: rgb(230, 230, 230) !important;
+        }
         .ant-menu-item a:hover {
             color: rgb(62, 24, 24) !important;
         }
 
     .ant-menu-item-selected a {
+        /* color: rgb(230, 230, 230) !important; */
+        color: rgb(62, 24, 24) !important;
+    }
+
+    .ant-menu-submenu-title .ant-menu-item-selected anticon {
         color: rgb(230, 230, 230) !important;
     }
 
-    .ant-menu-item-selected anticon {
+    .ant-menu-submenu-selected i {
         color: rgb(230, 230, 230) !important;
     }
 
@@ -77,8 +82,8 @@
             padding-left: 0px !important;
         }
 
-    .ant-menu-title-content{
-        
+    .ant-menu-title-content i{
+        color: rgb(62, 24, 24) !important;
     }
 
     .ant-menu-item-selected:hover, .ant-menu-submenu-selected:hover {
@@ -117,9 +122,9 @@
         }
 
         .ant-menu-submenu-selected .ant-menu-item-selected li {
-            border-left: 3px solid rgb(62, 24, 24) !important;
+            border: 3px solid rgb(62, 24, 24) !important;
+            color: rgb(62, 24, 24) !important;
         }
-
     
         .ant-menu-submenu-selected > .anticon-alert {
             background-color: #fff !important;
@@ -138,6 +143,10 @@
         color: black !important;
     }
 
+    .ant-menu-submenu-title .ant-menu-submenu-selected > .ant-menu-submenu-arrow {
+        color: #fff !important;
+    }
+
     /*acomodar para que sea por cada flecha(item seleccionado), no en todas*/
     .ant-menu-submenu-selected:first-child .ant-menu-submenu-title > .ant-menu-submenu-arrow {
         color: #fff !important;
@@ -151,8 +160,8 @@
         padding-top: 10px !important;
     }
 
-    .ant-menu .ant-menu-item{
-        /*padding: 0!important;*/
+    .ant-menu-item:hover {
+        color: black !important;
     }
 </style>
 
@@ -375,6 +384,8 @@
     {
         if (firstRender)
         {
+            ToggleCollapsed();
+            StateHasChanged();
             await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_2735473_hi62ezq5579.js");
         }
     }

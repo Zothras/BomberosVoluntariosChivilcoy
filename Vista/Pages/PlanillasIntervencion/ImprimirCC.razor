@@ -1,0 +1,339 @@
+﻿@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@page "/PlanillasIntervencion/Imprimir/{SalidaId:int?}/{ConCroquis:bool?}"
+@layout EmptyLayout
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            padding: .5em 4.5em;
+            /* width: 100%;
+            height: 100%; */
+            width: 826px;
+            height: 2712px;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+
+        /* seccion 1 */
+
+        .sec1 { 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sec1-content {
+            display: flex;
+            flex-direction: row;
+            font-weight: bold;
+            position: relative;
+            height: 10em;
+            width: 100%;
+            margin-top: 0;
+        }
+
+            .sec1-content h2 {
+                text-decoration: underline;
+                text-align: center;
+                font-size: 1.5em;
+            }
+
+            .sec1-content p {
+                text-align: center;
+            }
+
+        .sec1 h3 {
+            font-size: 1.5em;
+        }
+
+            .sec1 h3:nth-child(2) {
+                display: inline-block;
+            }
+
+        .sec1 h1 {
+            display: inline-block;
+            font-size: 3em;
+        }
+
+        thead tr td {
+            border: 1px solid black;
+            font-weight: bold;
+        }
+
+        table {
+            text-align: center;
+        }
+
+            table td {
+                padding: 0 1.5em;
+            }
+
+        /* seccion 2*/
+        .sec2-contenedor {
+            margin-left: 20px;
+        }
+
+        .sec2 p:first-child {
+            font-weight: bold;
+        }
+
+        .sec2 .sec2-contenedor div ul {
+            list-style: none;
+            padding: 1.5em;
+            font-weight: bold;
+        }
+
+            .sec2 .sec2-contenedor div ul li {
+                padding: .3em 0;
+            }
+
+        .sec2-contenedor {
+            display: flex;
+            gap: 8em;
+        }
+
+        .sec2 div:nth-child(3) {
+            padding: 1em 0 7em 0;
+        }
+
+        /* seccion 3 */
+
+        .sec3-titulo {
+            font-weight: bold;
+        }
+
+        .sec3-contenedor {
+            display: flex;
+            flex-direction: column;
+            padding: 0 1em;
+        }
+
+            .sec3-contenedor div:first-child {
+                padding: 0.6em 0 1.8em 0;
+            }
+
+            .sec3-contenedor div:nth-child(2) {
+                padding: .8em 0;
+            }
+
+        .h3-2 {
+            padding: 3em 0 .3em 0;
+        }
+
+        .div2-div > h3:first-child, .div2-div > h3:last-child {
+            padding: 0 .7em;
+        }
+
+        .div2-div-contenido {
+            display: flex;
+            gap: 16em;
+        }
+
+        /* seccion 4 */
+
+        .croquis {
+            width: 90%;
+            height: 23em;
+            border: 1px solid black;
+            border-radius: 5px;
+            margin-left: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- seccion 1  -->
+    <div class="sec1">
+        <div class="sec1-content">
+            <div style="width: 300px; font-size: 11px;position: absolute;left: 0; top: -20px;">
+                <img style="height: 100px;width: 100px;margin-left: 100px;" src="/Imagenes/logoPlanilla.png" />
+                <h2>SOCIEDAD DE <br>BOMBEROS VOLUNTARIOS CHIVILCOY</h2>
+                <p style="font-size: 12.4px;">Personeria Juridica - Decreto 6914</p>
+            </div>
+            <div style="position: absolute;right: 8em;font-size: 11px;top: 4em;">
+                <div style="position: relative;">
+                    <h3>PLANILLA DE INTERVENCION</h3>
+                    <br>
+                    <h3 style="font-size: 1.3em;">NRO: </h3>
+                    <h1 style="font-size: 2.8em;display: inline-block;position: absolute;top: 24px;right: 20px;">551 / 2023</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- seccion 2  -->
+    <div class="sec2">
+        <p style="margin-left: .8em;">A) DATOS GENERALES</p>
+        <div class="sec2-contenedor">
+            <div>
+                <ul>
+                    <li style="display: inline-block;">FECHA: @IntervencionVM.Fecha.ToLongDateString()</li>
+                    <li style="display: inline-block;margin-left: 8.5em;">DIA: @IntervencionVM.Fecha.DayOfWeek</li>
+                    <li>AVISADO POR:</li>
+                    <li>RECEPCIONADO POR: @IntervencionVM.Recepcionista</li>
+                    <li>TIPO SERVICIO:</li>
+                    <li>DIRECCION:</li>
+                    <li>JEFE DE LA INTERVENCION:</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>HORA DE SALIDA:</li>
+                    <li>HORA DE REGRESO:</li>
+                    <li>TEL. NUMERO:</li>
+                    <li style="margin-left: 3em;">CAUSA:</li>
+                    <li style="margin-left: 3em;">ZONA:</li>
+                    <li style="margin-left: 3em;">LUGAR:</li>
+                </ul>
+            </div>
+        </div>
+        <div style="padding-top: 0;">
+            <p>
+                LISTADO DE BOMBEROS EN MOVILES
+            </p>
+            <p style="padding-top: .4em;">
+                Bomberos que arribaron en el movil:
+            </p>
+            <p>
+                - [1º AYUDANTE] , -[2º AYUDANTE] , -[3º AYUDANTE] , - [BOMBERO]
+            </p>
+        </div>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <td>MOVIL</td>
+                        <td>KM LLEGADA</td>
+                        <td>CHOFER</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>30</td>
+                        <td>27452</td>
+                        <td>MARTINO, PABLO EMANUEL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- seccion 3  -->
+    <div class="sec3">
+        <div>
+            <p class="sec3-titulo">
+                B) INCENDIO
+            </p>
+        </div>
+        <div class="sec3-contenedor">
+            <div>
+                <h3 class="sec3-titulo">
+                    Detalle o Daños generales:
+                </h3>
+                <p>incendio de contenedor</p>
+            </div>
+            <div>
+                <h3 class="sec3-titulo h3-2">
+                    Elementos cercanos no afectados:
+                </h3>
+                <br><br><br>
+                <div class="div2-div" style="padding-bottom: 0px;">
+                    <h3>Nombre de Locatario o Propietario: </h3>
+                    <div class="div2-div-contenido">
+                        <h3>Dni: </h3>
+                        <h3>Seguro: </h3>
+                        <h3>Compania: </h3>
+                    </div>
+                    <h3 style="padding-bottom: 0px;">Personas que pueden atestiguar: </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- seccion 4  -->
+    <div class="sec4">
+        @if (ConCroquis.HasValue && ConCroquis.Value)
+        {
+            <div class="sec4-titulo">
+                <p class="sec3-titulo">
+                    D) CROQUIS DE LA ESCENA
+                </p>
+                <div class="croquis">
+                </div>
+            </div>
+        }
+        <div>
+            <p class="sec3-titulo" style="margin-top: 10px;">OBSERVACIONES:</p>
+            <p>llamado de guardia Nº 2</p>
+        </div>
+        <div style="display: flex;padding: 3em;justify-content:center; gap: 15em;">
+            <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em; text-align: center;">
+                <div>
+                    <h3>CONFECCIONO</h3>
+                    <p>1º AYUDANTE-</p>
+                </div>
+                <div>
+                    <p>....................................</p>
+                    <h3>Firma</h3>
+                </div>
+            </div>
+            <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em;text-align: center;">
+                <div>
+                    <h3>GRADUADO A CARGO</h3>
+                    <p>1º AYUDANTE-</p>
+                </div>
+                <div>
+                    <p>....................................</p>
+                    <h3>Firma</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+@code {
+    [Parameter]
+    public int? SalidaId { get; set; }
+    
+    [Parameter]
+    public bool? ConCroquis { get; set; }
+
+    public class IntervencionViewModel
+    {
+        public DateTime Fecha { get; set; }
+
+        public string Recepcionista { get; set; }
+    }
+
+    BomberosDbContext Context { get; set; }
+
+    IntervencionViewModel IntervencionVM { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Context = DbFactory.CreateDbContext();
+
+        var salida = await Context.Set<Salida>().Include(s => s.ReceptorBombero).SingleOrDefaultAsync(s => s.SalidaId == SalidaId);
+
+        if (salida != null)
+        {
+            IntervencionVM.Fecha = salida.HoraSalida;
+            IntervencionVM.Recepcionista = $"{salida.ReceptorBombero.Nombre} {salida.ReceptorBombero.Apellido}";
+        }
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

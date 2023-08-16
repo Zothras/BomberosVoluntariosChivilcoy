@@ -78,6 +78,10 @@
                     </div>
                 </card>
             }
+            <Modal Title="Editar"
+               Visible="@editarVisible">
+                <MovilEditar VehiculoId="777"/>
+            </Modal>
         }
         else
         {
@@ -94,6 +98,7 @@
 
 @code {
     public Movil[]? moviles;
+    private bool editarVisible = true;
 
     protected override async Task OnInitializedAsync()
     {
