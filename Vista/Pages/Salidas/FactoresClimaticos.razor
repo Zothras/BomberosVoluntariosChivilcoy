@@ -1,4 +1,6 @@
-﻿@inject NavigationManager navigationManager
+﻿@implements IDisposable
+@inject IMessageService message
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/factores-climaticos"
 @using System.ComponentModel.DataAnnotations;
@@ -13,7 +15,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
-    
+
     <FormItem Label="Descripcion">
         <Input @bind-Value="@modelFactorClimatico.Descripcion" />
     </FormItem>
@@ -24,10 +26,10 @@
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelFactorClimatico.HoraLLegada" />
     </FormItem>
     @*<FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="modelFactorClimatico.KmSalida" />
+    <AntDesign.InputNumber @bind-Value="modelFactorClimatico.KmSalida" />
     </FormItem>
     <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="modelFactorClimatico.KmLlegada" />
+    <AntDesign.InputNumber @bind-Value="modelFactorClimatico.KmLlegada" />
     </FormItem>*@
     @*Datos Localizacion*@
     <FormItem Label="Calle/Ruta">
@@ -77,6 +79,21 @@
             <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
         </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+        <div>
+            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+            <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+            <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+            <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
     }
     @*Solicitante datos*@
     <b><label>Datos de solicitante</label></b>
@@ -165,15 +182,42 @@
 
     </FormItem>
     <br />
+    @if (NumeroMovil is not null)
+    {
+        foreach (Movil m in Moviles)
+        {
+            if (m.NumeroMovil == NumeroMovil)
+            {
+                modelFactorClimatico.Kilometraje = m.kilometraje;
+                break;
+            }
+        }
+    }
+    <FormItem Label="Kilometro salida">
+        <AntDesign.InputNumber @bind-Value="modelFactorClimatico.Kilometraje" Disabled />
+    </FormItem>
+    <FormItem Label="Kilometro llegada">
+        <AntDesign.InputNumber @bind-Value="modelFactorClimatico.KmLlegada" />
+    </FormItem>
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <br />
-
+    <div>
+        <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+            <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
 
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
-    <FormItem Label="Tipo Escalafon">
-        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
-    </FormItem>
     <FormItem Label="Elija el bombero">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
@@ -190,7 +234,20 @@
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
     <br />
-
+    <div>
+        <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
+            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
     <b><label>Elija al encargado</label></b>
     <FormItem Label="Encargado">
         <Select TItem="BomberoViweModel"
@@ -223,7 +280,7 @@
     </FormItem>
 
     @*propio de la salida de Factor Climatico*@
-    
+
     <FormItem Label="Tipo Factores Climaticos">
         <EnumSelect TEnum="TipoFactoresClimaticos" @bind-Value="@modelFactorClimatico.Tipo" />
     </FormItem>
@@ -253,7 +310,7 @@
           WrapperColSpan="16"
           OnFinish="OnFinishModel"
           OnFinishFailed="OnFinishFailed"
-    @ref="@_form1">
+          @ref="@_form1">
         <FormItem Label="Numero factura">
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
@@ -279,9 +336,9 @@
 
 @code
 {
-
+    BomberosDbContext Context { get; set; }
     private DamnificadoViewModels damnificado = new();
-    private FactorClimaticoViewModels modelFactorClimatico = new ();
+    private FactorClimaticoViewModels modelFactorClimatico = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
     private VehiculoDamnificadoViewModels vehiculo = new();
@@ -312,124 +369,122 @@
 
 
     //direccion
-    public async void CargarFactorClimatico()
+    public async Task CargarFactorClimatico()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == modelFactorClimatico.LegajoReceptor).SingleOrDefaultAsync();
-        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
-
-        FactorClimatico factorClimatico = new()
+        try
         {
+            Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == modelFactorClimatico.LegajoReceptor).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
+            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
 
-                NumeroParte = modelFactorClimatico.NumeroParte,
-                HoraSalida = modelFactorClimatico.HoraSalida,
-                HoraLlegada = modelFactorClimatico.HoraLLegada,
-                //KmSalida = modelFactorClimatico.KmSalida,
-                //KmLlegada = modelFactorClimatico.KmLlegada,
-                Descripcion = modelFactorClimatico.Descripcion,
-                CalleORuta = modelFactorClimatico.CalleORuta,
-                NumeroOKilometro = modelFactorClimatico.NumeroOKilometro,
-                EntreCalles = modelFactorClimatico.EntreCalles,
-                PisoNumero = modelFactorClimatico.PisoNumero,
-                Depto = modelFactorClimatico.Depto,
-                //Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo)
-                TipoZona = modelFactorClimatico.TipoZona,
-                NombreSolicitante = modelFactorClimatico.NombreSolicitante,
-                ApellidoSolicitante = modelFactorClimatico.ApellidoSolicitante,
-                DniSolicitante = modelFactorClimatico.DniSolicitante,
-                TelefonoSolicitante = modelFactorClimatico.TelefonoSolicitante,
-                NombreYApellidoReceptor = modelFactorClimatico.NombreYApellidoReceptor,
-                TelefonoReceptor = modelFactorClimatico.TelefonoReceptor,
-                TipoServicio = modelFactorClimatico.TipoServicio,
-                //carga Evacuacion y superficie dañada
-
-                Evacuacion = modelFactorClimatico.Evacuacion,
-                Superficie = modelFactorClimatico.Superficie,
-                DetalleSuperficieDañada = modelFactorClimatico.DetalleSuperficieDañada,
-                Tipo= modelFactorClimatico.Tipo,
-
-                QuienLleno = BomberoLlenoPlanilla,
-                ReceptorBombero = bomberoReceptor,
-                Encargado = bomberoEncargado,
-               Seguro = new ()
-               {
-                   CompañiaAseguradora = modelFactorClimatico.CompaniaAseguradora,
-                   NumeroDePoliza = modelFactorClimatico.NumeroPoliza,
-                    FechaDeVencimineto = modelFactorClimatico.FechaVencimineto,
-               },
-               Damnificados = new(),
-               Moviles = new(),
-               CuerpoParticipante=new()
-
-        };
-        foreach (BomberoSalidaViewModels bom in bomberosSalida)
-        {
-            Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-            BomberoSalida BomSalida = new()
-            {
-                Salio = bom.Salio,
-                Grado = bom.Grado,
-                Bombero = bomberoSalida
-            };
-            factorClimatico.CuerpoParticipante.Add(BomSalida);
-        }
-        foreach (MovilSalidaViewModels m in MovilesSalidasL)
-        {
-            Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
-            MovilSalida movilS = new()
-            {
-                CargoCombustible = m.CargoCombustible,
-                Chofer = bomberoChofer,
-                Movil = Movilsalida
-            };
-            factorClimatico.Moviles.Add(movilS);
-        }
-        foreach (DamnificadoViewModels d in DamnificadosSalida)
-        {
-
-            Damnificado damn = new()
+            FactorClimatico factorClimatico = new()
                 {
-                    Nombre = d.Nombre,
-                    Apellido = d.Apellido,
-                    Dni = d.Dni,
-                    Sexo = d.Sexo,
-                    LugarDeNacimiento = d.LugarDeNacimiento,
-                    Edad = d.Edad,
-                    Estado = d.Estado,
-
-                    //No hay que inicializarlo ya que despues no se carga y no es necesario en esta salida
-                    //VehiculoDamnificado = new()
-                    //{
-                    //    Marca = vehiculo.Marca,
-                    //    Modelo = vehiculo.Modelo,
-                    //    Año = vehiculo.Año,
-                    //    Patente = vehiculo.Patente,
-                    //    Tipo = vehiculo.Tipo,
-                    //    Color = vehiculo.Color,
-                    //    Airbag = chek,
-                    //    Seguro = new()
-                    //    {
-                    //        CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                    //        NumeroDePoliza = vehiculo.NumeroDePoliza,
-                    //        FechaDeVencimineto = vehiculo.FechaDeVencimineto,
-                    //    },
-                    //}
+                    NumeroParte = modelFactorClimatico.NumeroParte,
+                    HoraSalida = modelFactorClimatico.HoraSalida,
+                    HoraLlegada = modelFactorClimatico.HoraLLegada,
+                    Descripcion = modelFactorClimatico.Descripcion,
+                    CalleORuta = modelFactorClimatico.CalleORuta,
+                    NumeroOKilometro = modelFactorClimatico.NumeroOKilometro,
+                    EntreCalles = modelFactorClimatico.EntreCalles,
+                    PisoNumero = modelFactorClimatico.PisoNumero,
+                    Depto = modelFactorClimatico.Depto,
+                    TipoZona = modelFactorClimatico.TipoZona,
+                    NombreSolicitante = modelFactorClimatico.NombreSolicitante,
+                    ApellidoSolicitante = modelFactorClimatico.ApellidoSolicitante,
+                    DniSolicitante = modelFactorClimatico.DniSolicitante,
+                    TelefonoSolicitante = modelFactorClimatico.TelefonoSolicitante,
+                    NombreYApellidoReceptor = modelFactorClimatico.NombreYApellidoReceptor,
+                    TelefonoReceptor = modelFactorClimatico.TelefonoReceptor,
+                    TipoServicio = modelFactorClimatico.TipoServicio,
+                    //carga Evacuacion y superficie dañada
+                    Evacuacion = modelFactorClimatico.Evacuacion,
+                    Superficie = modelFactorClimatico.Superficie,
+                    DetalleSuperficieDañada = modelFactorClimatico.DetalleSuperficieDañada,
+                    Tipo = modelFactorClimatico.Tipo,
+                    QuienLleno = BomberoLlenoPlanilla,
+                    ReceptorBombero = bomberoReceptor,
+                    Encargado = bomberoEncargado,
+                    Seguro = new()
+                    {
+                        CompañiaAseguradora = modelFactorClimatico.CompaniaAseguradora,
+                        NumeroDePoliza = modelFactorClimatico.NumeroPoliza,
+                        FechaDeVencimineto = modelFactorClimatico.FechaVencimineto,
+                    },
+                    Damnificados = new(),
+                    Moviles = new(),
+                    CuerpoParticipante = new()
                 };
-            factorClimatico.Damnificados.Add(damn);
+            foreach (BomberoSalidaViewModels bom in bomberosSalida)
+            {
+                Bombero? bomberoSalida = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == bom.NumeroLegajo);
+                BomberoSalida BomSalida = new()
+                    {
+                        Salio = bom.Salio,
+                        Grado = bom.Grado,
+                        Bombero = bomberoSalida
+                    };
+                factorClimatico.CuerpoParticipante.Add(BomSalida);
+            }
+            foreach (MovilSalidaViewModels m in MovilesSalidasL)
+            {
+                Bombero? bomberoChofer = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
+                Movil? Movilsalida = await Context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil);
+                if (Movilsalida is not null)
+                {
+                    Movilsalida.kilometraje = m.KmLlegada;
+                }
+                MovilSalida movilS = new()
+                    {
+                        CargoCombustible = m.CargoCombustible,
+                        NumeroFactura = movilSalidaViewModels.NumeroFactura,
+                        FechaFactura = movilSalidaViewModels.FechaFactura,
+                        TipoConbustible = movilSalidaViewModels.TipoConbustible,
+                        CantidadLitros = movilSalidaViewModels.CantidadLitros,
+                        QuienLleno = movilSalidaViewModels.QuienLleno,
+                        TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                        KmLlegada = m.KmLlegada,
+                        Chofer = bomberoChofer,
+                        Movil = Movilsalida
+                    };
+                factorClimatico.Moviles.Add(movilS);
+            }
+            foreach (DamnificadoViewModels d in DamnificadosSalida)
+            {
 
+                Damnificado damn = new()
+                    {
+                        Nombre = d.Nombre,
+                        Apellido = d.Apellido,
+                        Dni = d.Dni,
+                        Sexo = d.Sexo,
+                        LugarDeNacimiento = d.LugarDeNacimiento,
+                        Edad = d.Edad,
+                        Estado = d.Estado,
+                    };
+                factorClimatico.Damnificados.Add(damn);
+
+
+            }
+            Context.FactoresClimaticos.Add(factorClimatico);
+            await Context.SaveChangesAsync();
+
+            await Init();
+            StateHasChanged();
+            await message.Success("Salida agregada correctamente");
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
 
         }
-        await db.FactoresClimaticos.AddAsync(factorClimatico);
-        await db.SaveChangesAsync();
-
-
-
     }
-    public async void AgregarDamnificado()
+    public async Task AgregarDamnificado()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
 
         DamnificadoViewModels dp = new()
             {
@@ -439,17 +494,17 @@
                 Sexo = damnificado.Sexo,
                 LugarDeNacimiento = damnificado.LugarDeNacimiento,
                 Edad = damnificado.Edad,
-                Estado = damnificado.Estado
+                Estado = damnificado.Estado,
 
             };
         DamnificadosSalida.Add(dp);
-        await db.SaveChangesAsync();
+        StateHasChanged();
     }
-    public async void AgregarMovilSalida()
+    public async Task AgregarMovilSalida()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+
+        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
+        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -459,34 +514,48 @@
                 CantidadLitros = movilSalidaViewModels.CantidadLitros,
                 QuienLleno = movilSalidaViewModels.QuienLleno,
                 TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                KmLlegada = modelFactorClimatico.KmLlegada,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
+
             };
         MovilesSalidasL.Add(m);
-        await db.SaveChangesAsync();
+        StateHasChanged();
+
     }
 
-    public async void AgregarCuerpoParticipante()
+    public async Task AgregarCuerpoParticipante()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-
-        BomberoSalidaViewModels b = new()
+        var boberos = await Context.Bomberos.ToArrayAsync();
+        foreach (var bom in boberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
             {
-                Salio = chekB,
-                Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = BomberoCuerpo
-            };
-        bomberosSalida.Add(b);
-        await db.SaveChangesAsync();
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
+        StateHasChanged();
+
     }
     protected override async Task OnInitializedAsync()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        TodosBomberos = await db.Bomberos.ToArrayAsync();
-        Moviles = await db.Moviles.ToArrayAsync();
-        CargarBomberosView();
+        await Init();
     }
-
+    private  async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        Moviles = await Context.Moviles.ToArrayAsync();
+        await CargarBomberosView();
+    }
+    
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(modelFactorClimatico)}");
@@ -506,10 +575,12 @@
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
     // array de las opciones posibles, buscar la opcion y agregarla en la planilla
-    public void CargarBomberosView()
+    public async Task CargarBomberosView()
     {
-
-        foreach (Bombero b in TodosBomberos)
+        bomberoTodos = new();
+        bomberoChoferes = new();
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in bomberos)
         {
             BomberoViweModel bombero = new()
                 {
@@ -549,9 +620,8 @@
 
                 };
             bomberoTodos.Add(bombero);
-
         }
-        foreach (Bombero c in TodosBomberos)
+        foreach (Bombero c in bomberos)
         {
             if (c.Chofer == true)
             {
@@ -596,6 +666,7 @@
             }
         }
     }
+
     bool loading = false;
 
     void toggle(bool value) => loading = value;
@@ -621,9 +692,24 @@
         _visible = false;
 
     }
-    
+    void deleteRow(int numlegajo)
+    {
+        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+    void deleteRowMovil(string NumMovil)
+    {
+        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
+    }
+    void deleteRowDamnificados(string Dni)
+    {
+        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
 }
 
-    
+
 
 

@@ -582,9 +582,9 @@
 
     public async Task AgregarMovilSalida()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoChofer = await db.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == chofer);
-        Movil? Movilsalida = await db.Moviles.SingleOrDefaultAsync(m => m.NumeroMovil == NumeroMovil);
+
+        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
+        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -597,28 +597,38 @@
                 KmLlegada = accidenteViewModels.KmLlegada,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
+
             };
         MovilesSalidasL.Add(m);
         StateHasChanged();
+
     }
 
     public async Task AgregarCuerpoParticipante()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-
-        BomberoSalidaViewModels b = new()
+        var boberos = await Context.Bomberos.ToArrayAsync();
+        foreach (var bom in boberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
             {
-                Salio = bomberoSalidaView.Salio,
-                Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = BomberoCuerpo
-            };
-        bomberosSalida.Add(b);
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
         StateHasChanged();
+
     }
     public async void AgregarVehiculoAfectadoAccidente()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Accidente? vehiculosAfectadosAcc1 = await db.Accidentes.Where(vaa => vaa.NumeroParte == accidenteViewModels.NumeroParte)
+        
+        Accidente? vehiculosAfectadosAcc1 = await Context.Accidentes.Where(vaa => vaa.NumeroParte == accidenteViewModels.NumeroParte)
         .Include(sal => sal.VehiculosAfectado).ThenInclude(vehiculo => vehiculo.Seguro)
         .SingleOrDefaultAsync();
 
@@ -626,13 +636,12 @@
             {
                 Tipo = vehiculosAfectadosAcc1.Tipo,
                 CantidadVheiculo = vehiculosAfectadosAcc1.CantidadVehiculos,
-
                 VehiculosAfectado = vehiculosAfectadosAcc1.VehiculosAfectado,
                 CondicionesClimaticas = vehiculosAfectadosAcc1.CondicionesClimaticas,
                 OtroCondicion = vehiculosAfectadosAcc1.OtroCondicion
             };
         VehiculosAfectdosAcci.Add(Accidentes1);
-        await db.SaveChangesAsync();
+        await Context.SaveChangesAsync();
     }
 
 
@@ -656,10 +665,12 @@
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
 
-    public async  Task CargarBomberosView()
+    public async Task CargarBomberosView()
     {
-
-        foreach (Bombero b in TodosBomberos)
+        bomberoTodos = new();
+        bomberoChoferes = new();
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in bomberos)
         {
             BomberoViweModel bombero = new()
                 {
@@ -699,9 +710,8 @@
 
                 };
             bomberoTodos.Add(bombero);
-
         }
-        foreach (Bombero c in TodosBomberos)
+        foreach (Bombero c in bomberos)
         {
             if (c.Chofer == true)
             {

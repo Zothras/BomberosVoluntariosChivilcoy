@@ -177,6 +177,7 @@
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                     Placeholder="Selecione a un bombero"
                                     DefaultActiveFirstOption="false"
+                                    AllowClear="true"
                                             EnableSearch>
                             </Select>
                         </FormItem>
@@ -189,6 +190,7 @@
                                     ValueName="@nameof(Movil.NumeroMovil)"
                                     Placeholder="Selecione el movil"
                                     DefaultActiveFirstOption="false"
+                                    AllowClear="true"
                                             EnableSearch>
                             </Select>
 
@@ -215,7 +217,7 @@
                         <div>
                             <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
                                 <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-                                <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
+                                <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
                                 <ActionColumn Title="Acciones">
                                     <Popconfirm Title="Sure to delete?"
                                                 OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
@@ -241,6 +243,7 @@
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                     Placeholder="Selecione un bombero"
                                     DefaultActiveFirstOption="false"
+                                    AllowClear="true"
                                             EnableSearch>
                             </Select>
                         </FormItem>
@@ -272,6 +275,7 @@
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                     Placeholder="Seleccione  a un  bombero"
                                     DefaultActiveFirstOption="true"
+                                    AllowClear="true"
                                             EnableSearch>
                             </Select>
                         </FormItem>
@@ -285,6 +289,7 @@
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                     Placeholder="Seleccione  a un  bombero"
                                     DefaultActiveFirstOption="false"
+                                    AllowClear="true"
                                     EnableSearch>
                             </Select>
                         </FormItem>
