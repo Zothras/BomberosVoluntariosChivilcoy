@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@inject IMessageService _message
+@inject IMessageService message
 @page "/Herramientas/Comunicacion"
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
@@ -25,12 +25,14 @@
         </GridRow>
     </TitleTemplate>
     <ColumnDefinitions>
-        <PropertyColumn Property="c=>c.NroEquipo"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Modelo"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Marca"></PropertyColumn>
-        <PropertyColumn Property="c=>c.NroSerie"></PropertyColumn>
-        <PropertyColumn Property="b=>b.Nombre"></PropertyColumn>
-        <PropertyColumn Property="b=>b.Apellido"></PropertyColumn>
+        <PropertyColumn Property="c => c.NroEquipo"
+                        DefaultSortOrder="@SortDirection.Descending"
+                        SorterCompare="@((a, b) => string.Compare(a, b))"/>
+        <PropertyColumn Property="c=>c.Modelo" Sortable/>
+        <PropertyColumn Property="c=>c.Marca" Sortable />
+        <PropertyColumn Property="c=>c.NroSerie" />
+        <PropertyColumn Property="b=>b.Nombre"  />
+        <PropertyColumn Property="b=>b.Apellido" Sortable />
         <ActionColumn Title="Action">
             <Space>
                 <SpaceItem>
@@ -105,8 +107,8 @@
                         ValueName="@nameof(bomberosViewModel.NumeroLegajo)"
                         Placeholder="Selecione a un bombero"
                         DefaultActiveFirstOption="false"
-                    EnableSearch
-                    AllowClear="true">
+                        EnableSearch
+                        AllowClear="true">
                 </Select>
             </FormItem>
         </div>
@@ -241,48 +243,87 @@
     }
 
     private async Task Delete(string NroEquipoBorrar)
-    {
-        using var context = DbFactory.CreateDbContext();
-        Comunicacion? comunicacion = await context.Comunicacion.FirstOrDefaultAsync(c => c.NroEquipo == NroEquipoBorrar);
-        context.Remove(comunicacion);
-        ComunicacionesViewModel = ComunicacionesViewModel.Where(x => x.NroEquipo != NroEquipoBorrar).ToList();
-        _total = ComunicacionesViewModel.Count;
-        await context.SaveChangesAsync();
-        StateHasChanged();
+    {     
+        try
+        {
+            Comunicacion? comunicacion = await Context.Comunicacion.FirstOrDefaultAsync(c => c.NroEquipo == NroEquipoBorrar);
+            Context.Remove(comunicacion);
+            ComunicacionesViewModel = ComunicacionesViewModel.Where(x => x.NroEquipo != NroEquipoBorrar).ToList();
+            _total = ComunicacionesViewModel.Count;
+            await Context.SaveChangesAsync();
+            await Init();
+            StateHasChanged();
+            await message.Success("Handie elminado correctamente");
+        }
+        catch (Exception ex)
+        {
+            await Init();
+            StateHasChanged();
+            if (ex.InnerException != null)
+                await message.Error(ex.InnerException.Message, 5);
+            else
+                await message.Error(ex.Message, 5);
+        }
+
     }
     private async Task Desasignar(string NroEquipoDesasignar)
     {
-        using var context = DbFactory.CreateDbContext();
-
-        Bombero? bombero = await context.Bomberos
+        try
+        {
+            Bombero? bombero = await Context.Bomberos
             .Include(b => b.Handie) // Incluye la entidad relacionada Handie en la consulta
             .Where(x => x.Handie.NroEquipo == NroEquipoDesasignar)
             .SingleOrDefaultAsync();
 
-        if (bombero != null)
-        {
-            bombero.Handie = null; // Desvincula la entidad relacionada Handie
-            await context.SaveChangesAsync();
-
+            if (bombero != null)
+            {
+                bombero.Handie = null; // Desvincula la entidad relacionada Handie
+                await Context.SaveChangesAsync();
+            }
+            await Init();
+            StateHasChanged();
+            await message.Success("Bombero desasignado correctamente");
         }
-        await Init();
-        StateHasChanged();
+        catch (Exception ex)
+        {
+            await Init();
+            StateHasChanged();
+            if (ex.InnerException != null)
+                await message.Error(ex.InnerException.Message, 5);
+            else
+                await message.Error(ex.Message, 5);
+        }
+
     }
 
     private async void EditarBombero(string NroEquipoEdit)
     {
-        Comunicacion? comunicacion = await Context.Comunicacion.SingleOrDefaultAsync(b => b.NroEquipo == NroEquipoEdit);
-        Bombero? bombero = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == ComunicacionVM.NroLegajo);
+        try
+        {
+            Comunicacion? comunicacion = await Context.Comunicacion.SingleOrDefaultAsync(b => b.NroEquipo == NroEquipoEdit);
+            Bombero? bombero = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == ComunicacionVM.NroLegajo);
 
-        comunicacion.NroEquipo = ComunicacionVM.NroEquipo;
-        comunicacion.Modelo = ComunicacionVM.Modelo;
-        comunicacion.Marca = ComunicacionVM.Marca;
-        comunicacion.NroSerie = ComunicacionVM.NroSerie;
-        comunicacion.Estado = ComunicacionVM.Estado;
-        comunicacion.Bombero = bombero;
-        await Context.SaveChangesAsync();
-        await Init();
-        StateHasChanged();
+            comunicacion.NroEquipo = ComunicacionVM.NroEquipo;
+            comunicacion.Modelo = ComunicacionVM.Modelo;
+            comunicacion.Marca = ComunicacionVM.Marca;
+            comunicacion.NroSerie = ComunicacionVM.NroSerie;
+            comunicacion.Estado = ComunicacionVM.Estado;
+            comunicacion.Bombero = bombero;
+            await Context.SaveChangesAsync();
+            await Init();
+            StateHasChanged();
+            await message.Success("Handie editado correctamente");
+        }
+        catch (Exception ex)
+        {
+            await Init();
+            StateHasChanged();
+            if (ex.InnerException != null)
+                await message.Error(ex.InnerException.Message, 5);
+            else
+                await message.Error(ex.Message, 5);
+        }
+
     }
 
     string NroEquipoEdit;
@@ -292,11 +333,6 @@
         GetComunicacionViewModel(NroEquipo);
         _visible = true;
     }
-
-
-
-
-
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(ComunicacionVM)}");
@@ -332,10 +368,6 @@
     }
 
     private Form<ComunicacionViewModel> _form;
-
-    /// <summary>
-    /// when form is submited, close the modal
-    /// </summary>
     /// <param name="args"></param>
     private void OnFinish(EditContext editContext)
     {
@@ -345,15 +377,7 @@
 
     private async void HandleOk(MouseEventArgs e)
     {
-        //bomberoVM.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
-        //_form.Submit();
-
         EditarBombero(NroEquipoEdit);
-        //navigationManager.NavigateTo($"/bomberos");
-
-        //StateHasChanged();
-        //await Task.Delay(500);
-        //NevigateToYourUrl();
         _visible = false;
     }
 
@@ -370,7 +394,7 @@
 
     private void Cancel()
     {
-        _message.Error("Operacion cancelada");
+        message.Error("Operacion cancelada");
     }
 
 }

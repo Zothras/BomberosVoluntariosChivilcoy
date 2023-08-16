@@ -1,4 +1,6 @@
-﻿@inject NavigationManager navigationManager
+﻿@implements IDisposable
+@inject IMessageService message
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/incendios-vehiculares"
 @using System.ComponentModel.DataAnnotations;
@@ -26,10 +28,10 @@
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioVehicularView.HoraLLegada" />
     </FormItem>
     @*<FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.KmSalida" />
+    <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.KmSalida" />
     </FormItem>
     <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.KmLlegada" />
+    <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.KmLlegada" />
     </FormItem>*@
     <FormItem Label="Calle/Ruta">
         <Input @bind-Value="@salidaIncendioVehicularView.CalleORuta" />
@@ -106,10 +108,26 @@
             <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
         </FormItem>
         <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+        <div>
+            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+            <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+            <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+            <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
     }
     @*Moviles de salidas*@
     @*a la hora de pedir el chofer y movil,
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
+    @*Moviles de salidas*@
     <b><label>Datos de chofer</label></b>
     <br />
     <FormItem Label="" style="display: grid;place-items: center;">
@@ -152,16 +170,17 @@
         {
             if (m.NumeroMovil == NumeroMovil)
             {
-                <FormItem Label="Kilometro salida">
-                    <AntDesign.InputNumber @bind-Value="m.kilometraje" Disabled />
-                </FormItem>
-                <FormItem Label="Kilometro llegada">
-                    <AntDesign.InputNumber @bind-Value="movilSalidaViewModels.KmLlegada" />
-                </FormItem>
+                salidaIncendioVehicularView.Kilometraje = m.kilometraje;
                 break;
             }
         }
     }
+    <FormItem Label="Kilometro salida">
+        <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.Kilometraje" Disabled />
+    </FormItem>
+    <FormItem Label="Kilometro llegada">
+        <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.KmLlegada" />
+    </FormItem>
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <div>
         <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
@@ -312,7 +331,7 @@
           WrapperColSpan="16"
           OnFinish="OnFinishModel"
           OnFinishFailed="OnFinishFailed"
-    @ref="@_form1">
+          @ref="@_form1">
         <FormItem Label="Numero factura">
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
@@ -336,6 +355,7 @@
 
 @code {
 
+    BomberosDbContext Context { get; set; }
     public IncendioViewModels salidaIncendioVehicularView = new();
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
@@ -365,23 +385,90 @@
     int BomberoEncargado;
     int QuienLLenoPlanilla;
 
-    protected override void OnInitialized()
+
+
+
+
+    public async Task AgregarDamnificado()
     {
-        salidaIncendioVehicularView.Tipo = TipoIncendio.Vehicular; // Establecer valor predeterminado
+
+        DamnificadoViewModels dp = new()
+            {
+                Nombre = damnificado.Nombre,
+                Apellido = damnificado.Apellido,
+                Dni = damnificado.Dni,
+                Sexo = damnificado.Sexo,
+                LugarDeNacimiento = damnificado.LugarDeNacimiento,
+                Edad = damnificado.Edad,
+                Estado = damnificado.Estado,
+
+            };
+        DamnificadosSalida.Add(dp);
+        StateHasChanged();
     }
-    protected override async Task OnInitializedAsync()
+
+    public async Task AgregarMovilSalida()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        var salida = db.Set<Salida>().OrderByDescending(s => s.NumeroParte).FirstOrDefault();
-        if (salida is not null)
-        {
-            salidaIncendioVehicularView.NumeroParte = salida.NumeroParte + 1;
-        }
-        TodosBomberos = await db.Bomberos.ToArrayAsync();
-        Moviles = await db.Moviles.ToArrayAsync();
-        CargarBomberosView();
+
+        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
+        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+        MovilSalidaViewModels m = new()
+            {
+                CargoCombustible = chekM,
+                NumeroFactura = movilSalidaViewModels.NumeroFactura,
+                FechaFactura = movilSalidaViewModels.FechaFactura,
+                TipoConbustible = movilSalidaViewModels.TipoConbustible,
+                CantidadLitros = movilSalidaViewModels.CantidadLitros,
+                QuienLleno = movilSalidaViewModels.QuienLleno,
+                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                KmLlegada = salidaIncendioVehicularView.KmLlegada,
+                Chofer = bomberoChofer,
+                MovilesSalida = Movilsalida,
+
+            };
+        MovilesSalidasL.Add(m);
+        StateHasChanged();
 
     }
+
+    public async Task AgregarCuerpoParticipante()
+    {
+        var boberos = await Context.Bomberos.ToArrayAsync();
+        foreach (var bom in boberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
+            {
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
+        StateHasChanged();
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await Init();
+
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        salidaIncendioVehicularView = new();
+        salidaIncendioVehicularView.Tipo = TipoIncendio.Vehicular; // Establecer valor predeterminado
+        TodosBomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
+        await CargarBomberosView();
+    }
+
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(salidaIncendioVehicularView)}");
@@ -397,185 +484,136 @@
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
-    public async void SubirIncendioVehicular()
+
+    public async Task SubirIncendioVehicular()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
-        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
-        if (salidaIncendioVehicularView is not null)
+        try
         {
-            Vista.Data.Models.Salidas.Planillas.Incendio? numeroParte = await db.Set<Incendio>().Where(m => m.NumeroParte == salidaIncendioVehicularView.NumeroParte).SingleOrDefaultAsync();
+            Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
+            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
+
             if (salidaIncendioVehicularView is not null)
             {
-                Vista.Data.Models.Salidas.Planillas.Incendio salidaIncendioVehicular = new()
-                    {
-                        Tipo = salidaIncendioVehicularView.Tipo,
-                        Descripcion = salidaIncendioVehicularView.Descripcion,
-                        HoraSalida = salidaIncendioVehicularView.HoraSalida,
-                        HoraLlegada = salidaIncendioVehicularView.HoraLLegada,
-                        //KmSalida = salidaIncendioVehicularView.KmSalida,
-                        //KmLlegada = salidaIncendioVehicularView.KmLlegada,
-                        NumeroParte = salidaIncendioVehicularView.NumeroParte,
-                        CalleORuta = salidaIncendioVehicularView.CalleORuta,
-                        NumeroOKilometro = salidaIncendioVehicularView.NumeroOKilometro,
-                        EntreCalles = salidaIncendioVehicularView.EntreCalles,
-                        TipoZona = salidaIncendioVehicularView.TipoZona,
-                        NombreSolicitante = salidaIncendioVehicularView.NombreSolicitante,
-                        ApellidoSolicitante = salidaIncendioVehicularView.ApellidoSolicitante,
-                        DniSolicitante = salidaIncendioVehicularView.DniSolicitante,
-                        TelefonoSolicitante = salidaIncendioVehicularView.TelefonoSolicitante,
-                        DeteccionAutomaticaId = salidaIncendioVehicularView.DeteccionAutomaticaId,
-                        TipoServicio = salidaIncendioVehicularView.TipoServicio,
-                        Extintor = salidaIncendioVehicularView.Extintor,
-                        Hidrante = salidaIncendioVehicularView.Hidrante,
-                        TipoEvacuacion = salidaIncendioVehicularView.TipoEvacuacion,
-                        TipoSuperficieAfectada = salidaIncendioVehicularView.TipoSuperficieAfectada,
-                        DetalleSuperficieAfectadaIncendio = salidaIncendioVehicularView.DetalleSuperficieAfectadaIncendio,
-                        SuperficieAfectadaCausa = salidaIncendioVehicularView.SuperficieAfectadaCausa,
-                        QuienLleno = BomberoLlenoPlanilla,
-                        ReceptorBombero = bomberoReceptor,
-                        Encargado = bomberoEncargado,
-                        Seguro = new()
-                        {
-                            CompañiaAseguradora = salidaIncendioVehicularView.CompaniaAseguradora,
-                            NumeroDePoliza = salidaIncendioVehicularView.NumeroPoliza,
-                            FechaDeVencimineto = salidaIncendioVehicularView.FechaVencimineto,
-                        },
-                        Damnificados = new(),
-                        Moviles = new(),
-                        CuerpoParticipante = new()
-                    };
-                foreach (BomberoSalidaViewModels bom in bomberosSalida)
+                Vista.Data.Models.Salidas.Planillas.Incendio? numeroParte = await Context.Set<Incendio>().Where(m => m.NumeroParte == salidaIncendioVehicularView.NumeroParte).SingleOrDefaultAsync();
+                if (salidaIncendioVehicularView is not null)
                 {
-                    Bombero? bomberoSalida = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-                    BomberoSalida BomSalida = new()
+                    Vista.Data.Models.Salidas.Planillas.Incendio salidaIncendioVehicular = new()
                         {
-                            Salio = bom.Salio,
-                            Bombero = bomberoSalida
-                        };
-                    salidaIncendioVehicular.CuerpoParticipante.Add(BomSalida);
-                }
-                foreach (MovilSalidaViewModels m in MovilesSalidasL)
-                {
-                    Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-                    Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
-                    MovilSalida movilS = new()
-                        {
-                            CargoCombustible = m.CargoCombustible,
-                            Chofer = bomberoChofer,
-                            Movil = Movilsalida
-                        };
-                    salidaIncendioVehicular.Moviles.Add(movilS);
-                }
-                foreach (DamnificadoViewModels d in DamnificadosSalida)
-                {
-
-                    Damnificado damn = new()
-                        {
-                            Nombre = d.Nombre,
-                            Apellido = d.Apellido,
-                            Dni = d.Dni,
-                            Sexo = d.Sexo,
-                            LugarDeNacimiento = d.LugarDeNacimiento,
-                            Edad = d.Edad,
-                            Estado = d.Estado,
-
-                            VehiculoDamnificado = new()
+                            Tipo = salidaIncendioVehicularView.Tipo,
+                            Descripcion = salidaIncendioVehicularView.Descripcion,
+                            HoraSalida = salidaIncendioVehicularView.HoraSalida,
+                            HoraLlegada = salidaIncendioVehicularView.HoraLLegada,
+                            //KmSalida = salidaIncendioVehicularView.KmSalida,
+                            //KmLlegada = salidaIncendioVehicularView.KmLlegada,
+                            NumeroParte = salidaIncendioVehicularView.NumeroParte,
+                            CalleORuta = salidaIncendioVehicularView.CalleORuta,
+                            NumeroOKilometro = salidaIncendioVehicularView.NumeroOKilometro,
+                            EntreCalles = salidaIncendioVehicularView.EntreCalles,
+                            TipoZona = salidaIncendioVehicularView.TipoZona,
+                            NombreSolicitante = salidaIncendioVehicularView.NombreSolicitante,
+                            ApellidoSolicitante = salidaIncendioVehicularView.ApellidoSolicitante,
+                            DniSolicitante = salidaIncendioVehicularView.DniSolicitante,
+                            TelefonoSolicitante = salidaIncendioVehicularView.TelefonoSolicitante,
+                            DeteccionAutomaticaId = salidaIncendioVehicularView.DeteccionAutomaticaId,
+                            TipoServicio = salidaIncendioVehicularView.TipoServicio,
+                            Extintor = salidaIncendioVehicularView.Extintor,
+                            Hidrante = salidaIncendioVehicularView.Hidrante,
+                            TipoEvacuacion = salidaIncendioVehicularView.TipoEvacuacion,
+                            TipoSuperficieAfectada = salidaIncendioVehicularView.TipoSuperficieAfectada,
+                            DetalleSuperficieAfectadaIncendio = salidaIncendioVehicularView.DetalleSuperficieAfectadaIncendio,
+                            SuperficieAfectadaCausa = salidaIncendioVehicularView.SuperficieAfectadaCausa,
+                            QuienLleno = BomberoLlenoPlanilla,
+                            ReceptorBombero = bomberoReceptor,
+                            Encargado = bomberoEncargado,
+                            Seguro = new()
                             {
-                                Marca = vehiculo.Marca,
-                                Modelo = vehiculo.Modelo,
-                                Año = vehiculo.Año,
-                                Patente = vehiculo.Patente,
-                                Tipo = vehiculo.Tipo,
-                                Color = vehiculo.Color,
-                                Airbag = chek,
-                                Seguro = new()
-                                {
-                                    CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                                    NumeroDePoliza = vehiculo.NumeroDePoliza,
-                                    FechaDeVencimineto = vehiculo.FechaDeVencimineto,
-                                },
-                            }
+                                CompañiaAseguradora = salidaIncendioVehicularView.CompaniaAseguradora,
+                                NumeroDePoliza = salidaIncendioVehicularView.NumeroPoliza,
+                                FechaDeVencimineto = salidaIncendioVehicularView.FechaVencimineto,
+                            },
+                            Damnificados = new(),
+                            Moviles = new(),
+                            CuerpoParticipante = new()
                         };
-                    salidaIncendioVehicular.Damnificados.Add(damn);
-
-
-                }
-                await db.Set<Incendio>().AddAsync(salidaIncendioVehicular);
-                await db.SaveChangesAsync();
-            }
-        }
-    }
-    public async void AgregarDamnificado()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-
-        DamnificadoViewModels dp = new()
-            {
-                Nombre = damnificado.Nombre,
-                Apellido = damnificado.Apellido,
-                Dni = damnificado.Dni,
-                Sexo = damnificado.Sexo,
-                LugarDeNacimiento = damnificado.LugarDeNacimiento,
-                Edad = damnificado.Edad,
-                Estado = damnificado.Estado,
-
-            };
-        DamnificadosSalida.Add(dp);
-        await db.SaveChangesAsync();
-    }
-    public async void AgregarMovilSalida()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
-        if (Movilsalida is not null)
-        {
-            Movilsalida.kilometraje = movilSalidaViewModels.KmLlegada;
-        }
-        MovilSalidaViewModels m = new()
-            {
-                CargoCombustible = chekM,
-                NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                FechaFactura = movilSalidaViewModels.FechaFactura,
-                TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                QuienLleno = movilSalidaViewModels.QuienLleno,
-                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                Chofer = bomberoChofer,
-                MovilesSalida = Movilsalida,
-            };
-        MovilesSalidasL.Add(m);
-        await db.SaveChangesAsync();
-    }
-
-    void OnChange(string[] checkedValues)
-    {
-        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
-    }
-    public async void AgregarCuerpoParticipante()
-    {
-        using var db = await DbFactory.CreateDbContextAsync();
-        foreach (var bom in TodosBomberos)
-        {
-            if (bom.NumeroLegajo == BomberoCuerpo)
-            {
-                BomberoSalidaViewModels b = new()
+                    foreach (BomberoSalidaViewModels bom in bomberosSalida)
                     {
-                        Salio = bomberoSalidaView.Salio,
-                        Nombre = bom.Nombre,
-                        Apellido = bom.Apellido,
-                        NumeroLegajo = BomberoCuerpo
-                    };
-                bomberosSalida.Add(b);
-                await db.SaveChangesAsync();
+                        Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
+                        BomberoSalida BomSalida = new()
+                            {
+                                Salio = bom.Salio,
+                                Bombero = bomberoSalida
+                            };
+                        salidaIncendioVehicular.CuerpoParticipante.Add(BomSalida);
+                    }
+
+                    foreach (MovilSalidaViewModels m in MovilesSalidasL)
+                    {
+                        Bombero? bomberoChofer = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
+                        Movil? Movilsalida = await Context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil);
+                        if (Movilsalida is not null)
+                        {
+                            Movilsalida.kilometraje = m.KmLlegada;
+                        }
+                        MovilSalida movilS = new()
+                            {
+                                CargoCombustible = m.CargoCombustible,
+                                NumeroFactura = movilSalidaViewModels.NumeroFactura,
+                                FechaFactura = movilSalidaViewModels.FechaFactura,
+                                TipoConbustible = movilSalidaViewModels.TipoConbustible,
+                                CantidadLitros = movilSalidaViewModels.CantidadLitros,
+                                QuienLleno = movilSalidaViewModels.QuienLleno,
+                                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                                KmLlegada = m.KmLlegada,
+                                Chofer = bomberoChofer,
+                                Movil = Movilsalida
+                            };
+                        salidaIncendioVehicular.Moviles.Add(movilS);
+                    }
+
+
+                    foreach (DamnificadoViewModels d in DamnificadosSalida)
+                    {
+
+                        Damnificado damn = new()
+                            {
+                                Nombre = d.Nombre,
+                                Apellido = d.Apellido,
+                                Dni = d.Dni,
+                                Sexo = d.Sexo,
+                                LugarDeNacimiento = d.LugarDeNacimiento,
+                                Edad = d.Edad,
+                                Estado = d.Estado,
+                            };
+                        salidaIncendioVehicular.Damnificados.Add(damn);
+                    }
+                    await Context.Set<Incendio>().AddAsync(salidaIncendioVehicular);
+                    await Context.SaveChangesAsync();
+
+
+                    await Init();
+                    StateHasChanged();
+                    await message.Success("Salida agregada correctamente");
+                }
             }
         }
-    }
-    public void CargarBomberosView()
-    {
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+        }
 
+
+    }
+    public async Task CargarBomberosView()
+    {
+        bomberoTodos = new();
+        bomberoChoferes = new();
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
         foreach (Bombero b in TodosBomberos)
         {
             BomberoViweModel bombero = new()
@@ -716,5 +754,13 @@
     void deleteRowMovil(string NumMovil)
     {
         MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
+    }
+    void deleteRowDamnificados(string Dni)
+    {
+        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
     }
 }

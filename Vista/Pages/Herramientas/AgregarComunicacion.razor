@@ -169,9 +169,6 @@
                 };
             Context.Comunicacion.Add(comunicacion);
             await Context.SaveChangesAsync();
-
-            //navigationManager.NavigateTo($"/Herramientas/Comunicacion", true);
-
             await Init();
             StateHasChanged();
             await message.Success("Handie agregado correctamente");
