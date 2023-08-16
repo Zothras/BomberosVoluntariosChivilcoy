@@ -64,7 +64,7 @@
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/movil/{m.VehiculoId}"); })">
                                 <Icon Type="ellipsis" Theme="outline" />
                             </Button>
-                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="@(() => { navigationManager.NavigateTo($"/moviles/editar/{m.VehiculoId}"); })">
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>EditarMovilModal(m.VehiculoId)">
                                 <Icon Type="edit" Theme="outline" />
                             </Button>
                             <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de dar de baja a este movil?"
@@ -77,11 +77,10 @@
                         </div>
                     </div>
                 </card>
+                <Modal Title="Editar" OnCancel="@HandleCancel" Visible="@editarVisible">
+                    <MovilEditar VehiculoId="@EditarPorId" />
+                </Modal>
             }
-            <Modal Title="Editar"
-               Visible="@editarVisible">
-                <MovilEditar VehiculoId="777"/>
-            </Modal>
         }
         else
         {
@@ -97,14 +96,19 @@
 </div>
 
 @code {
+
     public Movil[]? moviles;
-    private bool editarVisible = true;
+    public bool editarVisible;
+    int EditarPorId;
+    // string xeditar;
+    // public MovilEditar? movilEditar = new();
+    BomberosDbContext Context { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        using var db = DbFactory.CreateDbContext();
+        Context = DbFactory.CreateDbContext();
 
-        moviles = await db.Moviles.ToArrayAsync();
+        moviles = await Context.Moviles.ToArrayAsync();
     }
 
     public string CargarImage(Movil movil)
@@ -122,37 +126,44 @@
 
         return src;
     }
-    public async void EliminarMovil(int id)
-    {
 
-        using var context = DbFactory.CreateDbContext();
-        Movil? MovilAeliminnar = await context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
-        if (MovilAeliminnar is not null)
-        {
-            context.Remove(MovilAeliminnar);
-        }
-        await context.SaveChangesAsync();
-        //NumeroMovil.NumeroMovil = string.Empty;
-        moviles = await context.Moviles.ToArrayAsync();
+    public async void EditarMovilModal(int id)
+    {
+        EditarPorId = id;
+        editarVisible = true;
+        // MovilEditar.GetMovilesViewModel(xeditar);
+        // await movilEditar.Init();
+        // movilEditar.LimpiarDatos();
         StateHasChanged();
     }
+    
     public async void CambiarEstado(int id, TipoEstadoMovil estado)
     {
-
-        using var context = DbFactory.CreateDbContext();
-        Movil? movil_a_modificar = await context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
+        Movil? movil_a_modificar = await Context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
         if (movil_a_modificar is not null)
         {
             movil_a_modificar.Estado = estado;
         }
-        await context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         //NumeroMovil.NumeroMovil = string.Empty;
-        moviles = await context.Moviles.ToArrayAsync();
+        moviles = await Context.Moviles.ToArrayAsync();
         StateHasChanged();
     }
+
     private void Cancel()
     {
         _message.Error("Operacion cancelada");
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        editarVisible = false;
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
     }
 }
 

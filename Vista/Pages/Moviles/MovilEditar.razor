@@ -1,10 +1,7 @@
-﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/moviles/editar/{VehiculoId:int?}"
+﻿@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
 
 <style>
-    .ant-carousel .slick-dots li {
-        display: none !important;
-    }
     .inpt-container {
         position: relative; 
         padding: .8em 0;
@@ -69,16 +66,16 @@
     .raro {
         padding: 6em 0;
     }
+
     .ant-modal-body {
+        width: 100%;
+        height: 100%;
         padding: 0;
     }
 
-    .ant-modal-body {
-        width: 33em;
-    }
-
     .ant-modal-content {
-        width: 33em;
+        width: 100%;
+        height: 100%;
     }
 
     .ant-modal-footer{
@@ -86,7 +83,7 @@
     }
 </style>
 
-<div style="width: 100%;">
+<div style="width: 100%;padding: 1em;">
     <Steps Current="current">
         @foreach (var item in steps)
         {
@@ -155,25 +152,27 @@
             }
             else if (current == 2)
             {
-                <div style="height: 100%;width: 100%;padding: 10px;">
-                    @if (bomberos is not null)
-                    {
-                        @foreach (BomberoViewModel b in bomberoViews)
+                <div style="width: 100%;height: 24em; background: #fff;">
+                    <div style="height: 100%;width: 100%;padding: 10px;">
+                        @if (bomberos is not null)
                         {
-                            <div class="inpt-container">
-                                <select class="select-estadoMovil" @bind="b.PersonaId">
-                                    <option hidden selected value="0">Seleccione bombero @b.Rol.ToString()</option>
-                                    @foreach (Bombero bo in bomberos)
-                                    {
-                                        <option value="@bo.PersonaId">@bo.Apellido  @bo.Nombre</option>
-                                    }
-                                </select>
+                            @foreach (BomberoViewModel b in bomberoViews)
+                            {
+                                <div class="inpt-container">
+                                    <select class="select-estadoMovil" @bind="b.PersonaId">
+                                        <option hidden selected value="0">Seleccione bombero @b.Rol.ToString()</option>
+                                        @foreach (Bombero bo in bomberos)
+                                        {
+                                            <option value="@bo.PersonaId">@bo.Apellido  @bo.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+                            <div style="display: flex;justify-content: flex-end;">
+                                <Button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 40%;text-align: center,">Confirmar roles</Button>
                             </div>
                         }
-                        <div style="display: flex;justify-content: flex-end;">
-                            <Button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 40%;text-align: center,">Confirmar roles</Button>
-                        </div>
-                    }
+                    </div>
                 </div>
             }
         </div>
@@ -193,7 +192,6 @@
                 Editar movil
             </Button>
         }
-
     </div>
 </div>
 
@@ -215,7 +213,7 @@
 @code {
     [Parameter]
     public int? VehiculoId { get; set; }
-
+    
     public class MovilViewModel
     {
         [Required, StringLength(255)]
@@ -249,19 +247,28 @@
         public int PersonaId { get; set; }
     }
 
+    BomberosDbContext Context { get; set; }
+
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
+    // public List<MovilViewModel> movilesview { get; set; } = new();
     public List<BomberoViewModel> bomberoViews { get; set; } = new();
     public Bombero[]? bomberos;
     public bool existe;
 
+    public async Task Init()
+    {
+        movilView = new();
+        Context = DbFactory.CreateDbContext();
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        using var db = DbFactory.CreateDbContext();
+        await Init();
 
-        bomberos = await db.Bomberos.ToArrayAsync();
+        bomberos = await Context.Bomberos.ToArrayAsync();
 
-        Movil? movil = await db.Moviles.Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+        Movil? movil = await Context.Moviles.Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
 
         if (movil is not null)
         {
@@ -274,7 +281,7 @@
             movilView.NumeroMotor = movil.NumeroMotor;
             movilView.NumeroChasis = movil.NumeroChasis;
             movilView.Estado = movil.Estado;
-            ImagenMovil? imagen = await db.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
+            ImagenMovil? imagen = await Context.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
 
             if (imagen is not null)
             {
@@ -287,12 +294,61 @@
         }
         else if (movil is null)
         {
-            existe = false;
+            existe = false; 
         }
 
         AgregarALista(TipoRol.Encargado);
         AgregarALista(TipoRol.Subalterno);
+
+        // await Init();
+        StateHasChanged();
     }
+
+    // public async Task CargarMovilVM()
+    // {
+    //     bomberos = await Context.Bomberos.ToArrayAsync();
+
+    //     Movil? movil = await Context.Moviles.Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+
+    //     if (movil is not null)
+    //     {
+    //         movilView.Marca = movil.Marca;
+    //         movilView.Modelo = movil.Modelo;
+    //         movilView.Año = movil.Año;
+    //         movilView.Patente = movil.Patente;
+    //         movilView.Tipo = movil.Tipo;
+    //         movilView.NumeroMovil = movil.NumeroMovil;
+    //         movilView.NumeroMotor = movil.NumeroMotor;
+    //         movilView.NumeroChasis = movil.NumeroChasis;
+    //         movilView.Estado = movil.Estado;
+    //         ImagenMovil? imagen = await Context.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
+
+    //         if (imagen is not null)
+    //         {
+    //             imagenView.Nombre = imagen.NombreImagen;
+    //             imagenView.TipoImagen = imagen.TipoImagen;
+    //             imagenView.Base64 = imagen.Base64Imagen;
+    //             StateHasChanged();
+    //         }
+    //         existe = true;
+    //     }
+    //     else if (movil is null)
+    //     {
+    //         existe = false;
+    //     }
+
+    //     AgregarALista(TipoRol.Encargado);
+    //     AgregarALista(TipoRol.Subalterno);
+
+    //     await Init();
+    //     StateHasChanged();
+    // }
+
+    // public async void GetMovilesViewModel(string NroMovil)
+    // {
+    //     movilView = movilesview.Single(c => c.NumeroMovil == NroMovil);
+    //     StateHasChanged();
+    // }
 
     public void AgregarALista(TipoRol tipo)
     {
@@ -315,11 +371,10 @@
 
     public async void EditarMovil()
     {
-        using var db = DbFactory.CreateDbContext();
 
         if (movilView.NumeroMovil is not null)
         {
-            Movil? movil = await db.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
+            Movil? movil = await Context.Moviles.Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
 
             if (movil is not null)
             {
@@ -329,11 +384,11 @@
                 movil.Patente = movilView.Patente;
                 movil.Tipo = movilView.Tipo;
                 movil.Imagen = new()
-                {
-                    NombreImagen = imagenView.Nombre,
-                    TipoImagen = imagenView.TipoImagen,
-                    Base64Imagen = imagenView.Base64
-                };
+                    {
+                        NombreImagen = imagenView.Nombre,
+                        TipoImagen = imagenView.TipoImagen,
+                        Base64Imagen = imagenView.Base64
+                    };
                 movil.NumeroChasis = movilView.NumeroChasis;
                 movil.NumeroMotor = movilView.NumeroMotor;
                 movil.NumeroMovil = movilView.NumeroMovil;
@@ -344,16 +399,17 @@
                     if (m.PersonaId != 0)
                     {
                         MovilBombero bombero = new()
-                        {
-                            Rol = m.Rol,
-                            PersonaId = m.PersonaId
-                        };
+                            {
+                                Rol = m.Rol,
+                                PersonaId = m.PersonaId
+                            };
                         movil.Bomberos.Add(bombero);
                     }
                 }
-                await db.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
         }
+        StateHasChanged();
     }
 
     //steps
@@ -381,6 +437,11 @@
     void OnNextClick()
     {
         current++;
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
     }
 }
 
