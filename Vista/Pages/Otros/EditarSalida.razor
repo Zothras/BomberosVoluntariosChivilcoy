@@ -2049,6 +2049,8 @@
 
         Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == _selectedValueEncargado).SingleOrDefaultAsync();
         Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == _selectedValueQuienLlenoPlanilla).SingleOrDefaultAsync();
+        MaterialPeligroso? materialPeligroso = await db.MaterialesPeligrosos.Where(s => s.SalidaId == salidasViewModel.SalidaId)
+        .SingleOrDefaultAsync();
         MaterialPeligroso cargarMaterialPeligroso = new()
             {
 
