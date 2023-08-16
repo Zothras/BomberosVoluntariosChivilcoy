@@ -288,6 +288,11 @@
                     </SubMenu>
                 </SubMenu>
                 <SubMenu class="xd" Key="sub6" Title="Salidas" TitleTemplate=@sub7Title>
+                    <MenuItem Style="padding-left: 3.2em!important;" Key="21" Title=@("Historial de salidas") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialSalidas"); })">
+                        <IconTemplate>
+                            <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
+                        </IconTemplate>
+                    </MenuItem>
                     <MenuItem Style="padding-left: 3.2em!important;" Key="20" Title=@("Historial de bomberos") @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
                         <IconTemplate>
                             <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
