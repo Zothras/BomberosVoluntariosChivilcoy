@@ -658,6 +658,8 @@
 
     List<AccidenteViewModels> accidentesVM = new List<AccidenteViewModels>();
 
+    Salida? salida;
+    string discriminador;
 
     protected override async Task OnInitializedAsync()
     {
@@ -665,13 +667,36 @@
 
         _visible = true;
     }
+
     private async Task Init()
     {
         //PersonaViewModel = new();
         db = DbFactory.CreateDbContext();
-        //TodosBomberos = await db.Bomberos.ToArrayAsync();
-        //Moviles = await db.Moviles.ToArrayAsync();
-        //await CargarBomberosView();
+        salida = await db.Set<Salida>().Where(s => s.SalidaId == salidaId)
+        .Include(s => s.Moviles)
+            .ThenInclude(ms => ms.Movil)
+
+            .Include(s => s.Moviles)
+            .ThenInclude(ms => ms.Chofer)
+        .Include(s => s.CuerpoParticipante).ThenInclude(cp => cp.Bombero)
+        .Include(s => s.ReceptorBombero).ThenInclude(rb => rb.Contacto)
+        .Include(s => s.Encargado).ThenInclude(e => e.Brigada)
+        .Include(s => s.QuienLleno).ThenInclude(ql => ql.Brigada)
+        .Include(d => d.Damnificados).ThenInclude(dam => dam.VehiculoDamnificado).ThenInclude(vd => vd.Seguro)
+        .SingleOrDefaultAsync();
+
+        //traigo el discriminados de cada elemento la tabla salidas
+        var entry = db.Entry(salida);
+        var entityType = entry.Metadata;
+        var discriminatorProperty = entityType.FindDiscriminatorProperty();
+        var discriminatorValue = entry.CurrentValues[discriminatorProperty];
+
+        discriminador = discriminatorValue?.ToString();
+        int discriminadorNumero = (int.Parse(discriminador)) - 1;// le bajo un valor para que sea congruente a como esta cargado en el
+                                                                 //enum tipo salida(empiezan desde el valor 0 y en el dbContext empieza desde el 1)
+        discriminador = discriminadorNumero.ToString();
+        GetSalidasViewModel(salida);
+        StateHasChanged();
     }
 
    
@@ -685,22 +710,87 @@
 
         _visible = true;
     }
-    private void HandleOk(MouseEventArgs e)
+    private async void HandleOk(MouseEventArgs e)
     {
-        Console.WriteLine(e);
+        _visible = false;
+        await db.SaveChangesAsync();
+        await Init();
+        StateHasChanged();
+        await message.Success("Se edito Corecctamente");
         _visible = false;
     }
 
-    private void HandleCancel(MouseEventArgs e)
+    private async void HandleCancel(MouseEventArgs e)
     {
-        Console.WriteLine(e);
         _visible = false;
+        await Init();
+        StateHasChanged();
     }
 
    
     public void Dispose()
     {
         db?.Dispose();
+    }
+    private async void GetSalidasViewModel(Salida salida)
+    {
+        //List<Damnificado>? damificado = await db.Damnificados
+        //    .Where(D => D.SalidaId == salida.SalidaId).Include(vd => vd.VehiculoDamnificado).ThenInclude(seg => seg.Seguro)
+        //    .ToListAsync();
+        salidasViewModel = new()
+        {
+                SalidaId = salida.SalidaId,
+                HoraSalida = salida.HoraSalida,
+                HoraLLegada = salida.HoraLlegada,
+                //KmSalida= s.KmSalida,
+                //KmLlegada=s.KmLlegada,
+                NumeroParte = salida.NumeroParte,
+                Descripcion = salida.Descripcion,
+                CalleORuta = salida.CalleORuta,
+                NumeroOKilometro = salida.NumeroOKilometro,
+                EntreCalles = salida.EntreCalles,
+                PisoNumero = salida.PisoNumero,
+                Depto = salida.Depto,
+                TipoZona = salida.TipoZona,
+                NombreSolicitante = salida.NombreSolicitante,
+                ApellidoSolicitante = salida.ApellidoSolicitante,
+                DniSolicitante = salida.DniSolicitante,
+                TelefonoSolicitante = salida.TelefonoSolicitante,
+                NombreYApellidoReceptor = salida.NombreYApellidoReceptor,
+                TelefonoReceptor = salida.TelefonoReceptor,
+                ReceptorId = salida.ReceptorId,
+                ReceptorBombero = salida.ReceptorBombero,
+                Damnificados = salida.Damnificados,
+                Moviles = salida.Moviles,
+                Seguro = salida.Seguro,
+                CuerpoParticipante = salida.CuerpoParticipante,
+                EncargadoId = salida.EncargadoId,
+                Encargado = salida.Encargado,
+                QuienLleno = salida.QuienLleno,
+                QuienLlenoId = salida.QuienLlenoId,
+                TipoServicio = salida.TipoServicio,
+                Discriminador = (TipoSalida)int.Parse(discriminador)
+        };
+
+
+        StateHasChanged();
+
+    }
+    private async void OnFinishEditar(EditContext editContext)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+        await db.SaveChangesAsync();
+        await Init();
+        StateHasChanged();
+        await message.Success("Se edito Corecctamente");
+    }
+    private async void OnFinishFailedEditar(EditContext editContext)
+    {
+
+        _visible = false;
+        await Init();
+        StateHasChanged();
     }
 }
 @code{
@@ -1189,4 +1279,6 @@
         StateHasChanged();
 
     }
+
+    
 }

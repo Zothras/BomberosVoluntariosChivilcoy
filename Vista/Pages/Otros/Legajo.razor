@@ -56,11 +56,11 @@
 
 @if (mostrarDetalle is true)
 {
-    <DetalleSalida salidaId="salidaId" />
+    <DetalleSalida @key="salidaId" salidaId="salidaId" />
 }
 @if (mostrarEditar is true)
 {
-    <EditarSalida salidaId="salidaId" />
+    <EditarSalida @key="salidaId" salidaId="salidaId" />
     mostrarEditar = false;
 }
 
