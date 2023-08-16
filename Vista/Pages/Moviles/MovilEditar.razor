@@ -213,7 +213,9 @@
 @code {
     [Parameter]
     public int? VehiculoId { get; set; }
-    
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
     public class MovilViewModel
     {
         [Required, StringLength(255)]
@@ -256,15 +258,9 @@
     public Bombero[]? bomberos;
     public bool existe;
 
-    public async Task Init()
-    {
-        movilView = new();
-        Context = DbFactory.CreateDbContext();
-    }
-
     protected override async Task OnInitializedAsync()
     {
-        await Init();
+        Context = DbFactory.CreateDbContext();
 
         bomberos = await Context.Bomberos.ToArrayAsync();
 
@@ -288,19 +284,17 @@
                 imagenView.Nombre = imagen.NombreImagen;
                 imagenView.TipoImagen = imagen.TipoImagen;
                 imagenView.Base64 = imagen.Base64Imagen;
-                StateHasChanged();
             }
             existe = true;
+
+            AgregarALista(TipoRol.Encargado);
+            AgregarALista(TipoRol.Subalterno);
         }
         else if (movil is null)
         {
-            existe = false; 
+            existe = false;
         }
 
-        AgregarALista(TipoRol.Encargado);
-        AgregarALista(TipoRol.Subalterno);
-
-        // await Init();
         StateHasChanged();
     }
 
@@ -371,7 +365,6 @@
 
     public async void EditarMovil()
     {
-
         if (movilView.NumeroMovil is not null)
         {
             Movil? movil = await Context.Moviles.Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
@@ -407,9 +400,9 @@
                     }
                 }
                 await Context.SaveChangesAsync();
+                await OnClose.InvokeAsync();
             }
         }
-        StateHasChanged();
     }
 
     //steps

@@ -77,10 +77,14 @@
                         </div>
                     </div>
                 </card>
-                <Modal Title="Editar" OnCancel="@HandleCancel" Visible="@editarVisible">
-                    <MovilEditar VehiculoId="@EditarPorId" />
-                </Modal>
             }
+
+            @if (EditarVisible)
+            {
+                <Modal Title="Editar" OnCancel="@HandleCancel" Visible="true">
+                    <MovilEditar VehiculoId="@EditarPorId" OnClose="@CerrarModal" />
+                </Modal>
+            }            
         }
         else
         {
@@ -96,10 +100,9 @@
 </div>
 
 @code {
-
-    public Movil[]? moviles;
-    public bool editarVisible;
-    int EditarPorId;
+    Movil[]? moviles;
+    bool EditarVisible { get; set; }
+    int EditarPorId { get; set; }
     // string xeditar;
     // public MovilEditar? movilEditar = new();
     BomberosDbContext Context { get; set; }
@@ -130,13 +133,13 @@
     public async void EditarMovilModal(int id)
     {
         EditarPorId = id;
-        editarVisible = true;
+        EditarVisible = true;
         // MovilEditar.GetMovilesViewModel(xeditar);
         // await movilEditar.Init();
         // movilEditar.LimpiarDatos();
         StateHasChanged();
     }
-    
+
     public async void CambiarEstado(int id, TipoEstadoMovil estado)
     {
         Movil? movil_a_modificar = await Context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
@@ -157,8 +160,12 @@
 
     private void HandleCancel(MouseEventArgs e)
     {
-        Console.WriteLine(e);
-        editarVisible = false;
+        CerrarModal();
+    }
+
+    private void CerrarModal()
+    {
+        EditarVisible = false;
     }
 
     public void Dispose()
