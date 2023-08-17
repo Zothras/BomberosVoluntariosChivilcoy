@@ -2,9 +2,11 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/PlanillasIntervencion/Imprimir/{SalidaId:int?}/{ConCroquis:bool?}"
 @layout EmptyLayout
+@using System;
+@using System.Globalization;
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-ES">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -167,7 +169,7 @@
                     <h3>PLANILLA DE INTERVENCION</h3>
                     <br>
                     <h3 style="font-size: 1.3em;">NRO: </h3>
-                    <h1 style="font-size: 2.8em;display: inline-block;position: absolute;top: 24px;right: 20px;">551 / 2023</h1>
+                    <h1 style="font-size: 2.8em;display: inline-block;position: absolute;top: 24px;right: 20px;">@IntervencionVM.NumeroParte/@año</h1>
                 </div>
             </div>
         </div>
@@ -178,7 +180,7 @@
         <div class="sec2-contenedor">
             <div>
                 <ul>
-                    <li style="display: inline-block;">FECHA: @IntervencionVM.Fecha.ToLongDateString()</li>
+                    <li style="display: inline-block;">FECHA: @IntervencionVM.Fecha.Date</li>
                     <li style="display: inline-block;margin-left: 8.5em;">DIA: @IntervencionVM.Fecha.DayOfWeek</li>
                     <li>AVISADO POR: @IntervencionVM.AvisadoPor </li>
                     <li>RECEPCIONADO POR:</li>
@@ -289,7 +291,7 @@
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em;text-align: center;">
                 <div>
                     <h3>GRADUADO A CARGO  </h3>
-                    <p>1º AYUDANTE-</p>
+                    <p>1º AYUDANTE- @IntervencionVM.GraduadoCargo</p>
                 </div>
                 <div>
                     <p>....................................</p>
@@ -302,6 +304,18 @@
 </html>
 
 @code {
+    public class Fecha
+    {
+        public static void Main()
+        {
+            DateTime dateValue = new DateTime(2023, 8, 17);
+            CultureInfo culture = new CultureInfo("es-ES");
+            Console.WriteLine(dateValue.ToString("dddd", culture));
+        }
+    }
+    
+    
+    
     [Parameter]
     public int? SalidaId { get; set; }
 
@@ -318,9 +332,19 @@
 
         public string HoraSalida { get; set; }
 
-        public string Confecciono { get; set; } 
-         
-        public string GraduadoCargo { get; set; }
+        public string NombreConfecciono { get; set; }
+
+        public string ApellidoConfecciono { get; set; }
+
+        public string Confecciono { get { return NombreConfecciono + "," + ApellidoConfecciono; } } 
+
+        public string GraduadoCargo { get { return GraduadoNombre + "," + ApellidoConfecciono; } }
+
+        public string GraduadoNombre  { get; set; }
+
+        public string GraduadoApellido { get; set; }
+
+        public int NumeroParte { get; set; }
 
     }
 
@@ -328,19 +352,39 @@
 
     IntervencionViewModel IntervencionVM { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    int año = DateTime.Now.Year;
+
+    private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
+        IntervencionVM = new();
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
 
-        var salida = await Context.Set<Salida>().Include(s => s.ReceptorBombero).SingleOrDefaultAsync(s => s.SalidaId == SalidaId);
+        await Init();
+        await CargarEncargado();
+
+    }
+    public async Task CargarEncargado ()
+    {
+
+        var salida = await Context.Set<Salida>().SingleOrDefaultAsync(s => s.SalidaId == SalidaId);
 
         if (salida != null)
         {
+            var quienlleno = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.QuienLlenoId); 
+            var encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.EncargadoId);
+
+
             IntervencionVM.Fecha = salida.HoraSalida;
             IntervencionVM.AvisadoPor = salida.NombreSolicitante;
-            // IntervencionVM.Recepcionista = $"{salida.ReceptorBombero.Nombre} {salida.ReceptorBombero.Apellido}";
-            IntervencionVM.Confecciono = salida.Encargado.Nombre;
+            IntervencionVM.NombreConfecciono = quienlleno.Nombre;
+            IntervencionVM.ApellidoConfecciono = quienlleno.Apellido;
+            IntervencionVM.GraduadoNombre = encargado.Nombre;
+            IntervencionVM.GraduadoApellido = encargado.Apellido;
+            IntervencionVM.NumeroParte = salida.NumeroParte;
         }
     }
 
