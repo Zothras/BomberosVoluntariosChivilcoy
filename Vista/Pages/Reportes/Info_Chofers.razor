@@ -7,28 +7,27 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-mes:
-@tomarenteromes(date1);
-dia:
-@tomarenterodia(date1);
-año:
-@tomarenteroanio(date1);
-
-
 <h7 style="display: flex;justify-content:left;align-items:flex-start;height: 50%;width:50%;">
-    Desde:<DatePicker DefaultValue="@date1" @bind-Value="@date1" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
-    Hasta:<DatePicker DefaultValue="@date2" @bind-Value="@date2" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
+    Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
+    Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
 </h7>
 
-<Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de dar de alta a este movil?"
-            OnConfirm="()=>set_preferencia(date1,date2,bomberChofer)"
+<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
+            OnConfirm="()=>colocar_preferencia(desde,hasta,preferencia)"
             OnCancel="Cancel">
     <Button>
         Buscar
     </Button>
 </Popconfirm>
+<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
+            OnConfirm="()=>Insertar_todos_choferes(preferencia)"
+            OnCancel="Cancel">
+    <Button>
+        Mostrar todos
+    </Button>
+</Popconfirm>
 
-<Table DataSource="bomberChofer"  TItem="Bombero">
+<Table DataSource="preferencia" TItem="ChoferesVM">
     <TitleTemplate>
         <GridRow>
             <GridCol Span="6">
@@ -42,7 +41,6 @@ año:
          <PropertyColumn Property="c=>c.NumeroLegajo"
                          DefaultSortOrder="@SortDirection.Descending"
                          SorterCompare="@((a,b)=> a - b)" />
-        @*<TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />*@
         <PropertyColumn Property="c=>c.Nombre" Sortable />
 
         <PropertyColumn Property="c=>c.Apellido" Sortable />
@@ -51,80 +49,97 @@ año:
 
         <PropertyColumn Property="c=>c.VencimientoRegistro" Sortable />
 
-        <PropertyColumn Property="c=>c.Contacto.TelefonoCel" Sortable />
+        <PropertyColumn Property="c=>c.TelefonoCel" Sortable />
 
-        <PropertyColumn Property="c=>c.Contacto.TelefonoLaboral" Sortable />
+        <PropertyColumn Property="c=>c.TelefonoFijo" Sortable />
+
+        <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable />
+
+
 
     </ColumnDefinitions>
 </Table>
 
-
-
 @code {
-    List<Bombero> bomberChofer = new List<Bombero>();
-    List<Bombero> preferencia = new List<Bombero>();
-    static string dateString = "5/1/2008 8:30:52 AM";
-    DateTime date1 = DateTime.Parse(dateString,
-    System.Globalization.CultureInfo.InvariantCulture);
-    DateTime date2 = DateTime.Parse(dateString,
-    System.Globalization.CultureInfo.InvariantCulture);
+    bool primeravuelta = true;
+    List<ChoferesVM> todosLosChoferes = new List<ChoferesVM>();
+    List<ChoferesVM> preferencia = new List<ChoferesVM>();
 
-    void set_preferencia(DateTime d, DateTime h, List<Bombero> b)
+    //static string dateString = "5/1/2008 8:30:52 AM";
+    static DateTime hasta = DateTime.Now;
+    static DateTime desde = hasta.AddMonths(-1);
+
+    class ChoferesVM
     {
-        preferencia.Clear();
-        for (int i = 0; i < b.Count; i++)
+        [Required, StringLength(255)]
+        public string Nombre { get; set; }
+        [Required, StringLength(255)]
+        public string Apellido { get; set; }
+        public TipoDotaciones Dotacion { get; set; }
+        public DateTime? VencimientoRegistro { get; set; }
+        public int NumeroLegajo { get; set; }
+        [Required, StringLength(255)]
+        public string? TelefonoCel { get; set; }
+        [Required, StringLength(255)]
+        public string? TelefonoLaboral { get; set; }
+        [Required, StringLength(255)]
+        public string TelefonoFijo { get; set; }
+    }
+
+    async void Insertar_todos_choferes(List<ChoferesVM> b)
+    {
+        b.Clear();
+        using var context = DbFactory.CreateDbContext();
+        List<Bombero> choferes = await context.Bomberos.Where(b => b.Chofer).ToListAsync();//saco la info
+        foreach (var chofer in choferes)
         {
-            if (b[i].VencimientoRegistro is null)continue;
-            if (tomarenterodia(d) > tomarenterodia((DateTime)b[i].VencimientoRegistro) && tomarenteromes(d) > tomarenteromes((DateTime)b[i].VencimientoRegistro) && tomarenteroanio(d) > tomarenteroanio((DateTime)b[i].VencimientoRegistro))
-            {
-                if (tomarenterodia(h) < tomarenterodia((DateTime)b[i].VencimientoRegistro) && tomarenteromes(h) < tomarenteromes((DateTime)b[i].VencimientoRegistro) && tomarenteroanio(h) < tomarenteroanio((DateTime)b[i].VencimientoRegistro))
+            var contactos = await context.Contactos.Where(c => c.PersonaId == chofer.PersonaId).SingleOrDefaultAsync();
+                ChoferesVM ChoferesPasajeVM = new()
                 {
-                    preferencia.Add(b[i]);
-                }
-            }
+                    Nombre = chofer.Nombre,
+                    Apellido = chofer.Apellido,
+                    Dotacion = chofer.Dotacion,
+                    VencimientoRegistro = chofer.VencimientoRegistro,
+                    NumeroLegajo = chofer.NumeroLegajo,
+                    TelefonoCel = contactos.TelefonoCel,
+                    TelefonoFijo = contactos.TelefonoFijo,
+                    TelefonoLaboral = contactos.TelefonoLaboral
+
+                };
+            b.Add(ChoferesPasajeVM);
         }
         StateHasChanged();
     }
 
-    int tomarenterodia(DateTime date)
+
+    //Guarda en la lista los valores que esten entre las fechas sin distingir los dias
+    void colocar_preferencia(DateTime d, DateTime h, List<ChoferesVM> b)//preferentemente b es todos los choferes
     {
-        string d = date.ToString("MM/dd/yyyy");
-        char pdia = d[3];
-        char sdia = d[4];
-        return (int)Char.GetNumericValue(sdia) + 10 * (int)Char.GetNumericValue(pdia);
+            int desde;
+            int hasta;
+            b.Clear();
+            for (int i = 0; i < todosLosChoferes.Count; i++)
+            {
+                if (todosLosChoferes[i].VencimientoRegistro == null) continue;
+                desde = DateTime.Compare(d, (DateTime)todosLosChoferes[i].VencimientoRegistro);
+                hasta = DateTime.Compare(h, (DateTime)todosLosChoferes[i].VencimientoRegistro);
+                if (desde <= 0 && hasta >= 0)
+                {
+                        b.Add(todosLosChoferes[i]);
+                }
+            }
+            StateHasChanged();
     }
-
-     int tomarenteromes(DateTime date)
-    {
-
-        string d = date.ToString("MM/dd/yyyy");
-        char pmes = d[0];
-        char smes = d[1];
-        return (int)Char.GetNumericValue(smes) + 10*(int)Char.GetNumericValue(pmes);
-    }
-     int tomarenteroanio(DateTime date)
-    {
-
-        string d = date.ToString("MM/dd/yyyy");
-        char panio = d[6];
-        char sanio = d[7];
-        char tanio = d[8];
-        char canio = d[9];
-        return 1000*(int)Char.GetNumericValue(panio) + 100 * (int)Char.GetNumericValue(sanio) + 10 * (int)Char.GetNumericValue(tanio) + (int)Char.GetNumericValue(canio);
-    }
-
 
     protected override async Task OnInitializedAsync()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-
-        bomberChofer = await db.Bomberos
-            .Where(c => c.Chofer == true)
-            .ToListAsync(); 
+        Insertar_todos_choferes(preferencia);
+        Insertar_todos_choferes(todosLosChoferes);
         StateHasChanged();
     }
     private void Cancel()
     {
         _message.Error("Operacion cancelada");
     }
+
 }
