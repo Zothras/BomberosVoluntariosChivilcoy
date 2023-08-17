@@ -382,15 +382,7 @@
             
         </Form>
 
-        <Modal Title="@("success")"
-               Visible="@_visible1"
-               OnOk="@HandleOk1"
-               OnCancel="@HandleCancel1">
-            <Result Status="success"
-                    Title="Se cargo correctamente la salida"
-                    SubTitle="">
-            </Result>
-        </Modal>
+        
         <Modal Title="@("Datos de la carga de combustible")"
                Visible="@_visible"
                OnOk="@HandleOk"
@@ -518,7 +510,7 @@
     int BomberoCuerpo;
     int BomberoEncargado;
     int QuienLLenoPlanilla;
-    bool _visible1;
+   
 
 
     public async Task AgregarDamnificado()
@@ -737,7 +729,6 @@
     {
         
     }
-
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelMateriales)}");
@@ -861,10 +852,7 @@
     {
         _visible = true;
     }
-    public async Task ShowModal1()
-    {
-        _visible1 = true;
-    }
+    
     private void HandleCancel(MouseEventArgs e)
     {
 
@@ -881,17 +869,7 @@
         _visible = false;
 
     }
-    private void HandleCancel1(MouseEventArgs e)
-    {
 
-        _visible1 = false;
-    }
-    private void HandleOk1(MouseEventArgs e)
-    {
-        navigationManager.NavigateTo($"/legajo");
-        _visible1 = false;
-
-    }
     void deleteRow(int numlegajo)
     {
         bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();

@@ -28,12 +28,6 @@
         <FormItem Label="Dato Hora llegada">
             <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@PersonaViewModel.HoraLLegada" />
         </FormItem>
-        @*<FormItem Label="Kilometro salida">
-            <AntDesign.InputNumber @bind-Value="PersonaViewModel.KmSalida" />
-        </FormItem>
-        <FormItem Label="Kilometro llegada">
-            <AntDesign.InputNumber @bind-Value="PersonaViewModel.KmLlegada" />
-        </FormItem>*@
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@PersonaViewModel.CalleORuta" />
         </FormItem>
@@ -104,6 +98,21 @@
                 <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
             </FormItem>
             <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+            <div>
+                <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+                <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                <ActionColumn Title="Acciones">
+                    <Popconfirm Title="Sure to delete?"
+                                OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                OkText="Yes"
+                                CancelText="No">
+                        <a>Delete</a>
+                    </Popconfirm>
+                </ActionColumn>
+            </Table>
+        </div>
         }
 
         @*Moviles de salidas*@
@@ -157,6 +166,20 @@
             }
         }
         <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
+        <div>
+            <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+                <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+                <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
+                <ActionColumn Title="Acciones">
+                    <Popconfirm Title="Sure to delete?"
+                                OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                                OkText="Yes"
+                                CancelText="No">
+                        <a>Delete</a>
+                    </Popconfirm>
+                </ActionColumn>
+            </Table>
+        </div>
         @*Cuerpos paraticipantes*@
         <b><label>Cuerpo Participante</label></b>
         <FormItem Label="Tipo Escalafon">
@@ -178,6 +201,20 @@
         <br />
         <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
         <br />
+        <div>
+            <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
+                <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+                <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+                <ActionColumn Title="Acciones">
+                    <Popconfirm Title="Sure to delete?"
+                                OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                                OkText="Yes"
+                                CancelText="No">
+                        <a>Delete</a>
+                    </Popconfirm>
+                </ActionColumn>
+            </Table>
+        </div>
         <b><label>Datos encargados</label></b>
         <FormItem Label="Encargado">
             <Select TItem="BomberoViweModel"
@@ -289,10 +326,10 @@
         PersonaViewModel = new();
         db = DbFactory.CreateDbContext();
         TodosBomberos = await db.Bomberos.ToArrayAsync();
-        Moviles = await db.Moviles.ToArrayAsync();
+        Moviles = await db.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
         await CargarBomberosView();
     }
-    public async void CargarRescatePersona()
+    public async Task CargarRescatePersona()
     {
 
         try
@@ -420,12 +457,12 @@
 
 
             }
-            await db.RescatePersonas.AddAsync(Rescates);
+             db.RescatePersonas.Add(Rescates);
             await db.SaveChangesAsync();
 
             await Init();
             StateHasChanged();
-            await message.Success("Handie agregado correctamente");
+            await message.Success("salida agregada correctamente");
         }
 
         catch (Exception ex)
@@ -434,7 +471,7 @@
         }
 
     }
-    public async void AgregarDamnificado()
+    public async Task AgregarDamnificado()
     {
         
 
@@ -450,10 +487,10 @@
 
             };
         DamnificadosSalida.Add(dp);
-        await db.SaveChangesAsync();
+        StateHasChanged();
     }
 
-    public async void AgregarMovilSalida()
+    public async Task AgregarMovilSalida()
     {
         
         Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
@@ -473,21 +510,29 @@
 
             };
         MovilesSalidasL.Add(m);
-        await db.SaveChangesAsync();
+        StateHasChanged();
     }
 
-    public async void AgregarCuerpoParticipante()
+    public async Task AgregarCuerpoParticipante()
     {
-        
-
-        BomberoSalidaViewModels b = new()
+        var boberos = await db.Bomberos.ToArrayAsync();
+        foreach (var bom in boberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
             {
-                Salio =chekB,
-                Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = bomberoSalidaView.NumeroLegajo
-            };
-        bomberosSalida.Add(b);
-        await db.SaveChangesAsync();
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
+        StateHasChanged();
+
     }
 
 
@@ -530,8 +575,10 @@
     }
     public async Task CargarBomberosView()
     {
-
-        foreach (Bombero b in TodosBomberos)
+        bomberoTodos = new();
+        bomberoChoferes = new();
+        var bomberos = await db.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in bomberos)
         {
             BomberoViweModel bombero = new()
                 {
@@ -571,9 +618,8 @@
 
                 };
             bomberoTodos.Add(bombero);
-
         }
-        foreach (Bombero c in TodosBomberos)
+        foreach (Bombero c in bomberos)
         {
             if (c.Chofer == true)
             {
@@ -647,6 +693,18 @@
 
         _visible = false;
 
+    }
+    void deleteRow(int numlegajo)
+    {
+        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+    void deleteRowMovil(string NumMovil)
+    {
+        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
+    }
+    void deleteRowDamnificados(string Dni)
+    {
+        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
     }
     public void Dispose()
     {
