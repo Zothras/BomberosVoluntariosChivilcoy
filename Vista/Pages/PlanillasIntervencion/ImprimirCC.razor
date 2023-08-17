@@ -180,8 +180,8 @@
                 <ul>
                     <li style="display: inline-block;">FECHA: @IntervencionVM.Fecha.ToLongDateString()</li>
                     <li style="display: inline-block;margin-left: 8.5em;">DIA: @IntervencionVM.Fecha.DayOfWeek</li>
-                    <li>AVISADO POR:</li>
-                    <li>RECEPCIONADO POR: @IntervencionVM.Recepcionista</li>
+                    <li>AVISADO POR: @IntervencionVM.AvisadoPor </li>
+                    <li>RECEPCIONADO POR:</li>
                     <li>TIPO SERVICIO:</li>
                     <li>DIRECCION:</li>
                     <li>JEFE DE LA INTERVENCION:</li>
@@ -278,8 +278,8 @@
         <div style="display: flex;padding: 3em;justify-content:center; gap: 15em;">
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em; text-align: center;">
                 <div>
-                    <h3>CONFECCIONO</h3>
-                    <p>1º AYUDANTE-</p>
+                    <h3>CONFECCIONO  </h3>
+                    <p>1º AYUDANTE- @IntervencionVM.Confecciono</p>
                 </div>
                 <div>
                     <p>....................................</p>
@@ -288,7 +288,7 @@
             </div>
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em;text-align: center;">
                 <div>
-                    <h3>GRADUADO A CARGO</h3>
+                    <h3>GRADUADO A CARGO  </h3>
                     <p>1º AYUDANTE-</p>
                 </div>
                 <div>
@@ -304,7 +304,7 @@
 @code {
     [Parameter]
     public int? SalidaId { get; set; }
-    
+
     [Parameter]
     public bool? ConCroquis { get; set; }
 
@@ -312,7 +312,16 @@
     {
         public DateTime Fecha { get; set; }
 
-        public string Recepcionista { get; set; }
+        public string AvisadoPor { get; set; }
+
+        public string TipoServicio { get; set; }
+
+        public string HoraSalida { get; set; }
+
+        public string Confecciono { get; set; } 
+         
+        public string GraduadoCargo { get; set; }
+
     }
 
     BomberosDbContext Context { get; set; }
@@ -323,12 +332,15 @@
     {
         Context = DbFactory.CreateDbContext();
 
+
         var salida = await Context.Set<Salida>().Include(s => s.ReceptorBombero).SingleOrDefaultAsync(s => s.SalidaId == SalidaId);
 
         if (salida != null)
         {
             IntervencionVM.Fecha = salida.HoraSalida;
-            IntervencionVM.Recepcionista = $"{salida.ReceptorBombero.Nombre} {salida.ReceptorBombero.Apellido}";
+            IntervencionVM.AvisadoPor = salida.NombreSolicitante;
+            // IntervencionVM.Recepcionista = $"{salida.ReceptorBombero.Nombre} {salida.ReceptorBombero.Apellido}";
+            IntervencionVM.Confecciono = salida.Encargado.Nombre;
         }
     }
 
