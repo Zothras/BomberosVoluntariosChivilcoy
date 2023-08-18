@@ -1,4 +1,5 @@
-﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
+﻿@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/Reportes/HistorialMoviles"
 @using System.ComponentModel
 @using AntDesign.TableModels
@@ -6,70 +7,81 @@
 @using Vista.Data.ViewModels.Personal;
 
 <div>
-    <Table DataSource="MovilsalidasVM" Bordered>
-        <PropertyColumn Property="c=>c.Movil.NumeroMovil"></PropertyColumn>
-        <PropertyColumn Property="c=>c.CargoCombustible"></PropertyColumn>
+    <Table DataSource="MovilesSalidas" Bordered>
+        <PropertyColumn Property="c=>c.NumeroMovil"></PropertyColumn>
         <PropertyColumn Property="c=>c.Kilometraje"></PropertyColumn>
         <PropertyColumn Property="c=>c.NumeroParte"></PropertyColumn>
 
-        @*<ActionColumn Title="Action">
-            <Popconfirm Title="Sure to delete?"
-                        OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                        OkText="Yes"
-                        CancelText="No">
-                <a>Delete</a>
-            </Popconfirm>
-        </ActionColumn>*@
+        @if (context.CargoCombustible == true)
+        {
+            <PropertyColumn Property="c=>c.CargoCombustible">Cargo</PropertyColumn>
+        }
+        else
+        {
+            <PropertyColumn Property="c=>c.CargoCombustible">No Cargo</PropertyColumn>
+        }
+
+       
     </Table>
 </div>
 
 @code {
-    ITable table;
+    Movil[] moviles;
 
-    Salida[] salidas;
     BomberosDbContext Context { get; set; }
 
     int _pageIndex = 1;
     int _pageSize = 10;
     int _total = 0;
 
-    //public MovilSalidaViewModel MovilsalidaVM { get; set; }
 
     private class MovilSalidaViewModel
     {
         public bool CargoCombustible { get; set; }
         public int Kilometraje { get; set; }
         public int NumeroParte { get; set; }
-        public Movil Movil { get; set; } = new();
+        public string NumeroMovil { get; set; }
     }
 
-    List<MovilSalidaViewModel> MovilsalidasVM { get; set; } = new();
+    private MovilSalidaViewModel MovilSalidaViewModels { get; set; } = new();
+
+    List<MovilSalidaViewModel> MovilesSalidas { get; set; } = new();
 
     public async Task CargarSalidasMovil()
     {
-        MovilsalidasVM = new();
-        int movilId = 92;
-        var movilSalidas = await Context.Moviles.Include(m => m.Salidas).SingleOrDefaultAsync(m => m.VehiculoId == movilId);
-        if (movilSalidas != null)
+        int movilId = 93;
+        var movilsalidaVM = await Context.Set<MovilSalida>().Include(m => m.Salida).Where(m => m.MovilId == movilId).ToArrayAsync();
+        if (movilsalidaVM != null)
         {
-            foreach (var salida in movilSalidas.Salidas)
+
+            foreach (var s in movilsalidaVM)
             {
+                var movil = await Context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == s.MovilId);
+
                 MovilSalidaViewModel msvm = new()
-                {
-                    CargoCombustible = salida.CargoCombustible,
-                    Kilometraje = salida.KmLlegada,
-                    NumeroParte = salida.Salida.NumeroParte,
-                    Movil = salida.Movil
-                };
-                MovilsalidasVM.Add(msvm);
-            }
+                    {
+                        CargoCombustible = s.CargoCombustible,
+                        Kilometraje = s.KmLlegada,
+                        NumeroParte = s.Salida.NumeroParte,
+                        NumeroMovil = movil.NumeroMovil
+
+                    };
+
+                MovilesSalidas.Add(msvm);
+                StateHasChanged();
+
+            } 
+
         }
     }
 
+
+
     private async Task Init()
     {
-
+        MovilSalidaViewModels = new();
         Context = DbFactory.CreateDbContext();
+        moviles = await Context.Moviles.ToArrayAsync();
         await CargarSalidasMovil();
 
     }
@@ -79,17 +91,8 @@
         await Init();
     }
 
-
-
-
-    //Movil? movilsalida = await Context.Moviles.Where(m => m.VehiculoId == m.Salidas.First().MovilId).SingleOrDefaultAsync();
-
-    //foreach (Movil m in movilsalida)
-    //{
-    //    MovilSalidaViewModel movils = new()
-    //        {
-    //            CargoCombustible = m.CargoCombustible,
-    //            Kilometraje = m.kilometraje,
-    //        };
-    //}
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
 }
