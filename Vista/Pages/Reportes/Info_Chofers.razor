@@ -54,9 +54,6 @@
         <PropertyColumn Property="c=>c.TelefonoFijo" Sortable />
 
         <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable />
-
-
-
     </ColumnDefinitions>
 </Table>
 
@@ -104,13 +101,11 @@
                     TelefonoCel = contactos.TelefonoCel,
                     TelefonoFijo = contactos.TelefonoFijo,
                     TelefonoLaboral = contactos.TelefonoLaboral
-
                 };
             b.Add(ChoferesPasajeVM);
         }
         StateHasChanged();
     }
-
 
     //Guarda en la lista los valores que esten entre las fechas sin distingir los dias
     void colocar_preferencia(DateTime d, DateTime h, List<ChoferesVM> b)//preferentemente b es todos los choferes
@@ -141,5 +136,4 @@
     {
         _message.Error("Operacion cancelada");
     }
-
 }

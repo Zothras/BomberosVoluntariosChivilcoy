@@ -160,16 +160,24 @@
         <FormItem Label="Grado">
             <EnumSelect DefaultValue="@bomberoVM.Grado" TEnum="EscalafonJerarquico" @bind-Value="@bomberoVM.Grado" />
         </FormItem>
-
-
         <FormItem Label="Estado">
-            <EnumSelect DefaultValue="@bomberoVM.Estado" TEnum="EstadoBombero" @bind-Value="@bomberoVM.Estado" />
+            <Select @bind-Value="@bomberoVM.Estado"
+                    DefaultValue="@(bomberoVM.Estado)"
+                    Style="width:200px"
+                    TItemValue="EstadoBombero"
+                    TItem="EstadoBombero"
+                    Bordered="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.CuerpoActivo)" Label="Cuerpo activo" />
+                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Reserva)" Label="Reserva" />
+                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.ComisionDirectiva)" Label="Comision directiva" />
+                </SelectOptions>
+            </Select>
         </FormItem>
 
         <FormItem Label="Sexo">
             <EnumSelect DefaultValue="@bomberoVM.Sexo" TEnum="TipoSexo" @bind-Value="@bomberoVM.Sexo" />
         </FormItem>
-
 
         @* Carga Contacto-----------------------------------------------------------------------*@
         <FormItem Label="Telefono Laboral">
