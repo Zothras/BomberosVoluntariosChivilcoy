@@ -95,7 +95,7 @@
                         </FormItem>
 
                         @*Datos de damnificados*@
-                        <FormItem Label="¿Ubo damnificados?">
+                        <FormItem Label="¿Hubo damnificados?">
                             <Switch @bind-Checked="switchValue" />
                         </FormItem>
                         @if (switchValue == true)
@@ -122,7 +122,6 @@
                             <FormItem Label="Tipo material">
                                 <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
                             </FormItem>
-                            <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
                             <div>
                                 <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
                                 <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
@@ -138,6 +137,8 @@
                                 </ActionColumn>
                             </Table>
                         </div>
+                            <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+                            
                         }
                     </div>
                 </CarouselSlick>

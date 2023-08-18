@@ -1,4 +1,6 @@
-﻿@inject NavigationManager navigationManager
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
+@inject IMessageService message
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/serviciosPrevencion"
 @using System.ComponentModel.DataAnnotations;
@@ -24,12 +26,6 @@
     <FormItem Label="Dato Hora llegada">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesPrevencion.HoraLLegada" />
     </FormItem>
-    @*<FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.KmSalida" />
-    </FormItem>
-    <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="modelServiciosEspecialesPrevencion.KmLlegada" />
-    </FormItem>*@
     @*Datos Localizacion*@
     <FormItem Label="Calle/Ruta">
         <Input @bind-Value="@modelServiciosEspecialesPrevencion.CalleORuta" />
@@ -77,8 +73,24 @@
         <FormItem Label="Tipo material">
             <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
         </FormItem>
+        <div>
+            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+            <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+            <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+            <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="Seguro que quiere borrar?"
+                            OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+        </div>
         <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
     }
+    
     @*Solicitante datos*@
     <b><label>Datos de solicitante</label></b>
     <FormItem Label="Nombre del solicitante">
@@ -102,19 +114,15 @@
     </FormItem>
 
     @*Moviles de salidas*@
-    @*a la hora de pedir el chofer y movil,
-    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
     <b><label>Datos de chofer</label></b>
     <br />
-    @*<FormItem Label="">
+    <FormItem Label="" style="display: grid;place-items: center;">
         <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-        <br />
         <Button Type="primary" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
-    </FormItem>*@
+    </FormItem>
     <FormItem Label="¿Cargo Combustible?" style="display: grid;place-items: center;">
-
         <Switch DefaultChecked="false" @bind-Checked="@chekM" CheckedChildren="Cargo" UnCheckedChildren="No Cargo" OnChange="OnChangeChofer" />
     </FormItem>
 
@@ -167,7 +175,20 @@
     <br />
     <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
     <br />
-
+    <div>
+        <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+            <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
 
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
@@ -190,7 +211,20 @@
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
     <br />
-
+    <div>
+        <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
+            <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
+            <PropertyColumn Property="c=>c.NumeroLegajo"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
     <b><label>Elija al encargado</label></b>
     <FormItem Label="Encargado">
         <Select TItem="BomberoViweModel"
@@ -345,19 +379,12 @@
 
 @code
 {
-    //private void CambiarValoesEnum()
-    //{
-    //    modelServiciosEspecialesRepresentacion.NivelCapacitacion= (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), _selectedValue);
-    //}
-    //private void CambiarValoesEnum1()
-    //{
-    //    modelServiciosEspecialesRepresentacion.TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), _selectedValue1);
-    //}
     string _selectedValue;
     string _selectedItem;
     string _selectedValue1;
     string _selectedItem1;
 
+    BomberosDbContext Context;
     private DamnificadoViewModels damnificado = new();
     private Data.ViewModels.Servicios.ServicioEspecialPrevencionViewModels modelServiciosEspecialesPrevencion = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
@@ -366,11 +393,11 @@
     public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
-    private Form<MovilSalidaViewModels> _form1;
+    private Form<MovilSalidaViewModels>? _form1;
 
 
-    Bombero[] TodosBomberos;
-    Movil[] Moviles;
+    Bombero[]? TodosBomberos;
+    Movil[]? Moviles;
 
     public List<BomberoViweModel> bomberoChoferes = new();
     public List<BomberoViweModel> bomberoTodos = new();
@@ -391,183 +418,180 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        TodosBomberos = await db.Bomberos.ToArrayAsync();
-        Moviles = await db.Moviles.ToArrayAsync();
-        CargarBomberosView();
-        chekM = false;
-        StateHasChanged();
+        await Init();
     }
+    private async Task Init()
+    {
+        modelServiciosEspecialesPrevencion = new();
+        Context = DbFactory.CreateDbContext();
+        Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
+        TodosBomberos = await Context.Bomberos.ToArrayAsync();
+        await CargarBomberosView();
+    }
+
     //direccion
     public async void CargarServicioPrevencion()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoReceptor = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
-        Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-        Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
-
-        Vista.Data.Models.Salidas.Planillas.ServicioEspecialPrevencion ServicioPrevenicion = new()
-            {
-
-                NumeroParte = modelServiciosEspecialesPrevencion.NumeroParte,
-                HoraSalida = modelServiciosEspecialesPrevencion.HoraSalida,
-                HoraLlegada = modelServiciosEspecialesPrevencion.HoraLLegada,
-                //KmSalida = modelServiciosEspecialesPrevencion.KmSalida,
-                //KmLlegada = modelServiciosEspecialesPrevencion.KmLlegada,
-                Descripcion = modelServiciosEspecialesPrevencion.Descripcion,
-                CalleORuta = modelServiciosEspecialesPrevencion.CalleORuta,
-                NumeroOKilometro = modelServiciosEspecialesPrevencion.NumeroOKilometro,
-                EntreCalles = modelServiciosEspecialesPrevencion.EntreCalles,
-                PisoNumero = modelServiciosEspecialesPrevencion.PisoNumero,
-                Depto = modelServiciosEspecialesPrevencion.Depto,
-                //Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo)
-                TipoZona = modelServiciosEspecialesPrevencion.TipoZona,
-                NombreSolicitante = modelServiciosEspecialesPrevencion.NombreSolicitante,
-                ApellidoSolicitante = modelServiciosEspecialesPrevencion.ApellidoSolicitante,
-                DniSolicitante = modelServiciosEspecialesPrevencion.DniSolicitante,
-                TelefonoSolicitante = modelServiciosEspecialesPrevencion.TelefonoSolicitante,
-                NombreYApellidoReceptor = modelServiciosEspecialesPrevencion.NombreYApellidoReceptor,
-                TelefonoReceptor = modelServiciosEspecialesPrevencion.TelefonoReceptor,
-                TipoServicio = modelServiciosEspecialesPrevencion.TipoServicio,
-                //Organizacion beneficiada
-                TipoOrganizacion = modelServiciosEspecialesPrevencion.TipoOrganizacion,
-                //Tipo de representación
-                TipoPrevencion = modelServiciosEspecialesPrevencion.TipoPrevencion,
-                //Carga capacitacion
-                QuienLleno = BomberoLlenoPlanilla,
-                ReceptorBombero = bomberoReceptor,
-                Encargado = bomberoEncargado,
-                Seguro = new()
-                {
-                    CompañiaAseguradora = modelServiciosEspecialesPrevencion.CompaniaAseguradora,
-                    NumeroDePoliza = modelServiciosEspecialesPrevencion.NumeroPoliza,
-                    FechaDeVencimineto = modelServiciosEspecialesPrevencion.FechaVencimineto,
-                },
-                Damnificados = new(),
-                Moviles = new(),
-                CuerpoParticipante = new(),
-                //Carga Representacion
-                DatosCapacitacion = new()
-                {
-                    NivelCapacitacion = (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), modelServiciosEspecialesPrevencion.NivelCapacitacion),
-                    NivelCapacitacionOtro = modelServiciosEspecialesPrevencion.NivelCapacitacionOtro,
-                    TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), modelServiciosEspecialesPrevencion.TipoCapacitacion),
-                    CapacitacionOtra = modelServiciosEspecialesPrevencion.CapacitacionOtra,
-                    DiasCapacitacion = modelServiciosEspecialesPrevencion.DiasCapacitacion,
-                    HorariosCapacitacion = modelServiciosEspecialesPrevencion.HorariosCapacitacion
-
-                }
-
-            };
-        foreach (BomberoSalidaViewModels bom in bomberosSalida)
+        try
         {
-            Bombero? bomberoSal = await db.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-            BomberoSalida BomSalida = new()
-                {
-                    Salio = bom.Salio,
-                    Grado = bom.Grado,
-                    Bombero = bomberoSal
-                };
-            ServicioPrevenicion.CuerpoParticipante.Add(BomSalida);
-        }
-        foreach (MovilSalidaViewModels m in MovilesSalidasL)
-        {
-            Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-            Movil? movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).
-            Include(s => s.Seguro).
-            Include(i => i.Imagen).
-            Include(f => f.Firmas).
-            Include(b => b.Bomberos).
-            Include(i => i.Incidentes).
-            SingleOrDefaultAsync();
-            MovilSalida movilS = new()
-            {
-                    CargoCombustible = m.CargoCombustible,
-                    NumeroFactura = m.NumeroFactura,
-                    FechaFactura = m.FechaFactura,
-                    TipoConbustible = m.TipoConbustible,
-                    CantidadLitros = m.CantidadLitros,
-                    QuienLleno = m.QuienLleno,
-                    TelefonoQuienLleno = m.TelefonoQuienLleno,
-                    KmLlegada = m.KmLlegada,
+            Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
+            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
 
-                    Chofer = bomberoChofer,
-                    Movil = new()
+            Vista.Data.Models.Salidas.Planillas.ServicioEspecialPrevencion ServicioPrevenicion = new()
+                {
+
+                    NumeroParte = modelServiciosEspecialesPrevencion.NumeroParte,
+                    HoraSalida = modelServiciosEspecialesPrevencion.HoraSalida,
+                    HoraLlegada = modelServiciosEspecialesPrevencion.HoraLLegada,
+                    Descripcion = modelServiciosEspecialesPrevencion.Descripcion,
+                    CalleORuta = modelServiciosEspecialesPrevencion.CalleORuta,
+                    NumeroOKilometro = modelServiciosEspecialesPrevencion.NumeroOKilometro,
+                    EntreCalles = modelServiciosEspecialesPrevencion.EntreCalles,
+                    PisoNumero = modelServiciosEspecialesPrevencion.PisoNumero,
+                    Depto = modelServiciosEspecialesPrevencion.Depto,
+                    TipoZona = modelServiciosEspecialesPrevencion.TipoZona,
+                    NombreSolicitante = modelServiciosEspecialesPrevencion.NombreSolicitante,
+                    ApellidoSolicitante = modelServiciosEspecialesPrevencion.ApellidoSolicitante,
+                    DniSolicitante = modelServiciosEspecialesPrevencion.DniSolicitante,
+                    TelefonoSolicitante = modelServiciosEspecialesPrevencion.TelefonoSolicitante,
+                    NombreYApellidoReceptor = modelServiciosEspecialesPrevencion.NombreYApellidoReceptor,
+                    TelefonoReceptor = modelServiciosEspecialesPrevencion.TelefonoReceptor,
+                    TipoServicio = modelServiciosEspecialesPrevencion.TipoServicio,
+                    //Organizacion beneficiada
+                    TipoOrganizacion = modelServiciosEspecialesPrevencion.TipoOrganizacion,
+                    //Tipo de representación
+                    TipoPrevencion = modelServiciosEspecialesPrevencion.TipoPrevencion,
+                    //Carga capacitacion
+                    QuienLleno = BomberoLlenoPlanilla,
+                    ReceptorBombero = bomberoReceptor,
+                    Encargado = bomberoEncargado,
+                    Seguro = new()
                     {
-                        NumeroMovil = movilsalida.NumeroMovil,
-                        NumeroMotor = movilsalida.NumeroMotor,
-                        ModeloBomba = movilsalida.ModeloBomba,
-                        NumeroChasis = movilsalida.NumeroChasis,
-                        Estado = movilsalida.Estado,
-                        //KmSalida = m.KmSalida,
-                        //KmLlegada = m.KmLlegada,
-                        ImagenId = movilsalida.ImagenId,
-                        Imagen = movilsalida.Imagen,
-                        Firmas = movilsalida.Firmas,
-                        Bomberos = movilsalida.Bomberos,
-                        Incidentes = movilsalida.Incidentes,
-                        Marca = movilsalida.Marca,
-                        Modelo = movilsalida.Modelo,
-                        Año = movilsalida.Año,
-                        Patente = movilsalida.Patente,
-                        Tipo = movilsalida.Tipo,
-                        Seguro = movilsalida.Seguro,
-                        SeguroId = movilsalida.SeguroId,
-                        kilometraje = m.KmLlegada
-
+                        CompañiaAseguradora = modelServiciosEspecialesPrevencion.CompaniaAseguradora,
+                        NumeroDePoliza = modelServiciosEspecialesPrevencion.NumeroPoliza,
+                        FechaDeVencimineto = modelServiciosEspecialesPrevencion.FechaVencimineto,
+                    },
+                    Damnificados = new(),
+                    Moviles = new(),
+                    CuerpoParticipante = new(),
+                    //Carga Representacion
+                    DatosCapacitacion = new()
+                    {
+                        NivelCapacitacion = (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), modelServiciosEspecialesPrevencion.NivelCapacitacion),
+                        NivelCapacitacionOtro = modelServiciosEspecialesPrevencion.NivelCapacitacionOtro,
+                        TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), modelServiciosEspecialesPrevencion.TipoCapacitacion),
+                        CapacitacionOtra = modelServiciosEspecialesPrevencion.CapacitacionOtra,
+                        DiasCapacitacion = modelServiciosEspecialesPrevencion.DiasCapacitacion,
+                        HorariosCapacitacion = modelServiciosEspecialesPrevencion.HorariosCapacitacion
 
                     }
-                    //encontrar forma de meter kilometros en movil de arriba
 
-            };
-            ServicioPrevenicion.Moviles.Add(movilS);
-        }
-        foreach (DamnificadoViewModels d in DamnificadosSalida)
-        {
-
-            Damnificado damn = new()
-                {
-                    Nombre = d.Nombre,
-                    Apellido = d.Apellido,
-                    Dni = d.Dni,
-                    Sexo = d.Sexo,
-                    LugarDeNacimiento = d.LugarDeNacimiento,
-                    Edad = d.Edad,
-                    Estado = d.Estado,
-
-                    //VehiculoDamnificado = new()
-                    //{
-                    //    Marca = vehiculo.Marca,
-                    //    Modelo = vehiculo.Modelo,
-                    //    Año = vehiculo.Año,
-                    //    Patente = vehiculo.Patente,
-                    //    Tipo = vehiculo.Tipo,
-                    //    Color = vehiculo.Color,
-                    //    Airbag = chek,
-                    //    Seguro = new()
-                    //    {
-                    //        CompañiaAseguradora = vehiculo.CompañiaAseguradora,
-                    //        NumeroDePoliza = vehiculo.NumeroDePoliza,
-                    //        FechaDeVencimineto = vehiculo.FechaDeVencimineto,
-                    //    },
-                    //}
                 };
-            ServicioPrevenicion.Damnificados.Add(damn);
+            foreach (BomberoSalidaViewModels bom in bomberosSalida)
+            {
+                Bombero? bomberoSal = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
+                BomberoSalida BomSalida = new()
+                    {
+                        Salio = bom.Salio,
+                        Grado = bom.Grado,
+                        Bombero = bomberoSal
+                    };
+                ServicioPrevenicion.CuerpoParticipante.Add(BomSalida);
+            }
+            foreach (MovilSalidaViewModels m in MovilesSalidasL)
+            {
+                Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
+                Movil? movilsalida = await Context.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).
+                Include(s => s.Seguro).
+                Include(i => i.Imagen).
+                Include(f => f.Firmas).
+                Include(b => b.Bomberos).
+                Include(i => i.Incidentes).
+                SingleOrDefaultAsync();
+                MovilSalida movilS = new()
+                    {
+                        CargoCombustible = m.CargoCombustible,
+                        NumeroFactura = m.NumeroFactura,
+                        FechaFactura = m.FechaFactura,
+                        TipoConbustible = m.TipoConbustible,
+                        CantidadLitros = m.CantidadLitros,
+                        QuienLleno = m.QuienLleno,
+                        TelefonoQuienLleno = m.TelefonoQuienLleno,
+                        KmLlegada = m.KmLlegada,
+
+                        Chofer = bomberoChofer,
+                        Movil = new()
+                        {
+                            NumeroMovil = movilsalida.NumeroMovil,
+                            NumeroMotor = movilsalida.NumeroMotor,
+                            ModeloBomba = movilsalida.ModeloBomba,
+                            NumeroChasis = movilsalida.NumeroChasis,
+                            Estado = movilsalida.Estado,
+                            ImagenId = movilsalida.ImagenId,
+                            Imagen = movilsalida.Imagen,
+                            Firmas = movilsalida.Firmas,
+                            Bomberos = movilsalida.Bomberos,
+                            Incidentes = movilsalida.Incidentes,
+                            Marca = movilsalida.Marca,
+                            Modelo = movilsalida.Modelo,
+                            Año = movilsalida.Año,
+                            Patente = movilsalida.Patente,
+                            Tipo = movilsalida.Tipo,
+                            Seguro = movilsalida.Seguro,
+                            SeguroId = movilsalida.SeguroId,
+                            kilometraje = m.KmLlegada
 
 
+                        }
+                        //encontrar forma de meter kilometros en movil de arriba
+
+                    };
+                ServicioPrevenicion.Moviles.Add(movilS);
+            }
+            foreach (DamnificadoViewModels d in DamnificadosSalida)
+            {
+
+                Damnificado damn = new()
+                    {
+                        Nombre = d.Nombre,
+                        Apellido = d.Apellido,
+                        Dni = d.Dni,
+                        Sexo = d.Sexo,
+                        LugarDeNacimiento = d.LugarDeNacimiento,
+                        Edad = d.Edad,
+                        Estado = d.Estado,
+                    };
+                ServicioPrevenicion.Damnificados.Add(damn);
+
+
+            }
+            Context.ServicioEspecialPrevenciones.Add(ServicioPrevenicion);
+            await Context.SaveChangesAsync();
+
+            await Init();
+            StateHasChanged();
+            await message.Success("Salida agregada correctamente");
         }
-        await db.ServicioEspecialPrevenciones.AddAsync(ServicioPrevenicion);
-        await db.SaveChangesAsync();
-
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+        }
+       
 
 
     }
 
-    public async void AgregarMovilSalida()
+    public async Task AgregarMovilSalida()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await db.Moviles.Where(m => m.NumeroMovil == NumeroMovil).Include(s => s.Seguro).SingleOrDefaultAsync();
+
+        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
+        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).Include(s => s.Seguro).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
             {
                 CargoCombustible = chekM,
@@ -583,26 +607,34 @@
 
             };
         MovilesSalidasL.Add(m);
-        await db.SaveChangesAsync();
+        StateHasChanged();
     }
 
-    public async void AgregarCuerpoParticipante()
+    public async Task AgregarCuerpoParticipante()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
-
-        BomberoSalidaViewModels b = new()
+        var boberos = await Context.Bomberos.ToArrayAsync();
+        foreach (var bom in boberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
             {
-                Salio = chekB,
-                Grado = bomberoSalidaView.Grado,
-                NumeroLegajo = bomberoSalidaView.NumeroLegajo
-            };
-        bomberosSalida.Add(b);
-        await db.SaveChangesAsync();
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
+        StateHasChanged();
+
     }
 
-    public async void AgregarDamnificado()
+    public async Task AgregarDamnificado()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
+
 
         DamnificadoViewModels dp = new()
             {
@@ -616,7 +648,7 @@
 
             };
         DamnificadosSalida.Add(dp);
-        await db.SaveChangesAsync();
+        StateHasChanged();
     }
 
     private void OnFinish(EditContext editContext)
@@ -642,10 +674,12 @@
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
     // array de las opciones posibles, buscar la opcion y agregarla en la planilla
-    public void CargarBomberosView()
+    public async Task CargarBomberosView()
     {
-
-        foreach (Bombero b in TodosBomberos)
+        bomberoTodos = new();
+        bomberoChoferes = new();
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in bomberos)
         {
             BomberoViweModel bombero = new()
                 {
@@ -685,9 +719,8 @@
 
                 };
             bomberoTodos.Add(bombero);
-
         }
-        foreach (Bombero c in TodosBomberos)
+        foreach (Bombero c in bomberos)
         {
             if (c.Chofer == true)
             {
@@ -757,7 +790,22 @@
         _visible = false;
 
     }
-
+    void deleteRow(int numlegajo)
+    {
+        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+    void deleteRowMovil(string NumMovil)
+    {
+        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
+    }
+    void deleteRowDamnificados(string Dni)
+    {
+        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
 }
 
 
