@@ -1,8 +1,9 @@
 ﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject NavigationManager navigationManager
 @inject IMessageService message
-@page "/moviles/agregar"
+@page "/embarcaciones/agregarembarcacion"
 @using AntDesign;
+@using Vista.Data.ViewModels.Personal;
 <style>
     .inpt-container {
         position: relative;
@@ -73,7 +74,7 @@
         padding: 6em 0;
     }
 </style>
-@if (movilView is not null)
+@if (embarcacionView is not null)
 {
     <div style="width: 40%;">
         <Steps Current="current">
@@ -88,27 +89,23 @@
                     <CarouselSlick Style="height: 100%;width: 100%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;display: flex; flex-direction: column;margin: auto;">
                         <div style="height: 100%;width: 100%;padding: 10px;">
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.Marca" placeholder=" " />
+                                <input type="text" @bind="embarcacionView.Marca" placeholder=" " />
                                 <label class="inpt-label">Marca:</label>
                             </div>
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.Modelo" placeholder=" " />
+                                <input type="text" @bind="embarcacionView.Modelo" placeholder=" " />
                                 <label class="inpt-label">Modelo:</label>
                             </div>
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.Año" placeholder=" " />
+                                <input type="text" @bind="embarcacionView.Año" placeholder=" " />
                                 <label class="inpt-label">Año:</label>
                             </div>
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.Patente" placeholder=" " />
+                                <input type="text" @bind="embarcacionView.Patente" placeholder=" " />
                                 <label class="inpt-label">Patente:</label>
                             </div>
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.Tipo" placeholder=" " />
-                                <label class="inpt-label">Tipo:</label>
-                            </div>
-                            <div class="inpt-container">
-                                <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
+                                <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de la embarcación</label>
                                 <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
                                 <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre</h3>
                             </div>
@@ -117,47 +114,34 @@
                     <CarouselSlick Style="height: 100%; width: 10%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
                         <div style="height: 100%;width: 100%;padding: 10px;">
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
-                                <label class="inpt-label">Nº movil:</label>
+                                <input type="text" @bind="embarcacionView.Tipo" placeholder=" " />
+                                <label class="inpt-label">Tipo:</label>
                             </div>
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.NumeroMotor" placeholder=" " />
-                                <label class="inpt-label">Nº motor:</label>
+                                <input type="text" @bind="embarcacionView.NumeroMovil" placeholder=" " />
+                                <label class="inpt-label">Nº Embarcación</label>
                             </div>
+
                             <div class="inpt-container">
-                                <input type="text" @bind="movilView.NumeroChasis" placeholder=" " />
-                                <label class="inpt-label">Nº chasis:</label>
-                            </div>
-                            <div class="inpt-container">
-                                <input type="text" @bind="movilView.ModeloBomba" placeholder=" " />
-                                <label class="inpt-label">Modelo de bomba:</label>
-                            </div>
-                            <div class="inpt-container">
-                                <select @bind="movilView.Estado" class="select-estadoMovil">
-                                    <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
+                                <select @bind="embarcacionView.Estado" class="select-estadoMovil">
+                                    <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado de la embarcación</option>
                                     <option value="@TipoEstadoMovil.Activo">Activo</option>
                                     <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
                                     <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
                                     <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
                                 </select>
                             </div>
-                        </div>
-                    </CarouselSlick>
-                    <CarouselSlick Style="height: 100%; width: 10%;overflow: hidden;text-align: center; line-height: 160px;z-index: 10;">
-                        <div style="height: 100%;width: 100%;padding: 10px;">
                             <div class="inpt-container">
-                                <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder=" " />
-                                <label class="inpt-label">Compañia:</label>
-                            </div>
-                            <div class="inpt-container">
-                                <input type="text" @bind="seguroView.NumeroDePoliza" placeholder=" " />
-                                <label class="inpt-label">Nº poliza:</label>
-                            </div>
-                            <div>
-                                <div>
-                                    <label>Vencimiento: </label>
-                                </div>
-                                <input type="date" @bind="seguroView.FechaDeVencimiento" />
+                                <Select TItem="BomberoViweModel"
+                                        TItemValue="int"
+                                        DataSource="@BomberoTodos"
+                                        @bind-Value="@BomberoEncargado"
+                                        LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                        ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                        Placeholder="Seleccione Bombero Encargado"
+                                        DefaultActiveFirstOption="false"
+                                        EnableSearch>
+                                </Select>
                             </div>
                         </div>
                     </CarouselSlick>
@@ -175,8 +159,8 @@
             }
             @if (current == steps.Length - 1)
             {
-                <Button Type="primary" @onclick="SubirMovil">
-                    Agregar movil
+                <Button Type="primary" @onclick="SubirEmbarcacion">
+                    Agregar embarcacion
                 </Button>
             }
         </div>
@@ -196,8 +180,6 @@
             }
         </style>
     </div>
-
-    
 }
 
 @code {
@@ -213,7 +195,7 @@
     public StepItem[] steps =
     {
         new StepItem {Title = "First", Content = "First-content"},
-        new StepItem {Title = "Second", Content = "Second-content"},
+		//new StepItem {Title = "Second", Content = "Second-content"},
         //new StepItem {Title = "Third", Content = "Third-content"},
         new StepItem {Title = "Last", Content = "Last-content"}
     };
@@ -230,9 +212,8 @@
         _carousel.Next();
     }
 
-    public class MovilViewModel
+    public class EmbarcacionViewModel
     {
-        [Required, StringLength(255)]
         public string Marca { get; set; }
         [Required, StringLength(255)]
         public string Modelo { get; set; }
@@ -241,18 +222,11 @@
         public string Patente { get; set; }
         [Required, StringLength(255)]
         public string Tipo { get; set; }
-        [Required, StringLength(255)]
         public string NumeroMovil { get; set; }
         [Required, StringLength(255)]
-        public string NumeroMotor { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroChasis { get; set; }
-        [Required, StringLength(255)]
-        public string ModeloBomba { get; set; }
-        [Required, StringLength(255)]
         public TipoEstadoMovil Estado { get; set; }
-
     }
+
     public class SeguroViewModel
     {
         [Required, StringLength(255)]
@@ -261,6 +235,7 @@
         public string NumeroDePoliza { get; set; }
         public DateTime FechaDeVencimiento { get; set; }
     }
+
     public class ImagenViewModel
     {
         public string Base64 { get; set; }
@@ -270,13 +245,20 @@
         public string Nombre { get; set; }
     }
 
+
     public ImagenViewModel imagenView { get; set; } = new();
-    public MovilViewModel movilView { get; set; } = new();
+    public EmbarcacionViewModel embarcacionView { get; set; } = new();
     public SeguroViewModel seguroView { get; set; } = new();
+    public Bombero[]? bomberos;
+    Bombero[] TodosBomberos;
 
     protected override async Task OnInitializedAsync()
     {
         using var db = DbFactory.CreateDbContext();
+
+        bomberos = await db.Bomberos.ToArrayAsync();
+
+        CargarBomberosView();
     }
 
     private async void SubirFoto(InputFileChangeEventArgs e)
@@ -288,50 +270,93 @@
         imagenView.Nombre = e.File.Name;
         StateHasChanged();
     }
-
-    private async void SubirMovil()
+    int BomberoEncargado;
+    private async void SubirEmbarcacion()
     {
         using var db = DbFactory.CreateDbContext();
 
-        if (movilView is not null)
+        if (embarcacionView is not null)
         {
-            Movil? comprobante = await db.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
-
+            Embarcacion? comprobante = await db.Embarcacion.Where(e => e.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
             if (comprobante is null)
             {
-                Movil movil = new Movil()
-                {
-                    Marca = movilView.Marca,
-                    Modelo = movilView.Modelo,
-                    Año = movilView.Año,
-                    Patente = movilView.Patente,
-                    Tipo = movilView.Tipo,
-                    Imagen = new()
+                Embarcacion embarcacion = new Embarcacion()
                     {
-                        NombreImagen = imagenView.Nombre,
-                        TipoImagen = imagenView.TipoImagen,
-                        Base64Imagen = imagenView.Base64
-                    },
-                    ModeloBomba = movilView.ModeloBomba,
-                    NumeroChasis = movilView.NumeroChasis,
-                    NumeroMotor = movilView.NumeroMotor,
-                    NumeroMovil = movilView.NumeroMovil,
-                    Estado = movilView.Estado,
-                    Seguro = new()
-                    {
-                        CompañiaAseguradora = seguroView.CompañiaAseguradora,
-                        FechaDeVencimineto = seguroView.FechaDeVencimiento,
-                        NumeroDePoliza = seguroView.NumeroDePoliza
-                    }
-                };
-                db.Moviles.Add(movil);
+                        Marca = embarcacionView.Marca,
+                        Modelo = embarcacionView.Modelo,
+                        Año = embarcacionView.Año,
+                        Patente = embarcacionView.Patente,
+                        Tipo = embarcacionView.Tipo,
+                        ImagenEmbarcacion = new()
+                        {
+                            NombreImagen = imagenView.Nombre,
+                            TipoImagen = imagenView.TipoImagen,
+                            Base64Imagen = imagenView.Base64
+                        },
+                        Encargado = bomberoEncargado,
+                        NumeroMovil = embarcacionView.NumeroMovil,
+                        Estado = embarcacionView.Estado,
+                        Seguro = new()
+                        {
+                            CompañiaAseguradora = seguroView.CompañiaAseguradora,
+                            FechaDeVencimineto = seguroView.FechaDeVencimiento,
+                            NumeroDePoliza = seguroView.NumeroDePoliza
+                        }
+                    };
+                db.Embarcacion.Add(embarcacion);
                 await db.SaveChangesAsync();
             }
         }
 
         StateHasChanged();
-        navigationManager.NavigateTo("/moviles");
+        navigationManager.NavigateTo("/embarcaciones");
     }
     Carousel _carousel;
+    List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
+    public void CargarBomberosView()
+    {
 
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    FechaNacimiento = b.FechaNacimiento,
+                    Sexo = b.Sexo,
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    Documento = b.Documento,
+                    NumeroLegajo = b.NumeroLegajo,
+                    NumeroIoma = b.NumeroIoma,
+                    LugarNacimiento = b.LugarNacimiento,
+                    Grado = b.Grado,
+                    //NombreImagen = b.NombreImagen,
+                    //TipoImagen = b.TipoImagen,
+                    //Base64Imagen = b.Base64,
+                    Dotacion = b.Dotacion,
+                    //Nombre = b.NombreBrigada,
+                    Resolucion1 = b.Resolucion1,
+                    Resolucion2 = b.Resolucion2,
+                    Resolucion3 = b.Resolucion3,
+                    Resolucion4 = b.Resolucion4,
+                    Resolucion5 = b.Resolucion5,
+                    Resolucion6 = b.Resolucion6,
+                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
+                    Estado = b.Estado,
+                    Chofer = b.Chofer,
+                    VencimientoRegistro = b.VencimientoRegistro,
+                    Direccion = b.Direccion,
+                    Observaciones = b.Observaciones,
+                    Profesion = b.Profesion,
+                    NivelEstudios = b.NivelEstudios,
+                    FechaAceptacion = b.FechaAceptacion,
+                    //TelefonoCel = b.TelefonoCel,
+                    //TelefonoFijo = b.TelefonoFijo,
+                    //TelefonoLaboral = b.TelefonoLaboral,
+                    //Email = b.Email,
+
+                };
+            BomberoTodos.Add(bombero);
+        }
+    }
 }

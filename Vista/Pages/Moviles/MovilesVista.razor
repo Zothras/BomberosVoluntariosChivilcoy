@@ -81,17 +81,23 @@
 
             @if (EditarVisible)
             {
-                <Modal Title="Editar" OnCancel="@HandleCancel" Visible="true">
+                <Modal Footer="null" Title="Editar" OnCancel="@HandleCancel" Visible="true">
                     <MovilEditar VehiculoId="@EditarPorId" OnClose="@CerrarModal" />
                 </Modal>
             }
 
             @if (DetallesVisible)
             {
-                <Modal Title="Detalles" OnCancel="@HandleDCancel" Visible="true">
-                    <MovilIndividual VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
+                <Modal Footer="null" Title="Detalles" OnCancel="@HandleDCancel" Visible="true">
+                    <MovilDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
+            @* @if (DetallesVisible)
+            {
+                <Modal Footer="null" Title="Agregar" OnCancel="@HandleCancel" Visible="true">
+                    <MovilAgregar OnClose="@CerrarDModal" />
+                </Modal>
+            } *@
         }
         else
         {
@@ -112,8 +118,6 @@
     bool DetallesVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
-    // string xeditar;
-    // public MovilEditar? movilEditar = new();
     BomberosDbContext Context { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -184,6 +188,7 @@
     {
         CerrarDModal();
     }
+
 
     private void CerrarDModal()
     {

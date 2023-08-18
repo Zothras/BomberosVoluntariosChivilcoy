@@ -235,6 +235,7 @@
         public string NumeroChasis { get; set; }
         public TipoEstadoMovil Estado { get; set; }
     }
+
     public class ImagenViewModel
     {
         public string Base64 { get; set; }
@@ -243,6 +244,7 @@
         [Required, StringLength(255)]
         public string Nombre { get; set; }
     }
+
     public class BomberoViewModel
     {
         public TipoRol Rol { get; set; }
@@ -251,8 +253,8 @@
 
     BomberosDbContext Context { get; set; }
 
-    public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
+    public ImagenViewModel imagenView { get; set; } = new();
     public List<BomberoViewModel> bomberoViews { get; set; } = new();
     public Bombero[]? bomberos;
     public bool existe;
@@ -263,6 +265,11 @@
 
         bomberos = await Context.Bomberos.ToArrayAsync();
 
+        await CargarMovil();
+    }
+
+    private async Task CargarMovil()
+    {
         Movil? movil = await Context.Moviles.Where(m => m.VehiculoId == VehiculoId).SingleOrDefaultAsync();
 
         if (movil is not null)
@@ -295,24 +302,6 @@
         }
 
         StateHasChanged();
-    }
-    public void AgregarALista(TipoRol tipo)
-    {
-        BomberoViewModel b = new()
-        {
-            Rol = tipo
-        };
-
-        bomberoViews.Add(b);
-    }
-
-    private async void SubirFoto(InputFileChangeEventArgs e)
-    {
-        string imagenBase64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream());
-
-        imagenView.Base64 = imagenBase64;
-        imagenView.TipoImagen = e.File.ContentType;
-        imagenView.Nombre = e.File.Name;
     }
 
     public async void EditarMovil()
@@ -355,6 +344,28 @@
                 await OnClose.InvokeAsync();
             }
         }
+        StateHasChanged();
+    }
+
+    private async void SubirFoto(InputFileChangeEventArgs e)
+    {
+        string imagenBase64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream());
+
+        imagenView.Base64 = imagenBase64;
+        imagenView.TipoImagen = e.File.ContentType;
+        imagenView.Nombre = e.File.Name;
+
+        StateHasChanged();
+    }
+
+    public void AgregarALista(TipoRol tipo)
+    {
+        BomberoViewModel b = new()
+        {
+            Rol = tipo
+        };
+
+        bomberoViews.Add(b);
     }
 
     //steps

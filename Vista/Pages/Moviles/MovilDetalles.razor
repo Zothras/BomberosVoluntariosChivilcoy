@@ -32,7 +32,13 @@
 }
 else if (!existe)
 {
-    <h5>No existe este movil</h5>
+    <div style="display: flex; justify-content: center;width: 100%;margin: 1em 1em;">
+        <Spin Delay="500" Indicator=antIcon />
+    </div>
+    //Hay que ver si se puede cambiar el contenido despues del delay
+    @code {
+        RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+    }
 }
 
 @code {
