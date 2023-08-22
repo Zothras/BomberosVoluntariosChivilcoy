@@ -1,4 +1,5 @@
 ﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
 
 <style>
     .steps-content{
@@ -87,7 +88,7 @@
             <div style="width: 100%;height: 100%; background: #fff;">
                 @if (current == 0)
                 {
-                    <div style="height: 24em;">
+                    <div style="height: 22em;">
                         <div class="inpt-container">
                             <input type="text" @bind="movilView.Marca" placeholder=" " />
                             <label class="inpt-label">Marca:</label>
@@ -117,7 +118,7 @@
                 }
                 else if (current == 1)
                 {
-                    <div style="height: 100%;width: 100%;padding: 10px;height: 24em;">
+                    <div style="height: 22em;width: 100%;padding: 10px;">
                         <div class="inpt-container">
                             <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
                             <label class="inpt-label">Nº movil:</label>
@@ -147,7 +148,7 @@
                 }
                 else if (current == 2)
                 {
-                    <div style="height: 100%;width: 100%;padding: 10px;height: 24em;">
+                    <div style="height: 22em;width: 100%;padding: 10px;">
                         <div class="inpt-container">
                             <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder=" " />
                             <label class="inpt-label">Compañia:</label>
@@ -288,6 +289,8 @@
         imagenView.Base64 = imagenBase64;
         imagenView.TipoImagen = e.File.ContentType;
         imagenView.Nombre = e.File.Name;
+
+        await message.Success("Imagen cargada");
         StateHasChanged();
     }
 

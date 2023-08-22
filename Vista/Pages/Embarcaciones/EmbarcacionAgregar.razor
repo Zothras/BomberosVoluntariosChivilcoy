@@ -84,11 +84,11 @@
                 <Step Title="@item.Title" Subtitle="@item.Content" />
             }
         </Steps>
-        <div class="steps-content" style="height: 100%;width: 100%;padding-top: 0;height: 20em;">
+        <div class="steps-content" style="width: 100%;padding-top: 0;">
             <div style="width: 100%;height: 100%; background: #fff;">
                 @if (current == 0)
                 {
-                    <div style="height: 100%;width: 100%;padding: 10px;">
+                    <div style="height: 22em;width: 100%;padding: 10px;">
                         <div class="inpt-container">
                             <input type="text" @bind="embarcacionView.Marca" placeholder=" " />
                             <label class="inpt-label">Marca:</label>
@@ -114,7 +114,7 @@
                 }
                 @if (current == 1)
                 {
-                    <div style="height: 100%;width: 100%;padding: 10px;height: 20em;">
+                    <div style="height: 22em;width: 100%;padding: 10px;">
                         <div class="inpt-container">
                             <input type="text" @bind="embarcacionView.Tipo" placeholder=" " />
                             <label class="inpt-label">Tipo:</label>
@@ -269,6 +269,8 @@
         imagenView.Base64 = imagenBase64;
         imagenView.TipoImagen = e.File.ContentType;
         imagenView.Nombre = e.File.Name;
+
+        await message.Success("Imagen cargada");
         StateHasChanged();
     }
     int BomberoEncargado;

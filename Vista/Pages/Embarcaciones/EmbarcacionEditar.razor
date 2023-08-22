@@ -94,7 +94,7 @@
         <div style="width: 100%;height: 100%; background: #fff;">
             @if (current == 0)
             {
-                <div style="height: 100%;width: 100%;padding: 10px;">
+                <div style="height: 22em;width: 100%;padding: 10px;">
                     <div class="inpt-container">
                         <input type="text" @bind="embarcacionView.Marca" placeholder=" " />
                         <label class="inpt-label">Marca:</label>
@@ -124,7 +124,7 @@
             }
             else if (current == 1)
             {
-                <div style="height: 100%;width: 100%;padding: 10px;">
+                <div style="height: 22em;width: 100%;padding: 10px;">
                     <div class="inpt-container">
                         <input type="text" @bind="embarcacionView.NumeroMovil" placeholder=" " />
                         <label class="inpt-label">Nº embarcación:</label>
@@ -138,26 +138,19 @@
                             <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
                         </select>
                     </div>
-                </div>
-            }
-            else if (current == 2)
-            {
-                <div style="width: 100%;height: 24em; background: #fff;">
-                    <div style="height: 100%;width: 100%;padding: 10px;">
-
-                        <Select TItem="Bombero"
+                    <div class="inpt-container">
+                        <Select TItem="BomberoViweModel"
                                 TItemValue="int"
-                                DataSource="@bomberos"
+                                DataSource="@BomberoTodos"
                                 @bind-Value="@BomberoEncargado"
-                                LabelName="@nameof(Bombero.Nombre)"
-                                ValueName="@nameof(Bombero.PersonaId)"
-                                Placeholder="Selecione a un bombero"
+                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                Placeholder="Seleccione Bombero Encargado"
                                 DefaultActiveFirstOption="false"
-                                AllowClear="true"
                                 EnableSearch>
                         </Select>
                     </div>
-                </div>
+                </div>      
             }
         </div>
     </div>
@@ -253,6 +246,8 @@
         Context = DbFactory.CreateDbContext();
         bomberos = await Context.Bomberos.ToArrayAsync();
 
+        CargarBomberosView();
+
         await CargarEmbarcacion();
     }
 
@@ -326,6 +321,52 @@
         StateHasChanged();
     }
 
+    List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
+    public void CargarBomberosView()
+    {
+
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    FechaNacimiento = b.FechaNacimiento,
+                    Sexo = b.Sexo,
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    Documento = b.Documento,
+                    NumeroLegajo = b.NumeroLegajo,
+                    NumeroIoma = b.NumeroIoma,
+                    LugarNacimiento = b.LugarNacimiento,
+                    Grado = b.Grado,
+                    //NombreImagen = b.NombreImagen,
+                    //TipoImagen = b.TipoImagen,
+                    //Base64Imagen = b.Base64,
+                    Dotacion = b.Dotacion,
+                    //Nombre = b.NombreBrigada,
+                    Resolucion1 = b.Resolucion1,
+                    Resolucion2 = b.Resolucion2,
+                    Resolucion3 = b.Resolucion3,
+                    Resolucion4 = b.Resolucion4,
+                    Resolucion5 = b.Resolucion5,
+                    Resolucion6 = b.Resolucion6,
+                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
+                    Estado = b.Estado,
+                    Chofer = b.Chofer,
+                    VencimientoRegistro = b.VencimientoRegistro,
+                    Direccion = b.Direccion,
+                    Observaciones = b.Observaciones,
+                    Profesion = b.Profesion,
+                    NivelEstudios = b.NivelEstudios,
+                    FechaAceptacion = b.FechaAceptacion,
+                    //TelefonoCel = b.TelefonoCel,
+                    //TelefonoFijo = b.TelefonoFijo,
+                    //TelefonoLaboral = b.TelefonoLaboral,
+                    //Email = b.Email,
+
+                };
+            BomberoTodos.Add(bombero);
+        }
+    }
 
     //steps
     public class StepItem
@@ -339,7 +380,7 @@
     public StepItem[] steps =
     {
         new StepItem {Title = "First", Content = "First-content"},
-        new StepItem {Title = "Second", Content = "Second-content"},
+        // new StepItem {Title = "Second", Content = "Second-content"},
         new StepItem {Title = "Last", Content = "Last-content"}
     };
 
