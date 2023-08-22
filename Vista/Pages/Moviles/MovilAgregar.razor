@@ -1,9 +1,10 @@
 ﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
-@inject IMessageService message
-@using AntDesign;
-@page "/x"
 
 <style>
+    .steps-content{
+        border: none!important;
+    }
+
     .inpt-container {
         position: relative;
         padding: .8em 0;
@@ -75,7 +76,7 @@
 </style>
 @if (movilView is not null)
 {
-    <div style="width: 40%;">
+    <div style="width: 100%;">
         <Steps Current="current">
             @foreach (var item in steps)
             {
@@ -86,7 +87,7 @@
             <div style="width: 100%;height: 100%; background: #fff;">
                 @if (current == 0)
                 {
-                    <div>
+                    <div style="height: 24em;">
                         <div class="inpt-container">
                             <input type="text" @bind="movilView.Marca" placeholder=" " />
                             <label class="inpt-label">Marca:</label>
@@ -116,7 +117,7 @@
                 }
                 else if (current == 1)
                 {
-                    <div style="height: 100%;width: 100%;padding: 10px;">
+                    <div style="height: 100%;width: 100%;padding: 10px;height: 24em;">
                         <div class="inpt-container">
                             <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
                             <label class="inpt-label">Nº movil:</label>
@@ -144,9 +145,9 @@
                         </div>
                     </div>
                 }
-                else if (current == 3)
+                else if (current == 2)
                 {
-                    <div style="height: 100%;width: 100%;padding: 10px;">
+                    <div style="height: 100%;width: 100%;padding: 10px;height: 24em;">
                         <div class="inpt-container">
                             <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder=" " />
                             <label class="inpt-label">Compañia:</label>
@@ -330,7 +331,6 @@
                 await OnClose.InvokeAsync();
             }
         }
-
         StateHasChanged();
     }
 }

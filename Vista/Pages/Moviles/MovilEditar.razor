@@ -1,5 +1,6 @@
 ﻿@implements IDisposable
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
 
 <style>
     .inpt-container {
@@ -118,7 +119,7 @@
                     <div class="inpt-container">
                         <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
                         <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
-                        <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre <Icon Type="eye" Theme="outline" /></h3>
+                        <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre @* <Icon Type="eye" Theme="outline" /> *@</h3>
                     </div>
                 </div>
             }
@@ -295,13 +296,13 @@
 
             AgregarALista(TipoRol.Encargado);
             AgregarALista(TipoRol.Subalterno);
+            StateHasChanged();
         }
         else if (movil is null)
         {
             existe = false;
         }
-
-        StateHasChanged();
+        
     }
 
     public async void EditarMovil()
@@ -341,10 +342,10 @@
                     }
                 }
                 await Context.SaveChangesAsync();
+                StateHasChanged();
                 await OnClose.InvokeAsync();
             }
         }
-        StateHasChanged();
     }
 
     private async void SubirFoto(InputFileChangeEventArgs e)
@@ -355,6 +356,7 @@
         imagenView.TipoImagen = e.File.ContentType;
         imagenView.Nombre = e.File.Name;
 
+        await message.Success("Imagen cargada");
         StateHasChanged();
     }
 
@@ -364,7 +366,6 @@
         {
             Rol = tipo
         };
-
         bomberoViews.Add(b);
     }
 

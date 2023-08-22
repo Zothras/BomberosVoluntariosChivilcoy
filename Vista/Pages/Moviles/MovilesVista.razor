@@ -41,7 +41,7 @@
             <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Moviles-baja"); })">
                 <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Moviles de baja</Button>
             </a>
-            <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/agregar"); })">
+            <a @onclick="AgregarMovilModal">
                 <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar Movil</Button>
             </a>
         </div>
@@ -92,12 +92,12 @@
                     <MovilDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
-            @* @if (DetallesVisible)
+            @if (AgregarVisible)
             {
-                <Modal Footer="null" Title="Agregar" OnCancel="@HandleCancel" Visible="true">
-                    <MovilAgregar OnClose="@CerrarDModal" />
+                <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
+                    <MovilAgregar OnClose="@CerrarAModal" />
                 </Modal>
-            } *@
+            }
         }
         else
         {
@@ -116,6 +116,7 @@
     Movil[]? moviles;
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
+    bool AgregarVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
     BomberosDbContext Context { get; set; }
@@ -143,17 +144,19 @@
         return src;
     }
 
-    public async void EditarMovilModal(int id)
+    public void EditarMovilModal(int id)
     {
         EditarPorId = id;
         EditarVisible = true;
-        StateHasChanged();
     }
-    public async void DetallesMovilModal(int id)
+    public void DetallesMovilModal(int id)
     {
         DetallesPorId = id;
         DetallesVisible = true;
-        StateHasChanged();
+    }
+    public void AgregarMovilModal()
+    {
+        AgregarVisible = true;
     }
 
     public async void CambiarEstado(int id, TipoEstadoMovil estado)
@@ -178,7 +181,6 @@
     {
         CerrarModal();
     }
-
     private void CerrarModal()
     {
         EditarVisible = false;
@@ -188,11 +190,18 @@
     {
         CerrarDModal();
     }
-
-
     private void CerrarDModal()
     {
         DetallesVisible = false;
+    }
+
+    private void HandleACancel(MouseEventArgs e)
+    {
+        CerrarAModal();
+    }
+    private void CerrarAModal()
+    {
+        AgregarVisible = false;
     }
 
     public void Dispose()

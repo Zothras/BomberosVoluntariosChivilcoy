@@ -1,6 +1,4 @@
 ﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
-@using System.ComponentModel
-@using AntDesign.TableModels
 
 <style>
     #ImagenMovil {
@@ -119,11 +117,9 @@ else if (!existe)
         public string Nombre { get; set; }
     }
 
-
     public ImagenViewModel imagenView { get; set; } = new();
     public EmbarcacionViewModel embarcacionView { get; set; } = new();
     public bool existe;
-
 
     protected override async Task OnInitializedAsync()
     {

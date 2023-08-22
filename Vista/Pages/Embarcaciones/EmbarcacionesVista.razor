@@ -41,7 +41,7 @@
             <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Embarcaciones-baja"); })">
                 <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Embarcaciones de baja</Button>
             </a>
-            <a @onclick="@(() => { navigationManager.NavigateTo($"/embarcaciones/agregarembarcacion"); })">
+            <a @onclick="AgregarEmbarcacionModal">
                 <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar Embarcacion</Button>
             </a>
         </div>
@@ -93,6 +93,12 @@
                     <EmbarcacionDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
+            @if (AgregarVisible)
+            {
+                <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
+                    <EmbarcacionAgregar OnClose="@CerrarAModal" />
+                </Modal>
+            }
         }
         else
         {
@@ -111,11 +117,17 @@
     public Embarcacion[]? embarcaciones;
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
+    bool AgregarVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
     BomberosDbContext Context { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+
+    private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
 
@@ -138,17 +150,23 @@
         return src;
     }
 
-    public async void EditarEmbarcacionModal(int id)
+    public void EditarEmbarcacionModal(int id)
     {
         EditarPorId = id;
         EditarVisible = true;
         StateHasChanged();
     }
 
-    public async void DetallesEmbarcacionModal(int id)
+    public void DetallesEmbarcacionModal(int id)
     {
         DetallesPorId = id;
         DetallesVisible = true;
+        StateHasChanged();
+    }
+
+    public void AgregarEmbarcacionModal()
+    {
+        AgregarVisible = true;
         StateHasChanged();
     }
 
@@ -174,7 +192,6 @@
     {
         CerrarModal();
     }
-
     private void CerrarModal()
     {
         EditarVisible = false;
@@ -184,10 +201,18 @@
     {
         CerrarDModal();
     }
-
     private void CerrarDModal()
     {
         DetallesVisible = false;
+    }
+
+    private void HandleACancel(MouseEventArgs e)
+    {
+        CerrarAModal();
+    }
+    private void CerrarAModal()
+    {
+        AgregarVisible = false;
     }
 
     public void Dispose()
