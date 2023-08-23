@@ -195,6 +195,9 @@
     [Parameter]
     public EventCallback OnClose { get; set; }
 
+    [Parameter]
+    public EventCallback RenderVista { get; set; }
+
     int EncargadoId { get; set; }
 
     public class EmbarcacionViewModel
@@ -304,6 +307,7 @@
             embarcacion.Encargado = bomberoEncargado;
 
             await Context.SaveChangesAsync();
+            await RenderVista.InvokeAsync();
             await OnClose.InvokeAsync();
             StateHasChanged();
         }
@@ -338,18 +342,13 @@
                     NumeroIoma = b.NumeroIoma,
                     LugarNacimiento = b.LugarNacimiento,
                     Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
                     Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
                     Resolucion1 = b.Resolucion1,
                     Resolucion2 = b.Resolucion2,
                     Resolucion3 = b.Resolucion3,
                     Resolucion4 = b.Resolucion4,
                     Resolucion5 = b.Resolucion5,
                     Resolucion6 = b.Resolucion6,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
                     Estado = b.Estado,
                     Chofer = b.Chofer,
                     VencimientoRegistro = b.VencimientoRegistro,
@@ -358,10 +357,6 @@
                     Profesion = b.Profesion,
                     NivelEstudios = b.NivelEstudios,
                     FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
 
                 };
             BomberoTodos.Add(bombero);
@@ -380,7 +375,6 @@
     public StepItem[] steps =
     {
         new StepItem {Title = "First", Content = "First-content"},
-        // new StepItem {Title = "Second", Content = "Second-content"},
         new StepItem {Title = "Last", Content = "Last-content"}
     };
 
