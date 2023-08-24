@@ -40,6 +40,7 @@ namespace Vista.Data
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<Embarcacion> Embarcacion {get; set;}
         public DbSet<Comunicacion> Comunicacion { get; set; }
+        public DbSet<Licencia> Licencias { get; set; }  
 
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
             : base(options)
@@ -67,8 +68,11 @@ namespace Vista.Data
             modelBuilder.Entity<Persona>()
                 .ToTable("Personas");
 
-       
-                 
+            modelBuilder.Entity<Licencia>()
+               .HasKey(l =>l.LicenciaId);
+            modelBuilder.Entity<Licencia>()
+                .ToTable("Licencias");
+
 
             modelBuilder.Entity<Seguro>()
                 .HasDiscriminator<int>("TipoSeguro")
@@ -141,7 +145,16 @@ namespace Vista.Data
                 .Property(p => p.Sexo)                
                 .HasConversion<string>()
                 .HasMaxLength(255);
-
+            modelBuilder
+                .Entity<Licencia>()
+                .Property(p => p.EstadoLicencia)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+            modelBuilder
+              .Entity<Licencia>()
+              .Property(p => p.TipoLicencia)
+              .HasConversion<string>()
+              .HasMaxLength(255);
             modelBuilder
                 .Entity<Bombero>()
                 .Property(b => b.Grado)
