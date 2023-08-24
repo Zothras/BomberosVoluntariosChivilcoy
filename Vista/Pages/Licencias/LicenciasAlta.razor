@@ -1,0 +1,147 @@
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/LicenciasAlta"
+
+<h3>Licenccias</h3>
+<Form Model="@LicencasVM"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;">
+    <FormItem Label="Numero de movil">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@ListabomberosVM"
+        @bind-Value="@LicencasVM.NumeroLegajo"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Selecione el movil"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                EnableSearch>
+        </Select>
+    </FormItem>
+    <FormItem Label="Numero Legajo">
+        <AntDesign.InputNumber @bind-Value="LicencasVM.NumeroLegajo" Disabled />
+    </FormItem>
+    <FormItem Label="Tipo Licencia">
+        <EnumSelect TEnum="TipoLicencia" @bind-Value="@LicencasVM.TipoLicencia" />
+    </FormItem>
+    <FormItem Label="Descripcion">
+        <Input @bind-Value="@LicencasVM.Descripcion" />
+    </FormItem>
+    <FormItem Label="Dato Hora salida">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@LicencasVM.Desde" />
+    </FormItem>
+    <FormItem Label="Dato Hora salida">
+        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@LicencasVM.Hasta" />
+    </FormItem>
+    <FormItem Label="Tipo estado licencia">
+        <EnumSelect TEnum="TipoEstadoLicencia" @bind-Value="@LicencasVM.EstadoLicencia" />
+    </FormItem>
+    <FormItem Style="width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Agregar Handie
+        </Button>
+    </FormItem>
+    
+</Form>
+
+
+
+@code {
+    public class LicencasVm
+    {
+        [Required]
+        public TipoLicencia TipoLicencia { get; set; }
+        public int NumeroLegajo { get; set; }
+        public string Descripcion { get; set; }
+        public DateTime Desde { get; set; }
+        public DateTime Hasta { get; set; }
+        public TipoEstadoLicencia EstadoLicencia { get; set; }
+        public Bombero? PersonalAfectado { get; set; }
+    }
+
+    BomberosDbContext Context { get; set; }
+    public LicencasVm LicencasVM = new();
+    List<BomberoViweModel> ListabomberosVM = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        LicencasVM = new();
+        Context = DbFactory.CreateDbContext();
+        await CargarBomberosView();
+    }
+    private async void OnFinish(EditContext editContext)
+    {
+        try
+        {
+            Bombero? personalAfectado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == LicencasVM.NumeroLegajo);
+            Licencia licencia = new()
+            {
+                    TipoLicencia = LicencasVM.TipoLicencia,
+                    Descripcion = LicencasVM.Descripcion,
+                    Desde = LicencasVM.Desde,
+                    Hasta = LicencasVM.Hasta,
+                    EstadoLicencia = LicencasVM.EstadoLicencia,
+                    PersonalAfectado = personalAfectado
+                    
+            };
+            Context.Licencias.Add(licencia);
+            await Context.SaveChangesAsync();
+
+
+            await Init();
+            StateHasChanged();
+            await message.Success("Licencia cargada correctamente");
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+
+        }
+    }
+    private async Task CargarBomberosView()
+    {
+        ListabomberosVM = new();
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViweModel bom = new()
+                {
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    NumeroLegajo = b.NumeroLegajo
+                };
+            ListabomberosVM.Add(bom);
+        }
+    }
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(LicencasVM)}");
+    }
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

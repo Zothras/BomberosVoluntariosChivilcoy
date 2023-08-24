@@ -1,0 +1,91 @@
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/LicenciasDetalles"
+<h5>Detalles de las Licencias</h5>
+<style>
+    
+    .ant-table-row > td {
+        
+        color: white;
+        background-color: black;
+        
+    }
+</style>
+<div>
+   
+    <Table DataSource="LicenciasActivasVM" Bordered>
+        
+        <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Desde"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Hasta"></PropertyColumn>
+        <PropertyColumn Property="c=>c.TipoLicencia"></PropertyColumn>
+        @*<ActionColumn Title="Action">
+            <Popconfirm Title="Sure to delete?"
+                        OnConfirm="()=> deleteRow(context.Id)"
+                        OkText="Yes"
+                        CancelText="No">
+                <a>Delete</a>
+            </Popconfirm>
+        </ActionColumn>*@
+    </Table>
+</div>
+
+@code {
+    public class LicencasVm
+    {
+        [Required]
+        public TipoLicencia TipoLicencia { get; set; }
+        public string Descripcion { get; set; }
+        public DateTime Desde { get; set; }
+        public DateTime Hasta { get; set; }
+        public TipoEstadoLicencia EstadoLicencia { get; set; }
+        public int PersonaId { get; set; }
+        public Bombero? PersonalAfectado { get; set; }
+        public string? NombreYApellido { get; set; }
+       
+    }
+
+
+    BomberosDbContext Context { get; set; }
+    public LicencasVm LicencasVM = new();
+    List<LicencasVm> LicenciasActivasVM = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        LicencasVM = new();
+        Context = DbFactory.CreateDbContext();
+        await LicenciasActivas();
+    }
+
+    private async Task LicenciasActivas()
+    {
+        LicenciasActivasVM = new();
+        var Licencias = await Context.Licencias.Where(l=> l.EstadoLicencia == TipoEstadoLicencia.Activa ).ToListAsync();
+        foreach (var l in Licencias)
+        {
+            var bombero = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == l.PersonaId);
+            LicencasVm LicVm = new()
+                {
+                    TipoLicencia = l.TipoLicencia,
+                    Descripcion = l.Descripcion,
+                    Desde = l.Desde,
+                    Hasta = l.Hasta,
+                    EstadoLicencia = l.EstadoLicencia,
+                    NombreYApellido = bombero.Nombre + "," + bombero.Apellido,
+                    PersonalAfectado = bombero
+                    
+                }; 
+            LicenciasActivasVM.Add(LicVm);
+        }
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}
