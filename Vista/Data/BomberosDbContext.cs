@@ -40,6 +40,7 @@ namespace Vista.Data
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<Embarcacion> Embarcacion {get; set;}
         public DbSet<Comunicacion> Comunicacion { get; set; }
+        public DbSet<AscensoBombero> AscensoBomberos { get; set; }
 
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
             : base(options)
@@ -60,15 +61,17 @@ namespace Vista.Data
             modelBuilder.Entity<Comunicacion>()
                 .ToTable("Comunicacion");
 
+            modelBuilder.Entity<AscensoBombero>()
+              .HasKey(a => a.AscensoId);
+            modelBuilder.Entity<AscensoBombero>()
+                .ToTable("AscensoBombero");
+
             modelBuilder.Entity<Persona>()
                 .HasDiscriminator<int>("TipoPersona")
                 .HasValue<Bombero>(1)
                 .HasValue<Persona>(2);
             modelBuilder.Entity<Persona>()
-                .ToTable("Personas");
-
-       
-                 
+                .ToTable("Personas");     
 
             modelBuilder.Entity<Seguro>()
                 .HasDiscriminator<int>("TipoSeguro")
@@ -207,6 +210,19 @@ namespace Vista.Data
                 .Property(i => i.TipoLugar)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+
+            modelBuilder
+               .Entity<AscensoBombero>()
+               .Property(b => b.GradoAntiguo)
+               .HasConversion<string>()
+               .HasMaxLength(255);
+
+            modelBuilder
+               .Entity<AscensoBombero>()
+               .Property(b => b.GradoAscenso)
+               .HasConversion<string>()
+               .HasMaxLength(255);
+
 
             modelBuilder
                 .Entity<IncendioIndustria>()

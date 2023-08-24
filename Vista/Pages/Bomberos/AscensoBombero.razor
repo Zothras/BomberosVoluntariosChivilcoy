@@ -1,0 +1,36 @@
+﻿@page "/vista"
+
+@using AntDesign
+
+<h3>Detalles de Ascenso</h3>
+
+<ProCard>
+    <ProCardTabs>
+        <ProCardTabPane Key="details" Tab="Detalles">
+            <ProDescriptions Title="Detalles de Ascenso" Column="1">
+                <ProDescriptionsItem Label="Personal Afectado">@model.PersonalAfectado</ProDescriptionsItem>
+                <ProDescriptionsItem Label="Fecha de Emisión">@model.FechaEmision</ProDescriptionsItem>
+                <ProDescriptionsItem Label="Descripción">@model.Descripcion</ProDescriptionsItem>
+                <ProDescriptionsItem Label="Grado Antiguo">@model.GradoAntiguo</ProDescriptionsItem>
+                <ProDescriptionsItem Label="Grado de Ascenso">@model.GradoAscenso</ProDescriptionsItem>
+            </ProDescriptions>
+        </ProCardTabPane>
+    </ProCardTabs>
+</ProCard>
+
+@code {
+    private AscensoViewModel model = new AscensoViewModel();
+
+    public class AscensoViewModel
+    {
+        public Bombero PersonalAfectado { get; set; } 
+
+        public DateTime FechaEmision { get; set; }
+
+        public string Descripcion { get; set; }
+
+        public EscalafonJerarquico GradoAntiguo { get; set; }
+
+        public EscalafonJerarquico GradoAscenso { get; set; }
+    }
+}
