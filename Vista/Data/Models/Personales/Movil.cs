@@ -24,6 +24,6 @@ namespace Vista.Data.Models.Personales
         public List<MovilSalida> Salidas { get; set; } = new();
         public List<MovilBombero> Bomberos { get; set; } = new();
 
-
+        
     }
 }

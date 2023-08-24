@@ -330,15 +330,16 @@
     </FormItem>
     <div>
         <b><label>Hubo deteccion automatica?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioComercioView.DeteccionAutomaticaId"></Checkbox>
+        <Checkbox @bind-Checked="salidaIncendioComercioView.DeteccionAutomaticaId" ></Checkbox>
     </div>
     <div>
         <b><label>Habia Extintor?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioComercioView.Extintor"></Checkbox>
+        <Checkbox @bind-Checked="salidaIncendioComercioView.Extintor" ></Checkbox>
     </div>
     <div>
         <b><label>Habia Hidrante?</label></b>
         <Checkbox @bind-Checked="salidaIncendioComercioView.Hidrante"></Checkbox>
+
     </div>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
@@ -527,20 +528,12 @@
 
     public async Task SubirIncendioComercio()
     {
-
         try
         {
-            Bombero? bomberoReceptor = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == BomberoReceptor);
             Bombero? bomberoEncargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == BomberoEncargado);
             Bombero? BomberoLlenoPlanilla = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == QuienLLenoPlanilla);
 
-            if (salidaIncendioComercioView is not null)
-            {
-                Vista.Data.Models.Salidas.Planillas.IncendioComercio? numeroParte = await Context.IncendiosComercios.Where(m => m.NumeroParte == salidaIncendioComercioView.NumeroParte).SingleOrDefaultAsync();
-
-                if (salidaIncendioComercioView is not null)
-                {
-                    Vista.Data.Models.Salidas.Planillas.IncendioComercio salidaIncendioComercio = new()
+                    IncendioComercio salidaIncendioComercio = new()
                         {
                             Tipo = salidaIncendioComercioView.Tipo,
                             Descripcion = salidaIncendioComercioView.Descripcion,
@@ -578,7 +571,6 @@
                             PisoAfectado = salidaIncendioComercioView.PisoAfectado,
                             CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes,
                             QuienLleno = BomberoLlenoPlanilla,
-                            ReceptorBombero = bomberoReceptor,
                             Encargado = bomberoEncargado,
                             Seguro = new()
                             {
@@ -647,8 +639,6 @@
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
-                }
-            }
         }
         catch (Exception e)
         {

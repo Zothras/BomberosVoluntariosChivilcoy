@@ -80,10 +80,10 @@
                 </card>
             }
 
-            @if (EditarVisible)
+            @if (AgregarVisible)
             {
-                <Modal Footer="null" Title="Editar" OnCancel="@HandleCancel" Visible="true">
-                    <EmbarcacionEditar VehiculoId="@EditarPorId" OnClose="@CerrarModal" />
+                <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
+                    <EmbarcacionAgregar OnClose="@CerrarAModal" RenderVista="RenderizarVista" />
                 </Modal>
             }
 
@@ -93,10 +93,11 @@
                     <EmbarcacionDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
-            @if (AgregarVisible)
+
+            @if (EditarVisible)
             {
-                <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
-                    <EmbarcacionAgregar OnClose="@CerrarAModal" />
+                <Modal Footer="null" Title="Editar" OnCancel="@HandleCancel" Visible="true">
+                    <EmbarcacionEditar VehiculoId="@EditarPorId" OnClose="@CerrarModal" RenderVista="RenderizarVista" />
                 </Modal>
             }
         }
@@ -106,7 +107,8 @@
                 <Spin Delay="500" Indicator=antIcon />
             </div>
             //Hay que ver si se puede cambiar el contenido despues del delay
-            @code {
+            @code 
+            {
                 RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
             }
         }
@@ -132,6 +134,12 @@
         Context = DbFactory.CreateDbContext();
 
         embarcaciones = await Context.Embarcacion.ToArrayAsync();
+    }
+
+    private async Task RenderizarVista()
+    {
+        await Init();
+        StateHasChanged();
     }
 
     public string CargarImage(Embarcacion embarcaciones)
@@ -182,6 +190,7 @@
         await context.SaveChangesAsync();
         StateHasChanged();
     }
+
 
     private void Cancel()
     {
