@@ -53,7 +53,6 @@ namespace Vista.Data.Models.Personales
         public int? EquipoId { get; set; }
         public Comunicacion? Handie { get; set; }
 
-        public List<Licencia> Licencias { get; set; } = new();
-       
+
     }
 }
