@@ -10,6 +10,7 @@ namespace Vista.Data.Models.Salidas.Componentes
         public int LicenciaId { get; set; }
         [Required]
         public TipoLicencia TipoLicencia { get; set; }
+        public string Descripcion { get; set; }
         //desde = emicion de licencia
         //Hasta = finalizacion de la licencia
         public DateTime Desde { get; set; }
