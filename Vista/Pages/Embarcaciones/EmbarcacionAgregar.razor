@@ -256,12 +256,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        BomberoEncargado = -1;
+
         using var db = DbFactory.CreateDbContext();
 
         bomberos = await db.Bomberos.ToArrayAsync();
 
         CargarBomberosView();
     }
+
 
     private async void SubirFoto(InputFileChangeEventArgs e)
     {
@@ -309,6 +312,7 @@
                         }
                     };
                 db.Embarcacion.Add(embarcacion);
+
                 await db.SaveChangesAsync();
                 await RenderVista.InvokeAsync();
                 await OnClose.InvokeAsync();
@@ -319,7 +323,6 @@
     List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
     public void CargarBomberosView()
     {
-
         foreach (Bombero b in bomberos)
         {
             BomberoViweModel bombero = new()

@@ -69,6 +69,7 @@ namespace Vista.Data.ViewModels.Personal
         public string NombreImagen { get; set; }
         //Brigada-------------------------------
         public string NombreBrigada { get; set; }
-       
+
+        public bool Selected { get; set; }
     }
 }

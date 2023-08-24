@@ -130,11 +130,11 @@
 
     public string CargarImage(Movil movil)
     {
-        using var db = DbFactory.CreateDbContext();
+        Context = DbFactory.CreateDbContext();
 
         string src = "/";
 
-        ImagenMovil? imagen = db.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefault();
+        ImagenMovil? imagen = Context.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefault();
 
         if (imagen is not null)
         {
@@ -167,7 +167,6 @@
             movil_a_modificar.Estado = estado;
         }
         await Context.SaveChangesAsync();
-        //NumeroMovil.NumeroMovil = string.Empty;
         moviles = await Context.Moviles.ToArrayAsync();
         StateHasChanged();
     }
