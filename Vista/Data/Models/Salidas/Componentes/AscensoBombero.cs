@@ -20,4 +20,6 @@ namespace Vista.Data.Models.Salidas.Componentes
         public Bombero PersonalAfectado { get; set; }
 
     }
+
+
 }
