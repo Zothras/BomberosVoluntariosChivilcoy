@@ -2,8 +2,8 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
-@page "/Licencias-Detalles"
-<h5>Detalles de las Licencias</h5>
+@page "/Licencias-Aprobar"
+
 <style>
 
     .ant-table-row > td {
@@ -14,33 +14,9 @@
     .ant-table-row:hover > td {
         background-color: black !important;
     }
-
-    .notificacion {
-        display: flex;
-        justify-content: flex-end;
-        width: 100%;
-    }
-
-    .ant-badge{
-        padding:0 5px !important;
-    }
 </style>
-
 <div>
-    <div class="notificacion">
-        <a style="color:darkred;" href="/Licencias-Aprobar">
-            <p style="display:inline-block;">
-                Tienes licencias pendientes
 
-            </p>
-
-            <Badge Count="LicenciasPendientes.Count">
-                <span class="head-example" />
-            </Badge>
-
-
-        </a>
-    </div>
     <Table DataSource="LicenciasActivasVM" Bordered>
 
         <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
@@ -48,13 +24,21 @@
         <PropertyColumn Property="c=>c.Hasta"></PropertyColumn>
         <PropertyColumn Property="c=>c.TipoLicencia"></PropertyColumn>
         <PropertyColumn Property="c=>c.EstadoLicencia"></PropertyColumn>
-
+        <ActionColumn Title="Action">
+        <Popconfirm Title="Esta seguro que quiere aprobarla?"
+        OnConfirm="()=> AprobarLicencia(context.LicenciaId)"
+        OkText="Yes"
+        CancelText="No">
+        <a>Aprobar Licencia</a>
+        </Popconfirm>
+        </ActionColumn>
     </Table>
 </div>
 
 @code {
     public class LicencasVm
     {
+        public int LicenciaId { get; set; }
         [Required]
         public TipoLicencia TipoLicencia { get; set; }
         public string Descripcion { get; set; }
@@ -71,7 +55,7 @@
     BomberosDbContext Context { get; set; }
     public LicencasVm LicencasVM = new();
     List<LicencasVm> LicenciasActivasVM = new();
-    List<Licencia> LicenciasPendientes = new();
+
     protected override async Task OnInitializedAsync()
     {
         await Init();
@@ -80,19 +64,19 @@
     {
         LicencasVM = new();
         Context = DbFactory.CreateDbContext();
-        await LicenciasActivas();
-        await LicenciasPendiente();
+        await LicenciasPendientes();
     }
 
-    private async Task LicenciasActivas()
+    private async Task LicenciasPendientes()
     {
         LicenciasActivasVM = new();
-        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).ToListAsync();
+        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
         foreach (var l in Licencias)
         {
             var bombero = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == l.PersonaId);
             LicencasVm LicVm = new()
                 {
+                    LicenciaId = l.LicenciaId,
                     TipoLicencia = l.TipoLicencia,
                     Descripcion = l.Descripcion,
                     Desde = l.Desde,
@@ -105,11 +89,18 @@
             LicenciasActivasVM.Add(LicVm);
         }
     }
-    private async Task LicenciasPendiente()
+    private async Task AprobarLicencia(int IdLicencia)
     {
-        LicenciasPendientes = new();
-        LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
+        var LicenciaAprobar = await Context.Licencias.SingleOrDefaultAsync(l => l.LicenciaId == IdLicencia);
+        if (LicenciaAprobar is not null)
+        {
+            LicenciaAprobar.EstadoLicencia = TipoEstadoLicencia.Aprobada;
+        }
+        await Context.SaveChangesAsync();
 
+        await Init();
+        StateHasChanged();
+        await message.Success("Licencia Aprobada!");
     }
     public void Dispose()
     {

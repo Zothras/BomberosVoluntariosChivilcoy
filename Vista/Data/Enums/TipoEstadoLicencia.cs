@@ -2,8 +2,8 @@
 {
     public enum TipoEstadoLicencia
     {
-        Activa,
+        Aprobada,
         Pendiente,
-        Baja
+        Rechazada
     }
 }

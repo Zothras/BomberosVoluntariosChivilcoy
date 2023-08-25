@@ -2,9 +2,9 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
-@page "/LicenciasAlta"
+@page "/Licencias-Alta"
 
-<h3>Licenccias</h3>
+
 <Form Model="@LicencasVM"
       LabelColSpan="8"
       WrapperColSpan="16"
@@ -15,10 +15,10 @@
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@ListabomberosVM"
-        @bind-Value="@LicencasVM.NumeroLegajo"
+                @bind-Value="@LicencasVM.NumeroLegajo"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Selecione el movil"
+                Placeholder="Selecione el bombero"
                 DefaultActiveFirstOption="false"
                 AllowClear="true"
                 EnableSearch>
@@ -33,10 +33,10 @@
     <FormItem Label="Descripcion">
         <Input @bind-Value="@LicencasVM.Descripcion" />
     </FormItem>
-    <FormItem Label="Dato Hora salida">
+    <FormItem Label="Fecha inicio">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@LicencasVM.Desde" />
     </FormItem>
-    <FormItem Label="Dato Hora salida">
+    <FormItem Label="Fecha finalizacion">
         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@LicencasVM.Hasta" />
     </FormItem>
     <FormItem Label="Tipo estado licencia">
@@ -47,7 +47,7 @@
             justify-content: flex-end !important;
             align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
-            Agregar Handie
+            cargar licencia
         </Button>
     </FormItem>
     
@@ -61,7 +61,7 @@
         [Required]
         public TipoLicencia TipoLicencia { get; set; }
         public int NumeroLegajo { get; set; }
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
         public DateTime Desde { get; set; }
         public DateTime Hasta { get; set; }
         public TipoEstadoLicencia EstadoLicencia { get; set; }
