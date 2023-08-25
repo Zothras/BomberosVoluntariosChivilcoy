@@ -1,95 +1,120 @@
-﻿@* @page "/vista"
-
+﻿@page "/vista"
 @using AntDesign
+@using System.ComponentModel.DataAnnotations
+@inject IDbContextFactory<BomberosDbContext> DbFactory
 
-<h3>Detalles de Ascenso @AscensoVM.FechaEmision </h3>
+<h3 style="text-align:center; text-decoration:underline;">Detalles de Ascenso</h3>
+<b><label>Elija al encargado</label></b>
+
+<Form Model="AscensoVM">
+    <FormItem Label="Personal Afectado">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@BomberoTodos"
+        @bind-Value="@Bombero"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Seleccione Bombero Encargado"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
+    </FormItem>
+    <FormItem Label="Fecha de emision">
+        <DatePicker @bind-Value="AscensoVM.FechaEmision" />
+    </FormItem>
+    <FormItem Label="Descripción">
+        <Input @bind-Value="AscensoVM.Descripcion" />
+    </FormItem>
+    <FormItem Label="Grado antiguo">
+        <Input @bind-Value="AscensoVM.GradoAntiguo" />
+    </FormItem>
+    <FormItem Label="Grado ascenso">
+        <EnumSelect TEnum="@EscalafonJerarquico" OnSelectedItemChanged="handleChange" />
+    </FormItem>
+</Form>
+
 
 @code {
-    private AscensoViewModel model = new AscensoViewModel();
+    [Parameter]
+    public int? BomberoId { get; set; }
+
+    [Parameter]
+    public int? AscensoId { get; set; }
+
+    public Bombero[]? bomberos;
+    public int Bombero { get; set; }
+    BomberosDbContext Context { get; set; }
+    // public List<Bombero> bomberoTodos = new List<Bombero>();
 
     public class AscensoViewModel
     {
-        public Bombero? PersonalAfectado { get; set; } 
-
+        public Bombero PersonalAfectado { get; set; }
         public DateTime FechaEmision { get; set; }
-
-        public string? Descripcion { get; set; }
-
+        public string Descripcion { get; set; }
         public EscalafonJerarquico GradoAntiguo { get; set; }
-
         public EscalafonJerarquico GradoAscenso { get; set; }
     }
 
+    AscensoViewModel AscensoVM { get; set; } = new AscensoViewModel();
 
-
-
-    AscensoViewModel AscensoVM  { get; set; } = new() ;
-
-} *@
-
-@page "/vista"
-@using AntDesign
-
-<h3>Detalles de Ascenso @AscensoVM.FechaEmision </h3>
-
-<AntSelect Value="AscensoVM.GradoAscenso" ValueChanged="HandleGradoAscensoChanged">
-    @foreach (EscalafonJerarquico jerarquia in Enum.GetValues(typeof(EscalafonJerarquico)))
+    protected override async Task OnInitializedAsync ()
     {
-        <AntSelectOption Value="@jerarquia">@jerarquia</AntSelectOption>
-    }
-</AntSelect>
-
-
-
-@code {
-    private AscensoViewModel model = new AscensoViewModel();
-
-    public class AscensoViewModel
-    {
-       
+        Bombero = -1;
+        Context = DbFactory.CreateDbContext();
+        Bombero? bombero = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
+        if (AscensoId.HasValue)
+        {
+            var datos = await Context.AscensoBomberos.FindAsync(AscensoId);
+            AscensoVM.PersonalAfectado = bombero;
+            AscensoVM.FechaEmision = datos.FechaEmision;
+            AscensoVM.Descripcion = datos.Descripcion;
+            AscensoVM.GradoAntiguo = datos.GradoAntiguo;
+            AscensoVM.GradoAscenso = datos.GradoAscenso;
+        }
         
-            public Bombero? PersonalAfectado { get; set; }
+        bomberos = await Context.Bomberos.ToArrayAsync();
 
-            public DateTime FechaEmision { get; set; }
+        CargarBomberosView();
 
-            public string? Descripcion { get; set; }
-
-            public EscalafonJerarquico GradoAntiguo { get; set; }
-
-            public EscalafonJerarquico GradoAscenso { get; set; }
-     
     }
 
-            AscensoViewModel AscensoVM { get; set; } = new();
-
-    void HandleGradoAscensoChanged (EscalafonJerarquico nuevoGrado)
+    void handleChange (EscalafonJerarquico escalafon)
     {
-        AscensoVM.GradoAscenso = nuevoGrado;
+        Console.WriteLine(escalafon);
     }
-
-
-    public enum EscalafonJerarquico
+    List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
+    public void CargarBomberosView ()
     {
-        ComandanteGeneral,
-        ComandanteMayor,
-        Comandante,
-        SubComandante,
-        OficialAuxiliarDotacion,
-        OficialAuxiliarEscuadra,
-        OficialAuxiliar,
-        SubOficialAyudanteMayor,
-        SubOficialAyudantePrincipal,
-        SubOficialAyudantePrimera,
-        SubOficialAyudante,
-        SuboficialSubAyudante,
-        SegundoAyudante,
-        Bombero,
-        Aspirante,
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    FechaNacimiento = b.FechaNacimiento,
+                    Sexo = b.Sexo,
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    Documento = b.Documento,
+                    NumeroLegajo = b.NumeroLegajo,
+                    NumeroIoma = b.NumeroIoma,
+                    LugarNacimiento = b.LugarNacimiento,
+                    Grado = b.Grado,
+                    Dotacion = b.Dotacion,
+                    Resolucion1 = b.Resolucion1,
+                    Resolucion2 = b.Resolucion2,
+                    Resolucion3 = b.Resolucion3,
+                    Resolucion4 = b.Resolucion4,
+                    Resolucion5 = b.Resolucion5,
+                    Resolucion6 = b.Resolucion6,
+                    Estado = b.Estado,
+                    Chofer = b.Chofer,
+                    VencimientoRegistro = b.VencimientoRegistro,
+                    Direccion = b.Direccion,
+                    Observaciones = b.Observaciones,
+                    Profesion = b.Profesion,
+                    NivelEstudios = b.NivelEstudios,
+                    FechaAceptacion = b.FechaAceptacion,
+                };
+            BomberoTodos.Add(bombero);
+        }
     }
-
 }
-
-}
-
-
-
