@@ -1,5 +1,7 @@
-﻿@implements IDisposable
+﻿@inject NavigationManager navigationManager
+@implements IDisposable
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService _message
 @page "/Reportes/HistorialMoviles"
 @using System.ComponentModel
 @using AntDesign.TableModels
@@ -8,39 +10,84 @@
 
 <div>
     <Table DataSource="MovilesSalidas" Bordered>
-        <PropertyColumn Property="c=>c.NumeroMovil"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Kilometraje"></PropertyColumn>
-        <PropertyColumn Property="c=>c.NumeroParte"></PropertyColumn>
+        <TitleTemplate>
+            <GridRow>
+                <GridCol Span="4">
+                    <Title Level="3">Moviles</Title>
+                </GridCol>
+            </GridRow>
+        </TitleTemplate>
 
-        @if (context.CargoCombustible == true)
-        {
-            <PropertyColumn Property="c=>c.CargoCombustible">Cargo</PropertyColumn>
-        }
-        else
-        {
-            <PropertyColumn Property="c=>c.CargoCombustible">No Cargo</PropertyColumn>
-        }
+         <ColumnDefinitions>
+            <PropertyColumn Property="c=>c.NumeroMovil" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
 
-       
+
+
+            @if (context.CargoCombustible == true)
+            {
+                <PropertyColumn Property="c=>c.CargoCombustible">Cargo</PropertyColumn>
+            }
+            else
+            {
+                <PropertyColumn Property="c=>c.CargoCombustible">No Cargo</PropertyColumn>
+            }
+         </ColumnDefinitions> 
+
     </Table>
 </div>
+
+
+@*<h7 style="display: flex;justify-content:left;align-items:flex-start;height: 50%;width:50%;">
+    Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
+    Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
+</h7>*@
+
+@*<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
+            OnConfirm="()=> mostrar_eleccion(desde,hasta,preferencia)"
+            OnCancel="Cancel">
+    <Button>
+        Buscar
+    </Button>
+</Popconfirm>
+<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
+            OnConfirm="()=> CargarSalidasMovil(preferencia)"
+            OnCancel="Cancel">
+    <Button>
+        Mostrar todos
+    </Button>
+</Popconfirm>*@
+
+<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir"); })" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
 
 @code {
     Movil[] moviles;
 
+    //static DateTime hasta = DateTime.Now;
+    //static DateTime desde = hasta.AddMonths(-1);
+
     BomberosDbContext Context { get; set; }
+
+    //List<MovilSalidaViewModel> Todoslosmoviles = new List<MovilSalidaViewModel>();
+    //List<MovilSalidaViewModel> preferencia = new List<MovilSalidaViewModel>();
+
+    IEnumerable<HistorialMoviles> dataSource;
+    IEnumerable<HistorialMoviles> selectedRows;
+    ITable table;
 
     int _pageIndex = 1;
     int _pageSize = 10;
     int _total = 0;
 
-
     private class MovilSalidaViewModel
     {
+
         public bool CargoCombustible { get; set; }
         public int Kilometraje { get; set; }
         public int NumeroParte { get; set; }
         public string NumeroMovil { get; set; }
+
     }
 
     private MovilSalidaViewModel MovilSalidaViewModels { get; set; } = new();
@@ -60,6 +107,7 @@
 
                 MovilSalidaViewModel msvm = new()
                     {
+
                         CargoCombustible = s.CargoCombustible,
                         Kilometraje = s.KmLlegada,
                         NumeroParte = s.Salida.NumeroParte,
@@ -75,7 +123,17 @@
         }
     }
 
-
+    //void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> b)
+    //{
+    //    int desde;
+    //    int hasta;
+    //    b.Clear();
+    //    for (int i = 0; i < Todoslosmoviles.Count; i++)
+    //    {
+    //        if (Todoslosmoviles[i].NumeroMovil == null) continue; 
+    //    }
+    //    StateHasChanged();
+    //}
 
     private async Task Init()
     {
@@ -95,4 +153,9 @@
     {
         Context?.Dispose();
     }
+
+    //private void Cancel()
+    //{
+    //    _message.Error("Operacion cancelada");
+    //}
 }
