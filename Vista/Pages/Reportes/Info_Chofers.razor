@@ -7,25 +7,31 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-<h7 style="display: flex;justify-content:left;align-items:flex-start;height: 50%;width:50%;">
-    Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
-    Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
-</h7>
+<style>
+    .nombreClase {
+        display: inline-block;
+    }
+</style>
 
-<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
-            OnConfirm="()=>colocar_preferencia(desde,hasta,preferencia)"
-            OnCancel="Cancel">
-    <Button>
-        Buscar
-    </Button>
-</Popconfirm>
-<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
-            OnConfirm="()=>Insertar_todos_choferes(preferencia)"
-            OnCancel="Cancel">
-    <Button>
-        Mostrar todos
-    </Button>
-</Popconfirm>
+<div style="display: flex;justify-content: space-evenly;width:80%;padding:1em 9em 0.1em 5em">
+    <p class="nombreClase"> Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
+
+     <p class="nombreClase">Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
+
+     <p class ="nombreClase">
+         <Button OnClick="()=>colocar_preferencia(desde,hasta,preferencia)">
+             Buscar
+         </Button>
+     </p>
+
+     <p class="nombreClase">
+         <Button OnClick="()=>Insertar_todos_choferes(preferencia)">
+             Mostrar todos
+         </Button>
+     </p >
+     
+</div>
+
 
 <Table DataSource="preferencia" TItem="ChoferesVM">
     <TitleTemplate>
