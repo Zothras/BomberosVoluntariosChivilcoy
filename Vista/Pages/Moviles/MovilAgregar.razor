@@ -204,6 +204,7 @@
 @code {
     [Parameter]
     public EventCallback OnClose { get; set; }
+    BomberosDbContext Context { get; set; }
 
     public class StepItem
     {
@@ -279,7 +280,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var db = DbFactory.CreateDbContext();
+        await Init();
+    }
+
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
     }
 
     private async void SubirFoto(InputFileChangeEventArgs e)
@@ -296,11 +302,11 @@
 
     private async void SubirMovil()
     {
-        using var db = DbFactory.CreateDbContext();
+        Context = DbFactory.CreateDbContext();
 
         if (movilView is not null)
         {
-            Movil? comprobante = await db.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
+            Movil? comprobante = await Context.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
 
             if (comprobante is null)
             {
@@ -329,8 +335,8 @@
                         NumeroDePoliza = seguroView.NumeroDePoliza
                     }
                 };
-                db.Moviles.Add(movil);
-                await db.SaveChangesAsync();
+                Context.Moviles.Add(movil);
+                await Context.SaveChangesAsync();
                 await OnClose.InvokeAsync();
             }
         }

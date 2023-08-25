@@ -2,11 +2,14 @@
 
 <style>
     #ImagenMovil {
-        border: 1px solid #BABABA;
-        min-width: 380px;
-        min-height: 200px;
+        border: 1px solid #f0f5f5;
         border-radius: 2px;
+        height: 25em;
+        max-height: 25em;
+        min-height: 25em;
         width: 100%;
+        max-width: 100%;
+        min-width: 100%;
     }
 
     .ant-table-pagination.ant-pagination {
@@ -21,11 +24,11 @@
     <br>
     <div>
         <Table TItem="Data" DataSource="data" Responsive>
-            <PropertyColumn Property="c=>c.Tipo"> @embarcacionView.Tipo </PropertyColumn>
-            <PropertyColumn Property="c=>c.Encargado">@embarcacionView.EncargadoNombre</PropertyColumn>
-            <PropertyColumn Property="c=>c.Marca"> @embarcacionView.Marca </PropertyColumn>
-            <PropertyColumn Property="c=>c.Modelo">@embarcacionView.Modelo</PropertyColumn>
-            <PropertyColumn Property="c=>c.Patente">@embarcacionView.Patente</PropertyColumn>
+                <PropertyColumn Property="c=>c.Tipo"> @embarcacionView.Tipo </PropertyColumn>
+                <PropertyColumn Property="c=>c.Encargado">@embarcacionView.EncargadoNombre</PropertyColumn>
+                <PropertyColumn Property="c=>c.Marca"> @embarcacionView.Marca </PropertyColumn>
+                <PropertyColumn Property="c=>c.Modelo">@embarcacionView.Modelo</PropertyColumn>
+                <PropertyColumn Property="c=>c.Patente">@embarcacionView.Patente</PropertyColumn>
         </Table>
     </div>
 }

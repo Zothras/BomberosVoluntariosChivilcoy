@@ -142,10 +142,11 @@
                         <Select TItem="BomberoViweModel"
                                 TItemValue="int"
                                 DataSource="@BomberoTodos"
+                                Placeholder="Seleccione Bombero Encargado"
                                 @bind-Value="@BomberoEncargado"
                                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                Placeholder="Seleccione Bombero Encargado">
+                                DefaultValue="@BomberoEncargado">
                         </Select>
                     </div>
                 </div>      
@@ -193,10 +194,8 @@
     [Parameter]
     public EventCallback OnClose { get; set; }
 
-    [Parameter]
-    public EventCallback RenderVista { get; set; }
-
     int BomberoEncargado { get; set; }
+    BomberosDbContext Context { get; set; }
 
     public class EmbarcacionViewModel
     {
@@ -227,8 +226,6 @@
         public TipoRol Rol { get; set; }
         public int PersonaId { get; set; }
     }
-
-    BomberosDbContext Context { get; set; }
 
     public ImagenViewModel imagenView { get; set; } = new();
     public EmbarcacionViewModel embarcacionView { get; set; } = new();
@@ -306,7 +303,6 @@
             embarcacion.Encargado = bomberoEncargado;
 
             await Context.SaveChangesAsync();
-            await RenderVista.InvokeAsync();
             await OnClose.InvokeAsync();
             StateHasChanged();
         }
