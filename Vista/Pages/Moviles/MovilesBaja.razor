@@ -87,7 +87,7 @@
 
             @if (DetallesVisible)
             {
-                <Modal Footer="null" Title="Detalles" OnCancel="@HandleDCancel" Visible="true">
+                <Modal Footer="null" Title="Detalles" OnCancel="@HandleDCancel" Visible="true" Style="width: 35%!important;">
                     <MovilDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
@@ -116,11 +116,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await Init();
+    }
+
+    private async Task Init()
+    {
         Context = DbFactory.CreateDbContext();
 
         moviles_de_baja = await Context.Moviles.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
     }
-    
 
     public string CargarImage(Movil movil)
     {
@@ -169,9 +173,11 @@
     {
         CerrarModal();
     }
-    private void CerrarModal()
+    private async void CerrarModal()
     {
         EditarVisible = false;
+        await Init();
+        StateHasChanged();
     }
 
     private void HandleDCancel(MouseEventArgs e)

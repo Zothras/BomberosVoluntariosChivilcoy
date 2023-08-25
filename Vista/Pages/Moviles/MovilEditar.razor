@@ -214,8 +214,11 @@
 @code {
     [Parameter]
     public int? VehiculoId { get; set; }
+
     [Parameter]
     public EventCallback OnClose { get; set; }
+
+    BomberosDbContext Context { get; set; }
 
     public class MovilViewModel
     {
@@ -252,8 +255,6 @@
         public int PersonaId { get; set; }
     }
 
-    BomberosDbContext Context { get; set; }
-
     public MovilViewModel movilView { get; set; } = new();
     public ImagenViewModel imagenView { get; set; } = new();
     public List<BomberoViewModel> bomberoViews { get; set; } = new();
@@ -261,6 +262,11 @@
     public bool existe;
 
     protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+
+    private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
 
@@ -382,7 +388,6 @@
     {
         new StepItem {Title = "First", Content = "First-content"},
         new StepItem {Title = "Second", Content = "Second-content"},
-        //new StepItem {Title = "Third", Content = "Third-content"},
         new StepItem {Title = "Last", Content = "Last-content"}
     };
 

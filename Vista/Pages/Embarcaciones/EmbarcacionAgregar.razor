@@ -187,33 +187,8 @@
 @code {
     [Parameter]
     public EventCallback OnClose { get; set; }
-
-    [Parameter]
-    public EventCallback RenderVista { get; set; }
-
-    public class StepItem
-    {
-        public string Title { get; set; }
-        public string Content { get; set; }
-    }
-
-    public int current { get; set; } = 0;
-
-    public StepItem[] steps =
-    {
-        new StepItem {Title = "First", Content = "First-content"},
-        new StepItem {Title = "Last", Content = "Last-content"}
-    };
-
-    void OnPreClick()
-    {
-        current--;
-    }
-
-    void OnNextClick()
-    {
-        current++;
-    }
+    public int BomberoEncargado { get; set; }
+    BomberosDbContext Context { get; set; }
 
     public class EmbarcacionViewModel
     {
@@ -256,15 +231,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await Init();
+    }
+
+    private async Task Init()
+    {
         BomberoEncargado = -1;
 
-        using var db = DbFactory.CreateDbContext();
+        Context = DbFactory.CreateDbContext();
 
-        bomberos = await db.Bomberos.ToArrayAsync();
+        bomberos = await Context.Bomberos.ToArrayAsync();
 
         CargarBomberosView();
     }
-
 
     private async void SubirFoto(InputFileChangeEventArgs e)
     {
@@ -277,15 +256,15 @@
         await message.Success("Imagen cargada");
         StateHasChanged();
     }
-    int BomberoEncargado;
+    
     private async void SubirEmbarcacion()
     {
-        using var db = DbFactory.CreateDbContext();
+        Context = DbFactory.CreateDbContext();
 
         if (embarcacionView is not null)
         {
-            Embarcacion? comprobante = await db.Embarcacion.Where(e => e.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
-            Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
+            Embarcacion? comprobante = await Context.Embarcacion.Where(e => e.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
             if (comprobante is null)
             {
                 Embarcacion embarcacion = new Embarcacion()
@@ -311,15 +290,15 @@
                             NumeroDePoliza = seguroView.NumeroDePoliza
                         }
                     };
-                db.Embarcacion.Add(embarcacion);
+                Context.Embarcacion.Add(embarcacion);
 
-                await db.SaveChangesAsync();
-                await RenderVista.InvokeAsync();
+                await Context.SaveChangesAsync();
                 await OnClose.InvokeAsync();
             }
         }
         StateHasChanged();
     }
+
     List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
     public void CargarBomberosView()
     {
@@ -354,5 +333,29 @@
                 };
             BomberoTodos.Add(bombero);
         }
+    }
+
+    public class StepItem
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+    }
+
+    public int current { get; set; } = 0;
+
+    public StepItem[] steps =
+    {
+        new StepItem {Title = "First", Content = "First-content"},
+        new StepItem {Title = "Last", Content = "Last-content"}
+    };
+
+    void OnPreClick()
+    {
+        current--;
+    }
+
+    void OnNextClick()
+    {
+        current++;
     }
 }
