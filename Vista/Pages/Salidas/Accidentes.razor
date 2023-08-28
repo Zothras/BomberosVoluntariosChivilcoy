@@ -4,6 +4,7 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/accidentes"
 @using Vista.Data.ViewModels.Accidente;
+@using Vista.Pages.PlanillasIntervencion;
 <h2 style="text-align:center; text-decoration:underline;">Acciedentes</h2>
 
 <Form Model="@accidenteViewModels"
@@ -375,6 +376,14 @@
     </Form>
 </Modal>
 
+<Modal Title="@("Datos de la carga de accidente")"
+       Visible="@imprimirmodal"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+       <p>Imprimir con croquis</p>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{true}"); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{false}"); })">No</button>
+</Modal>
 
 @code {
     BomberosDbContext Context { get; set; }
@@ -388,7 +397,7 @@
     public List<AccidenteViewModels> VehiculosAfectdosAcci = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
     private Form<MovilSalidaViewModels> _form1;
-
+    bool imprimirmodal { get; set; }
 
     Bombero[] TodosBomberos;
     Movil[] Moviles;
@@ -561,6 +570,7 @@
                 await message.Error(e.Message, 5);
 
         }
+        imprimirmodal = true;
     }
     public async Task AgregarDamnificado()
     {

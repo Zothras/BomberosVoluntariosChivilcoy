@@ -52,7 +52,13 @@ namespace Vista.Data.Models.Personales
 
         public int? EquipoId { get; set; }
         public Comunicacion? Handie { get; set; }
+<<<<<<< HEAD
         public List<AscensoBombero> Ascensos { get; set; } = new();
         public List<Licencia> Licencias { get; set; } = new();
+=======
+
+        public List<Sancion> Sanciones { get; set; } = new();
+
+>>>>>>> Empece a modelar sanciones
     }
 }

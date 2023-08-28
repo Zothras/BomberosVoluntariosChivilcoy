@@ -1,6 +1,6 @@
 ﻿@implements IDisposable
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/PlanillasIntervencion/Imprimir/{SalidaId:int?}/{ConCroquis:bool?}"
+@page "/PlanillasIntervencion/Imprimir/{NumeroParte:int?}/{ConCroquis:bool?}"
 @layout EmptyLayout
 @using System;
 @using System.Globalization;
@@ -234,7 +234,7 @@
     <div class="sec3">
         <div>
             <p class="sec3-titulo">
-                B) INCENDIO
+                B) @IntervencionVM.TipoServicio
             </p>
         </div>
         <div class="sec3-contenedor">
@@ -317,7 +317,7 @@
     
     
     [Parameter]
-    public int? SalidaId { get; set; }
+    public int? NumeroParte { get; set; }
 
     [Parameter]
     public bool? ConCroquis { get; set; }
@@ -370,7 +370,7 @@
     public async Task CargarEncargado ()
     {
 
-        var salida = await Context.Set<Salida>().SingleOrDefaultAsync(s => s.SalidaId == SalidaId);
+        var salida = await Context.Set<Salida>().SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte);
 
         if (salida != null)
         {
