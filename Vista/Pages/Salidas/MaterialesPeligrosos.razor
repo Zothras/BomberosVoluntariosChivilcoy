@@ -20,7 +20,6 @@
 
 </style>
 
-<h2 style="text-align:center; text-decoration:underline;">Materiales Peligrosos</h2>
 <div style="width: 50%;">
     <Steps Current="current">
         @foreach (var item in steps)
@@ -35,7 +34,7 @@
               OnFinish="OnFinish"
               OnFinishFailed="OnFinishFailed"
               Style="width: 100%;height: 100%;">
-                
+
             @if (current == 0)
             {
                 @*Datos generales de las salidas*@
@@ -170,19 +169,19 @@
                     </FormItem>
                     <FormItem Label="Elija el chofer">
                         <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoChoferes"
-                            @bind-Value="@chofer"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Selecione a un bombero"
-                            DefaultActiveFirstOption="false"
-                            AllowClear="true"
-                            EnableSearch>
+                                TItemValue="int"
+                                DataSource="@bomberoChoferes"
+                                @bind-Value="@chofer"
+                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                Placeholder="Selecione a un bombero"
+                                DefaultActiveFirstOption="false"
+                                AllowClear="true"
+                                EnableSearch>
                         </Select>
                     </FormItem>
                     <FormItem Label="Numero de movil">
-                            <Select TItem="Movil"
+                        <Select TItem="Movil"
                                 TItemValue="string"
                                 DataSource="@Moviles"
                                 @bind-Value="@NumeroMovil"
@@ -192,7 +191,7 @@
                                 DefaultActiveFirstOption="false"
                                 AllowClear="true"
                                 EnableSearch>
-                            </Select>
+                        </Select>
                     </FormItem>
                     <br />
                     @if (NumeroMovil is not null)
@@ -215,7 +214,7 @@
                         }
                     }
                     <FormItem Label="Kilometro salida">
-                            <AntDesign.InputNumber @bind-Value="modelMateriales.Kilometraje" Disabled />
+                        <AntDesign.InputNumber @bind-Value="modelMateriales.Kilometraje" Disabled />
                     </FormItem>
                     <FormItem Label="Kilometro llegada">
                         <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
@@ -239,149 +238,128 @@
             }
             else if (current == 4)
             {
-                <div class="slick-contenedor">
+                 <div class="slick-contenedor">
                     @*Cuerpos paraticipantes*@
-                    <b><label>Cuerpo Participante</label></b>
-                    <FormItem Label="Elija el bombero">
+                     <b><label>Cuerpo Participante</label></b>
+                     <FormItem Label="Elija el bombero">
                         <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoTodos"
-                            @bind-Value="@BomberoCuerpo"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Selecione un bombero"
-                            DefaultActiveFirstOption="false"
-                            AllowClear="true"EnableSearch>
+                                    TItemValue="int"
+                                    DataSource="@bomberoTodos"
+                                    @bind-Value="@BomberoCuerpo"
+                                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                    Placeholder="Selecione un bombero"
+                                    DefaultActiveFirstOption="false"
+                                    AllowClear="true" EnableSearch>
                         </Select>
-                    </FormItem>
-                    <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
-                    <br />
-                    <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
-                    <br />
-                    <div>
-                        <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
-                            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-                            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-                            <ActionColumn Title="Acciones">
-                                <Popconfirm Title="Sure to delete?"
-                                OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                                OkText="Yes"
-                                CancelText="No">
-                                    <a>Delete</a>
-                                </Popconfirm>
-                            </ActionColumn>
-                        </Table>
-                    </div>
-                    <b><label>Elija al encargado</label></b>
-                    <FormItem Label="Encargado">
-                        <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoTodos"
-                            @bind-Value="@BomberoEncargado"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione  a un  bombero"
-                            DefaultActiveFirstOption="true"
-                            AllowClear="true" EnableSearch>
-                        </Select>
-                    </FormItem>
-                    <b><label>Quien lleno planilla</label></b>
-                    <FormItem Label="Bombero que lleno la planilla">
-                        <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoTodos"
-                            @bind-Value="@QuienLLenoPlanilla"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione  a un  bombero"
-                            DefaultActiveFirstOption="false"
-                            AllowClear="true"
-                            EnableSearch>
-                        </Select>
-                    </FormItem>
-                </div>
+                     </FormItem>
+                     <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
+                     <br />
+                     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
+                     <br />
+                     <div>
+                         <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
+                             <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+                             <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+                             <ActionColumn Title="Acciones">
+                                 <Popconfirm Title="Sure to delete?"
+                                             OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                                             OkText="Yes"
+                                             CancelText="No">
+                                     <a>Delete</a>
+                                 </Popconfirm>
+                             </ActionColumn>
+                         </Table>
+                     </div>
+                     <b><label>Elija al encargado</label></b>
+                     <FormItem Label="Encargado">
+                         <Select TItem="BomberoViweModel"
+                                 TItemValue="int"
+                                 DataSource="@bomberoTodos"
+                                 @bind-Value="@BomberoEncargado"
+                                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                 Placeholder="Seleccione  a un  bombero"
+                                 DefaultActiveFirstOption="true"
+                                 AllowClear="true" EnableSearch>
+                         </Select>
+                     </FormItem>
+                     <b><label>Quien lleno planilla</label></b>
+                     <FormItem Label="Bombero que lleno la planilla">
+                         <Select TItem="BomberoViweModel"
+                                 TItemValue="int"
+                                 DataSource="@bomberoTodos"
+                                 @bind-Value="@QuienLLenoPlanilla"
+                                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                 Placeholder="Seleccione  a un  bombero"
+                                 DefaultActiveFirstOption="false"
+                                 AllowClear="true"
+                                 EnableSearch>
+                         </Select>
+                     </FormItem>
+                 </div>
             }
-            //Todo lo que esta de esta linea a la 274 deberia estar en un else if: else if(current == 5){} pero no funciona, a revisar el lunes.
-                @*Tipo servicio*@
-                <div class="slick-contenedor">
-                    <FormItem Label="Tipo Servicio salida">
-                        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelMateriales.TipoServicio" />
-                    </FormItem>
-                    @*propio de la salida de tipo material*@
-                    <FormItem Label="Tipo material">
-                        <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
-                    </FormItem>
-                    <FormItem Label="Sustancias">
-                        <Input @bind-Value="modelMateriales.Sustancias" />
-                    </FormItem>
-                    <b><label>Acciones sobre los materiales</label></b>
+            else if (current == 5)
+            {
+                <FormItem Label="Tipo Servicio salida">
+                    <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelMateriales.TipoServicio" />
+                </FormItem>
+                @*propio de la salida de tipo material*@
+                <FormItem Label="Tipo material">
+                    <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
+                </FormItem>
+                <FormItem Label="Sustancias">
+                    <Input @bind-Value="modelMateriales.Sustancias" />
+                </FormItem>
+                <b><label>Acciones sobre los materiales</label></b>
 
-                    <CheckboxGroup Style="width: 100%;" ValueChanged="@OnChange">
-                        <Row>
-                            <Col Span="8">
-                                <Checkbox Label="Controlada" @bind-Value="@modelMateriales.Controlada">Controlada</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="Venteo" @bind-Value="@modelMateriales.Venteo">Venteo</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="DilucionDeVapores" @bind-Value="@modelMateriales.DilucionDeVapores">DilucionDeVapores</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="Neutralizacion" @bind-Value="@modelMateriales.Neutralizacion">Neutralizacion</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="Trasvase" @bind-Value="@modelMateriales.Trasvase">Trasvase</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="otro" @bind-Value="@modelMateriales.OtraAccionesMateriales">OtraAccionesMateriales</Checkbox>
-                            </Col>
-                        </Row>
-                    </CheckboxGroup>
+                <Checkbox Label="Controlada" @bind-Value="@modelMateriales.Controlada">Controlada</Checkbox>
 
-                    <FormItem Label="Detalles Acciones">
-                        <Input @bind-Value="modelMateriales.DetallesAccionesMateriales" />
-                    </FormItem>
-                    @*Acciones sobre personas*@
-                    <FormItem Label="Tipo Evacuacion">
-                        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
-                    </FormItem>
-                    <br />
-                    <b><label>Acciones sobre personas</label></b>
-                    <CheckboxGroup Style="width:100%" ValueChanged="@OnChange">
-                        <Row>
-                            <Col Span="8">
-                                <Checkbox Label="Confinamiento" @bind-Value="@modelMateriales.Confinamiento">Confinamiento</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="Descontaminacion" @bind-Value="@modelMateriales.Descontaminacion">Descontaminacion</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="SinAccion" @bind-Value="@modelMateriales.SinAccion">SinAccion</Checkbox>
-                            </Col>
-                            <Col Span="8">
-                                <Checkbox Label="OtraAccionesPersonas" @bind-Value="@modelMateriales.OtraAccionesPersonas">OtraAccionesPersonas</Checkbox>
-                            </Col>
-                        </Row>
-                    </CheckboxGroup>
+                <Checkbox Label="Venteo" @bind-Value="@modelMateriales.Venteo">Venteo</Checkbox>
 
-                    <FormItem Label="Tipo Superficie">
-                        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
-                    </FormItem>
-                    <FormItem Label="Detalles Surpeficie Afectada ">
-                        <Input @bind-Value="modelMateriales.DetalleSuperficieAfectada" />
-                    </FormItem>
-                    <FormItem Label="Tipo Evacuacion">
-                        <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
-                    </FormItem>
-                    <FormItem Label="">
-                        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
-                            Cargar salida
-                        </Button>
-                    </FormItem>
-                </div>
+                <Checkbox Label="DilucionDeVapores" @bind-Value="@modelMateriales.DilucionDeVapores">DilucionDeVapores</Checkbox>
+
+                <Checkbox Label="Neutralizacion" @bind-Value="@modelMateriales.Neutralizacion">Neutralizacion</Checkbox>
+
+                <Checkbox Label="Trasvase" @bind-Value="@modelMateriales.Trasvase">Trasvase</Checkbox>
+
+                <Checkbox Label="otro" @bind-Value="@modelMateriales.OtraAccionesMateriales">OtraAccionesMateriales</Checkbox>
+
+                <FormItem Label="Detalles Acciones">
+                    <Input @bind-Value="modelMateriales.DetallesAccionesMateriales" />
+                </FormItem>
+                @*Acciones sobre personas*@
+                <FormItem Label="Tipo Evacuacion">
+                    <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
+                </FormItem>
+                <br />
+                <b><label>Acciones sobre personas</label></b>
+                <Checkbox Label="Confinamiento" @bind-Value="@modelMateriales.Confinamiento">Confinamiento</Checkbox>
+
+                <Checkbox Label="Descontaminacion" @bind-Value="@modelMateriales.Descontaminacion">Descontaminacion</Checkbox>
+
+                <Checkbox Label="SinAccion" @bind-Value="@modelMateriales.SinAccion">SinAccion</Checkbox>
+
+                <Checkbox Label="OtraAccionesPersonas" @bind-Value="@modelMateriales.OtraAccionesPersonas">OtraAccionesPersonas</Checkbox>
+
+                <FormItem Label="Tipo Superficie">
+                    <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
+                </FormItem>
+                <FormItem Label="Detalles Surpeficie Afectada ">
+                    <Input @bind-Value="modelMateriales.DetalleSuperficieAfectada" />
+                </FormItem>
+                <FormItem Label="Tipo Evacuacion">
+                    <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
+                </FormItem>
+                <FormItem Label="">
+                    <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
+                        Cargar salida
+                    </Button>
+                </FormItem>
+            }
         </Form>
-        
+
         <Modal Title="@("Datos de la carga de combustible")"
                Visible="@_visible"
                OnOk="@HandleOk"
@@ -410,9 +388,7 @@
                 <FormItem Label="TelefonoQuienLleno">
                     <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
                 </FormItem>
-
             </Form>
-
         </Modal>
     </div>
     <div class="steps-action">
@@ -504,12 +480,11 @@
     int BomberoCuerpo;
     int BomberoEncargado;
     int QuienLLenoPlanilla;
-   
+
 
 
     public async Task AgregarDamnificado()
     {
-
         DamnificadoViewModels dp = new()
             {
                 Nombre = damnificado.Nombre,
@@ -519,7 +494,6 @@
                 LugarDeNacimiento = damnificado.LugarDeNacimiento,
                 Edad = damnificado.Edad,
                 Estado = damnificado.Estado,
-
             };
         DamnificadosSalida.Add(dp);
         StateHasChanged();
@@ -527,7 +501,6 @@
 
     public async Task AgregarMovilSalida()
     {
-
         Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
         Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
         MovilSalidaViewModels m = new()
@@ -542,11 +515,9 @@
                 KmLlegada = modelMateriales.KmLlegada,
                 Chofer = bomberoChofer,
                 MovilesSalida = Movilsalida,
-                
             };
         MovilesSalidasL.Add(m);
         StateHasChanged();
-
     }
 
     public async Task AgregarCuerpoParticipante()
@@ -564,16 +535,16 @@
                         NumeroLegajo = BomberoCuerpo
                     };
                 bomberosSalida.Add(b);
-
             }
         }
         StateHasChanged();
-
     }
+
     protected override async Task OnInitializedAsync()
     {
         await Init();
     }
+
     private async Task Init()
     {
         modelMateriales = new();
@@ -586,14 +557,12 @@
     {
         try
         {
-
             Bombero? bomberoReceptor = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == BomberoReceptor);
             Bombero? bomberoEncargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == BomberoEncargado);
             Bombero? BomberoLlenoPlanilla = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == QuienLLenoPlanilla);
 
             MaterialPeligroso materiales = new()
                 {
-
                     NumeroParte = modelMateriales.NumeroParte,
                     HoraSalida = modelMateriales.HoraSalida,
                     HoraLlegada = modelMateriales.HoraLLegada,
@@ -641,8 +610,8 @@
                     Damnificados = new(),
                     Moviles = new(),
                     CuerpoParticipante = new()
-
                 };
+
             foreach (BomberoSalidaViewModels bom in bomberosSalida)
             {
                 Bombero? bomberoSalida = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == bom.NumeroLegajo);
@@ -653,17 +622,18 @@
                         Grado = bomberoSalida.Grado
                     };
                 materiales.CuerpoParticipante.Add(BomSalida);
-
             }
+
             foreach (MovilSalidaViewModels m in MovilesSalidasL)
             {
-                
                 Bombero? bomberoChofer = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
                 Movil? Movilsalida = await Context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil);
+
                 if (Movilsalida is not null)
                 {
                     Movilsalida.Kilometraje = m.KmLlegada;
                 }
+
                 MovilSalida movilS = new()
                     {
                         CargoCombustible = m.CargoCombustible,
@@ -677,14 +647,11 @@
                         Chofer = bomberoChofer,
                         Movil = Movilsalida
                     };
-                
                 materiales.Moviles.Add(movilS);
-
             }
 
             foreach (DamnificadoViewModels d in DamnificadosSalida)
             {
-
                 Damnificado damn = new()
                     {
                         Nombre = d.Nombre,
@@ -696,13 +663,10 @@
                         Estado = d.Estado
                     };
                 materiales.Damnificados.Add(damn);
-
             }
 
             Context.MaterialesPeligrosos.Add(materiales);
             await Context.SaveChangesAsync();
-
-
             await Init();
             StateHasChanged();
             await message.Success("Salida agregada correctamente");
@@ -715,33 +679,37 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-
         }
     }
 
     private async void OnFinish(EditContext editContext)
     {
-        
+
     }
+
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelMateriales)}");
     }
+
     private void OnChange(DateTimeChangedEventArgs args)
     {
         Console.WriteLine($"Selected Time: {args.Date}");
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
+
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
+
     // array de las opciones posibles, buscar la opcion y agregarla en la planilla
     public async Task CargarBomberosView()
     {
         bomberoTodos = new();
         bomberoChoferes = new();
         var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+
         foreach (Bombero b in bomberos)
         {
             BomberoViweModel bombero = new()
@@ -755,18 +723,13 @@
                     NumeroIoma = b.NumeroIoma,
                     LugarNacimiento = b.LugarNacimiento,
                     Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
                     Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
                     Resolucion1 = b.Resolucion1,
                     Resolucion2 = b.Resolucion2,
                     Resolucion3 = b.Resolucion3,
                     Resolucion4 = b.Resolucion4,
                     Resolucion5 = b.Resolucion5,
                     Resolucion6 = b.Resolucion6,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
                     Estado = b.Estado,
                     Chofer = b.Chofer,
                     VencimientoRegistro = b.VencimientoRegistro,
@@ -775,14 +738,10 @@
                     Profesion = b.Profesion,
                     NivelEstudios = b.NivelEstudios,
                     FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
-
                 };
             bomberoTodos.Add(bombero);
         }
+
         foreach (Bombero c in bomberos)
         {
             if (c.Chofer == true)
@@ -798,18 +757,13 @@
                         NumeroIoma = c.NumeroIoma,
                         LugarNacimiento = c.LugarNacimiento,
                         Grado = c.Grado,
-                        //NombreImagen = b.NombreImagen,
-                        //TipoImagen = b.TipoImagen,
-                        //Base64Imagen = b.Base64,
                         Dotacion = c.Dotacion,
-                        //Nombre = b.NombreBrigada,
                         Resolucion1 = c.Resolucion1,
                         Resolucion2 = c.Resolucion2,
                         Resolucion3 = c.Resolucion3,
                         Resolucion4 = c.Resolucion4,
                         Resolucion5 = c.Resolucion5,
                         Resolucion6 = c.Resolucion6,
-                        //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
                         Estado = c.Estado,
                         Chofer = c.Chofer,
                         VencimientoRegistro = c.VencimientoRegistro,
@@ -818,18 +772,11 @@
                         Profesion = c.Profesion,
                         NivelEstudios = c.NivelEstudios,
                         FechaAceptacion = c.FechaAceptacion,
-                        //TelefonoCel = b.TelefonoCel,
-                        //TelefonoFijo = b.TelefonoFijo,
-                        //TelefonoLaboral = b.TelefonoLaboral,
-                        //Email = b.Email,
-
                     };
                 bomberoChoferes.Add(bomberoChofer);
             }
         }
     }
-
-
 
     //metodos para el modal
 
@@ -837,51 +784,50 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
     }
+
     bool loading = false;
 
     void toggle(bool value) => loading = value;
 
     bool _visible = false;
+
     private void ShowModal()
     {
         _visible = true;
     }
-    
+
     private void HandleCancel(MouseEventArgs e)
     {
-
         _visible = false;
     }
+
     private void OnFinishModel(EditContext editContext)
     {
-
         _visible = false;
     }
+
     private void HandleOk(MouseEventArgs e)
     {
-
         _visible = false;
-
     }
 
     void deleteRow(int numlegajo)
     {
         bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
     }
+
     void deleteRowMovil(string NumMovil)
     {
         MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
     }
+
     void deleteRowDamnificados(string Dni)
     {
         DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
     }
+
     public void Dispose()
     {
         Context?.Dispose();
     }
 }
-
-
-
-

@@ -30,23 +30,70 @@
         width: 100%;
     }
 
-        .ant-menu-item-selected .ant-menu-item-selected anticon {
-                background: rgb(230, 230, 230) !important;
+        .ant-menu-item-selected anticon i {
+            background: rgb(62, 24, 24) !important;
         }
         .ant-menu-item a:hover {
             color: rgb(62, 24, 24) !important;
         }
 
     .ant-menu-item-selected a {
-        /* color: rgb(230, 230, 230) !important; */
-        color: rgb(62, 24, 24) !important;
+        color: rgb(230, 230, 230) !important;
+    }
+
+    .ant-menu-item-selected a:hover {
+        color: rgb(230, 230, 230) !important;
     }
 
     .ant-menu-submenu-title .ant-menu-item-selected anticon {
         color: rgb(230, 230, 230) !important;
     }
+     
+    .ant-menu-submenu-selected .ant-menu-submenu-title .anticon svg{
+        color: rgb(230, 230, 230) !important;
+    }
 
-    .ant-menu-submenu-selected i {
+    /* /iconos/ */
+    .xd2 .ant-menu-submenu-selected .ant-menu-submenu-title i {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    .xd2 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content:hover, .xd2 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content span i {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    .xd3 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content:hover, .xd3 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content span i {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content:hover, .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content span i {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content:hover, .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content span i {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    /* /titulos/ */
+    .ant-menu-submenu-title:hover {
+        color: #adb5bd !important;
+    }
+        
+    /* /arrows/ */
+    .xd .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
+        color: rgb(230, 230, 230) !important;
+    }
+    .xd2 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
+        color: rgb(230, 230, 230) !important;
+    }
+    .xd3 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
+        color: rgb(230, 230, 230) !important;
+    }
+    .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    .xd4.ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow:hover {
         color: rgb(230, 230, 230) !important;
     }
 
@@ -82,11 +129,11 @@
             padding-left: 0px !important;
         }
 
-    .ant-menu-title-content i{
+    .ant-menu-submenu .ant-menu-item-selected .anticon-container i{
         color: rgb(62, 24, 24) !important;
     }
 
-    .ant-menu-item-selected:hover, .ant-menu-submenu-selected:hover {
+    .ant-menu-submenu-selected{
         color: #fff !important;
     }
 
@@ -99,9 +146,9 @@
         border-left: 3px solid rgb(62, 24, 24) !important;
     }
 
-    .ant-menu-light .ant-menu-submenu-title:hover, .ant-menu-light .ant-menu-title-content:hover {
+    /* .ant-menu-light .ant-menu-submenu-title:hover, .ant-menu-light .ant-menu-title-content:hover {
         color: black !important;
-    }
+    } */
 
     .ant-menu-light .ant-menu-submenu-arrow:hover {
         background: black !important;
@@ -162,6 +209,10 @@
 
     .ant-menu-item:hover {
         color: black !important;
+    }
+
+    .ant-menu-submenu .ant-menu-submenu-vertical .ant-menu-submenu-title{
+        padding-left: 0!important;
     }
 </style>
 
@@ -253,7 +304,7 @@
                             </IconTemplate>
                         </MenuItem>
                     </a>
-                    <SubMenu Key="sub2" TitleTemplate=@sub3Title>
+                    <SubMenu class="xd2" Key="sub2" TitleTemplate=@sub3Title>
                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
                             <MenuItem Key="04">Comercio</MenuItem>
                         </a>
@@ -279,7 +330,7 @@
                             <MenuItem Key="11">Vivienda</MenuItem>
                         </a>
                     </SubMenu>
-                    <SubMenu Key="sub3" TitleTemplate=@sub4Title Style="padding-left: 0!important;">
+                    <SubMenu class="xd3" Key="sub3" TitleTemplate=@sub4Title Style="padding-left: 0!important;">
                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
                             <MenuItem Key="12">Representacion</MenuItem>
                         </a>
@@ -287,7 +338,7 @@
                             <MenuItem Key="13">Prevencion</MenuItem>
                         </a>
                     </SubMenu>
-                    <SubMenu Key="sub4" TitleTemplate=@sub5Title Style="padding-left: 0!important;">
+                    <SubMenu class="xd4" Key="sub4" TitleTemplate=@sub5Title Style="padding-left: 0!important;">
                         <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
                             <MenuItem Key="14">Animal</MenuItem>
                         </a>
