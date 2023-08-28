@@ -39,7 +39,7 @@
     </Table>
 </div>
 
-<style>
+@*<style>
     .nombreClase {
         display: inline-block;
     }
@@ -62,20 +62,20 @@
         </Button>
     </p>
 
-</div>
+</div>*@
 
 <Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir"); })" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
 
 @code {
     Movil[] moviles;
 
-    List<MovilSalidaViewModel> todosLosMoviles = new List<MovilSalidaViewModel>();
-    List<MovilSalidaViewModel> Preferencia = new List<MovilSalidaViewModel>();
+    //List<MovilSalidaViewModel> todosLosMoviles = new List<MovilSalidaViewModel>();
+    //List<MovilSalidaViewModel> Preferencia = new List<MovilSalidaViewModel>();
 
     BomberosDbContext Context { get; set; }
 
-    static DateTime hasta = DateTime.Now;
-    static DateTime desde = hasta.AddMonths(-1);
+    //static DateTime hasta = DateTime.Now;
+    //static DateTime desde = hasta.AddMonths(-1);
 
     IEnumerable<HistorialMoviles> dataSource;
     IEnumerable<HistorialMoviles> selectedRows;
@@ -128,23 +128,23 @@
         }
     }
 
-    void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> b)
-    {
-        int desde;
-        int hasta;
-        b.Clear();
-        for (int i = 0; i < todosLosMoviles.Count; i++)
-        {
-            if (todosLosMoviles[i]. == null) continue;
-            desde = DateTime.Compare(d, (DateTime)todosLosMoviles[i].VencimientoRegistro);
-            hasta = DateTime.Compare(h, (DateTime)todosLosMoviles[i].VencimientoRegistro);
-            if (desde <= 0 && hasta >= 0)
-            {
-                b.Add(todosLosMoviles[i]);
-            }
-        }
-        StateHasChanged();
-    }
+    //void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> b)
+    //{
+    //    int desde;
+    //    int hasta;
+    //    b.Clear();
+    //    for (int i = 0; i < todosLosMoviles.Count; i++)
+    //    {
+    //        if (todosLosMoviles[i]. == null) continue;
+    //        desde = DateTime.Compare(d, (DateTime)todosLosMoviles[i].VencimientoRegistro);
+    //        hasta = DateTime.Compare(h, (DateTime)todosLosMoviles[i].VencimientoRegistro);
+    //        if (desde <= 0 && hasta >= 0)
+    //        {
+    //            b.Add(todosLosMoviles[i]);
+    //        }
+    //    }
+    //    StateHasChanged();
+    //}
 
     private async Task Init()
     {
@@ -158,8 +158,8 @@
     protected override async Task OnInitializedAsync()
     {
         await Init();
-        CargarSalidasMovil(Preferencia);
-        CargarSalidasMovil(todosLosMoviles);
+        //CargarSalidasMovil(Preferencia);
+        //CargarSalidasMovil(todosLosMoviles);
     }
 
     public void Dispose()
@@ -167,8 +167,8 @@
         Context?.Dispose();
     }
 
-    private void Cancel()
-    {
-        _message.Error("Operacion cancelada");
-    }
+    //private void Cancel()
+    //{
+    //    _message.Error("Operacion cancelada");
+    //}
 }
