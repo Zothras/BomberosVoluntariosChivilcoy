@@ -42,7 +42,7 @@ namespace Vista.Data.Models.Personales
 
         public List<VehiculoPersonal> Vehiculos { get; set; } = new();
 
-        //public MovilBombero? Movil { get; set; }
+        
 
         public BomberoDependencia? Dependencia { get; set; }
 
@@ -52,13 +52,13 @@ namespace Vista.Data.Models.Personales
 
         public int? EquipoId { get; set; }
         public Comunicacion? Handie { get; set; }
-<<<<<<< HEAD
+
         public List<AscensoBombero> Ascensos { get; set; } = new();
         public List<Licencia> Licencias { get; set; } = new();
-=======
+
 
         public List<Sancion> Sanciones { get; set; } = new();
 
->>>>>>> Empece a modelar sanciones
+
     }
 }
