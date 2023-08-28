@@ -163,7 +163,7 @@
         {
             if (m.NumeroMovil == NumeroMovil)
             {
-                salidaIncendioForestalView.Kilometraje = m.kilometraje;
+                salidaIncendioForestalView.Kilometraje = m.Kilometraje;
                 break;
             }
         }
@@ -523,7 +523,7 @@
                         Movil? Movilsalida = await Context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil);
                         if (Movilsalida is not null)
                         {
-                            Movilsalida.kilometraje = m.KmLlegada;
+                            Movilsalida.Kilometraje = m.KmLlegada;
                         }
                         MovilSalida movilS = new()
                             {

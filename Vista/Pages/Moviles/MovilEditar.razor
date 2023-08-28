@@ -159,6 +159,7 @@
                         {
                             @foreach (BomberoViewModel b in bomberoViews)
                             {
+                                @*
                                 <div class="inpt-container">
                                     <select class="select-estadoMovil" @bind="b.PersonaId">
                                         <option hidden selected value="0">Seleccione bombero @b.Rol.ToString()</option>
@@ -168,9 +169,10 @@
                                         }
                                     </select>
                                 </div>
+                                *@
                             }
                             <div style="display: flex;justify-content: flex-end;">
-                                <Button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 40%;text-align: center,">Confirmar roles</Button>
+                                @*<Button @onclick="@(() => { TipoRol tipo = TipoRol.Subalterno; AgregarALista(tipo); })" Style="background: rgb(62, 24, 24);color: #fff;border: none; width: 40%;text-align: center,">Confirmar roles</Button>*@
                             </div>
                         }
                     </div>
@@ -251,7 +253,7 @@
 
     public class BomberoViewModel
     {
-        public TipoRol Rol { get; set; }
+       //public TipoRol Rol { get; set; }
         public int PersonaId { get; set; }
     }
 
@@ -300,8 +302,8 @@
             }
             existe = true;
 
-            AgregarALista(TipoRol.Encargado);
-            AgregarALista(TipoRol.Subalterno);
+            //AgregarALista(TipoRol.Encargado);
+            //AgregarALista(TipoRol.Subalterno);
             StateHasChanged();
         }
         else if (movil is null)
@@ -335,18 +337,18 @@
                 movil.NumeroMovil = movilView.NumeroMovil;
                 movil.Estado = movilView.Estado;
 
-                foreach (BomberoViewModel m in bomberoViews)
-                {
-                    if (m.PersonaId != 0)
-                    {
-                        MovilBombero bombero = new()
-                            {
-                                Rol = m.Rol,
-                                PersonaId = m.PersonaId
-                            };
-                        movil.Bomberos.Add(bombero);
-                    }
-                }
+                //foreach (BomberoViewModel m in bomberoViews)
+                //{
+                //    if (m.PersonaId != 0)
+                //    {
+                //        MovilBombero bombero = new()
+                //            {
+                //                //Rol = m.Rol,
+                //                PersonaId = m.PersonaId
+                //            };
+                //        movil.Bomberos.Add(bombero);
+                //    }
+                //}
                 await Context.SaveChangesAsync();
                 StateHasChanged();
                 await OnClose.InvokeAsync();
@@ -366,14 +368,14 @@
         StateHasChanged();
     }
 
-    public void AgregarALista(TipoRol tipo)
-    {
-        BomberoViewModel b = new()
-        {
-            Rol = tipo
-        };
-        bomberoViews.Add(b);
-    }
+    //public void AgregarALista(TipoRol tipo)
+    //{
+    //    BomberoViewModel b = new()
+    //    {
+    //        Rol = tipo
+    //    };
+    //    bomberoViews.Add(b);
+    //}
 
     //steps
     public class StepItem

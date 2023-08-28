@@ -7,7 +7,7 @@ namespace Vista.Data.Models.Personales
     {
         public int BomberoDependenciaId { get; set; }
 
-        public TipoRol Rol { get; set; }
+        //public TipoRol Rol { get; set; }
 
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]

@@ -220,7 +220,7 @@
         {
             if (m.NumeroMovil == NumeroMovil)
             {
-                accidenteViewModels.Kilometraje = m.kilometraje;
+                accidenteViewModels.Kilometraje = m.Kilometraje;
                 break;
             }
         }
@@ -492,7 +492,7 @@
                 Movil? Movilsalida = await Context.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
                 if (Movilsalida is not null)
                 {
-                    Movilsalida.kilometraje = m.KmLlegada;
+                    Movilsalida.Kilometraje = m.KmLlegada;
                 }
                 MovilSalida movilS = new()
                     {

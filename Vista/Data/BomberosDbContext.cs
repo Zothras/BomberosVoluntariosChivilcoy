@@ -123,12 +123,6 @@ namespace Vista.Data
                 .HasValue<VehiculoAfectado>(6)
                 .HasValue<Embarcacion>(7);
 
-
-            modelBuilder.Entity<Bombero>()
-                .HasOne(b => b.Movil)
-                .WithOne(m => m.Bombero)
-                .HasForeignKey<MovilBombero>(mb => mb.PersonaId);
-
             modelBuilder.Entity<Comunicacion>()
                 .HasOne(c => c.Bombero)
                 .WithOne(b => b.Handie)
@@ -348,12 +342,6 @@ namespace Vista.Data
             modelBuilder
                 .Entity<DatosCapacitacion>()
                 .Property(d => d.TipoCapacitacion)
-                .HasConversion<string>()
-                .HasMaxLength(255);
-
-            modelBuilder
-                .Entity<MovilBombero>()
-                .Property(m => m.Rol)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 

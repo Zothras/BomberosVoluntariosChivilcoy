@@ -11,11 +11,6 @@ namespace Vista.Data.Models.Salidas.Componentes
         public int ImagenId { get; set; }
         [ForeignKey("ImagenId")]
         public ImagenEmbarcacion ImagenEmbarcacion { get; set; }
-        public int EncargadoId { get; set; }
-
-        [ForeignKey("EncargadoId")]
-        public Bombero Encargado { get; set; }
-
     }
 
 

@@ -1,8 +1,8 @@
-﻿namespace Vista.Data.Enums
-{
-    public enum TipoRol
-    {
-        Encargado,
-        Subalterno
-    }
-}
+﻿//namespace Vista.Data.Enums
+//{
+//    public enum TipoRol
+//    {
+//        Encargado,
+//        Subalterno
+//    }
+//}

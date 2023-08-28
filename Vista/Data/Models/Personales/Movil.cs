@@ -17,13 +17,11 @@ namespace Vista.Data.Models.Personales
         [Required, StringLength(255)]
         public string NumeroChasis { get; set; }
        
-        public int kilometraje { get; set; }
+        public int Kilometraje { get; set; }
         public int ImagenId { get; set; }
         [ForeignKey("ImagenId")]
         public ImagenMovil Imagen { get; set; }
         public List<MovilSalida> Salidas { get; set; } = new();
-        public List<MovilBombero> Bomberos { get; set; } = new();
-
-        
+       //public List<MovilBombero> Bomberos { get; set; } = new();  
     }
 }

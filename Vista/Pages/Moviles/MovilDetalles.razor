@@ -123,42 +123,42 @@ else if (!existe)
     public async Task MostrarDatos()
     {
         using var db = DbFactory.CreateDbContext();
-        Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero). Where(ma => ma.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+       // Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero). Where(ma => ma.VehiculoId == VehiculoId).SingleOrDefaultAsync();
 
-        if (movil is not null)
-        {
-            movilView.Marca = movil.Marca;
-            movilView.Modelo = movil.Modelo;
-            movilView.Año = movil.Año;
-            movilView.Patente = movil.Patente;
-            movilView.Tipo = movil.Tipo;
-            movilView.NumeroMovil = movil.NumeroMovil;
-            movilView.NumeroMotor = movil.NumeroMotor;
-            movilView.NumeroChasis = movil.NumeroChasis;
-            movilView.Estado = movil.Estado;
+        //if (movil is not null)
+        //{
+        //    movilView.Marca = movil.Marca;
+        //    movilView.Modelo = movil.Modelo;
+        //    movilView.Año = movil.Año;
+        //    movilView.Patente = movil.Patente;
+        //    movilView.Tipo = movil.Tipo;
+        //    movilView.NumeroMovil = movil.NumeroMovil;
+        //    movilView.NumeroMotor = movil.NumeroMotor;
+        //    movilView.NumeroChasis = movil.NumeroChasis;
+        //    movilView.Estado = movil.Estado;
             
             
-            foreach (MovilBombero b in movil.Bomberos)
-            {
-                if (b.Rol == TipoRol.Encargado)
-                {
-                    movilView.EncargadoId = b.Bombero.PersonaId;
-                    movilView.EncargadoNombre = $"{b.Bombero.Nombre} {b.Bombero.Apellido}";
-                }
-            }
-            ImagenMovil? imagen = await db.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
+        //    foreach (MovilBombero b in movil.Bomberos)
+        //    {
+        //        //if (b.Rol == TipoRol.Encargado)
+        //        //{
+        //        //    movilView.EncargadoId = b.Bombero.PersonaId;
+        //        //    movilView.EncargadoNombre = $"{b.Bombero.Nombre} {b.Bombero.Apellido}";
+        //        //}
+        //    }
+        //    ImagenMovil? imagen = await db.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
 
-            if (imagen is not null)
-            {
-                imagenView.Nombre = imagen.NombreImagen;
-                imagenView.TipoImagen = imagen.TipoImagen;
-                imagenView.Base64 = imagen.Base64Imagen;
-            }
-            existe = true;
-        }
-        else if (movil is null)
-        {
-            existe = false;
-        }
+        //    if (imagen is not null)
+        //    {
+        //        imagenView.Nombre = imagen.NombreImagen;
+        //        imagenView.TipoImagen = imagen.TipoImagen;
+        //        imagenView.Base64 = imagen.Base64Imagen;
+        //    }
+        //    existe = true;
+        //}
+        //else if (movil is null)
+        //{
+        //    existe = false;
+        //}
     }
 }

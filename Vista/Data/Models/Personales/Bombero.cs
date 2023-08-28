@@ -42,7 +42,7 @@ namespace Vista.Data.Models.Personales
 
         public List<VehiculoPersonal> Vehiculos { get; set; } = new();
 
-        public MovilBombero? Movil { get; set; }
+        //public MovilBombero? Movil { get; set; }
 
         public BomberoDependencia? Dependencia { get; set; }
 

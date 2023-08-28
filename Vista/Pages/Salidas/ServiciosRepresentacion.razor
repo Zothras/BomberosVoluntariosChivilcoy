@@ -155,7 +155,7 @@
             {
                @* m. = m.;*@
                 <FormItem>
-                    <AntDesign.InputNumber @bind-Value="@m.kilometraje" Disabled="true" />
+                    <AntDesign.InputNumber @bind-Value="@m.Kilometraje" Disabled="true" />
                 </FormItem>
                 <FormItem>
                     <AntDesign.InputNumber @bind-Value="@movilSalidaViewModels.KmLlegada" />
@@ -508,7 +508,7 @@
                 Include(s => s.Seguro).
                 Include(i => i.Imagen).
                 Include(f => f.Firmas).
-                Include(b => b.Bomberos).
+                //Include(b => b.Bomberos).
                 Include(i => i.Incidentes).
                 SingleOrDefaultAsync();
                 MovilSalida movilS = new()
@@ -534,7 +534,7 @@
                             ImagenId = movilsalida.ImagenId,
                             Imagen = movilsalida.Imagen,
                             Firmas = movilsalida.Firmas,
-                            Bomberos = movilsalida.Bomberos,
+                            //Bomberos = movilsalida.Bomberos,
                             Incidentes = movilsalida.Incidentes,
                             Marca = movilsalida.Marca,
                             Modelo = movilsalida.Modelo,
@@ -543,7 +543,7 @@
                             Tipo = movilsalida.Tipo,
                             Seguro = movilsalida.Seguro,
                             SeguroId = movilsalida.SeguroId,
-                            kilometraje = m.KmLlegada,
+                            Kilometraje = m.KmLlegada,
 
 
                         }
