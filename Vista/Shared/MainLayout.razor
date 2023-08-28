@@ -222,6 +222,15 @@
                         <li class="nav-item"><a class="nav-link" href="/embarcaciones">Embarcaciones</a></li>
                     </ChildContent>
                 </MenuItem>
+                <MenuItem Key="5" Icon="container">
+                    <IconTemplate>
+                        <i class="fa-solid fa-file-signature" style="color:#263040;"></i>
+                    </IconTemplate>
+                    <ChildContent>
+                        <li class="nav-item"><a class="nav-link" href="/Licencias-Detalles">Licencias</a></li>
+
+                    </ChildContent>
+                </MenuItem>
                 <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title>
                     <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
                         <MenuItem Key="02" Title=@("Materiales peligrosos")>
