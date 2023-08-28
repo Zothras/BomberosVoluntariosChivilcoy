@@ -21,8 +21,8 @@
         width: 100%;
     }
 
-    .ant-badge{
-        padding:0 5px !important;
+    .ant-badge {
+        padding: 0 5px !important;
     }
 </style>
 
@@ -37,12 +37,17 @@
             <Badge Count="LicenciasPendientes.Count">
                 <span class="head-example" />
             </Badge>
-
+            
 
         </a>
     </div>
+    <GridRow>
+        <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
+            <Button Type="primary" OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
+        </GridCol>
+    </GridRow>
     <Table DataSource="LicenciasActivasVM" Bordered>
-
+        
         <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
         <PropertyColumn Property="c=>c.Desde"></PropertyColumn>
         <PropertyColumn Property="c=>c.Hasta"></PropertyColumn>
@@ -51,7 +56,15 @@
 
     </Table>
 </div>
-
+<Modal Footer="null" Title="@("Licencia")"
+       Visible="@_visibleAgregar"
+       OnOk="@HandleOkAgregar"
+       OnCancel="@HandleCancelAgregar">
+       <LicenciasAlta/>
+       <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
+            Volver
+       </Button>
+</Modal>
 @code {
     public class LicencasVm
     {
@@ -72,6 +85,7 @@
     public LicencasVm LicencasVM = new();
     List<LicencasVm> LicenciasActivasVM = new();
     List<Licencia> LicenciasPendientes = new();
+    public bool _visibleAgregar = false;
     protected override async Task OnInitializedAsync()
     {
         await Init();
@@ -110,6 +124,20 @@
         LicenciasPendientes = new();
         LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
 
+    }
+    private async void HandleOkAgregar(MouseEventArgs e)
+    {
+        _visibleAgregar = false;
+    }
+    public async void HandleCancelAgregar(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visibleAgregar = false;
+        await Init();
+    }
+    private void ShowModalAgregar()
+    {
+        _visibleAgregar = true;
     }
     public void Dispose()
     {
