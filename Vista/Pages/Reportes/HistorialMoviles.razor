@@ -8,6 +8,7 @@
 @using System.Text.Json;
 @using Vista.Data.ViewModels.Personal;
 
+
 <div>
     <Table DataSource="MovilesSalidas" Bordered>
         <TitleTemplate>
@@ -38,39 +39,43 @@
     </Table>
 </div>
 
+<style>
+    .nombreClase {
+        display: inline-block;
+    }
+</style>
 
-@*<h7 style="display: flex;justify-content:left;align-items:flex-start;height: 50%;width:50%;">
-    Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
-    Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
-</h7>*@
+<div style="display: flex;justify-content: space-evenly;width:80%;padding:1em 9em 0.1em 5em">
+    <p class="nombreClase"> Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
 
-@*<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
-            OnConfirm="()=> mostrar_eleccion(desde,hasta,preferencia)"
-            OnCancel="Cancel">
-    <Button>
-        Buscar
-    </Button>
-</Popconfirm>
-<Popconfirm Style="width: 33.3%;" Title="Estas seguro?"
-            OnConfirm="()=> CargarSalidasMovil(preferencia)"
-            OnCancel="Cancel">
-    <Button>
-        Mostrar todos
-    </Button>
-</Popconfirm>*@
+    <p class="nombreClase">Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
+
+    <p class="nombreClase">
+        <Button OnClick="()=> mostrar_eleccion(desde,hasta,Preferencia)">
+            Buscar
+        </Button>
+    </p>
+
+    <p class="nombreClase">
+        <Button OnClick="()=> CargarSalidasMovil(Preferencia)">
+            Mostrar todos
+        </Button>
+    </p>
+
+</div>
 
 <Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir"); })" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
 
 @code {
     Movil[] moviles;
 
-    //static DateTime hasta = DateTime.Now;
-    //static DateTime desde = hasta.AddMonths(-1);
+    List<MovilSalidaViewModel> todosLosMoviles = new List<MovilSalidaViewModel>();
+    List<MovilSalidaViewModel> Preferencia = new List<MovilSalidaViewModel>();
 
     BomberosDbContext Context { get; set; }
 
-    //List<MovilSalidaViewModel> Todoslosmoviles = new List<MovilSalidaViewModel>();
-    //List<MovilSalidaViewModel> preferencia = new List<MovilSalidaViewModel>();
+    static DateTime hasta = DateTime.Now;
+    static DateTime desde = hasta.AddMonths(-1);
 
     IEnumerable<HistorialMoviles> dataSource;
     IEnumerable<HistorialMoviles> selectedRows;
@@ -123,17 +128,23 @@
         }
     }
 
-    //void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> b)
-    //{
-    //    int desde;
-    //    int hasta;
-    //    b.Clear();
-    //    for (int i = 0; i < Todoslosmoviles.Count; i++)
-    //    {
-    //        if (Todoslosmoviles[i].NumeroMovil == null) continue; 
-    //    }
-    //    StateHasChanged();
-    //}
+    void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> b)
+    {
+        int desde;
+        int hasta;
+        b.Clear();
+        for (int i = 0; i < todosLosMoviles.Count; i++)
+        {
+            if (todosLosMoviles[i]. == null) continue;
+            desde = DateTime.Compare(d, (DateTime)todosLosMoviles[i].VencimientoRegistro);
+            hasta = DateTime.Compare(h, (DateTime)todosLosMoviles[i].VencimientoRegistro);
+            if (desde <= 0 && hasta >= 0)
+            {
+                b.Add(todosLosMoviles[i]);
+            }
+        }
+        StateHasChanged();
+    }
 
     private async Task Init()
     {
@@ -147,6 +158,8 @@
     protected override async Task OnInitializedAsync()
     {
         await Init();
+        CargarSalidasMovil(Preferencia);
+        CargarSalidasMovil(todosLosMoviles);
     }
 
     public void Dispose()
@@ -154,8 +167,8 @@
         Context?.Dispose();
     }
 
-    //private void Cancel()
-    //{
-    //    _message.Error("Operacion cancelada");
-    //}
+    private void Cancel()
+    {
+        _message.Error("Operacion cancelada");
+    }
 }
