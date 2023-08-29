@@ -1,0 +1,173 @@
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/vistaSancion"
+
+<h3 style="text-align:center; text-decoration:underline;">Detalles de sancion</h3>
+<b><label>Elija al encargado</label></b>
+
+<Form Model="@SancionVM"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;">
+    
+    <FormItem Label="Fecha Desde:">
+        <DatePicker @bind-Value="SancionVM.FechaDesde" />
+    </FormItem>
+    <FormItem Label="Fecha Hasta:">
+        <DatePicker @bind-Value="SancionVM.FechaHasta" />
+    </FormItem>
+    <FormItem Label="Personal Sancionado:">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@ListabomberosVM"
+                @bind-Value="@SancionVM.NumeroLegajoSancionado"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Selecione el bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                EnableSearch>
+        </Select>
+    </FormItem>
+    <FormItem Label="Numero Legajo">
+        <AntDesign.InputNumber @bind-Value="SancionVM.NumeroLegajoSancionado" Disabled />
+    </FormItem>
+    <FormItem Label="Tipo Sancion:">
+        <EnumSelect TEnum="TipoSancion" @bind-Value="@SancionVM.TipoSancion" />
+    </FormItem>
+    <FormItem Label="Area Sancion:">
+        <EnumSelect TEnum="AreaSancion" @bind-Value="@SancionVM.SancionArea" />
+    </FormItem>
+    <FormItem Label="Encargado Area:">
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@ListabomberosVM"
+                @bind-Value="@SancionVM.NumeroLegajoEncargado"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Seleccione Personal Sancionado"
+                DefaultActiveFirstOption="false"
+                EnableSearch>
+        </Select>
+    </FormItem>
+    <FormItem Label="Observacion">
+        <Input @bind-Value="SancionVM.observaciones" />
+    </FormItem>
+    <FormItem Style="width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" Style="margin-right: 60px;">
+            Cargar Sancion
+        </Button>
+    </FormItem>
+
+</Form>
+
+@code {
+
+    BomberosDbContext Context;
+    public class SancionViewModel
+    {
+
+        public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta { get; set; }
+
+        public Bombero PersonalSancionado { get; set; }
+        public int NumeroLegajoSancionado { get; set; }
+
+        public TipoSancion TipoSancion { get; set; }
+
+        public AreaSancion SancionArea { get; set; }
+
+        public Bombero EncargadoArea { get; set; }
+        public int NumeroLegajoEncargado { get; set; }
+
+        [Required, StringLength(255)]
+        public string observaciones { get; set; }
+    }
+
+    public SancionViewModel SancionVM = new();
+
+    List<BomberoViweModel> ListabomberosVM = new();
+
+    private async Task CargarBombero()
+    {
+        ListabomberosVM = new();
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViweModel bom = new()
+                {
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    NumeroLegajo = b.NumeroLegajo
+                };
+            ListabomberosVM.Add(bom);
+        }
+    }
+
+    private async void OnFinish(EditContext editContext)
+    {
+        try
+        {
+            Bombero? BomberoSancionado = await Context.Bomberos.Where(b => b.NumeroLegajo == SancionVM.NumeroLegajoSancionado).SingleOrDefaultAsync();
+            Bombero? BomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == SancionVM.NumeroLegajoEncargado).SingleOrDefaultAsync();
+
+            Sancion Sancion = new()
+                {
+                    FechaDesde = SancionVM.FechaDesde,
+                    FechaHasta = SancionVM.FechaHasta,
+                    PersonalSancionado = BomberoSancionado,
+                    TipoSancion = SancionVM.TipoSancion,
+                    SacionArea = SancionVM.SancionArea,
+                    EncargadoArea = BomberoEncargado,
+                    observaciones = SancionVM.observaciones
+                };
+            Context.Sanciones.Add(Sancion);
+            await Context.SaveChangesAsync();
+
+
+            await Init();
+            StateHasChanged();
+            await message.Success("Sancion cargada correctamente");
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+        }
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(SancionVM)}");
+    }
+
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        SancionVM = new();
+        Context = DbFactory.CreateDbContext();
+        await CargarBombero();
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

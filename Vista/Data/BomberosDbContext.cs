@@ -43,6 +43,8 @@ namespace Vista.Data
         public DbSet<AscensoBombero> AscensoBomberos { get; set; }
         public DbSet<Licencia> Licencias { get; set; }
 
+        public DbSet<Sancion> Sanciones { get; set; }
+
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
             : base(options)
         {
