@@ -18,10 +18,17 @@
         flex-direction: column;
     }
 
+    .ant-form-item-control-input-content, .ant-form-item-label{
+        padding: 0!important;
+    }
+    .ant-form-item-row:nth-child(2){
+        display: flex!important;
+        flex-direction: column !important;
+    }
 </style>
 
-<div style="width: 50%;">
-    <Steps Current="current">
+<div style="width: 40%;">
+    <Steps Current="current" ShowProgressDot Style="width: 100%!important;">
         @foreach (var item in steps)
         {
             <Step Title="@item.Title" Subtitle="@item.Content" />
@@ -37,34 +44,44 @@
 
             @if (current == 0)
             {
-                @*Datos generales de las salidas*@
                 <div class="slick-contenedor">
-                    <FormItem Label="Descripcion" Style="display: block!important;">
-                        <Input @bind-Value="@modelMateriales.Descripcion" Style="width: 50%!important;" />
+                    <FormItem Label="Descripcion" Style="padding: 0!important;display: inline-block;position: relative;">
+                        <br>
+                        <Input @bind-Value="@modelMateriales.Descripcion" Style="width: 100%;display: block;position: absolute;left: -7em;"/>
                     </FormItem>
-                    <FormItem Label="Dato Hora salida">
-                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraSalida" />
+                    <div style="display: flex;gap: 10px;width: 100%;text-align: center;padding: .5em;justify-content: space-between;">
+                        <FormItem Label="Hora salida" Style="padding: 0!important;display: inline-block;width 100%;">
+                            <br>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraSalida" Style="width: 100%;display: block;"/>
+                        </FormItem>
+                        <FormItem Label="Hora llegada" Style="padding: 0!important;display: inline-block;width 100%;">
+                            <br>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraLLegada" Style="width: 100%;display: block;" />
+                        </FormItem>
+                    </div>
+                    <FormItem Label="Calle/Ruta" Style="padding: 0!important;display: inline-block;position: relative;">
+                        <br>
+                        <Input @bind-Value="@modelMateriales.CalleORuta" Style="width: 100%;display: block;position: absolute;left: -7em;" />
                     </FormItem>
-                    <FormItem Label="Dato Hora llegada">
-                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraLLegada" />
+                    <FormItem Label="Numero/kilometro" Style="padding: 0!important;display: inline-block;position: relative;">
+                        <br>
+                        <Input @bind-Value="@modelMateriales.NumeroOKilometro" Style="width: 100%;display: block;position: absolute;left: -7em;" />
                     </FormItem>
-                    <FormItem Label="Calle/Ruta">
-                        <Input @bind-Value="@modelMateriales.CalleORuta" />
+                    <FormItem Label="Entre calles" Style="padding: 0!important;display: inline-block;position: relative;">
+                        <br>
+                        <Input @bind-Value="@modelMateriales.EntreCalles" Style="width: 100%;display: block;position: absolute;left: -7em;"/>
                     </FormItem>
-                    <FormItem Label="Numero/kilometro">
-                        <Input @bind-Value="@modelMateriales.NumeroOKilometro" />
+                    <FormItem Label="PisoNumero" Style="padding: 0!important;display: inline-block;position: relative;">
+                        <br>
+                        <Input @bind-Value="@modelMateriales.PisoNumero" Style="width: 100%;display: block;position: absolute;left: -7em;"/>
                     </FormItem>
-                    <FormItem Label="Entre calles">
-                        <Input @bind-Value="@modelMateriales.EntreCalles" />
+                    <FormItem Label="Depto" Style="padding: 0!important;display: inline-block;position: relative;">
+                        <br>
+                        <Input @bind-Value="@modelMateriales.Depto" Style="width: 100%;display: block;position: absolute;left: -7em;"/>
                     </FormItem>
-                    <FormItem Label="PisoNumero">
-                        <Input @bind-Value="@modelMateriales.PisoNumero" />
-                    </FormItem>
-                    <FormItem Label="Depto">
-                        <Input @bind-Value="@modelMateriales.Depto" />
-                    </FormItem>
-                    <FormItem Label="Tipo zona">
-                        <EnumSelect TEnum="TipoZona" @bind-Value="@modelMateriales.TipoZona" />
+                    <FormItem Label="Tipo zona" Style="padding: 0!important;display: inline-block;position: relative;">
+                        <br>
+                        <EnumSelect TEnum="TipoZona" @bind-Value="@modelMateriales.TipoZona" Style="width: 100%;display: block;position: absolute;left: -7em;" />
                     </FormItem>
                 </div>
             }
@@ -436,12 +453,12 @@
 
     public StepItem[] steps =
     {
-        new StepItem {Title = "Primer", Content ="Paso"},
-        new StepItem {Title = "Segundo", Content ="Paso"},
-        new StepItem {Title = "Tercer", Content ="Paso"},
-        new StepItem {Title = "Cuarto", Content ="Paso"},
-        new StepItem {Title = "Quinto", Content ="Paso"},
-        new StepItem {Title = "Sexto", Content = "Paso"}
+        new StepItem {Title = " ", Content = " "},
+        new StepItem {Title = " ", Content = " "},
+        new StepItem {Title = " ", Content = " "},
+        new StepItem {Title = " ", Content = " "},
+        new StepItem {Title = " ", Content = " "},
+        new StepItem {Title = " ", Content = " "}
     };
 
     void OnPreClick()
