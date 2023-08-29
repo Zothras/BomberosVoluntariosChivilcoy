@@ -51,7 +51,7 @@
     @*--------------------------------------------Modal-----------------------------------------------*@
 </Table>
 <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="position: absolute;right: 32.5em;top: 56.9em;">Agregar Bombero</Button>
-
+ <Button Type="primary" OnClick="()=>ShowModalAgregar()">Ascender bombero</Button>
 <Modal Title="@("Bombero")"
        Visible="@_visible"
        OnOk="@HandleOk"
@@ -171,7 +171,6 @@
                     <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.CuerpoActivo)" Label="Cuerpo activo" />
                     <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Reserva)" Label="Reserva" />
                     <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.ComisionDirectiva)" Label="Comision directiva" />
-                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Retirado)" Label="Retirado" />
                 </SelectOptions>
             </Select>
         </FormItem>
@@ -218,25 +217,16 @@
         <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
     </Template>;
 }
-
-
-
-
-
-
-
-
-
-
-<Modal Footer="null" Title="@("Sancion")"
+<Modal Footer="null" Title="@("Licencia")"
        Visible="@_visibleAgregar"
        OnOk="@HandleOkAgregar"
        OnCancel="@HandleCancelAgregar">
-       <SancionBombero/>
+       <AscensoBombero/> 
        <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
             Volver
        </Button>
 </Modal>
+
 <Modal Title="@("Detalles de bombero")"
        Visible="@_visibleDetalle"
        OnCancel="@HandleCancelDetalle"
@@ -320,7 +310,7 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         brigadas = await db.Brigadas.ToArrayAsync();
-        bomberos = await db.Bomberos.Where(x => x.Estado != EstadoBombero.Retirado).ToListAsync();//Se trae a todos los bomberos que no esten en reserva
+        bomberos = await db.Bomberos.ToListAsync();
 
         bomberosRespaldo = bomberos;
 
@@ -452,7 +442,6 @@
 
     bool _visible = false;
     bool _visibleDetalle = false;
-    public bool _visibleAgregar = false;
     int idBombero;
     private async void ShowModalEditar(int id)
     {
@@ -514,6 +503,8 @@
     {
         navigationManager.NavigateTo($"/bomberos", true);
     }
+
+    public bool _visibleAgregar = false;
 
     private async void GetBomberoViewModel(int id)
     {
@@ -669,25 +660,19 @@
         busquedaVacia = string.IsNullOrWhiteSpace(searchString);
         if (busquedaVacia) bomberos = bomberosRespaldo;
     }
+    private void ShowModalAgregar ()
+    {
+        _visibleAgregar = true;
+    }
 
-
-
-
-
-
-
-
-    private async void HandleOkAgregar(MouseEventArgs e)
+    private async void HandleOkAgregar (MouseEventArgs e)
     {
         _visibleAgregar = false;
     }
-    public async void HandleCancelAgregar(MouseEventArgs e)
+    public async void HandleCancelAgregar (MouseEventArgs e)
     {
         Console.WriteLine(e);
         _visibleAgregar = false;
     }
-    private void ShowModalAgregar()
-    {
-        _visibleAgregar = true;
-    }
+
 }
