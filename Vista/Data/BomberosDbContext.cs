@@ -70,6 +70,12 @@ namespace Vista.Data
             modelBuilder.Entity<AscensoBombero>()
                 .ToTable("AscensoBombero");
 
+            modelBuilder.Entity<Sancion>()
+              .HasKey(a => a.SancionId);
+            modelBuilder.Entity<Sancion>()
+                .ToTable("Sanciones");
+
+
             modelBuilder.Entity<Persona>()
                 .HasDiscriminator<int>("TipoPersona")
                 .HasValue<Bombero>(1)
@@ -248,6 +254,19 @@ namespace Vista.Data
                 .Property(i => i.TipoLugar)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+
+            modelBuilder
+                .Entity<Sancion>()
+                .Property(S => S.TipoSancion)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+
+            modelBuilder
+                .Entity<Sancion>()
+                .Property(S => S.SacionArea)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+        
 
             modelBuilder
                 .Entity<IncendioEstablecimientoPublico>()

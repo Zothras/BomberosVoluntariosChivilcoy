@@ -13,7 +13,7 @@ namespace Vista.Data.Models.Personales
     {
         [Required]
         public int NumeroLegajo { get; set; }
-        public EstadoBombero Estado { get; set; } 
+        public EstadoBombero Estado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
         public DateTime FechaAceptacion { get; set; }
         public EscalafonJerarquico Grado { get; set; }
@@ -42,7 +42,7 @@ namespace Vista.Data.Models.Personales
 
         public List<VehiculoPersonal> Vehiculos { get; set; } = new();
 
-        
+
 
         public BomberoDependencia? Dependencia { get; set; }
 
@@ -56,9 +56,10 @@ namespace Vista.Data.Models.Personales
         public List<AscensoBombero> Ascensos { get; set; } = new();
         public List<Licencia> Licencias { get; set; } = new();
 
-
-        public List<Sancion> Sanciones { get; set; } = new();
-
+        [InverseProperty("PersonalSancionado")]
+        public List<Sancion> SancionesRecibidas { get; set; } = new();
+        [InverseProperty("EncargadoArea")]
+        public List<Sancion> SancionesAplicadas { get; set; } = new();
 
     }
 }
