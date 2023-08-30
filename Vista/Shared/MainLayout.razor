@@ -249,14 +249,22 @@
                         <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
                     </ChildContent>
                 </MenuItem>
-                <MenuItem Key="2" Icon="desktop">
-                    <IconTemplate>
-                        <i class="fa-solid fa-users icoSelected" style="color: #263040;"></i>
-                    </IconTemplate>
-                    <ChildContent>
-                        <li class="nav-item"><a class="nav-link" href="bomberos">Bomberos</a></li>
-                    </ChildContent>
-                </MenuItem>
+                <SubMenu class="xd" Key="001" Title="Bomberos" TitleTemplate=@sub1Title>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })">
+                        <MenuItem Key="002" Title=@("Activos")>
+                            <IconTemplate>
+                                <i class="fa-solid fa-circle-radiation" style="color: #263040;"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/retirados"); })">
+                        <MenuItem Key="003" Title=@("Retirados")>
+                            <IconTemplate>
+                                <i class="fa-solid fa-circle-radiation" style="color: #263040;"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
+                </SubMenu>
                 <MenuItem Key="3" Icon="container">
                     <IconTemplate>
                         <i class="fa-solid fa-truck-droplet icoSelected" style="color: #263040;"></i>
@@ -405,6 +413,13 @@
         collapsedMenu = !collapsedMenu;
     }
     
+    RenderFragment sub1Title =
+    @<span class="spanSalidas" style="position: relative;">
+        <Icon class="menuSalidas" Type="alert" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
+        <span class="spanContentSalidas" style="padding-left: 32px!important;">Bomberos</span>
+    </span>
+    ;
+
     RenderFragment sub2Title =
     @<span class="spanSalidas" style="position: relative;">
         <Icon class="menuSalidas" Type="alert" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />

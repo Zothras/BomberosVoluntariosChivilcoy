@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/bomberos"
+@page "/bomberos/retirados"
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
@@ -17,7 +17,7 @@
     <TitleTemplate>
         <GridRow>
             <GridCol Span="4">
-                <Title Level="3">Bomberos</Title>
+                <Title Level="3">Bomberos retirados</Title>
             </GridCol>
             <GridCol Span="8" Offset="12">
                 <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
@@ -301,7 +301,7 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         brigadas = await db.Brigadas.ToArrayAsync();
-        bomberos = await db.Bomberos.Where(x => x.Estado != EstadoBombero.Retirado).ToListAsync();//Se trae a todos los bomberos que no esten en reserva
+        bomberos = await db.Bomberos.Where(x => x.Estado == EstadoBombero.Retirado).ToListAsync();//Se trae a todos los bomberos que no esten en reserva
 
         bomberosRespaldo = bomberos;
 
