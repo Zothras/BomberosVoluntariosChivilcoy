@@ -4,9 +4,6 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 
-<h3 style="text-align:center; text-decoration:underline;">Detalles de Ascenso</h3>
-<b><label>Elija al encargado</label></b>
-
 <Form Model="AscensoVM"
       LabelColSpan="8"
       WrapperColSpan="16"
@@ -37,11 +34,16 @@
     <FormItem Label="Grado ascenso">
         <EnumSelect TEnum="@EscalafonJerarquico" OnSelectedItemChanged="handleChange" />
     </FormItem>
-    <Button Type="@ButtonType.Primary" HtmlType="submit" Style="margin-right: 60px;">
-        Ascender Bombero
-    </Button>
+    <FormItem Style="width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" Style="margin-right: 60px;">
+            Ascender Bombero
+        </Button>
+    </FormItem>
+    
 </Form>
-
 
 @code {
     [Parameter]

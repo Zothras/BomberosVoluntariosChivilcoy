@@ -55,7 +55,8 @@
     </div>
     <div>
         <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
-        <Button OnClick="@ShowModalAgregar">Agregar Sancion</Button>
+        <Button OnClick="@ShowModalAgregarS">Agregar Sancion</Button>
+        <Button OnClick="@ShowModalAgregarA">Ascender bombero</Button>
     </div>
 </div>
 
@@ -226,26 +227,21 @@
         <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
     </Template>;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<Modal Footer="null" Title="@("Ascenso")"
+       Visible="@_visibleAgregarA"
+       OnOk="@HandleOkAgregarA"
+       OnCancel="@HandleCancelAgregarA">
+    <AscensoBombero />
+    <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregarA">
+        Volver
+    </Button>
+</Modal>
 <Modal Footer="null" Title="@("Sancion")" Style=""
-       Visible="@_visibleAgregar"
-       OnOk="@HandleOkAgregar"
-       OnCancel="@HandleCancelAgregar">
+       Visible="@_visibleAgregarS"
+       OnOk="@HandleOkAgregarS"
+       OnCancel="@HandleCancelAgregarS">
     <SancionBombero />
-    <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
+    <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregarS">
         Volver
     </Button>
 </Modal>
@@ -464,7 +460,8 @@
 
     bool _visible = false;
     bool _visibleDetalle = false;
-    public bool _visibleAgregar = false;
+    public bool _visibleAgregarS;
+    public bool _visibleAgregarA;
     int idBombero;
     private async void ShowModalEditar(int id)
     {
@@ -681,25 +678,31 @@
         busquedaVacia = string.IsNullOrWhiteSpace(searchString);
         if (busquedaVacia) bomberos = bomberosRespaldo;
     }
-
-
-
-
-
-
-
-
-    private async void HandleOkAgregar(MouseEventArgs e)
+    private void ShowModalAgregarS()
     {
-        _visibleAgregar = false;
+        _visibleAgregarS = true;
     }
-    public async void HandleCancelAgregar(MouseEventArgs e)
+
+    private async void HandleOkAgregarS(MouseEventArgs e)
+    {
+        _visibleAgregarS = false;
+    }
+    public async void HandleCancelAgregarS(MouseEventArgs e)
     {
         Console.WriteLine(e);
-        _visibleAgregar = false;
+        _visibleAgregarS = false;
     }
-    private void ShowModalAgregar()
+    private async void HandleOkAgregarA(MouseEventArgs e)
     {
-        _visibleAgregar = true;
+        _visibleAgregarA = false;
+    }
+    public async void HandleCancelAgregarA(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visibleAgregarA = false;
+    }
+    private void ShowModalAgregarA()
+    {
+        _visibleAgregarA = true;
     }
 }
