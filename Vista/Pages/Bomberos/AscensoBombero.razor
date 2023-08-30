@@ -90,10 +90,10 @@
             AscensoVM.GradoAscenso = datos.GradoAscenso;
         }
 
+
         bomberos = await Context.Bomberos.ToArrayAsync();
 
-        CargarBomberosView();
-
+        await CargarBomberosView();
     }
 
     void handleChange (EscalafonJerarquico escalafon)
@@ -101,7 +101,7 @@
         Console.WriteLine(escalafon);
     }
     List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
-    public void CargarBomberosView ()
+    public async Task CargarBomberosView ()
     {
         foreach (Bombero b in bomberos)
         {
@@ -135,12 +135,37 @@
             BomberoTodos.Add(bombero);
         }
     }
+
+    public async Task EstadoBombero ()
+    {
+        Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
+
+        if (BomberoAfectado is not null)
+        {
+            BomberoAfectado.Grado = AscensoVM.GradoAscenso;
+        }
+
+        await Context.SaveChangesAsync();
+    }
+
     private async void OnFinish (EditContext editContext)
     {
         try
         {
             Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
 
+            Vista.Data.Models.Salidas.Componentes.AscensoBombero Bombasck = new()
+                {
+
+                    FechaEmision = AscensoVM.FechaEmision,
+                    Descripcion = AscensoVM.Descripcion,
+                    GradoAntiguo = AscensoVM.GradoAntiguo,
+                    GradoAscenso = AscensoVM.GradoAscenso,
+                    PersonalAfectado = BomberoAfectado
+                };
+            Context.AscensoBomberos.Add(Bombasck);
+            await Context.SaveChangesAsync();
+            await EstadoBombero();
             await Init();
             StateHasChanged();
             await message.Success("Bombero Ascendido");
