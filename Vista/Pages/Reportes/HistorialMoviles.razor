@@ -23,6 +23,7 @@
             <PropertyColumn Property="c=>c.NumeroMovil" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Hrllegada" Sortable></PropertyColumn>
 
 
 
@@ -39,7 +40,7 @@
     </Table>
 </div>
 
-@*<style>
+<style>
     .nombreClase {
         display: inline-block;
     }
@@ -57,25 +58,25 @@
     </p>
 
     <p class="nombreClase">
-        <Button OnClick="()=> CargarSalidasMovil(Preferencia)">
+        <Button OnClick="() => CargarSalidasMovil(Preferencia)">
             Mostrar todos
         </Button>
     </p>
 
-</div>*@
+</div>
 
 <Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir"); })" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
 
 @code {
     Movil[] moviles;
 
-    //List<MovilSalidaViewModel> todosLosMoviles = new List<MovilSalidaViewModel>();
-    //List<MovilSalidaViewModel> Preferencia = new List<MovilSalidaViewModel>();
+    List<MovilSalidaViewModel> todosLosMoviles = new List<MovilSalidaViewModel>();
+    List<MovilSalidaViewModel> Preferencia = new List<MovilSalidaViewModel>();
 
     BomberosDbContext Context { get; set; }
 
-    //static DateTime hasta = DateTime.Now;
-    //static DateTime desde = hasta.AddMonths(-1);
+    static DateTime hasta = DateTime.Now;
+    static DateTime desde = hasta.AddMonths(-1);
 
     IEnumerable<HistorialMoviles> dataSource;
     IEnumerable<HistorialMoviles> selectedRows;
@@ -92,74 +93,74 @@
         public int Kilometraje { get; set; }
         public int NumeroParte { get; set; }
         public string NumeroMovil { get; set; }
+        public DateTime? Hrllegada { get; set; }
 
     }
 
     private MovilSalidaViewModel MovilSalidaViewModels { get; set; } = new();
 
-    List<MovilSalidaViewModel> MovilesSalidas { get; set; } = new();
+    List<MovilSalidaViewModel>  MovilesSalidas { get; set; } = new();
 
-    public async Task CargarSalidasMovil()
+    private async Task CargarSalidasMovil(List<MovilSalidaViewModel> a)
     {
-        int movilId = 93;
-        var movilsalidaVM = await Context.Set<MovilSalida>().Include(m => m.Salida).Where(m => m.MovilId == movilId).ToArrayAsync();
-        if (movilsalidaVM != null)
+        MovilesSalidas.Clear();
+        using (var context = DbFactory.CreateDbContext())
         {
-
-            foreach (var s in movilsalidaVM)
+            var movilsalidaVM = await Context.Set<MovilSalida>().Include(m => m.Salida).ToArrayAsync();
+            if (movilsalidaVM != null)
             {
-                var movil = await Context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == s.MovilId);
+                foreach (var s in movilsalidaVM)
+                {
+                    var movil = await context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == s.MovilId);
 
-                MovilSalidaViewModel msvm = new()
-                    {
-
-                        CargoCombustible = s.CargoCombustible,
-                        Kilometraje = s.KmLlegada,
-                        NumeroParte = s.Salida.NumeroParte,
-                        NumeroMovil = movil.NumeroMovil
-
-                    };
-
-                MovilesSalidas.Add(msvm);
-                StateHasChanged();
-
-            } 
-
+                    MovilSalidaViewModel msvm = new()
+                        {
+                            CargoCombustible = s.CargoCombustible,
+                            Kilometraje = s.KmLlegada,
+                            NumeroParte = s.Salida.NumeroParte,
+                            NumeroMovil = movil.NumeroMovil,
+                            Hrllegada = s.Salida.HoraSalida
+                        };
+                    MovilesSalidas.Add(msvm);
+                    StateHasChanged();
+                }
+            }
         }
+       
     }
 
-    //void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> b)
-    //{
-    //    int desde;
-    //    int hasta;
-    //    b.Clear();
-    //    for (int i = 0; i < todosLosMoviles.Count; i++)
-    //    {
-    //        if (todosLosMoviles[i]. == null) continue;
-    //        desde = DateTime.Compare(d, (DateTime)todosLosMoviles[i].VencimientoRegistro);
-    //        hasta = DateTime.Compare(h, (DateTime)todosLosMoviles[i].VencimientoRegistro);
-    //        if (desde <= 0 && hasta >= 0)
-    //        {
-    //            b.Add(todosLosMoviles[i]);
-    //        }
-    //    }
-    //    StateHasChanged();
-    //}
+    private void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> a)
+    {
+        int desde;
+        int hasta;
+        a.Clear();
+        for (int i = 0; i < todosLosMoviles.Count; i++)
+        {
+            if (todosLosMoviles[i].Hrllegada == null) continue;
+            desde = DateTime.Compare(d, (DateTime)todosLosMoviles[i].Hrllegada);
+            hasta = DateTime.Compare(h, (DateTime)todosLosMoviles[i].Hrllegada);
+            if (desde <= 0 && hasta >= 0)
+            {
+                a.Add(todosLosMoviles[i]);
+            }
+        }
+        StateHasChanged();
+    }
 
     private async Task Init()
     {
+
         MovilSalidaViewModels = new();
         Context = DbFactory.CreateDbContext();
         moviles = await Context.Moviles.ToArrayAsync();
-        await CargarSalidasMovil();
 
     }
 
     protected override async Task OnInitializedAsync()
     {
         await Init();
-        //CargarSalidasMovil(Preferencia);
-        //CargarSalidasMovil(todosLosMoviles);
+        CargarSalidasMovil(Preferencia);
+        CargarSalidasMovil(todosLosMoviles);
     }
 
     public void Dispose()
@@ -167,8 +168,8 @@
         Context?.Dispose();
     }
 
-    //private void Cancel()
-    //{
-    //    _message.Error("Operacion cancelada");
-    //}
+    private void Cancel()
+    {
+        _message.Error("Operacion cancelada");
+    }
 }
