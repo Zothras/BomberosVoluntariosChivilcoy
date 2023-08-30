@@ -218,6 +218,25 @@
         <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
     </Template>;
 }
+
+
+
+
+
+
+
+
+
+
+<Modal Footer="null" Title="@("Sancion")"
+       Visible="@_visibleAgregar"
+       OnOk="@HandleOkAgregar"
+       OnCancel="@HandleCancelAgregar">
+       <SancionBombero/>
+       <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
+            Volver
+       </Button>
+</Modal>
 <Modal Title="@("Detalles de bombero")"
        Visible="@_visibleDetalle"
        OnCancel="@HandleCancelDetalle"
@@ -433,6 +452,7 @@
 
     bool _visible = false;
     bool _visibleDetalle = false;
+    public bool _visibleAgregar = false;
     int idBombero;
     private async void ShowModalEditar(int id)
     {
@@ -648,5 +668,26 @@
     {
         busquedaVacia = string.IsNullOrWhiteSpace(searchString);
         if (busquedaVacia) bomberos = bomberosRespaldo;
+    }
+
+
+
+
+
+
+
+
+    private async void HandleOkAgregar(MouseEventArgs e)
+    {
+        _visibleAgregar = false;
+    }
+    public async void HandleCancelAgregar(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visibleAgregar = false;
+    }
+    private void ShowModalAgregar()
+    {
+        _visibleAgregar = true;
     }
 }
