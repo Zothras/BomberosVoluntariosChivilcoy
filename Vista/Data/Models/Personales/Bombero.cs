@@ -61,7 +61,7 @@ namespace Vista.Data.Models.Personales
         [InverseProperty("EncargadoArea")]
         public List<Sancion> SancionesAplicadas { get; set; } = new();
 
-        public List<Horarios> Horarios { get; set; } = new();
+        public List<HorarioBombero> Horarios { get; set; } = new();
 
     }
 }

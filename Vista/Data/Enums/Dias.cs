@@ -8,6 +8,6 @@
         Miercoles,
         Jueves,
         Viernes,
-        Sabado,
+        Sabado
     }
 }

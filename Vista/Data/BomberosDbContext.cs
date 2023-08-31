@@ -42,7 +42,7 @@ namespace Vista.Data
         public DbSet<Comunicacion> Comunicacion { get; set; }
         public DbSet<AscensoBombero> AscensoBomberos { get; set; }
         public DbSet<Licencia> Licencias { get; set; }
-
+        public DbSet<HorarioBombero> HorariosBomberos { get; set; }
         public DbSet<Sancion> Sanciones { get; set; }
 
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
@@ -71,6 +71,11 @@ namespace Vista.Data
               .HasKey(a => a.AscensoId);
             modelBuilder.Entity<AscensoBombero>()
                 .ToTable("AscensoBombero");
+
+            modelBuilder.Entity<HorarioBombero>()
+              .HasKey(h => h.HorarioId);
+            modelBuilder.Entity<HorarioBombero>()
+                .ToTable("HorariosBomberos");
 
             modelBuilder.Entity<Sancion>()
               .HasKey(a => a.SancionId);
@@ -150,7 +155,16 @@ namespace Vista.Data
                 .Property(p => p.Sexo)                
                 .HasConversion<string>()
                 .HasMaxLength(255);
-
+            modelBuilder
+                .Entity<HorarioBombero>()
+                .Property(h => h.ModoRotativo)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+            modelBuilder
+                .Entity<HorarioBombero>()
+                .Property(h => h.DiaSemana)
+                .HasConversion<string>()
+                .HasMaxLength(255);
             modelBuilder
                 .Entity<Bombero>()
                 .Property(b => b.Grado)

@@ -1,14 +1,21 @@
 ﻿
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using Vista.Data.Enums;
+
 namespace Vista.Data.Models.Personales
 {
-    public class Horarios
+    public class HorarioBombero
     {
-        public DateTime? vigente_desde { get; set; }
-        public DateTime? vigente_hasta { get; set; }
-        //public Dias dia_semana { get; set; }
-        public TimeOnly hora_desde { get; set; }
-        public TimeOnly hora_hasta { get; set; }
-        public TimeOnly periodo { get; set; }
-        public bool modo_rotativo { get; set; }
+        public int HorarioId { get; set; }
+        public DateTime? VigenteDesde { get; set; }
+        public DateTime? VigenteHasta { get; set; }
+        public Dias DiaSemana { get; set; }
+        public TimeOnly HoraDesde { get; set; }
+        public TimeOnly HoraHasta { get; set; }
+        public TimeOnly? Periodo { get; set; }
+        public TiposRotativos ModoRotativo { get; set; }      
+        public int BomberoId { get; set; }
+        Bombero? BomberoAsignado { get; set; }
     }
 }
