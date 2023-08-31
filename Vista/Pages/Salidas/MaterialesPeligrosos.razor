@@ -10,7 +10,6 @@
         display: none !important;
     }
 
-
     .slick-contenedor {
         width: 100%;
         padding: 10px;
@@ -22,8 +21,26 @@
         padding: 0!important;
     }
     .ant-form-item-row:nth-child(2){
-        display: flex!important;
-        flex-direction: column !important;
+        display: flex !important;
+    }
+
+    .inpt-cont{
+        min-width: 170px;
+        display: flex;
+        flex-direction: column;
+        padding: .3em 0 ;
+        width: 100%;
+    }
+    .inpt-cont-inline {
+        min-width: 170px;
+        display: flex;
+        gap: 1em;
+        padding: .3em 0;    
+    }
+    .inpt-cont--lbl{
+        min-width: 170px;
+        text-align: start;
+        font-weight: bold;
     }
 </style>
 
@@ -34,7 +51,7 @@
             <Step Title="@item.Title" Subtitle="@item.Content" />
         }
     </Steps>
-    <div class="steps-content" style="height: 100%;width: 100%;padding: 10px;">
+    <div class="steps-content" style="height: 100%;width: 100%;padding: 10px;min-width: 395px!important;">
         <Form Model="@modelMateriales"
               LabelColSpan="8"
               WrapperColSpan="16"
@@ -45,7 +62,50 @@
             @if (current == 0)
             {
                 <div class="slick-contenedor">
-                    <FormItem Label="Descripcion" Style="padding: 0!important;display: inline-block;position: relative;">
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Descripcion</label>
+                        <Input @bind-Value="@modelMateriales.Descripcion" />
+                    </div>
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Hora salida</label>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraSalida"/>
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Hora llegada</label>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.HoraLLegada"/>
+                        </div>
+                    </div>
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Calle/Ruta</label>
+                            <Input @bind-Value="@modelMateriales.CalleORuta"/>
+                        </div>
+                        <div class="inpt-cont"> 
+                            <label class="inpt-cont--lbl">Numero/kilometro</label>
+                            <Input @bind-Value="@modelMateriales.NumeroOKilometro"/>
+                        </div>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Entre calles</label>
+                        <Input @bind-Value="@modelMateriales.EntreCalles"/>
+                    </div>
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">PisoNumero</label>
+                            <Input @bind-Value="@modelMateriales.PisoNumero" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Depto</label>
+                            <Input @bind-Value="@modelMateriales.Depto" />
+                        </div>  
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo zona</label>
+                        <EnumSelect TEnum="TipoZona" @bind-Value="@modelMateriales.TipoZona" />
+                    </div>
+
+                    @* <FormItem Label="Descripcion" Style="padding: 0!important;display: inline-block;position: relative;">
                         <br>
                         <Input @bind-Value="@modelMateriales.Descripcion" Style="width: 100%;display: block;position: absolute;left: -7em;"/>
                     </FormItem>
@@ -82,7 +142,7 @@
                     <FormItem Label="Tipo zona" Style="padding: 0!important;display: inline-block;position: relative;">
                         <br>
                         <EnumSelect TEnum="TipoZona" @bind-Value="@modelMateriales.TipoZona" Style="width: 100%;display: block;position: absolute;left: -7em;" />
-                    </FormItem>
+                    </FormItem> *@
                 </div>
             }
             else if (current == 1)
@@ -551,7 +611,7 @@
                         Apellido = bom.Apellido,
                         NumeroLegajo = BomberoCuerpo
                     };
-                bomberosSalida.Add(b);
+                bomberosSalida.Add(b);  
             }
         }
         StateHasChanged();
