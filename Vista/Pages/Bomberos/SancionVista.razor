@@ -1,0 +1,96 @@
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/bomberos/sancionados"
+
+<Table DataSource="sancionesVM" Bordered>
+    <PropertyColumn Property="c=>c.Encargado"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Sancionado"></PropertyColumn>
+    <PropertyColumn Property="c=>c.FechaDesde"></PropertyColumn>
+    <PropertyColumn Property="c=>c.FechaHasta"></PropertyColumn>
+    <PropertyColumn Property="c=>c.TipoSancion"></PropertyColumn>
+    <PropertyColumn Property="c=>c.SancionArea"></PropertyColumn>
+    <PropertyColumn Property="c=>c.Observaciones"></PropertyColumn>
+
+</Table>
+
+@code {
+
+    public class SancionViewModel
+    {
+
+        public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta { get; set; }
+
+        public Bombero PersonalSancionado { get; set; }
+        public string Sancionado { get; set; }
+        public int NumeroLegajoSancionado { get; set; }
+
+        public TipoSancion TipoSancion { get; set; }
+
+        public AreaSancion SancionArea { get; set; }
+
+        public Bombero EncargadoArea { get; set; }
+        public string Encargado { get; set; }
+        public int NumeroLegajoEncargado { get; set; }
+
+        [Required, StringLength(255)]
+        public string Observaciones { get; set; }
+    }
+
+    public SancionViewModel SancionVM = new();
+
+    BomberosDbContext Context { get; set; }
+    public bool _visibleAgregar = false;
+    List<SancionViewModel> sancionesVM = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await CargarSanciones();
+    }
+    public async Task CargarSanciones()
+    {
+        var sanciones = await Context.Sanciones.ToListAsync();
+        foreach (Sancion s in sanciones)
+        {
+            var bombero = await Context.Bomberos.Where(B => B.PersonaId == s.PersonaId).SingleOrDefaultAsync();
+            var bomberoEncargado = await Context.Bomberos.Where(B => B.PersonaId == s.EncargadoAreaId).SingleOrDefaultAsync();
+            SancionViewModel san = new()
+                {
+                    FechaDesde = s.FechaDesde,
+                    FechaHasta = s.FechaHasta,
+                    PersonalSancionado = bombero,
+                    Sancionado = bombero.Nombre+" "+ bombero.Apellido,
+                    TipoSancion = s.TipoSancion,
+                    SancionArea = s.SacionArea,
+                    EncargadoArea = bomberoEncargado,
+                    Encargado = bomberoEncargado.Nombre + " " + bomberoEncargado.Apellido,
+                    Observaciones = s.observaciones
+                };
+            sancionesVM.Add(san);
+        }
+    }
+    private async void HandleOkAgregar(MouseEventArgs e)
+    {
+        _visibleAgregar = false;
+    }
+    public async void HandleCancelAgregar(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visibleAgregar = false;
+        await Init();
+    }
+    private void ShowModalAgregar()
+    {
+        _visibleAgregar = true;
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

@@ -15,7 +15,7 @@ namespace Vista.Data.Models.Salidas.Componentes
 
         public int PersonaId { get; set; }
         [ForeignKey ("PersonaId")]
-
+       
         public Bombero PersonalSancionado { get; set; }
 
         public TipoSancion TipoSancion { get; set; }
