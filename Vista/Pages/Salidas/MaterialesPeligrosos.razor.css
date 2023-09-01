@@ -1,0 +1,35 @@
+﻿
+    .slick-contenedor {
+        width: 100%;
+        padding: 10px;
+        display: flex !important;
+        flex-direction: column;
+        overflow: hidden!important;
+    }
+    .slick-contenedor-D {
+        animation: moverDerecha .5s ease forwards;
+        transition: all .5s ease;
+    }
+    .slick-contenedor-I {
+        animation: moverIzquierda .5s ease forwards;
+        transition: all .5s ease;
+    }
+    @keyframes moverDerecha {
+        0% {
+            transform: translateX(1000px);
+        }
+
+        100% {
+            transform: translateX(0px);
+        }
+    }
+
+    @keyframes moverIzquierda {
+        0% {
+            transform: translateX(-1000px);
+        }
+
+        100% {
+            transform: translateX(0px);
+        }
+    }
