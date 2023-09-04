@@ -1,0 +1,75 @@
+﻿@implements IDisposable
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/bomberos/ascenso"
+
+<Table DataSource="ascensos" Bordered>
+
+    <PropertyColumn Property="b=>b.NombreYApellido"></PropertyColumn>
+    <PropertyColumn Property="b=>b.FechaEmision"></PropertyColumn>
+    <PropertyColumn Property="b=>b.Descripcion"></PropertyColumn>
+    <PropertyColumn Property="b=>b.GradoAntiguo"></PropertyColumn>
+    <PropertyColumn Property="b=>b.GradoAscenso"></PropertyColumn>
+
+</Table>
+
+
+
+@code {
+
+    public class AscensoViewModel
+    {
+        public Bombero PersonalAfectado { get; set; }
+        public string NombreYApellido { get; set; }
+        public DateTime FechaEmision { get; set; }
+        public string Descripcion { get; set; }
+        public EscalafonJerarquico GradoAntiguo { get; set; }
+        public EscalafonJerarquico GradoAscenso { get; set; }
+    }
+
+    BomberosDbContext Context { get; set; }
+    List<AscensoViewModel> ascensos = new List<AscensoViewModel>();
+
+
+    public async Task CargarAscenso ()
+    {
+        var ascenso = await Context.AscensoBomberos.ToListAsync();   
+
+        foreach (var a in ascenso)
+        {
+            var bomberoafectado = await Context.Bomberos.Where(b => b.PersonaId == a.PersonaId).SingleOrDefaultAsync();
+            AscensoViewModel ac = new()
+                {
+                    PersonalAfectado = bomberoafectado,
+                    NombreYApellido = bomberoafectado.Nombre+" "+bomberoafectado.Apellido,
+                    FechaEmision = a.FechaEmision,
+                    Descripcion = a.Descripcion,
+                    GradoAntiguo = a.GradoAntiguo,
+                    GradoAscenso = a.GradoAscenso
+                };
+            ascensos.Add(ac);
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+
+    private async Task Init()
+    {
+
+        Context = DbFactory.CreateDbContext();
+        await CargarAscenso();
+    }
+
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+
+}

@@ -360,6 +360,13 @@
                             </IconTemplate>
                         </MenuItem>
                     </a>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
+                        <MenuItem Key="005" Title=@("Ascenso")>
+                            <IconTemplate>
+                                <i class="fa-solid fa-user-xmark" style="color: #263040;"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
                 </SubMenu>
                 <SubMenu class="xd" Key="sub6" Title="Salidas" TitleTemplate=@sub7Title>
                     <a @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialSalidas"); })">

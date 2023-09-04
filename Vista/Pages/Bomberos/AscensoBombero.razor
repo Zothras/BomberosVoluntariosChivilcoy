@@ -1,8 +1,10 @@
-﻿@using AntDesign
+﻿@implements IDisposable
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
+
+
 
 <Form Model="AscensoVM"
       LabelColSpan="8"
@@ -29,10 +31,18 @@
         <Input @bind-Value="AscensoVM.Descripcion" />
     </FormItem>
     <FormItem Label="Grado antiguo">
-        <Input @bind-Value="AscensoVM.GradoAntiguo" />
+        @foreach (var item in BomberoTodos)
+        {
+            if (item.NumeroLegajo == Bombero)
+            {
+                AscensoVM.GradoAntiguo = item.Grado;
+                break;
+            }
+        }
+        <Input @bind-Value="AscensoVM.GradoAntiguo" Disabled />
     </FormItem>
     <FormItem Label="Grado ascenso">
-        <EnumSelect TEnum="@EscalafonJerarquico" OnSelectedItemChanged="handleChange" />
+        <EnumSelect TEnum="@EscalafonJerarquico" @bind-Value="@AscensoVM.GradoAscenso" />
     </FormItem>
     <FormItem Style="width: 100% !important;
             display: flex !important;
@@ -42,7 +52,6 @@
             Ascender Bombero
         </Button>
     </FormItem>
-    
 </Form>
 
 @code {
@@ -55,7 +64,6 @@
     public Bombero[]? bomberos;
     public int Bombero { get; set; }
     BomberosDbContext Context { get; set; }
-    // public List<Bombero> bomberoTodos = new List<Bombero>();
 
     public class AscensoViewModel
     {
@@ -68,7 +76,6 @@
 
     AscensoViewModel AscensoVM { get; set; } = new AscensoViewModel();
 
-
     protected override async Task OnInitializedAsync ()
     {
         await Init();
@@ -79,21 +86,6 @@
         AscensoVM = new();
 
         Context = DbFactory.CreateDbContext();
-        Bombero = -1;
-        Context = DbFactory.CreateDbContext();
-        Bombero? bombero = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
-        if (AscensoId.HasValue)
-        {
-            var datos = await Context.AscensoBomberos.FindAsync(AscensoId);
-            AscensoVM.PersonalAfectado = bombero;
-            AscensoVM.FechaEmision = datos.FechaEmision;
-            AscensoVM.Descripcion = datos.Descripcion;
-            AscensoVM.GradoAntiguo = datos.GradoAntiguo;
-            AscensoVM.GradoAscenso = datos.GradoAscenso;
-        }
-
-
-        bomberos = await Context.Bomberos.ToArrayAsync();
 
         await CargarBomberosView();
     }
@@ -105,6 +97,8 @@
     List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
     public async Task CargarBomberosView ()
     {
+        BomberoTodos = new();
+        var bomberos = await Context.Bomberos.ToListAsync();
         foreach (Bombero b in bomberos)
         {
             BomberoViweModel bombero = new()
@@ -142,12 +136,15 @@
     {
         Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
 
+
         if (BomberoAfectado is not null)
         {
             BomberoAfectado.Grado = AscensoVM.GradoAscenso;
         }
 
+       
         await Context.SaveChangesAsync();
+
     }
 
     private async void OnFinish (EditContext editContext)
@@ -155,6 +152,7 @@
         try
         {
             Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
+
 
             Vista.Data.Models.Salidas.Componentes.AscensoBombero Bombasck = new()
                 {
@@ -187,4 +185,22 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(AscensoVM)}");
     }
+
+    private bool mostrarDatos = false;
+
+    private void MostrarDatos()
+    {
+        mostrarDatos = true;
+    }
+
+    private void ShowModalAgregar()
+    {
+        mostrarDatos = true;
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+
 }
