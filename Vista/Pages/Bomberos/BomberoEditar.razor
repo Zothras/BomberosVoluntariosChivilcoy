@@ -123,6 +123,40 @@
     <input type="text" @bind="contactoView.Email" />
     <br>
 
+@*
+    <h5>Horarios</h5>
+
+    <label>Vigente Desde:</label>
+    <input type="datetime" @bind="Horarios[0].VigenteDesde" />
+    <br>
+    <select @bind="Horarios[0].DiaSemana">
+        <option value="@Dias.Domingo">Miercoles</option>
+        <option value="@Dias.Lunes">Lunes</option>
+        <option value="@Dias.Martes">Martes</option>
+        <option value="@Dias.Miercoles">Miercoles</option>
+        <option value="@Dias.Jueves">Lunes</option>
+        <option value="@Dias.Viernes">Martes</option>
+        <option value="@Dias.Sabado">Miercoles</option>
+    </select>
+    <label>Hora Desde:</label>
+    <input type="TimeOnly?" @bind="Horarios[0].HoraDesde" />
+    <br>
+    <label>Hora Hasta:</label>
+    <input type="TimeOnly?" @bind="Horarios[0].HoraHasta" />
+    <br>
+    <input type="checkbox" @bind="Horarios[0].es_periodico" />
+    if (Horarios[0].es_periodico)
+    {
+        <input type="TimeOnly?" @bind="Horarios[0].Periodo" />
+    }
+    <br>
+    <select @bind="Horarios[0].ModoRotativo">
+        <option value="@TiposRotativos.Fijo">Miercoles</option>
+        <option value="@TiposRotativos.Semanal">Lunes</option>
+        <option value="@TiposRotativos.Mensual">Martes</option>
+    </select>
+    <button @onclick="GenerarHorario">Insertar otro horarios</button>
+    *@
     <button @onclick="EditarBombero">Editar bombero</button>
 }
 else
@@ -133,6 +167,13 @@ else
 @code {
     [Parameter]
     public int? BomberoId { get; set; }
+    public ImagenViewModel imagenView { get; set; } = new();
+    public BomberosViewModel bomberoView { get; set; } = new();
+    public ContactoViewModel contactoView { get; set; } = new();
+    public Bombero[]? bomberos;
+    public bool existe;
+    //int tamaño_horario = 0;
+    //public List<HorariosViewModel> Horarios = new();
 
     public class BomberosViewModel
     {
@@ -180,8 +221,6 @@ else
         public string? Resolucion5 { get; set; }
         [Required, StringLength(255)]
         public string? Resolucion6 { get; set; }
-
-
     }
     public class ContactoViewModel
     {
@@ -202,13 +241,54 @@ else
         [Required, StringLength(255)]
         public string Nombre { get; set; }
     }
-
-    public ImagenViewModel imagenView { get; set; } = new();
-    public BomberosViewModel bomberoView { get; set; } = new();
-    public ContactoViewModel contactoView { get; set; } = new();
-    public Bombero[]? bomberos;
-    public bool existe;
-
+    /*
+    public class HorariosViewModel
+    {
+        public bool es_periodico {get; set;}
+        public DateTime? VigenteDesde { get; set; }
+        public Dias DiaSemana { get; set; }
+        public TimeOnly HoraDesde { get; set; }
+        public TimeOnly HoraHasta { get; set; }
+        public TimeOnly? Periodo { get; set; }
+        public TiposRotativos ModoRotativo { get; set; }
+        public int BomberoId { get; set; }
+    }
+    */
+    /*
+    public void GenerarHorario(DateTime date)
+    {
+        <br>
+        <label>Vigente Desde:</label>
+        <input type="datetime" @bind="Horarios[0].VigenteDesde" />
+        <br>
+        <select @bind="Horarios[0].DiaSemana">
+            <option value="@Dias.Domingo">Miercoles</option>
+            <option value="@Dias.Lunes">Lunes</option>
+            <option value="@Dias.Martes">Martes</option>
+            <option value="@Dias.Miercoles">Miercoles</option>
+            <option value="@Dias.Jueves">Lunes</option>
+            <option value="@Dias.Viernes">Martes</option>
+            <option value="@Dias.Sabado">Miercoles</option>
+        </select>
+        <label>Hora Desde:</label>
+        <input type="TimeOnly?" @bind="Horarios[0].HoraDesde" />
+        <br>
+        <label>Hora Hasta:</label>
+        <input type="TimeOnly?" @bind="Horarios[0].HoraHasta" />
+        <br>
+        <input type="checkbox" @bind="Horarios[0].es_periodico" />
+        if (Horarios[0].es_periodico)
+        {
+            <input type="TimeOnly?" @bind="Horarios[0].Periodo" />
+        }
+        <br>
+        <select @bind="Horarios[0].ModoRotativo">
+            <option value="@TiposRotativos.Fijo">Miercoles</option>
+            <option value="@TiposRotativos.Semanal">Lunes</option>
+            <option value="@TiposRotativos.Mensual">Martes</option>
+        </select>
+    }
+    */
     protected override async Task OnInitializedAsync()
     {
         using var db = DbFactory.CreateDbContext();

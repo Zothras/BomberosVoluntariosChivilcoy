@@ -220,7 +220,87 @@
                     OnSelectedItemChanged="OnSelectedItemChangedHandler">
             </Select>
         </FormItem>
+@*
+        <FormItem Label="Vigente desde">
+            <DatePicker DefaultValue="@DateTime.Now" @bind-Value="@bomberoVM.VigenteDesde" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
+        </FormItem>
+        <FormItem Label="Vigente hasta">
+            <DatePicker DefaultValue="@null" @bind-Value="@bomberoVM.VigenteHasta" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
+        </FormItem>
+        <FormItem Label="Dia de semana">
+            <Select @bind-Value="@bomberoVM.DiaSemana"
+                    Style="width:200px"
+                    TItemValue="Dias"
+                    TItem="Dias"
+                    Bordered="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Domingo)" Label="Domingo" />
+                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Lunes)" Label="Lunes" />
+                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Martes)" Label="Martes" />
+                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Miercoles)" Label="Miercoles" />
+                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Jueves)" Label="Jueves" />
+                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Viernes)" Label="Viernes" />
+                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Sabado)" Label="Sabado" />
+                </SelectOptions>
+            </Select>
+        </FormItem>
+
+        <FormItem Label="Horarios">
+            <Select @bind-Value="@horadesde"
+                    Style="width:200px"
+                    TItemValue="int"
+                    TItem="int"
+                    Bordered="true">
+                <SelectOptions>
+                    @for (int i = 1; i < 25 ; i++)
+                {
+                    <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
+                }
+                </SelectOptions>
+            </Select>
+
+            <Select @bind-Value="@horaasta"
+                    Style="width:200px"
+                    TItemValue="int"
+                    TItem="int"
+                    Bordered="true">
+                <SelectOptions>
+                    @for (int i = 1; i < 25; i++)
+                    {
+                        <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
+                    }
+                </SelectOptions>
+            </Select>
+        </FormItem>
+                <FormItem Label="Hora hasta">
+                @*<TimePicker TValue="TimeOnly" />
+        </FormItem>
+        
+        
+        <FormItem Label="Tipo de horario">
+            <Select @bind-Value="@bomberoVM.ModoRotativo"
+                    DefaultValue="TiposRotativos.Fijo"
+                    Style="width:200px"
+                    TItemValue="TiposRotativos"
+                    TItem="TiposRotativos"
+                    Bordered="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Fijo)" Label="Fijo" />
+                    <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Semanal)" Label="Semanal" />
+                    <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Mensual)" Label="Mensual" />
+                </SelectOptions>
+            </Select>
+        </FormItem>
+
+            @if (bomberoVM.ModoRotativo != TiposRotativos.Fijo)
+            {
+                <FormItem Label="Periodo">
+                    <Input DefaultValue="@TimeOnly.MaxValue" @bind-Value="@bomberoVM.Periodo" />
+                </FormItem>
+            }
+        *@
     </Form>
+
 </Modal>
 @{
     RenderFragment footer = @<Template>
@@ -302,9 +382,12 @@
     }
 }
 @code {
-
+    //variables
+    
+    private bool busquedaVacia = true;
+    //static int horadesde, minutosdesde, horaasta, minutosasta;
+    //TimeOnly horacero = new(0,0,0);
     #region "tabla"
-
     //Bombero[]? bomberos;
     private Brigada[]? brigadas;
     string searchString;
@@ -315,7 +398,7 @@
     List<Bombero>? bomberosRespaldo = new List<Bombero>();
     List<string>? bomberosFiltro = new List<string>();
     private List<Bombero> bomberosFiltrados = new List<Bombero>();
-    private bool busquedaVacia = true;
+
 
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
@@ -439,6 +522,19 @@
         //public string NombreImagen { get; set; }
         //Brigada-------------------------------
         public string NombreBrigada { get; set; }
+
+        //Horarios
+        /*
+        public bool es_periodico { get; set; }
+        public DateTime? VigenteDesde { get; set; }
+        public DateTime? VigenteHasta { get; set; }
+        public Dias DiaSemana { get; set; }
+        public TimeOnly HoraDesde { get; set; }
+        public TimeOnly HoraHasta { get; set; }
+        public TimeOnly? Periodo { get; set; }
+        public TiposRotativos ModoRotativo { get; set; }
+        public int BomberoId { get; set; }
+        */
     }
     #endregion
     #region Primera parte Modal
@@ -582,13 +678,20 @@
 
     private async void EditarBombero(int id)
     {
+        /*
+        bomberoVM.HoraDesde = horacero;
+        bomberoVM.HoraHasta = horacero;
+        bomberoVM.HoraDesde.AddHours(horadesde);
+        bomberoVM.HoraHasta.AddHours(horaasta);
+        */
         using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
+        Bombero? bombero = await context.Bomberos
+        .Where(b => b.NumeroLegajo == id)
+        .Include(c => c.Contacto)
+        .Include(h => h.Horarios.Count)
+        .SingleOrDefaultAsync();
         Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
-        Bombero? bombero1 = await context.Bomberos
-            .Include(b => b.Contacto)
-            .Where(b => b.NumeroLegajo == id)
-            .SingleOrDefaultAsync();
+        //HorarioBombero horario = await context.HorariosBomberos.Where(h => h.BomberoId == id).SingleOrDefaultAsync();
 
         bombero.FechaNacimiento = bomberoVM.FechaNacimiento;
         bombero.Sexo = bomberoVM.Sexo;
@@ -624,10 +727,15 @@
         bombero.Profesion = bomberoVM.Profesion;
         bombero.NivelEstudios = bomberoVM.NivelEstudios;
         bombero.FechaAceptacion = bomberoVM.FechaAceptacion;
-        bombero1.Contacto.TelefonoCel = bomberoVM.TelefonoCel;
-        bombero1.Contacto.TelefonoFijo = bomberoVM.TelefonoFijo;
-        bombero1.Contacto.TelefonoLaboral = bomberoVM.TelefonoLaboral;
-        bombero1.Contacto.Email = bomberoVM.Email;
+        bombero.Contacto.TelefonoCel = bomberoVM.TelefonoCel;
+        bombero.Contacto.TelefonoFijo = bomberoVM.TelefonoFijo;
+        bombero.Contacto.TelefonoLaboral = bomberoVM.TelefonoLaboral;
+        bombero.Contacto.Email = bomberoVM.Email;
+        //agregar el seteo de hora desde y asta
+        /*
+        horario.HoraDesde = bomberoVM.HoraDesde;
+        horario.HoraHasta = bomberoVM.HoraHasta;
+        */
 
         await context.SaveChangesAsync();
         await OnInitializedAsync();
