@@ -20,6 +20,10 @@
         display: flex !important;
     }
 
+    .ant-input-number{
+        width: auto!important;
+    }
+
     .steps-content {
         margin-top: 16px;
         border: 1px dashed #e9e9e9;
@@ -57,8 +61,9 @@
         font-weight: bold;
         overflow: hidden !important;
     }
-    .ant-table-cell{
-        text-align: center!important;
+
+    .ant-table-cell {
+        text-align: center !important;
     }
 </style>
 
@@ -168,21 +173,25 @@
                         </div>
                         @if (switchValue == true)
                         {
-                            <div class="inpt-cont">
-                                <label class="inpt-cont--lbl" style="color: transparent;">.</label>
-                                <Button OnClick="()=>visibleDamnificados = true">Agregar otro</Button>
+                            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;">
+                                <label class="inpt-cont--lbl">Agregar otro</label>
+                                <Button OnClick="()=>visibleDamnificados = true">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                </Button>
                             </div>
-                            <div class="inpt-cont">
-                                <label class="inpt-cont--lbl" style="color: transparent;">.</label>
-                                <Button OnClick="()=>visibleVerDamnificados = true">Ver damnificados</Button>
+                            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;">
+                                <label class="inpt-cont--lbl">Ver damnificados</label>
+                                <Button OnClick="()=>visibleVerDamnificados = true">
+                                    <i class="fa-solid fa-users-gear"></i>
+                                </Button>
                             </div>
                         }
                     </div>
-                    
+
                     <Modal Footer="null" Title="@("Damnificados")"
-                               Visible="@visibleVerDamnificados"
-                               OnOk="@HandleOkD"
-                               OnCancel="@HandleCancelVD">
+                           Visible="@visibleVerDamnificados"
+                           OnOk="@HandleOkD"
+                           OnCancel="@HandleCancelVD">
                         <div class="inpt-cont">
                             <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
                                  <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
@@ -204,9 +213,9 @@
                     @if (switchValue == true)
                     {
                         <Modal Footer="null" Title="@("Datos del damnificado")"
-                               Visible="@visibleDamnificados"
-                               OnOk="@HandleOkD"
-                               OnCancel="@HandleCancelD">
+                                Visible="@visibleDamnificados"
+                                OnOk="@HandleOkD"
+                                OnCancel="@HandleCancelD">
                             <div class="inpt-cont-inline">
                                 <div class="inpt-cont">
                                     <label class="inpt-cont--lbl">Nombre</label>
@@ -248,34 +257,32 @@
             }
             else if (current == 2)
             {
-                @*Datos Del seguro*@
+                <h6>Seguro del lugar</h6>
+
                 <div class="slick-contenedor @animationClass">
-                    <b><label>Seguro del lugar</label></b>
-                    <br />
-                    <FormItem Label="Compania Aseguradora del establecimiento ">
+
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Compania aseguradora del establecimiento</label>
                         <Input @bind-Value="@modelMateriales.CompaniaAseguradora" />
-                    </FormItem>
-                    <FormItem Label="NumeroPoliza">
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Numero de poliza</label>
                         <Input @bind-Value="@modelMateriales.NumeroPoliza" />
-                    </FormItem>
-                    <FormItem Label="FechaVencimineto">
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Fecha de vencimineto</label>
                         <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelMateriales.FechaVencimineto" />
-                    </FormItem>
+                    </div>
                 </div>
             }
             else if (current == 3)
             {
-                @*Moviles de salidas*@
                 <div class="slick-contenedor @animationClass">
-                        <b><label>Datos de chofer</label></b>
-                        <br />
-                        <FormItem Label="" style="display: grid;place-items: center;">
-                            <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-                            <Button Type="primary" OnClick="@ShowModal">
-                                Cargo Combustible
-                            </Button>
-                        </FormItem>
-                        <FormItem Label="Elija el chofer">
+                    <h6>Datos del chofer</h6>
+                    
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Elija el chofer</label>
                             <Select TItem="BomberoViweModel"
                                     TItemValue="int"
                                     DataSource="@bomberoChoferes"
@@ -287,62 +294,105 @@
                                     AllowClear="true"
                                     EnableSearch>
                              </Select>
-                        </FormItem>
-                     <FormItem Label="Numero de movil">
-                         <Select TItem="Movil"
-                                 TItemValue="string"
-                                 DataSource="@Moviles"
-                                @bind-Value="@NumeroMovil"
-                                 LabelName="@nameof(Movil.NumeroMovil)"
-                                 ValueName="@nameof(Movil.NumeroMovil)"
-                                 Placeholder="Selecione el movil"
-                                 DefaultActiveFirstOption="false"
-                                 AllowClear="true"
-                                            EnableSearch>
-                         </Select>
-                     </FormItem>
-                     <br />
-                     @if (NumeroMovil is not null)
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Numero de movil</label>
+                            <Select TItem="Movil"
+                                    TItemValue="string"
+                                    DataSource="@Moviles"
+                                    @bind-Value="@NumeroMovil"
+                                    LabelName="@nameof(Movil.NumeroMovil)"
+                                    ValueName="@nameof(Movil.NumeroMovil)"
+                                    Placeholder="Selecione el movil"
+                                    DefaultActiveFirstOption="false"
+                                    AllowClear="true"
+                                    EnableSearch>
+                            </Select>
+                        </div>
+                    </div>
+                    @if (NumeroMovil is not null)
+                    {
+                        foreach (Movil m in Moviles)
                         {
-                            foreach (Movil m in Moviles)
+                            if (m.NumeroMovil == NumeroMovil)
                             {
                                 if (m.NumeroMovil == NumeroMovil)
                                 {
-
-                                    if (m.NumeroMovil == NumeroMovil)
-                                    {
-                                        modelMateriales.Kilometraje = m.Kilometraje;
-                                        break;
-                                    }
-
                                     modelMateriales.Kilometraje = m.Kilometraje;
                                     break;
-
                                 }
+
+                                modelMateriales.Kilometraje = m.Kilometraje;
+                                break;
                             }
                         }
-                        <FormItem Label="Kilometro salida">
+                    }
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Kilometro de salida</label>
                             <AntDesign.InputNumber @bind-Value="modelMateriales.Kilometraje" Disabled />
-                         </FormItem>
-                         <FormItem Label="Kilometro llegada">
-                             <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
-                         </FormItem>
-                         <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
-                         <div>
-                             <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
-                             <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-                             <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
-                             <ActionColumn Title="Acciones">
-                                 <Popconfirm Title="Sure to delete?"
-                                             OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                                             OkText="Yes"
-                                             CancelText="No">
-                                     <a>Delete</a>
-                                 </Popconfirm>
-                             </ActionColumn>
-                         </Table>
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Kilometro de llegada</label>
+                            <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
+                        </div>
+                    </div>
+                     <div class="inpt-cont">
+                             <label class="inpt-cont--lbl">¿Cargo combustible?</label>
+                             <Switch @bind-Checked="switchMoviles" Disabled="@desactivarSwitch" Style="width: 10px!important;" />
+                         @if (switchMoviles == true)
+                         {
+                                <Modal Title="@("Datos de la carga de combustible")"
+                                       Visible="@_visible"
+                                       OnOk="@HandleOk"
+                                       OnCancel="@HandleCancelMovil">
+                                    <Form Loading="loading" Model="@movilSalidaViewModels"
+                                          LabelColSpan="8"
+                                          WrapperColSpan="16"
+                                          OnFinish="OnFinishModel"
+                                          OnFinishFailed="OnFinishFailed"
+                                          @ref="@_form1" Context="modalMoviles">
+                                        <FormItem Label="Numero factura">
+                                            <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
+                                        </FormItem>
+                                        <FormItem Label="Fecha factura">
+                                            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+                                        </FormItem>
+                                        <FormItem Label="Tipo Combustible">
+                                            <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
+                                        </FormItem>
+                                        <FormItem Label="Cantidad de Litros">
+                                            <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
+                                        </FormItem>
+                                        <FormItem Label="Quien lleno">
+                                            <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
+                                        </FormItem>
+                                        <FormItem Label="TelefonoQuienLleno">
+                                            <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
+                                        </FormItem>
+                                    </Form>
+                                </Modal>
+                             }
                      </div>
-                 </div>
+                    <Button OnClick="@AgregarMovilSalida">Cargar movil</Button>
+                    @if (MovilesSalidasL is not null)
+                    {
+                        <div>
+                            <Table Size="TableSize.Small" PageSize="3" Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+                                 <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+                                 <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
+                                 <ActionColumn Title="Acciones">
+                                    <Popconfirm Title="¿Quieres borrar este movil?"
+                                                 OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                                                 OkText="Si"
+                                                 CancelText="No">
+                                        <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                    </Popconfirm>
+                                 </ActionColumn>
+                            </Table>
+                        </div>                        
+                    }
+                </div>
             }
             else if (current == 4)
             {
@@ -470,36 +520,7 @@
             }
         </Form>
 
-        <Modal Title="@("Datos de la carga de combustible")"
-               Visible="@_visible"
-               OnOk="@HandleOk"
-               OnCancel="@HandleCancel">
-            <Form Loading="loading" Model="@movilSalidaViewModels"
-                  LabelColSpan="8"
-                  WrapperColSpan="16"
-                  OnFinish="OnFinishModel"
-                  OnFinishFailed="OnFinishFailed"
-            @ref="@_form1">
-                <FormItem Label="Numero factura">
-                    <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
-                </FormItem>
-                <FormItem Label="Fecha factura">
-                    <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
-                </FormItem>
-                <FormItem Label="Tipo Combustible">
-                    <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
-                </FormItem>
-                <FormItem Label="Cantidad de Litros">
-                    <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
-                </FormItem>
-                <FormItem Label="Quien lleno">
-                    <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
-                </FormItem>
-                <FormItem Label="TelefonoQuienLleno">
-                    <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
-                </FormItem>
-            </Form>
-        </Modal>
+        
     </div>
     <div class="steps-action">
         @if (current > 0)
@@ -523,7 +544,8 @@
 {
     public int current { get; set; } = 0;
     bool loading = false;
-    bool _visible;
+    bool _visible {get; set;} = true;
+    bool desactivarSwitch { get; set; }
     bool visibleDamnificados = true;
     bool visibleVerDamnificados;
     private string animationClass = "";
@@ -543,6 +565,7 @@
     Movil[]? Moviles;
 
     bool switchValue { get; set; }
+    bool switchMoviles { get; set; } 
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
@@ -589,6 +612,8 @@
                 MovilesSalida = Movilsalida,
             };
         MovilesSalidasL.Add(m);
+        desactivarSwitch = false;
+        switchMoviles = false;
         StateHasChanged();
     }
 
@@ -896,24 +921,28 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
     }
-    
+
     void toggle(bool value) => loading = value;
 
-    private void ShowModal()
+    // private void ShowModal()
+    // {
+    //     _visible = true;
+    // }
+    private void HandleCancelMovil(MouseEventArgs e)
     {
-        _visible = true;
+        switchMoviles = false;
+        desactivarSwitch = false;
     }
-    private void HandleCancel(MouseEventArgs e)
-    {
-        _visible = false;
-    }
+    
     private void HandleOk(MouseEventArgs e)
     {
         _visible = false;
+        desactivarSwitch = true;
     }
     private void OnFinishModel(EditContext editContext)
     {
         _visible = false;
+        desactivarSwitch = true;
     }
 
     private void HandleOkD(MouseEventArgs e)
