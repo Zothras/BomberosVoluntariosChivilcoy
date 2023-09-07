@@ -37,33 +37,42 @@
             <Badge Count="LicenciasPendientes.Count">
                 <span class="head-example" />
             </Badge>
-            
+
 
         </a>
     </div>
+
+    <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
+
+
+    <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
+
+
+    <Button OnClick="@LicenciasBUscar"></Button>
+
     <GridRow>
         <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
             <Button Type="primary" OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
         </GridCol>
     </GridRow>
     <Table DataSource="LicenciasActivasVM" Bordered>
-        
-        <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Desde"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Hasta"></PropertyColumn>
-        <PropertyColumn Property="c=>c.TipoLicencia"></PropertyColumn>
-        <PropertyColumn Property="c=>c.EstadoLicencia"></PropertyColumn>
+
+        <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.Desde" Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.Hasta" Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.EstadoLicencia" Sortable></PropertyColumn>
 
     </Table>
 </div>
-<Modal Footer="null" Title="@("Licencia")"
+<Modal Footer="null" Title="@("Agregar la licencia")"
        Visible="@_visibleAgregar"
        OnOk="@HandleOkAgregar"
        OnCancel="@HandleCancelAgregar">
-       <LicenciasAlta/>
-       <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
-            Volver
-       </Button>
+    <LicenciasAlta />
+    <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
+        Volver
+    </Button>
 </Modal>
 @code {
     public class LicencasVm
@@ -80,7 +89,8 @@
 
     }
 
-
+    DateTime FechaBuscarI;
+    DateTime FechaBuscarF;
     BomberosDbContext Context { get; set; }
     public LicencasVm LicencasVM = new();
     List<LicencasVm> LicenciasActivasVM = new();
@@ -101,10 +111,10 @@
     private async Task LicenciasActivas()
     {
         LicenciasActivasVM = new();
-        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).ToListAsync();
+        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
         foreach (var l in Licencias)
         {
-            var bombero = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == l.PersonaId);
+
             LicencasVm LicVm = new()
                 {
                     TipoLicencia = l.TipoLicencia,
@@ -112,9 +122,7 @@
                     Desde = l.Desde,
                     Hasta = l.Hasta,
                     EstadoLicencia = l.EstadoLicencia,
-                    NombreYApellido = bombero.Nombre + "," + bombero.Apellido,
-                    PersonalAfectado = bombero
-
+                    NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido,
                 };
             LicenciasActivasVM.Add(LicVm);
         }
@@ -124,6 +132,29 @@
         LicenciasPendientes = new();
         LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
 
+    }
+    private async Task LicenciasBUscar()
+    {
+        LicenciasActivasVM.Clear();
+        foreach (var l in LicenciasActivasVM)
+        {
+            var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
+            if (l.Desde >= FechaBuscarI & l.Hasta <= FechaBuscarF)
+            {
+                LicencasVm LicVm = new()
+                    {
+                        TipoLicencia = l.TipoLicencia,
+                        Descripcion = l.Descripcion,
+                        Desde = l.Desde,
+                        Hasta = l.Hasta,
+                        EstadoLicencia = l.EstadoLicencia,
+                        NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido,
+                    };
+                LicenciasActivasVM.Add(LicVm);
+
+            }
+        }
+        await Init();
     }
     private async void HandleOkAgregar(MouseEventArgs e)
     {
@@ -135,9 +166,15 @@
         _visibleAgregar = false;
         await Init();
     }
-    private void ShowModalAgregar()
+    private async void ShowModalAgregar()
     {
         _visibleAgregar = true;
+        await Init();
+    }
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
     public void Dispose()
     {

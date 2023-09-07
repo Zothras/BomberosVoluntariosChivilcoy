@@ -70,10 +70,10 @@
     private async Task LicenciasPendientes()
     {
         LicenciasActivasVM = new();
-        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
+        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).Include(b=> b.PersonalAfectado).ToListAsync();
         foreach (var l in Licencias)
         {
-            var bombero = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == l.PersonaId);
+            
             LicencasVm LicVm = new()
                 {
                     LicenciaId = l.LicenciaId,
@@ -82,8 +82,8 @@
                     Desde = l.Desde,
                     Hasta = l.Hasta,
                     EstadoLicencia = l.EstadoLicencia,
-                    NombreYApellido = bombero.Nombre + "," + bombero.Apellido,
-                    PersonalAfectado = bombero
+                    NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido
+                   
 
                 };
             LicenciasActivasVM.Add(LicVm);
