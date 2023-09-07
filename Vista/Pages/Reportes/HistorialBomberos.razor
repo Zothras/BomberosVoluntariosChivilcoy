@@ -1,76 +1,89 @@
-﻿@inject NavigationManager navigationManager
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/Reportes/HistorialBomberos"
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.Json;
+@using Vista.Pages.Bomberos;
 
-<div>  
-   <Table @ref="table"
-       TItem="Bombero"
-       DataSource="@bomberos"
-       @bind-SelectedRows="selectedRows"
-       OnChange="OnChange"
-       Total="_total"
-       @bind-PageIndex="_pageIndex"
-       @bind-PageSize="_pageSize">
-      <TitleTemplate>
-        <GridRow>
-            <GridCol Span="4">
-                <Title Level="3">Bomberos</Title>
-            </GridCol>
-        </GridRow>
-      </TitleTemplate>
-      <ColumnDefinitions> 
-        <PropertyColumn Property="c=>c.NumeroLegajo"
-                        DefaultSortOrder="@SortDirection.Descending"
-                        SorterCompare="@((a,b)=> a - b)"/>
-        <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-        <PropertyColumn Property="c=>c.Nombre" Sortable />
-        <PropertyColumn Property="c=>c.Apellido" Sortable />
-        <PropertyColumn Property="c=>c.Documento" Sortable />
-        <PropertyColumn Property="c=>c.Contacto" Sortable />
+<h1>Bomberos</h1>
+
+<div>
+    <Table DataSource="BomberosVM" Bordered>
+
+        <PropertyColumn Property="c=>c.NumeroLegajo"  Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
         <PropertyColumn Property="c=>c.Grado"
                         SortDirections="new[] { SortDirection.Descending }"
                         Filters="EscalafonJerarquicoFilter"
                         OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
-      </ColumnDefinitions>
-   </Table>
+        <PropertyColumn Property="c=>c.TelefonoCel" Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.TelefonoFijo" Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable></PropertyColumn>
+        <PropertyColumn Property="c=>c.Email" Sortable></PropertyColumn>
+
+    </Table>
 </div>
 
 <Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialBomberos/Imprimir"); })" Style="position: absolute;right: 20.4em;top: 49.5em;">Imprimir</Button>
 
-
-
-
 @code {
 
     private Brigada[]? brigadas;
-    string searchString;
+
+    BomberosDbContext Context;
+
+    List<Vista.Data.ViewModels.Personal.BomberoViweModel> todosLosBomberos = new();
+    List<Vista.Data.ViewModels.Personal.BomberoViweModel> Preferencia = new();
+
+    private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
+
     IEnumerable<Bombero> dataSource;
     IEnumerable<Bombero> selectedRows;
     ITable table;
-    List<Bombero>? bomberos = new List<Bombero>();
-    List<Bombero>? bomberosRespaldo = new List<Bombero>();
-    List<string>? bomberosFiltro = new List<string>();
-    private List<Bombero> bomberosFiltrados = new List<Bombero>();
-    private bool busquedaVacia = true;
 
-    private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
+    static DateTime hasta = DateTime.Now;
+    static DateTime desde = hasta.AddMonths(-1);
+
+    List<Vista.Data.ViewModels.Personal.BomberoViweModel>? BomberosVM = new();
+    List<Bombero>? bomberosRespaldo = new List<Bombero>();
 
     int _pageIndex = 1;
     int _pageSize = 10;
     int _total = 0;
 
-    protected override async Task OnInitializedAsync()
+    bool _visible = false;
+    bool _visibleDetalle = false;
+    int idBombero;
+
+    private async Task cargarbomberosVM()
     {
-        using var db = await DbFactory.CreateDbContextAsync();
+        var bomberos = await Context.Bomberos.ToListAsync();
+        foreach (var a in bomberos)
+        {
+            var contacto = await Context.Contactos.Where(c => c.PersonaId == a.PersonaId).SingleOrDefaultAsync();
+            Vista.Data.ViewModels.Personal.BomberoViweModel Bm = new()
+            {
+                NumeroLegajo = a.NumeroLegajo,
+                Nombre = a.Nombre,
+                Apellido = a.Apellido,
+                Grado = a.Grado,
+                TelefonoCel = contacto.TelefonoCel,
+                TelefonoFijo = contacto.TelefonoFijo,
+                TelefonoLaboral = contacto.TelefonoLaboral,
+                Email = contacto.Email
+            };
+            BomberosVM.Add(Bm);
+        }
+    }
 
-        brigadas = await db.Brigadas.ToArrayAsync();
-        bomberos = await db.Bomberos.ToListAsync();
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await cargarbomberosVM();
 
-        bomberosRespaldo = bomberos;
 
         EscalafonJerarquicoFilter = new TableFilter<EscalafonJerarquico>[Enum.GetValues(typeof(EscalafonJerarquico)).Length];
         int i = 0;
@@ -80,107 +93,16 @@
             i++;
         }
 
-
-        StateHasChanged();
     }
 
-    void OnRowClick(RowData<Bombero> row)
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine($"row {row.Data.Brigada.BrigadaId} was clicked");
-    }//Toma el valor del valor de la fila seleccionada
-
-    private async Task OnChange(QueryModel<Bombero> queryModel)
-    {
-        Console.WriteLine(JsonSerializer.Serialize(queryModel));
-        OnInitializedAsync();
+        await Init();
     }
 
-   
-
-    private async void Delete(int id)
+    public void Dispose()
     {
-        using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        context.Remove(bombero);
-        bomberos = bomberos.Where(x => x.NumeroLegajo != id).ToList();
-        _total = bomberos.Count;
-        await context.SaveChangesAsync();
-        StateHasChanged();
-    }
-   
-    
-    private class BomberosViewModel
-    {
-       
-    }
-   
-    private BomberosViewModel bomberoVM = new BomberosViewModel();
-
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(bomberoVM)}");
+        Context?.Dispose();
     }
 
-    bool loading = false;
-
-    void toggle(bool value) => loading = value;
-
-   
-
-    bool _visible = false;
-    bool _visibleDetalle = false;
-    int idBombero;
-  
-    private Form<BomberosViewModel> _form;
-
-
-    private void NevigateToYourUrl()
-    {
-        navigationManager.NavigateTo($"/bomberos", true);
-    }
-
-    private async void GetBomberoViewModel(int id)
-    {
-        using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
-        Bombero? bombero1 = await context.Bomberos
-            .Include(b => b.Contacto)
-            .Where(b => b.NumeroLegajo == id)
-            .SingleOrDefaultAsync();
-
-        BomberosViewModel BomeroPasajeVM = new()
-            {
-            };
-        bomberoVM = BomeroPasajeVM;
-        StateHasChanged();
-    }//Se obtienen los valores de la base de datos al view model
-
-    private void OnSelectedItemChangedHandler(Brigada value)
-    {
-        Console.WriteLine($"selected: ${value?.Nombre}");
-    }
-
-    private void search(string value)
-    {
-        int number;
-
-        bomberosFiltrados = bomberos.Where(d =>
-        d.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-        Enum.GetName(typeof(EscalafonJerarquico), d.Grado).Contains(value, StringComparison.OrdinalIgnoreCase) ||
-        d.Apellido.Contains(value, StringComparison.OrdinalIgnoreCase))
-        .ToList();
-        if (int.TryParse(value, out number))
-        {
-            bomberosFiltrados = bomberos.Where(d => d.NumeroLegajo.Equals(number)).ToList();
-        }
-        bomberos = bomberosFiltrados;
-
-    }
-
-    private void UpdateSearchStatus()
-    {
-        busquedaVacia = string.IsNullOrWhiteSpace(searchString);
-        if (busquedaVacia) bomberos = bomberosRespaldo;
-    }
 }
