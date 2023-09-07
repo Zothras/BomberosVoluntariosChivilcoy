@@ -381,8 +381,8 @@
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
        <p>Imprimir con croquis</p>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{true}"); })">Si</button>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{false}"); })">No</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{true}", true); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{false}", true); })">No</button>
 </Modal>
 
 @code {
