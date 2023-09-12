@@ -287,6 +287,15 @@
     </Form>
 </Modal>
 
+<Modal Title="@("Datos de la carga de Rescate a la persona")"
+       Visible="@imprimirmodal"
+       OnOk="@HandleOkIMP"
+       OnCancel="@HandleCancelIMP">
+    <p>Imprimir con croquis</p>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{PersonaViewModel.NumeroParte}/{true}", true); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{PersonaViewModel.NumeroParte}/{false}", true); })">No</button>
+</Modal>
+
 @code {
     private DamnificadoViewModels damnificado = new();
     private RescatePersonaViewModels PersonaViewModel;
@@ -306,6 +315,7 @@
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
+    bool imprimirmodal;
 
     int BomberoReceptor;
     string NumeroMovil;
@@ -463,11 +473,13 @@
             await Init();
             StateHasChanged();
             await message.Success("salida agregada correctamente");
+            imprimirmodal = true;
         }
 
         catch (Exception ex)
         {
             toastService.ShowError($"Error en la carga: {ex.Message}");
+            imprimirmodal = true;
         }
 
     }
@@ -544,6 +556,7 @@
             await Init();
             StateHasChanged();
             await message.Success("Rescate cargado correctamente");
+            
         }
     
         catch (Exception ex)
@@ -554,6 +567,7 @@
                 await message.Error(ex.InnerException.Message, 5);
             else
                 await message.Error(ex.Message, 5);
+            
         }
 }
 
@@ -683,6 +697,11 @@
 
         _visible = false;
     }
+    private void HandleCancelIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
+    }
     private void OnFinishModel(EditContext editContext)
     {
 
@@ -692,6 +711,12 @@
     {
 
         _visible = false;
+
+    }
+    private void HandleOkIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
 
     }
     void deleteRow(int numlegajo)

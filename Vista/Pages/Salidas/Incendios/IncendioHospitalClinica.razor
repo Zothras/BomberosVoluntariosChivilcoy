@@ -365,9 +365,14 @@
     </Form>
 </Modal>
 
-
-
-
+@* <Modal Title="@("Datos de la carga de Incendio")"
+       Visible="@imprimirmodal"
+       OnOk="@HandleOkIMP"
+       OnCancel="@HandleCancelIMP">
+    <p>Imprimir con croquis</p>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{HospitalClinicaViewModel.NumeroParte}/{true}", true); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{HospitalClinicaViewModel.NumeroParte}/{false}", true); })">No</button>
+</Modal> *@
 
 @code {
     BomberosDbContext Context { get; set; }
@@ -392,6 +397,7 @@
     bool chekM { get; set; }
     bool chekB { get; set; }
     bool _visible1;
+    bool imprimirmodal;
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
@@ -614,6 +620,7 @@
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
+                    imprimirmodal = true;
                 }
             }
         }
@@ -625,6 +632,7 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
+            imprimirmodal = true;
         }
 
 
@@ -745,6 +753,11 @@
 
         _visible = false;
     }
+    private void HandleCancelIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
+    }
     private void OnFinishModel(EditContext editContext)
     {
 
@@ -754,6 +767,12 @@
     {
 
         _visible = false;
+
+    }
+    private void HandleOkIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
 
     }
     private void HandleCancel1(MouseEventArgs e)

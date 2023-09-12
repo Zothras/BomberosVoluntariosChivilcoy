@@ -332,7 +332,14 @@
     </Form>
 </Modal>
 
-
+<Modal Title="@("Datos de la carga de Factores Climaticos")"
+       Visible="@imprimirmodal"
+       OnOk="@HandleOkIMP"
+       OnCancel="@HandleCancelIMP">
+    <p>Imprimir con croquis</p>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelFactorClimatico.NumeroParte}/{true}", true); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelFactorClimatico.NumeroParte}/{false}", true); })">No</button>
+</Modal>
 
 @code
 {
@@ -346,6 +353,7 @@
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
     private Form<MovilSalidaViewModels> _form1;
+    bool imprimirmodal;
 
 
     Bombero[] TodosBomberos;
@@ -471,6 +479,7 @@
             await Init();
             StateHasChanged();
             await message.Success("Salida agregada correctamente");
+            imprimirmodal = true;
         }
         catch (Exception e)
         {
@@ -480,6 +489,7 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
+            imprimirmodal = true;
 
         }
     }
@@ -681,6 +691,11 @@
 
         _visible = false;
     }
+    private void HandleCancelIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
+    }
     private void OnFinishModel(EditContext editContext)
     {
 
@@ -690,6 +705,12 @@
     {
 
         _visible = false;
+
+    }
+    private void HandleOkIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
 
     }
     void deleteRow(int numlegajo)

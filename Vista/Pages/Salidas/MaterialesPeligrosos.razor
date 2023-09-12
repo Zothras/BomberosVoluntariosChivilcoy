@@ -539,6 +539,14 @@
         }
     </div>
 </div>
+<Modal Title="@("Datos de la carga de Materiales Peligrosos")"
+       Visible="@imprimirmodal"
+       OnOk="@HandleOkIMP"
+       OnCancel="@HandleCancelIMP">
+       <p>Imprimir con croquis</p>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelMateriales.NumeroParte}/{true}", true); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelMateriales.NumeroParte}/{false}", true); })">No</button>
+</Modal>
 
 @code
 {
@@ -549,6 +557,7 @@
     bool visibleDamnificados = true;
     bool visibleVerDamnificados;
     private string animationClass = "";
+    bool imprimirmodal;
 
     BomberosDbContext Context { get; set; }
     private DamnificadoViewModels damnificado = new();
@@ -767,6 +776,7 @@
             await Init();
             StateHasChanged();
             await message.Success("Salida agregada correctamente");
+            imprimirmodal = true;
         }
         catch (Exception e)
         {
@@ -776,6 +786,7 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
+            imprimirmodal = true;
         }
     }
 
@@ -933,6 +944,12 @@
         switchMoviles = false;
         desactivarSwitch = false;
     }
+
+    private void HandleCancelIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
+    }
     
     private void HandleOk(MouseEventArgs e)
     {
@@ -948,6 +965,13 @@
     private void HandleOkD(MouseEventArgs e)
     {
         visibleDamnificados = false;
+    }
+
+    private void HandleOkIMP(MouseEventArgs e)
+    {
+
+        imprimirmodal = false;
+
     }
     private void HandleCancelD(MouseEventArgs e)
     {
