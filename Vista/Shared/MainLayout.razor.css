@@ -1,3 +1,5 @@
+
+
 .page {
     position: relative;
     display: flex;
@@ -66,5 +68,23 @@ main {
     .top-row, article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
+    }
+}
+#ant-blazor-55972f7b-a09f-4205-abf7-00de4296d726 {
+    margin-left: 80px !important;
+}
+@media screen and (max-width: 375px) {
+
+    .ant-layout-has-sider .side-cont {
+        display: none !important;
+        position: unset !important;
+    }
+
+    #ant-blazor-9319d8f9-cf4c-45fc-b600-01ac942c4432 {
+        display: none !important;
+    }
+
+    .body-sect {
+        margin-left: 0 !important;
     }
 }

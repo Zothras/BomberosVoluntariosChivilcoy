@@ -20,8 +20,8 @@
         display: flex !important;
     }
 
-    .ant-input-number{
-        width: auto!important;
+    .ant-input-number {
+        width: auto !important;
     }
 
     .steps-content {
@@ -67,14 +67,14 @@
     }
 </style>
 
-<div style="width: 40%;">
-    <Steps Current="current" ShowProgressDot>
+<div style="max-width: 40%;">
+    <Steps Current="current">
         @foreach (var item in steps)
         {
             <Step Title="@item.Title" Subtitle="@item.Content" />
         }
     </Steps>
-    <div class="steps-content" style="height: 100%;width: 100%;padding: 10px;min-width: 395px!important;">
+    <div class="steps-content" style="height: 100%;width: 100%;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
         <Form Model="@modelMateriales"
               LabelColSpan="8"
               WrapperColSpan="16"
@@ -194,28 +194,28 @@
                            OnCancel="@HandleCancelVD">
                         <div class="inpt-cont">
                             <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                                 <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                                 <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                                 <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-                                 <ActionColumn Title="Acciones">
-                                     <Popconfirm Title="¿Quieres borrar este damnificado?"
-                                                 OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                                                 OkText="Si"
-                                                 CancelText="No"
-                                                 Style="display: flex;justify-content: center;align-items: center;">
-                                         <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                                     </Popconfirm>
-                                 </ActionColumn>
-                            </Table>
-                        </div>
-                    </Modal>
+                             <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                             <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                             <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                             <ActionColumn Title="Acciones">
+                                 <Popconfirm Title="¿Quieres borrar este damnificado?"
+                                             OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                             OkText="Si"
+                                             CancelText="No"
+                                             Style="display: flex;justify-content: center;align-items: center;">
+                                     <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                 </Popconfirm>
+                             </ActionColumn>
+                         </Table>
+                     </div>
+                 </Modal>
 
-                    @if (switchValue == true)
+                 @if (switchValue == true)
                     {
                         <Modal Footer="null" Title="@("Datos del damnificado")"
-                                Visible="@visibleDamnificados"
-                                OnOk="@HandleOkD"
-                                OnCancel="@HandleCancelD">
+                               Visible="@visibleDamnificados"
+                               OnOk="@HandleOkD"
+                               OnCancel="@HandleCancelD">
                             <div class="inpt-cont-inline">
                                 <div class="inpt-cont">
                                     <label class="inpt-cont--lbl">Nombre</label>
@@ -279,38 +279,38 @@
             {
                 <div class="slick-contenedor @animationClass">
                     <h6>Datos del chofer</h6>
-                    
+
                     <div class="inpt-cont-inline">
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Elija el chofer</label>
                             <Select TItem="BomberoViweModel"
                                     TItemValue="int"
                                     DataSource="@bomberoChoferes"
-                                    @bind-Value="@chofer"
+                            @bind-Value="@chofer"
                                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                     Placeholder="Selecione a un bombero"
                                     DefaultActiveFirstOption="false"
                                     AllowClear="true"
-                                    EnableSearch>
-                             </Select>
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Numero de movil</label>
-                            <Select TItem="Movil"
-                                    TItemValue="string"
-                                    DataSource="@Moviles"
-                                    @bind-Value="@NumeroMovil"
-                                    LabelName="@nameof(Movil.NumeroMovil)"
-                                    ValueName="@nameof(Movil.NumeroMovil)"
-                                    Placeholder="Selecione el movil"
-                                    DefaultActiveFirstOption="false"
-                                    AllowClear="true"
-                                    EnableSearch>
-                            </Select>
-                        </div>
-                    </div>
-                    @if (NumeroMovil is not null)
+                                                    EnableSearch>
+                         </Select>
+                     </div>
+                     <div class="inpt-cont">
+                         <label class="inpt-cont--lbl">Numero de movil</label>
+                         <Select TItem="Movil"
+                                 TItemValue="string"
+                                 DataSource="@Moviles"
+                         @bind-Value="@NumeroMovil"
+                                 LabelName="@nameof(Movil.NumeroMovil)"
+                                 ValueName="@nameof(Movil.NumeroMovil)"
+                                 Placeholder="Selecione el movil"
+                                 DefaultActiveFirstOption="false"
+                                 AllowClear="true"
+                                                    EnableSearch>
+                         </Select>
+                     </div>
+                 </div>
+                 @if (NumeroMovil is not null)
                     {
                         foreach (Movil m in Moviles)
                         {
@@ -331,75 +331,77 @@
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Kilometro de salida</label>
                             <AntDesign.InputNumber @bind-Value="modelMateriales.Kilometraje" Disabled />
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Kilometro de llegada</label>
-                            <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
-                        </div>
-                    </div>
-                     <div class="inpt-cont">
-                             <label class="inpt-cont--lbl">¿Cargo combustible?</label>
-                             <Switch @bind-Checked="switchMoviles" Disabled="@desactivarSwitch" Style="width: 10px!important;" />
-                         @if (switchMoviles == true)
-                         {
-                                <Modal Title="@("Datos de la carga de combustible")"
-                                       Visible="@_visible"
-                                       OnOk="@HandleOk"
-                                       OnCancel="@HandleCancelMovil">
-                                    <Form Loading="loading" Model="@movilSalidaViewModels"
-                                          LabelColSpan="8"
-                                          WrapperColSpan="16"
-                                          OnFinish="OnFinishModel"
-                                          OnFinishFailed="OnFinishFailed"
-                                          @ref="@_form1" Context="modalMoviles">
-                                        <FormItem Label="Numero factura">
-                                            <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
-                                        </FormItem>
-                                        <FormItem Label="Fecha factura">
-                                            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
-                                        </FormItem>
-                                        <FormItem Label="Tipo Combustible">
-                                            <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
-                                        </FormItem>
-                                        <FormItem Label="Cantidad de Litros">
-                                            <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
-                                        </FormItem>
-                                        <FormItem Label="Quien lleno">
-                                            <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
-                                        </FormItem>
-                                        <FormItem Label="TelefonoQuienLleno">
-                                            <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
-                                        </FormItem>
-                                    </Form>
-                                </Modal>
-                             }
+                         </div>
+                         <div class="inpt-cont">
+                             <label class="inpt-cont--lbl">Kilometro de llegada</label>
+                             <AntDesign.InputNumber @bind-Value="modelMateriales.KmLlegada" />
+                         </div>
                      </div>
-                    <Button OnClick="@AgregarMovilSalida">Cargar movil</Button>
+                     <div class="inpt-cont">
+                         <label class="inpt-cont--lbl">¿Cargo combustible?</label>
+                         <Switch @bind-Checked="switchMoviles" Disabled="@desactivarSwitch" Style="width: 10px!important;" />
+                         @if (switchMoviles == true)
+                        {
+                            <Modal Title="@("Datos de la carga de combustible")"
+                                   Visible="@_visible"
+                                   OnOk="@HandleOk"
+                                   OnCancel="@HandleCancelMovil">
+                                <Form Loading="loading" Model="@movilSalidaViewModels"
+                                      LabelColSpan="8"
+                                      WrapperColSpan="16"
+                                      OnFinish="OnFinishModel"
+                                      OnFinishFailed="OnFinishFailed"
+                                @ref="@_form1" Context="modalMoviles">
+                                    <FormItem Label="Numero factura">
+                                        <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
+                                    </FormItem>
+                                    <FormItem Label="Fecha factura">
+                                        <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+                                    </FormItem>
+                                    <FormItem Label="Tipo Combustible">
+                                        <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
+                                    </FormItem>
+                                    <FormItem Label="Cantidad de Litros">
+                                        <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
+                                    </FormItem>
+                                    <FormItem Label="Quien lleno">
+                                        <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
+                                    </FormItem>
+                                    <FormItem Label="TelefonoQuienLleno">
+                                        <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
+                                    </FormItem>
+                                </Form>
+                            </Modal>
+                        }
+                    </div>
+                    <div class="inpt-cont">
+                        <Button OnClick="@AgregarMovilSalida">Cargar movil</Button>
+                    </div>
                     @if (MovilesSalidasL is not null)
                     {
                         <div>
                             <Table Size="TableSize.Small" PageSize="3" Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
-                                 <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-                                 <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
-                                 <ActionColumn Title="Acciones">
-                                    <Popconfirm Title="¿Quieres borrar este movil?"
-                                                 OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                                                 OkText="Si"
-                                                 CancelText="No">
-                                        <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                                    </Popconfirm>
-                                 </ActionColumn>
-                            </Table>
-                        </div>                        
+                             <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+                             <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
+                             <ActionColumn Title="Acciones">
+                                 <Popconfirm Title="¿Quieres borrar este movil?"
+                                             OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                                             OkText="Si"
+                                             CancelText="No">
+                                     <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                 </Popconfirm>
+                             </ActionColumn>
+                         </Table>
+                     </div>
                     }
                 </div>
             }
             else if (current == 4)
             {
                 <div class="slick-contenedor @animationClass">
-                    @*Cuerpos paraticipantes*@
-                    <b><label>Cuerpo Participante</label></b>
-                    <FormItem Label="Elija el bombero">
+                    <h6>Cuerpo Participante</h6>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Elija el bombero</label>
                         <Select TItem="BomberoViweModel"
                                 TItemValue="int"
                                 DataSource="@bomberoTodos"
@@ -409,118 +411,124 @@
                                 Placeholder="Selecione un bombero"
                                 DefaultActiveFirstOption="false"
                                 AllowClear="true" EnableSearch>
-                     </Select>
-                 </FormItem>
-                 <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
-                 <br />
-                 <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
-                 <br />
-                 <div>
-                     <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
-                         <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-                         <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-                         <ActionColumn Title="Acciones">
-                             <Popconfirm Title="Sure to delete?"
-                                         OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                                         OkText="Yes"
-                                         CancelText="No">
-                                 <a>Delete</a>
-                             </Popconfirm>
-                         </ActionColumn>
-                     </Table>
-                 </div>
-                 <b><label>Elija al encargado</label></b>
-                 <FormItem Label="Encargado">
-                     <Select TItem="BomberoViweModel"
-                             TItemValue="int"
-                             DataSource="@bomberoTodos"
-                     @bind-Value="@BomberoEncargado"
-                             LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                             ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                             Placeholder="Seleccione  a un  bombero"
-                             DefaultActiveFirstOption="true"
-                             AllowClear="true" EnableSearch>
-                     </Select>
-                 </FormItem>
-                 <b><label>Quien lleno planilla</label></b>
-                 <FormItem Label="Bombero que lleno la planilla">
-                     <Select TItem="BomberoViweModel"
-                             TItemValue="int"
-                             DataSource="@bomberoTodos"
-                     @bind-Value="@QuienLLenoPlanilla"
-                             LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                             ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                             Placeholder="Seleccione  a un  bombero"
-                             DefaultActiveFirstOption="false"
-                             AllowClear="true"
-                                        EnableSearch>
-                     </Select>
-                 </FormItem>
-             </div>
+                         </Select>
+                    </div>
+                    <div class="inpt-cont">
+                         <Checkbox @bind-Checked="chekB">¿Salió?</Checkbox>
+                    </div>
+                    <div class="inpt-cont">
+                         <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
+                    </div>
+                     <div class="inpt-cont">
+                         <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="3" DataSource="bomberosSalida" Bordered>
+                             <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+                             <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+                             <ActionColumn Title="Acciones">
+                                 <Popconfirm Title="¿Quieres eliminar este bombero?"
+                                             OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                                             OkText="Si"
+                                             CancelText="No">
+                                 <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                 </Popconfirm>
+                             </ActionColumn>
+                         </Table>
+                     </div>
+                     <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Encargado</label>
+                             <Select TItem="BomberoViweModel"
+                                     TItemValue="int"
+                                     DataSource="@bomberoTodos"
+                                    @bind-Value="@BomberoEncargado"
+                                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                     Placeholder="Seleccione  a un  bombero"
+                                     DefaultActiveFirstOption="true"
+                                     AllowClear="true" EnableSearch>
+                             </Select>
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Bombero que lleno la planilla</label>
+                            <Select TItem="BomberoViweModel"
+                                     TItemValue="int"
+                                     DataSource="@bomberoTodos"
+                                     @bind-Value="@QuienLLenoPlanilla"
+                                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                     Placeholder="Seleccione un bombero"
+                                     DefaultActiveFirstOption="false"
+                                     AllowClear="true"
+                                     EnableSearch>
+                            </Select>
+                        </div>
+                    </div>
+                </div>
             }
             else if (current == 5)
             {
                 <div class="slick-contenedor @animationClass">
-                    <FormItem Label="Tipo Servicio salida">
-                        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelMateriales.TipoServicio" />
-                    </FormItem>
-                    @*propio de la salida de tipo material*@
-                    <FormItem Label="Tipo material">
-                        <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
-                    </FormItem>
-                    <FormItem Label="Sustancias">
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Tipo de servicio</label>
+                            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelMateriales.TipoServicio" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Tipo de material</label>
+                            <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
+                        </div>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Sustancias</label>
                         <Input @bind-Value="modelMateriales.Sustancias" />
-                    </FormItem>
-                    <b><label>Acciones sobre los materiales</label></b>
-
-                    <Checkbox Label="Controlada" @bind-Value="@modelMateriales.Controlada">Controlada</Checkbox>
-
-                    <Checkbox Label="Venteo" @bind-Value="@modelMateriales.Venteo">Venteo</Checkbox>
-
-                    <Checkbox Label="DilucionDeVapores" @bind-Value="@modelMateriales.DilucionDeVapores">DilucionDeVapores</Checkbox>
-
-                    <Checkbox Label="Neutralizacion" @bind-Value="@modelMateriales.Neutralizacion">Neutralizacion</Checkbox>
-
-                    <Checkbox Label="Trasvase" @bind-Value="@modelMateriales.Trasvase">Trasvase</Checkbox>
-
-                    <Checkbox Label="otro" @bind-Value="@modelMateriales.OtraAccionesMateriales">OtraAccionesMateriales</Checkbox>
-
-                    <FormItem Label="Detalles Acciones">
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Acciones sobre materiales</label>
+                        <div class="inpt-cont" style="flex-direction: row;flex-wrap: wrap;">
+                            <Checkbox Label="Controlada" @bind-Value="@modelMateriales.Controlada">Controlada</Checkbox>
+                            <Checkbox Label="Venteo" @bind-Value="@modelMateriales.Venteo">Venteo</Checkbox>
+                            <Checkbox Label="DilucionDeVapores" @bind-Value="@modelMateriales.DilucionDeVapores">DilucionDeVapores</Checkbox>
+                            <Checkbox Label="Neutralizacion" @bind-Value="@modelMateriales.Neutralizacion">Neutralizacion</Checkbox>
+                            <Checkbox Label="Trasvase" @bind-Value="@modelMateriales.Trasvase">Trasvase</Checkbox>
+                            <Checkbox Label="otro" @bind-Value="@modelMateriales.OtraAccionesMateriales">OtraAccionesMateriales</Checkbox>
+                        </div>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Detalles de acciones</label>
                         <Input @bind-Value="modelMateriales.DetallesAccionesMateriales" />
-                    </FormItem>
-                    @*Acciones sobre personas*@
-                    <FormItem Label="Tipo Evacuacion">
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo evacuacion</label>
                         <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
-                    </FormItem>
-                    <br />
-                    <b><label>Acciones sobre personas</label></b>
-                    <Checkbox Label="Confinamiento" @bind-Value="@modelMateriales.Confinamiento">Confinamiento</Checkbox>
-
-                    <Checkbox Label="Descontaminacion" @bind-Value="@modelMateriales.Descontaminacion">Descontaminacion</Checkbox>
-
-                    <Checkbox Label="SinAccion" @bind-Value="@modelMateriales.SinAccion">SinAccion</Checkbox>
-
-                    <Checkbox Label="OtraAccionesPersonas" @bind-Value="@modelMateriales.OtraAccionesPersonas">OtraAccionesPersonas</Checkbox>
-
-                    <FormItem Label="Tipo Superficie">
-                        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
-                    </FormItem>
-                    <FormItem Label="Detalles Surpeficie Afectada ">
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Acciones sobre personas</label>
+                        <div class="inpt-cont" style="flex-direction: row;flex-wrap: wrap;">
+                            <Checkbox Label="Confinamiento" @bind-Value="@modelMateriales.Confinamiento">Confinamiento</Checkbox>
+                            <Checkbox Label="Descontaminacion" @bind-Value="@modelMateriales.Descontaminacion">Descontaminacion</Checkbox>
+                            <Checkbox Label="SinAccion" @bind-Value="@modelMateriales.SinAccion">SinAccion</Checkbox>
+                            <Checkbox Label="OtraAccionesPersonas" @bind-Value="@modelMateriales.OtraAccionesPersonas">OtraAccionesPersonas</Checkbox>
+                        </div>
+                    </div>
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Tipo de superficie</label>
+                            <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Tipo de evacuacion</label>
+                            <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
+                        </div>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Detalles de surpeficie afectada</label>
                         <Input @bind-Value="modelMateriales.DetalleSuperficieAfectada" />
-                    </FormItem>
-                    <FormItem Label="Tipo Evacuacion">
-                        <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
-                    </FormItem>
-                    <FormItem Label="">
-                        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
-                            Cargar salida
-                        </Button>
-                    </FormItem>
+                    </div>
+                    <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
+                        Cargar salida
+                    </Button>
                 </div>
             }
         </Form>
-
-        
     </div>
     <div class="steps-action">
         @if (current > 0)
@@ -539,25 +547,16 @@
         }
     </div>
 </div>
-<Modal Title="@("Datos de la carga de Materiales Peligrosos")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
-       <p>Imprimir con croquis</p>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelMateriales.NumeroParte}/{true}", true); })">Si</button>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelMateriales.NumeroParte}/{false}", true); })">No</button>
-</Modal>
 
 @code
 {
     public int current { get; set; } = 0;
     bool loading = false;
-    bool _visible {get; set;} = true;
+    bool _visible { get; set; } = true;
     bool desactivarSwitch { get; set; }
     bool visibleDamnificados = true;
     bool visibleVerDamnificados;
     private string animationClass = "";
-    bool imprimirmodal;
 
     BomberosDbContext Context { get; set; }
     private DamnificadoViewModels damnificado = new();
@@ -574,7 +573,7 @@
     Movil[]? Moviles;
 
     bool switchValue { get; set; }
-    bool switchMoviles { get; set; } 
+    bool switchMoviles { get; set; }
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
@@ -776,7 +775,6 @@
             await Init();
             StateHasChanged();
             await message.Success("Salida agregada correctamente");
-            imprimirmodal = true;
         }
         catch (Exception e)
         {
@@ -786,7 +784,6 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-            imprimirmodal = true;
         }
     }
 
@@ -896,12 +893,12 @@
 
     public StepItem[] steps =
     {
-        new StepItem {Title = " ", Content = "Datos generales"},
-        new StepItem {Title = " ", Content = "Participantes"},
-        new StepItem {Title = " ", Content = "Seguros"},
-        new StepItem {Title = " ", Content = "Vehiculos"},
-        new StepItem {Title = " ", Content = "Personal"},
-        new StepItem {Title = " ", Content = "Materiales"}
+        new StepItem {Title = " ", Content = ""}, /* Datos generales */
+        new StepItem {Title = " ", Content = ""}, /* Participantes */
+        new StepItem {Title = " ", Content = ""}, /* Seguros */
+        new StepItem {Title = " ", Content = ""}, /* Vehiculos */
+        new StepItem {Title = " ", Content = ""}, /* Personal */
+        new StepItem {Title = " ", Content = ""}  /* Materiales */
     };
 
     private void ToggleAnimationD()
@@ -945,12 +942,6 @@
         desactivarSwitch = false;
     }
 
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
-
-        imprimirmodal = false;
-    }
-    
     private void HandleOk(MouseEventArgs e)
     {
         _visible = false;
@@ -965,13 +956,6 @@
     private void HandleOkD(MouseEventArgs e)
     {
         visibleDamnificados = false;
-    }
-
-    private void HandleOkIMP(MouseEventArgs e)
-    {
-
-        imprimirmodal = false;
-
     }
     private void HandleCancelD(MouseEventArgs e)
     {
