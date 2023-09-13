@@ -8,26 +8,33 @@
 @using System.Text.Json;
 @using Vista.Pages.Bomberos;
 
-<h1>Bomberos</h1>
-
 <div>
     <Table DataSource="BomberosVM" Bordered>
 
-        <PropertyColumn Property="c=>c.NumeroLegajo"  Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.Grado"
-                        SortDirections="new[] { SortDirection.Descending }"
-                        Filters="EscalafonJerarquicoFilter"
-                        OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
-        <PropertyColumn Property="c=>c.TelefonoCel" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.TelefonoFijo" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.Email" Sortable></PropertyColumn>
+        <TitleTemplate>
+            <GridRow>
+                <GridCol Span="4">
+                    <Title Level="3">Bomberos</Title>
+                </GridCol>
+            </GridRow>
+        </TitleTemplate>
 
+        <ColumnDefinitions>
+            <PropertyColumn Property="c=>c.NumeroLegajo" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Grado"
+                            SortDirections="new[] { SortDirection.Descending }"
+                            Filters="EscalafonJerarquicoFilter"
+                            OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+            <PropertyColumn Property="c=>c.TelefonoCel" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.TelefonoFijo" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Email" Sortable></PropertyColumn>
+        </ColumnDefinitions>
     </Table>
 </div>
 
-<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialBomberos/Imprimir"); })" Style="position: absolute;right: 20.4em;top: 49.5em;">Imprimir</Button>
+<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialBomberos/Imprimir"); })" Style="position: absolute;right: 25em;top: 2em;">Imprimir</Button>
 
 @code {
 

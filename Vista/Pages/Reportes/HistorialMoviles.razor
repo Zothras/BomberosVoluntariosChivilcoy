@@ -1,5 +1,5 @@
-﻿@inject NavigationManager navigationManager
-@implements IDisposable
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService _message
 @page "/Reportes/HistorialMoviles"
@@ -7,7 +7,6 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 @using Vista.Data.ViewModels.Personal;
-
 
 <div>
     <Table DataSource="MovilesSalidas" Bordered>
@@ -39,6 +38,7 @@
 
     </Table>
 </div>
+
 
 <style>
     .nombreClase {
@@ -78,8 +78,8 @@
     static DateTime hasta = DateTime.Now;
     static DateTime desde = hasta.AddMonths(-1);
 
-    IEnumerable<HistorialMoviles> dataSource;
-    IEnumerable<HistorialMoviles> selectedRows;
+    IEnumerable<Movil> dataSource;
+    IEnumerable<Movil> selectedRows;
     ITable table;
 
     int _pageIndex = 1;
@@ -103,30 +103,23 @@
 
     private async Task CargarSalidasMovil(List<MovilSalidaViewModel> a)
     {
-        MovilesSalidas.Clear();
-        using (var context = DbFactory.CreateDbContext())
+        a.Clear();
+        using var context = DbFactory.CreateDbContext();
+        var movilsalidaVM = await Context.Set<MovilSalida>().Include(m => m.Salida).ToArrayAsync();
+        foreach (var s in movilsalidaVM)
         {
-            var movilsalidaVM = await Context.Set<MovilSalida>().Include(m => m.Salida).ToArrayAsync();
-            if (movilsalidaVM != null)
-            {
-                foreach (var s in movilsalidaVM)
+            var movil = await Context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == s.MovilId);
+            MovilSalidaViewModel msvm = new()
                 {
-                    var movil = await context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == s.MovilId);
-
-                    MovilSalidaViewModel msvm = new()
-                        {
-                            CargoCombustible = s.CargoCombustible,
-                            Kilometraje = s.KmLlegada,
-                            NumeroParte = s.Salida.NumeroParte,
-                            NumeroMovil = movil.NumeroMovil,
-                            Hrllegada = s.Salida.HoraSalida
-                        };
-                    MovilesSalidas.Add(msvm);
-                    StateHasChanged();
-                }
-            }
+                    CargoCombustible = s.CargoCombustible,
+                    Kilometraje = s.KmLlegada,
+                    NumeroParte = s.Salida.NumeroParte,
+                    NumeroMovil = movil.NumeroMovil,
+                    Hrllegada = s.Salida.HoraSalida
+                };
+            a.Add(msvm);
         }
-       
+        StateHasChanged();
     }
 
     private void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> a)
@@ -149,18 +142,15 @@
 
     private async Task Init()
     {
-
-        MovilSalidaViewModels = new();
-        Context = DbFactory.CreateDbContext();
-        moviles = await Context.Moviles.ToArrayAsync();
-
+        //moviles = await Context.Moviles.ToArrayAsync();
+        CargarSalidasMovil(Preferencia);
+        CargarSalidasMovil(todosLosMoviles);
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
     {
         await Init();
-        CargarSalidasMovil(Preferencia);
-        CargarSalidasMovil(todosLosMoviles);
     }
 
     public void Dispose()
