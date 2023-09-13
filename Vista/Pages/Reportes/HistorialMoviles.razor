@@ -23,17 +23,7 @@
             <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.Hrllegada" Sortable></PropertyColumn>
-
-
-
-            @if (context.CargoCombustible == true)
-            {
-                <PropertyColumn Property="c=>c.CargoCombustible">Cargo</PropertyColumn>
-            }
-            else
-            {
-                <PropertyColumn Property="c=>c.CargoCombustible">No Cargo</PropertyColumn>
-            }
+            <PropertyColumn Property="c=>c.CargoCombustibleTexto"Sortable> cargo </PropertyColumn>
          </ColumnDefinitions> 
 
     </Table>
@@ -57,23 +47,22 @@
         </Button>
     </p>
 
-    <p class="nombreClase">
+ @*   <p class="nombreClase">
         <Button OnClick="() => CargarSalidasMovil(Preferencia)">
             Mostrar todos
         </Button>
-    </p>
+    </p>*@
 
 </div>
 
-<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir"); })" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
+<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir");})" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
 
 @code {
-    Movil[] moviles;
-
+    List<MovilSalida> moviles = new List<MovilSalida>();
     List<MovilSalidaViewModel> todosLosMoviles = new List<MovilSalidaViewModel>();
     List<MovilSalidaViewModel> Preferencia = new List<MovilSalidaViewModel>();
 
-    BomberosDbContext Context { get; set; }
+    BomberosDbContext Context;
 
     static DateTime hasta = DateTime.Now;
     static DateTime desde = hasta.AddMonths(-1);
@@ -95,16 +84,26 @@
         public string NumeroMovil { get; set; }
         public DateTime? Hrllegada { get; set; }
 
+        public string CargoCombustibleTexto
+        {
+            get
+            {
+                if (CargoCombustible)
+                    return "si";
+                else
+                    return "no";
+            }
+        }
+
     }
 
     private MovilSalidaViewModel MovilSalidaViewModels { get; set; } = new();
 
     List<MovilSalidaViewModel>  MovilesSalidas { get; set; } = new();
 
-    private async Task CargarSalidasMovil(List<MovilSalidaViewModel> a)
+    private async Task CargarSalidasMovil()
     {
-        a.Clear();
-        using var context = DbFactory.CreateDbContext();
+        MovilesSalidas.Clear();
         var movilsalidaVM = await Context.Set<MovilSalida>().Include(m => m.Salida).ToArrayAsync();
         foreach (var s in movilsalidaVM)
         {
@@ -117,7 +116,7 @@
                     NumeroMovil = movil.NumeroMovil,
                     Hrllegada = s.Salida.HoraSalida
                 };
-            a.Add(msvm);
+            MovilesSalidas.Add(msvm);
         }
         StateHasChanged();
     }
@@ -142,10 +141,9 @@
 
     private async Task Init()
     {
-        //moviles = await Context.Moviles.ToArrayAsync();
-        CargarSalidasMovil(Preferencia);
-        CargarSalidasMovil(todosLosMoviles);
-        StateHasChanged();
+        Context = DbFactory.CreateDbContext();
+        //var moviles = await Context.Set<MovilSalida>().ToListAsync();
+        await CargarSalidasMovil();
     }
 
     protected override async Task OnInitializedAsync()
