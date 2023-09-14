@@ -8,61 +8,95 @@
 @using System.Text.Json;
 @using Vista.Data.ViewModels.Personal;
 
-<div>
-    <Table DataSource="MovilesSalidas" Bordered>
-        <TitleTemplate>
-            <GridRow>
-                <GridCol Span="4">
-                    <Title Level="3">Moviles</Title>
-                </GridCol>
-            </GridRow>
-        </TitleTemplate>
-
-         <ColumnDefinitions>
-            <PropertyColumn Property="c=>c.NumeroMovil" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Hrllegada" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.CargoCombustibleTexto"Sortable> cargo </PropertyColumn>
-         </ColumnDefinitions> 
-
-    </Table>
-</div>
-
-
 <style>
-    .nombreClase {
-        display: inline-block;
+    .inpt-cont--lbl {
+        min-width: 170px;
+        text-align: start;
+        font-weight: bold;
+        overflow: hidden !important;
     }
+
+    .inpt-cont {
+        min-width: 170px;
+        display: flex;
+        flex-direction: column;
+        padding: .3em 0;
+        width: 100%;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont-inline {
+        min-width: 170px;
+        display: flex;
+        gap: 1em;
+        padding: .3em 0;
+        overflow: hidden !important;
+    }
+
+    .botonesCont{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
 </style>
 
-<div style="display: flex;justify-content: space-evenly;width:80%;padding:1em 9em 0.1em 5em">
-    <p class="nombreClase"> Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
+<EditForm Model="this">
+    <div>
+        <Table DataSource="MovilesSalidas" PageSize="6" Bordered>
+            <TitleTemplate>
+                <div class="botonesCont">
+                    <div class="inpt-cont-inline">
+                        <div>
+                            <label class="inpt-cont--lbl">Desde: </label>
+                            <InputDate class="inpt-cont" @bind-Value="fechaInicio" />
+                        </div>
+                        <div>
+                            <label class="inpt-cont--lbl">Hasta: </label>
+                            <InputDate class="inpt-cont" @bind-Value="fechaFin" />
+                        </div>
+                        <div>
+                            <Button OnClick="()=> FiltrarResultados(fechaInicio, fechaFin)">
+                                Filtrar
+                            </Button>
+                        </div>
+                    </div>
 
-    <p class="nombreClase">Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
+                    <div>
+                        <Button OnClick="() => CargarSalidasMovil()">
+                            Mostrar todos
+                        </Button>
+                    </div>
+                </div>
+            </TitleTemplate>
+    
+            <ColumnDefinitions Context="muestra">
+                <PropertyColumn Property="c=>c.NumeroMovil" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Hrllegada" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.CargoCombustibleTexto" Sortable> cargo </PropertyColumn>
+            </ColumnDefinitions> 
 
-    <p class="nombreClase">
-        <Button OnClick="()=> mostrar_eleccion(desde,hasta,Preferencia)">
-            Buscar
-        </Button>
-    </p>
+        </Table>
+    </div>
+    
 
- @*   <p class="nombreClase">
-        <Button OnClick="() => CargarSalidasMovil(Preferencia)">
-            Mostrar todos
-        </Button>
-    </p>*@
-
-</div>
-
-<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir");})" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
+    
+    <Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir");})" Style="position: absolute;right: 20em;top: 2em;">Imprimir</Button>
+</EditForm>
 
 @code {
-    List<MovilSalida> moviles = new List<MovilSalida>();
-    List<MovilSalidaViewModel> todosLosMoviles = new List<MovilSalidaViewModel>();
-    List<MovilSalidaViewModel> Preferencia = new List<MovilSalidaViewModel>();
-
     BomberosDbContext Context;
+    List<MovilSalida> moviles = new List<MovilSalida>();
+    List<MovilSalidaViewModel> MovilesSalidas { get; set; } = new();
+    private MovilSalidaViewModel MovilSalidaViewModels { get; set; } = new();
+
+    DateTime FechaBuscarD;
+    DateTime FechaBuscarH;
+
+    private DateTime fechaInicio;
+    private DateTime fechaFin;
 
     static DateTime hasta = DateTime.Now;
     static DateTime desde = hasta.AddMonths(-1);
@@ -82,6 +116,8 @@
         public int Kilometraje { get; set; }
         public int NumeroParte { get; set; }
         public string NumeroMovil { get; set; }
+        //public DateTime Desde { get; set; }
+        //public DateTime Hasta { get; set; }
         public DateTime? Hrllegada { get; set; }
 
         public string CargoCombustibleTexto
@@ -96,10 +132,6 @@
         }
 
     }
-
-    private MovilSalidaViewModel MovilSalidaViewModels { get; set; } = new();
-
-    List<MovilSalidaViewModel>  MovilesSalidas { get; set; } = new();
 
     private async Task CargarSalidasMovil()
     {
@@ -121,22 +153,10 @@
         StateHasChanged();
     }
 
-    private void mostrar_eleccion(DateTime d, DateTime h, List<MovilSalidaViewModel> a)
+    private void FiltrarResultados(DateTime fechaInicio, DateTime fechaFin)
     {
-        int desde;
-        int hasta;
-        a.Clear();
-        for (int i = 0; i < todosLosMoviles.Count; i++)
-        {
-            if (todosLosMoviles[i].Hrllegada == null) continue;
-            desde = DateTime.Compare(d, (DateTime)todosLosMoviles[i].Hrllegada);
-            hasta = DateTime.Compare(h, (DateTime)todosLosMoviles[i].Hrllegada);
-            if (desde <= 0 && hasta >= 0)
-            {
-                a.Add(todosLosMoviles[i]);
-            }
-        }
-        StateHasChanged();
+        var resultadosFiltrados = MovilesSalidas.Where(m => m.Hrllegada >= fechaInicio && m.Hrllegada <= fechaFin).ToList();
+        MovilesSalidas = resultadosFiltrados;
     }
 
     private async Task Init()
