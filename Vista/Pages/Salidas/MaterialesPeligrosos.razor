@@ -483,14 +483,20 @@
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Acciones sobre materiales</label>
-                        <div class="inpt-cont" style="flex-direction: row;flex-wrap: wrap;">
-                            <Checkbox Label="Controlada" @bind-Value="@modelMateriales.Controlada">Controlada</Checkbox>
-                            <Checkbox Label="Venteo" @bind-Value="@modelMateriales.Venteo">Venteo</Checkbox>
-                            <Checkbox Label="DilucionDeVapores" @bind-Value="@modelMateriales.DilucionDeVapores">DilucionDeVapores</Checkbox>
-                            <Checkbox Label="Neutralizacion" @bind-Value="@modelMateriales.Neutralizacion">Neutralizacion</Checkbox>
-                            <Checkbox Label="Trasvase" @bind-Value="@modelMateriales.Trasvase">Trasvase</Checkbox>
-                            <Checkbox Label="otro" @bind-Value="@modelMateriales.OtraAccionesMateriales">OtraAccionesMateriales</Checkbox>
-                        </div>
+                        <Select Mode="tags"
+                                Placeholder="Seleccione acciones"
+                                @bind-Values="@_selectedValues"
+                                TItemValue="string"
+                                TItem="string"
+                                OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+                                EnableSearch>
+                            <SelectOptions>
+                                @foreach (var item in _items)
+                                {
+                                    <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+                                }
+                            </SelectOptions>
+                        </Select>
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Detalles de acciones</label>
@@ -503,10 +509,20 @@
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Acciones sobre personas</label>
                         <div class="inpt-cont" style="flex-direction: row;flex-wrap: wrap;">
-                            <Checkbox Label="Confinamiento" @bind-Value="@modelMateriales.Confinamiento">Confinamiento</Checkbox>
-                            <Checkbox Label="Descontaminacion" @bind-Value="@modelMateriales.Descontaminacion">Descontaminacion</Checkbox>
-                            <Checkbox Label="SinAccion" @bind-Value="@modelMateriales.SinAccion">SinAccion</Checkbox>
-                            <Checkbox Label="OtraAccionesPersonas" @bind-Value="@modelMateriales.OtraAccionesPersonas">OtraAccionesPersonas</Checkbox>
+                            <Select Mode="tags"
+                                    Placeholder="Seleccione acciones"
+                                    @bind-Values="@_selectedValues2"
+                                    TItemValue="string"
+                                    TItem="string"
+                                    OnSelectedItemsChanged="OnSelectedItemsChangedHandler2"
+                                    EnableSearch>
+                                <SelectOptions>
+                                    @foreach (var item in _items2)
+                                    {
+                                        <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+                                    }
+                                </SelectOptions>
+                            </Select>
                         </div>
                     </div>
                     <div class="inpt-cont-inline">
@@ -523,9 +539,6 @@
                         <label class="inpt-cont--lbl">Detalles de surpeficie afectada</label>
                         <Input @bind-Value="modelMateriales.DetalleSuperficieAfectada" />
                     </div>
-                    <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
-                        Cargar salida
-                    </Button>
                 </div>
             }
         </Form>
@@ -541,7 +554,7 @@
         }
         @if (current == steps.Length - 1)
         {
-            <Button Type="@ButtonType.Primary" HtmlType="submit">
+            <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
                 Cargar salida
             </Button>
         }
@@ -652,6 +665,26 @@
 
     private async Task Init()
     {
+        _model = new MaterialPeligrosoViewModels();
+        _items = new List<string>();
+        _items2 = new List<string>();
+
+
+        var properties = typeof(MaterialPeligrosoViewModels).GetProperties();
+        var propertiesToShow = new List<string> { "Controlada", "Venteo", "DilucionDeVapores", "Neutralizacion", "Trasvase", "OtraAccionesMateriales" };
+        var propertiesToShow2 = new List<string> { "Descontaminacion", "Confinamiento", "SinAccion", "OtraAccionesPersonas" };
+
+        foreach (var prop in properties)
+        {
+            if (propertiesToShow.Contains(prop.Name))
+            {
+                _items.Add(prop.Name);
+            }
+            if (propertiesToShow2.Contains(prop.Name))
+            {
+                _items2.Add(prop.Name);
+            }
+        }
         modelMateriales = new();
         Context = DbFactory.CreateDbContext();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
@@ -985,5 +1018,26 @@
     public void Dispose()
     {
         Context?.Dispose();
+    }
+
+    //probando selects multiples para reemplazar los checkboxs
+    MaterialPeligrosoViewModels _model;
+
+    List<string> _items;
+    List<string> _items2;
+    
+    IEnumerable<string> _selectedValues;
+    IEnumerable<string> _selectedValues2;
+
+    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    {
+        if (values != null)
+            Console.WriteLine($"selected: ${string.Join(",", values)}");
+    }
+
+    private void OnSelectedItemsChangedHandler2(IEnumerable<string> values)
+    {
+		if (values != null)
+			Console.WriteLine($"selected: ${string.Join(",", values)}");
     }
 }
