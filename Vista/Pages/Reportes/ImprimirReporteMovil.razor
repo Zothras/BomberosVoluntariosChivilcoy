@@ -1,0 +1,34 @@
+﻿@page "/Reportes/ImprimirRM"
+@inject NavigationManager navigationManager
+@layout EmptyLayout
+
+<style>
+    .ant-table-title{
+        display: none!important;
+    }
+
+    .ant-table-pagination.ant-pagination{
+        display: none !important;
+    }
+
+    .ant-btn{
+        display: none !important;
+    }
+</style>
+
+<div>
+    <HistorialMoviles></HistorialMoviles>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            //ESTO NO DEBERIA HACERSE CON DELAY, PERO SE LLAMA A LA FUNCION JS DE IMPRIMIR DESPUES DE QUE SE RENDERIZA LA TABLA, NO LOS DATOS,
+            //Y LOS DATOS TARDAN EN RENDERIZAR, ENTONCES SE IMPRIME LA PAGINA SIN EL CONTENIDO DE LA PAGINA PORQUE SE CARGA DESPUES, HAY QUE ACOMODAR ESO.
+            await Task.Delay(2000);
+            navigationManager.NavigateTo("javascript:window.print()");
+        }
+    }
+}

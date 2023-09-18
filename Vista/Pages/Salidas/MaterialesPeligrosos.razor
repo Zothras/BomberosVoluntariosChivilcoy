@@ -5,12 +5,11 @@
 @page "/salidas/materiales-peligrosos"
 @using Vista.Data.ViewModels.MaterialesPeligrosos;
 
+
 <style>
     .ant-carousel .slick-dots li {
         display: none !important;
     }
-
-
 
     .ant-form-item-control-input-content, .ant-form-item-label {
         padding: 0 !important;
@@ -74,7 +73,7 @@
             <Step Title="@item.Title" Subtitle="@item.Content" />
         }
     </Steps>
-    <div class="steps-content" style="height: 100%;width: 100%;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+    <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
         <Form Model="@modelMateriales"
               LabelColSpan="8"
               WrapperColSpan="16"
@@ -167,19 +166,19 @@
                     <h6>Datos de damnificados</h6>
 
                     <div class="inpt-cont-inline">
-                        <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;">
+                        <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 80px;">
                             <label class="inpt-cont--lbl">¿Hubo damnificados?</label>
                             <Switch @bind-Checked="switchValue" Style="width: 10px!important;" />
                         </div>
                         @if (switchValue == true)
                         {
-                            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;">
+                            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 90px;">
                                 <label class="inpt-cont--lbl">Agregar otro</label>
                                 <Button OnClick="()=>visibleDamnificados = true">
                                     <i class="fa-solid fa-user-plus"></i>
                                 </Button>
                             </div>
-                            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;">
+                            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 90px;">
                                 <label class="inpt-cont--lbl">Ver damnificados</label>
                                 <Button OnClick="()=>visibleVerDamnificados = true">
                                     <i class="fa-solid fa-users-gear"></i>
@@ -194,21 +193,21 @@
                            OnCancel="@HandleCancelVD">
                         <div class="inpt-cont">
                             <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                             <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                             <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                             <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-                             <ActionColumn Title="Acciones">
-                                 <Popconfirm Title="¿Quieres borrar este damnificado?"
-                                             OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                                             OkText="Si"
-                                             CancelText="No"
-                                             Style="display: flex;justify-content: center;align-items: center;">
-                                     <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                                 </Popconfirm>
-                             </ActionColumn>
-                         </Table>
-                     </div>
-                 </Modal>
+                                 <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                                 <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                                 <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                                 <ActionColumn Title="Acciones">
+                                     <Popconfirm Title="¿Quieres borrar este damnificado?"
+                                                 OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                                 OkText="Si"
+                                                 CancelText="No"
+                                                 Style="display: flex;justify-content: center;align-items: center;">
+                                         <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                     </Popconfirm>
+                                 </ActionColumn>
+                             </Table>
+                         </div>
+                     </Modal>
 
                  @if (switchValue == true)
                     {
@@ -380,7 +379,7 @@
                     @if (MovilesSalidasL is not null)
                     {
                         <div>
-                            <Table Size="TableSize.Small" PageSize="3" Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
+                            <Table Size="TableSize.Small" PageSize="4" Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
                              <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
                              <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
                              <ActionColumn Title="Acciones">
@@ -420,7 +419,7 @@
                          <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
                     </div>
                      <div class="inpt-cont">
-                         <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="3" DataSource="bomberosSalida" Bordered>
+                         <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
                              <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
                              <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
                              <ActionColumn Title="Acciones">
@@ -477,9 +476,15 @@
                             <EnumSelect TEnum="TipoMaterialPeligroso" @bind-Value="@modelMateriales.Tipo" />
                         </div>
                     </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Sustancias</label>
-                        <Input @bind-Value="modelMateriales.Sustancias" />
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Sustancias</label>
+                            <Input @bind-Value="modelMateriales.Sustancias" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Tipo evacuacion</label>
+                            <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
+                        </div>
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Acciones sobre materiales</label>
@@ -501,10 +506,6 @@
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Detalles de acciones</label>
                         <Input @bind-Value="modelMateriales.DetallesAccionesMateriales" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo evacuacion</label>
-                        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Acciones sobre personas</label>
@@ -1029,15 +1030,46 @@
     IEnumerable<string> _selectedValues;
     IEnumerable<string> _selectedValues2;
 
-    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+   private async Task UpdateDatabase()
     {
-        if (values != null)
-            Console.WriteLine($"selected: ${string.Join(",", values)}");
+        using var dbContext = DbFactory.CreateDbContext();
+        dbContext.Update(_model);
+        await dbContext.SaveChangesAsync();
     }
 
-    private void OnSelectedItemsChangedHandler2(IEnumerable<string> values)
+    private async void OnSelectedItemsChangedHandler(IEnumerable<string> values)
     {
-		if (values != null)
-			Console.WriteLine($"selected: ${string.Join(",", values)}");
+        if (values != null)
+        {
+            Console.WriteLine($"selected: ${string.Join(",", values)}");
+            foreach (var value in values)
+            {
+                var property = _model.GetType().GetProperty(value);
+                if (property != null)
+                {
+                    property.SetValue(_model, true);
+                }
+            }
+            await UpdateDatabase();
+        }
     }
+
+    private async void OnSelectedItemsChangedHandler2(IEnumerable<string> values)
+    {
+        if (values != null)
+        {
+            Console.WriteLine($"selected: ${string.Join(",", values)}");
+            foreach (var value in values)
+            {
+                var property = _model.GetType().GetProperty(value);
+                if (property != null)
+                {
+                    property.SetValue(_model, true);
+                }
+            }
+            await UpdateDatabase();
+        }
+    }
+
+
 }

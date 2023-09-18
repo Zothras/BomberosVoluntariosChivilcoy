@@ -2,11 +2,51 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService _message
+@inject IJSRuntime JSRuntime;
+
 @page "/Reportes/HistorialMoviles"
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.Json;
 @using Vista.Data.ViewModels.Personal;
+
+<style>
+    .inpt-cont--lbl {
+        min-width: 170px;
+        text-align: start;
+        font-weight: bold;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont {
+        min-width: 170px;
+        display: flex;
+        flex-direction: column;
+        padding: .3em 0;
+        width: 100%;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont-inline {
+        min-width: 170px;
+        display: flex;
+        align-items: flex-end;
+        gap: 1em;
+        overflow: hidden !important;
+        height: 100%;
+    }
+
+    .botonesCont{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .ant-table-title{
+        height: 6.5em !important;
+    }
+
+</style>
 
 <EditForm Model="this">
     <div>
@@ -45,8 +85,7 @@
             </ColumnDefinitions> 
         </Table>
         <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-            @*<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialMoviles/Imprimir");})">Imprimir</Button>*@
-            <Button OnClick="ImprimirPagina">ImprimirPagina</Button>
+            <Button OnClick="@(async () => await JSRuntime.InvokeAsync<object>("open", "/Reportes/ImprimirRM", "_blank"))">Imprimir</Button>
         </div>
     </div>
 </EditForm>
@@ -145,10 +184,4 @@
     {
         _message.Error("Operacion cancelada");
     }
-
-    private void ImprimirPagina()
-    {
-        navigationManager.NavigateTo("javascript:window.print()");
-    }
-
 }
