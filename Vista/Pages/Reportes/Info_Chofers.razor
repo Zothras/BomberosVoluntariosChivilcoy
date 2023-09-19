@@ -11,57 +11,90 @@
     .nombreClase {
         display: inline-block;
     }
+
+    .inpt-cont--lbl {
+        min-width: 170px;
+        text-align: start;
+        font-weight: bold;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont {
+        min-width: 170px;
+        display: flex;
+        flex-direction: column;
+        padding: .3em 0;
+        width: 100%;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont-inline {
+        min-width: 170px;
+        display: flex;
+        align-items: flex-end;
+        gap: 1em;
+        overflow: hidden !important;
+        height: 100%;
+    }
+
+    .botonesCont {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .ant-table-title {
+        height: 6.5em !important;
+    }
 </style>
 
-<div style="display: flex;justify-content: space-evenly;width:80%;padding:1em 9em 0.1em 5em">
-    <p class="nombreClase"> Desde:<DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
+<div style="margin-top: 2em;">
+    <Table DataSource="preferencia" TItem="ChoferesVM" PageSize="6">
+        <TitleTemplate>
+             <div class="botonesCont">
+                 <div class="inpt-cont-inline">
+                     <div class="inpt-cont">
+                         <label class="inpt-cont--lbl">Desde: </label>
+                         <DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
+                     </div>
+                     <div class="inpt-cont">
+                         <label class="inpt-cont--lbl">Hasta: </label>
+                         <DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
+                     </div>
+                     <div>
+                         <Button OnClick="()=>colocar_preferencia(desde,hasta,preferencia)" Style="margin-bottom: 5px;">
+                             Buscar
+                         </Button>
+                     </div>
+                 </div>
+                 <div>
+                     <Button OnClick="()=>Insertar_todos_choferes(preferencia)">
+                         Mostrar todos
+                     </Button>
+                 </div>
+             </div>
+        </TitleTemplate>
+        <ColumnDefinitions>
+            <Selection Key="@(context.NumeroLegajo.ToString())" />
+             <PropertyColumn Property="c=>c.NumeroLegajo"
+                             DefaultSortOrder="@SortDirection.Descending"
+                             SorterCompare="@((a,b)=> a - b)" />
+            <PropertyColumn Property="c=>c.Nombre" Sortable />
 
-     <p class="nombreClase">Hasta:<DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear /></p>
+            <PropertyColumn Property="c=>c.Apellido" Sortable />
 
-     <p class ="nombreClase">
-         <Button OnClick="()=>colocar_preferencia(desde,hasta,preferencia)">
-             Buscar
-         </Button>
-     </p>
+            <PropertyColumn Property="c=>c.Dotacion" />
 
-     <p class="nombreClase">
-         <Button OnClick="()=>Insertar_todos_choferes(preferencia)">
-             Mostrar todos
-         </Button>
-     </p >
-     
-</div>
+            <PropertyColumn Property="c=>c.VencimientoRegistro" Sortable />
 
+            <PropertyColumn Property="c=>c.TelefonoCel" Sortable />
 
-<Table DataSource="preferencia" TItem="ChoferesVM">
-    <TitleTemplate>
-        <GridRow>
-            <GridCol Span="6">
-                <Title Level="4">Choferes</Title>
-            </GridCol>
-           
-        </GridRow>
-    </TitleTemplate>
-    <ColumnDefinitions>
-        <Selection Key="@(context.NumeroLegajo.ToString())" />
-         <PropertyColumn Property="c=>c.NumeroLegajo"
-                         DefaultSortOrder="@SortDirection.Descending"
-                         SorterCompare="@((a,b)=> a - b)" />
-        <PropertyColumn Property="c=>c.Nombre" Sortable />
+            <PropertyColumn Property="c=>c.TelefonoFijo" Sortable />
 
-        <PropertyColumn Property="c=>c.Apellido" Sortable />
-
-        <PropertyColumn Property="c=>c.Dotacion" />
-
-        <PropertyColumn Property="c=>c.VencimientoRegistro" Sortable />
-
-        <PropertyColumn Property="c=>c.TelefonoCel" Sortable />
-
-        <PropertyColumn Property="c=>c.TelefonoFijo" Sortable />
-
-        <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable />
-    </ColumnDefinitions>
-</Table>
+            <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable />
+        </ColumnDefinitions>
+    </Table>
+ </div>
 
 @code {
     bool primeravuelta = true;

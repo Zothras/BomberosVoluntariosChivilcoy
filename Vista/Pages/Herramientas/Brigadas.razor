@@ -5,7 +5,7 @@
 @using System.Text.Json;
 @using System.Text.RegularExpressions;
 @using System.Linq;
-<h3>Brigadas</h3>
+
 @*
 <label>Ingrese el nombre de la brigada :</label>
 <input @bind="BrigadaNueva.Nombre" type="text" />
@@ -28,12 +28,15 @@
         <br>
     }
 }*@
-
+<style>
+    .ant-table-wrapper{
+        width: 40em !important;
+    }
+</style>
 
 @*--------------------------------------------------------------------------Modal Agregar---------------------------------------------------------------------------------*@
-<Button Type="primary" OnClick="@ShowModalAgregar">
-    Agregar Brigada
-</Button>
+
+
 <Modal Title="@("Agregar Brigada")"
        Visible="@_visibleAgregar"
        OnOk="@HandleOkAgregar"
@@ -52,9 +55,7 @@
 
 
 @*--------------------------------------------------------------------------Modal Eliminar---------------------------------------------------------------------------------*@
-<Button Type="primary" OnClick="@ShowModalEliminar">
-    Eliminar Brigada
-</Button>
+
 <Modal Title="@("Agregar Brigada")"
        Visible="@_visibleEliminar"
        OnOk="@HandleOkEliminar"
@@ -82,67 +83,62 @@
 
 
 @*------------------------------------------------------------------------Tabla-----------------------------------------------------------------------------------------*@
-
-<Table DataSource="bomberos" OnChange="OnChange" TItem="Bombero" @ref="_table">
-    <TitleTemplate>
-
-        <GridRow>
-            <GridCol Span="8">
-                <Title Level="3">Brigadas</Title>
-            </GridCol>
-            <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+<div style="margin-top: 2em;">
+    <Table DataSource="bomberos" OnChange="OnChange" TItem="Bombero" @ref="_table" PageSize="6">
+        <TitleTemplate>
+            <GridRow Style="display: flex;">
+                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Style="width: 100%;"/>
                 @if (String.IsNullOrWhiteSpace(searchString))
                 {
                     bomberos = bomberosRespaldo;
                 }
-                
-                @*<AutoComplete Options="@bomberosFiltro">
-                    <AutoCompleteSearch Placeholder="Buscar" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
-                </AutoComplete>*@
-            </GridCol>
-        </GridRow>
-    </TitleTemplate>
-
-    <ColumnDefinitions>
-        <PropertyColumn Property="c=>c.Brigada.Nombre"
-                            SorterCompare="@((a,b)=> a.Length - b.Length)"
-                            SortDirections="new[] { SortDirection.Descending }"
-                            Filters="nameFilters"
-                            OnFilter="((value,name)=>name.StartsWith(value))"
-                            Title="Brigada" />
-            <PropertyColumn Property="c=>c.Nombre" Sortable />
-            <PropertyColumn Property="c=>c.NumeroLegajo"
-                            DefaultSortOrder="@SortDirection.Descending"
-            SorterCompare="@((a,b)=> a - b)" />
-        
-        @*corregir-------------------------------------------------------------------------------------------------------------------------------------------------------*@
-        @*else if (bomberosFiltrados is not null)
-        {
-            @foreach (Bombero bom in bomberosFiltrados)
-            {
-
-                <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Brigada.Nombre"
-                                    SorterCompare="@((a,b)=> a.Length - b.Length)"
-                                    SortDirections="new[] { SortDirection.Descending }"
-                                    Filters="nameFilters"
-                                    OnFilter="((value,name)=>name.StartsWith(value))"
-                                    Title="Brigada" />
-                <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Nombre" Sortable />
-                <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.NumeroLegajo"
-                                    DefaultSortOrder="@SortDirection.Descending"
+            </GridRow>
+        </TitleTemplate>
+        <ColumnDefinitions>
+            <PropertyColumn Property="c=>c.Brigada.Nombre"
+                                SorterCompare="@((a,b)=> a.Length - b.Length)"
+                                SortDirections="new[] { SortDirection.Descending }"
+                                Filters="nameFilters"
+                                OnFilter="((value,name)=>name.StartsWith(value))"
+                                Title="Brigada" />
+                <PropertyColumn Property="c=>c.Nombre" Sortable />
+                <PropertyColumn Property="c=>c.NumeroLegajo"
+                                DefaultSortOrder="@SortDirection.Descending"
                 SorterCompare="@((a,b)=> a - b)" />
-
-            }
-
-            bomberosFiltrados = new List<Bombero>();
-
-        }*@
-
         
-    </ColumnDefinitions>
-</Table>
+            @*corregir-------------------------------------------------------------------------------------------------------------------------------------------------------*@
+            @*else if (bomberosFiltrados is not null)
+            {
+                @foreach (Bombero bom in bomberosFiltrados)
+                {
 
+                    <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Brigada.Nombre"
+                                        SorterCompare="@((a,b)=> a.Length - b.Length)"
+                                        SortDirections="new[] { SortDirection.Descending }"
+                                        Filters="nameFilters"
+                                        OnFilter="((value,name)=>name.StartsWith(value))"
+                                        Title="Brigada" />
+                    <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Nombre" Sortable />
+                    <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.NumeroLegajo"
+                                        DefaultSortOrder="@SortDirection.Descending"
+                    SorterCompare="@((a,b)=> a - b)" />
+
+                }
+
+                bomberosFiltrados = new List<Bombero>();
+
+            }*@
+        </ColumnDefinitions>
+    </Table>
+     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;gap: 10px;">
+         <Button OnClick="@ShowModalEliminar">
+             Eliminar Brigada
+         </Button>
+         <Button OnClick="@ShowModalAgregar">
+             Agregar Brigada
+         </Button>
+     </div>
+ </div>
 
 
 @*------------------------------------------------------------------------Fin Tabla-----------------------------------------------------------------------------------------*@

@@ -6,51 +6,56 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-<Table @ref="table"
-       TItem="Bombero"
-       DataSource="@bomberos"
-       @bind-SelectedRows="selectedRows"
-       OnChange="OnChange"
-       Total="_total"
-       @bind-PageIndex="_pageIndex"
-       @bind-PageSize="_pageSize">
-    <TitleTemplate>
-        <GridRow>
-            <GridCol Span="4">
-                <Title Level="3">Bomberos retirados</Title>
-            </GridCol>
-            <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
-                @if (String.IsNullOrWhiteSpace(searchString))
-                {
-                    bomberos = bomberosRespaldo;
-                }
-            </GridCol>
-        </GridRow>
-    </TitleTemplate>
-    <ColumnDefinitions>
-        <Selection Key="@(context.NumeroLegajo.ToString())" />
-        <PropertyColumn Property="c=>c.NumeroLegajo"
-                        DefaultSortOrder="@SortDirection.Descending"
-                        SorterCompare="@((a,b)=> a - b)" />
-        <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-        <PropertyColumn Property="c=>c.Nombre" Sortable />
-        <PropertyColumn Property="c=>c.Apellido" Sortable />
-        <PropertyColumn Property="c=>c.Grado"
-                        SortDirections="new[] { SortDirection.Descending }"
-                        Filters="EscalafonJerarquicoFilter"
-                        OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
-        <ActionColumn Title="Action">
-            <Space>
-                <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
-                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
-                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
-            </Space>
-        </ActionColumn>
-    </ColumnDefinitions>
-    @*--------------------------------------------Modal-----------------------------------------------*@
-</Table>
-<Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="position: absolute;right: 32.5em;top: 56.9em;">Agregar Bombero</Button>
+<div style="margin-top: 2em;">
+    <Table @ref="table"
+           TItem="Bombero"
+           DataSource="@bomberos"
+           @bind-SelectedRows="selectedRows"
+           OnChange="OnChange"
+           Total="_total"
+           @bind-PageIndex="_pageIndex"
+           @bind-PageSize="_pageSize">
+        <TitleTemplate>
+            <GridRow>
+                <GridCol Span="4">
+                    <Title Level="3">Bomberos retirados</Title>
+                </GridCol>
+                <GridCol Span="8" Offset="12">
+                    <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+                    @if (String.IsNullOrWhiteSpace(searchString))
+                    {
+                        bomberos = bomberosRespaldo;
+                    }
+                </GridCol>
+            </GridRow>
+        </TitleTemplate>
+        <ColumnDefinitions>
+            <Selection Key="@(context.NumeroLegajo.ToString())" />
+            <PropertyColumn Property="c=>c.NumeroLegajo"
+                            DefaultSortOrder="@SortDirection.Descending"
+                            SorterCompare="@((a,b)=> a - b)" />
+            <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+            <PropertyColumn Property="c=>c.Nombre" Sortable />
+            <PropertyColumn Property="c=>c.Apellido" Sortable />
+            <PropertyColumn Property="c=>c.Grado"
+                            SortDirections="new[] { SortDirection.Descending }"
+                            Filters="EscalafonJerarquicoFilter"
+                            OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+            <ActionColumn Title="Action">
+                <Space>
+                    <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
+                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
+                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
+                </Space>
+            </ActionColumn>
+        </ColumnDefinitions>
+        @*--------------------------------------------Modal-----------------------------------------------*@
+    </Table>
+    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
+         <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
+    </div>
+</div>
+
 
 <Modal Title="@("Bombero")"
        Visible="@_visible"
@@ -293,7 +298,7 @@
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
     int _pageIndex = 1;
-    int _pageSize = 10;
+    int _pageSize = 6;
     int _total = 0;
 
     protected override async Task OnInitializedAsync()

@@ -9,57 +9,61 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal;
 @using Vista.Data.ViewModels.Personal;
 
+<div style="margin-top: 2em;">
+    <Table DataSource="ComunicacionesViewModel" Bordered
+        @bind-SelectedRows="selectedRows"
+        Total="_total"
+        @bind-PageIndex="_pageIndex"
+        @bind-PageSize="_pageSize">
 
-<Table DataSource="ComunicacionesViewModel" Bordered
-    @bind-SelectedRows="selectedRows"
-           Total="_total"
-    @bind-PageIndex="_pageIndex"
-    @bind-PageSize="_pageSize">
-
-    <TitleTemplate>
-        <GridRow>
-            <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
-                <Title Level="3">Comunicaciones</Title>
-                <Button Type="primary" OnClick="()=>ShowModalAgregar()">Agregar Handie</Button>
-            </GridCol>
-        </GridRow>
-    </TitleTemplate>
-    <ColumnDefinitions>
-        <PropertyColumn Property="c => c.NroEquipo"
-                        DefaultSortOrder="@SortDirection.Descending"
-                        SorterCompare="@((a, b) => string.Compare(a, b))"/>
-        <PropertyColumn Property="c=>c.Modelo" Sortable/>
-        <PropertyColumn Property="c=>c.Marca" Sortable />
-        <PropertyColumn Property="c=>c.NroSerie" />
-        <PropertyColumn Property="b=>b.Nombre"  />
-        <PropertyColumn Property="b=>b.Apellido" Sortable />
-        <ActionColumn Title="Action">
-            <Space>
-                <SpaceItem>
-                    <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas borrar el handie?"
-                                OnConfirm="()=>Delete(context.NroEquipo)"
-                                OnCancel="Cancel">
-                        <Button Danger>
-                            Eliminar
-                        </Button>
-                    </Popconfirm>
-                </SpaceItem>
-                <SpaceItem>
-                    <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas desasignar el bombero?"
-                                OnConfirm="()=>Desasignar(context.NroEquipo)"
-                                OnCancel="Cancel">
-                        <Button Danger>
-                            Desasignar
-                        </Button>
-                    </Popconfirm>
-                </SpaceItem>
-                @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
-                <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
-                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
-            </Space>
-        </ActionColumn>
-    </ColumnDefinitions>
-</Table>
+        <TitleTemplate>
+            <GridRow>
+                <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
+                    <Title Level="3">Comunicaciones</Title>
+                </GridCol>
+            </GridRow>
+        </TitleTemplate>
+        <ColumnDefinitions>
+            <PropertyColumn Property="c => c.NroEquipo"
+                            DefaultSortOrder="@SortDirection.Descending"
+                            SorterCompare="@((a, b) => string.Compare(a, b))"/>
+            <PropertyColumn Property="c=>c.Modelo" Sortable/>
+            <PropertyColumn Property="c=>c.Marca" Sortable />
+            <PropertyColumn Property="c=>c.NroSerie" />
+            <PropertyColumn Property="b=>b.Nombre"  />
+            <PropertyColumn Property="b=>b.Apellido" Sortable />
+            <ActionColumn Title="Action">
+                <Space>
+                    <SpaceItem>
+                        <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas borrar el handie?"
+                                    OnConfirm="()=>Delete(context.NroEquipo)"
+                                    OnCancel="Cancel">
+                            <Button Danger>
+                                Eliminar
+                            </Button>
+                        </Popconfirm>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas desasignar el bombero?"
+                                    OnConfirm="()=>Desasignar(context.NroEquipo)"
+                                    OnCancel="Cancel">
+                            <Button Danger>
+                                Desasignar
+                            </Button>
+                        </Popconfirm>
+                    </SpaceItem>
+                    @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
+                    <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
+                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
+                </Space>
+            </ActionColumn>
+        </ColumnDefinitions>
+    </Table>
+    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
+        <Button OnClick="()=>ShowModalAgregar()">Agregar Handie</Button>
+    </div>
+    
+</div>
 
 <Modal Footer="null" Title="@("Comunicacion")"
        Visible="@_visibleAgregar"

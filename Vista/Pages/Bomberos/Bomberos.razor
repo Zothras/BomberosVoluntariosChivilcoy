@@ -6,154 +6,152 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-<div>
-    <div>
-        <Table @ref="table"
-               TItem="Bombero"
-               DataSource="@bomberos"
-               @bind-SelectedRows="selectedRows"
-               OnChange="OnChange"
-               Total="_total"
-               @bind-PageIndex="_pageIndex"
-               @bind-PageSize="_pageSize">
-            <TitleTemplate>
-                <GridRow>
-                    <GridCol Span="4">
-                        <Title Level="3">Bomberos</Title>
-                    </GridCol>
-                    <GridCol Span="8" Offset="12">
-                        <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
-                        @if (String.IsNullOrWhiteSpace(searchString))
-                        {
-                            bomberos = bomberosRespaldo;
-                        }
-                    </GridCol>
-                </GridRow>
-            </TitleTemplate>
-            <ColumnDefinitions>
-                <Selection Key="@(context.NumeroLegajo.ToString())" />
-                <PropertyColumn Property="c=>c.NumeroLegajo"
-                                DefaultSortOrder="@SortDirection.Descending"
-                                SorterCompare="@((a,b)=> a - b)" />
-                <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-                <PropertyColumn Property="c=>c.Nombre" Sortable />
-                <PropertyColumn Property="c=>c.Apellido" Sortable />
-                <PropertyColumn Property="c=>c.Grado"
-                                SortDirections="new[] { SortDirection.Descending }"
-                                Filters="EscalafonJerarquicoFilter"
-                                OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
-                <ActionColumn Title="Action">
-                    <Space>
-                        <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
-                        <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
-                        <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
-                    </Space>
-                </ActionColumn>
-            </ColumnDefinitions>
-            @*--------------------------------------------Modal-----------------------------------------------*@
-        </Table>
-    </div>
-    <div>
+<div style="margin-top: 2em;">
+    <Table @ref="table"
+           TItem="Bombero"
+           DataSource="@bomberos"
+           @bind-SelectedRows="selectedRows"
+           OnChange="OnChange"
+           Total="_total"
+           @bind-PageIndex="_pageIndex"
+           @bind-PageSize="_pageSize">
+        <TitleTemplate>
+            <GridRow>
+                <GridCol Span="4">
+                    <Title Level="3">Bomberos</Title>
+                </GridCol>
+                <GridCol Span="8" Offset="12">
+                    <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+                     @if (String.IsNullOrWhiteSpace(searchString))
+                    {
+                        bomberos = bomberosRespaldo;
+                    }
+                </GridCol>
+            </GridRow>
+        </TitleTemplate>
+        <ColumnDefinitions>
+            <Selection Key="@(context.NumeroLegajo.ToString())" />
+            <PropertyColumn Property="c=>c.NumeroLegajo"
+                            DefaultSortOrder="@SortDirection.Descending"
+                            SorterCompare="@((a,b)=> a - b)" />
+            <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+            <PropertyColumn Property="c=>c.Nombre" Sortable />
+             <PropertyColumn Property="c=>c.Apellido" Sortable />
+             <PropertyColumn Property="c=>c.Grado"
+                             SortDirections="new[] { SortDirection.Descending }"
+                             Filters="EscalafonJerarquicoFilter"
+                             OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+             <ActionColumn Title="Action">
+                 <Space>
+                     <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
+                     <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
+                     <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
+                 </Space>
+             </ActionColumn>
+        </ColumnDefinitions>
+         @*--------------------------------------------Modal-----------------------------------------------*@
+    </Table>
+    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
         <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
         <Button OnClick="@ShowModalAgregarS">Agregar Sancion</Button>
         <Button OnClick="@ShowModalAgregarA">Ascender bombero</Button>
     </div>
-</div>
+ </div>
 
 
-<Modal Title="@("Bombero")"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
-    <Form Loading="loading" Model="@bomberoVM"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailed"
-          @ref="@_form">
+ <Modal Title="@("Bombero")"
+        Visible="@_visible"
+        OnOk="@HandleOk"
+        OnCancel="@HandleCancel">
+     <Form Loading="loading" Model="@bomberoVM"
+           LabelColSpan="8"
+           WrapperColSpan="16"
+           OnFinish="OnFinish"
+           OnFinishFailed="OnFinishFailed"
+     @ref="@_form">
 
-        <FormItem Label="Nombre">
-            <Input DefaultValue="@bomberoVM.Nombre" @bind-Value="@bomberoVM.Nombre" />
-        </FormItem>
-        <FormItem Label="Apellido">
-            <Input DefaultValue="@bomberoVM.Apellido" @bind-Value="@bomberoVM.Apellido" />
-        </FormItem>
+         <FormItem Label="Nombre">
+             <Input DefaultValue="@bomberoVM.Nombre" @bind-Value="@bomberoVM.Nombre" />
+         </FormItem>
+         <FormItem Label="Apellido">
+             <Input DefaultValue="@bomberoVM.Apellido" @bind-Value="@bomberoVM.Apellido" />
+         </FormItem>
 
-        <FormItem Label="Fecha de Nacimiento">
-            <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-            @*<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" @bind-Value="@bomberoView.FechaNacimiento" Style="width: 100%;"/>*@
-        </FormItem>
+         <FormItem Label="Fecha de Nacimiento">
+             <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+             @*<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" @bind-Value="@bomberoView.FechaNacimiento" Style="width: 100%;"/>*@
+         </FormItem>
 
-        <FormItem Label="DNI">
-            <Input DefaultValue="@bomberoVM.Documento" @bind-Value="@bomberoVM.Documento" />
-        </FormItem>
-        <FormItem Label="Direccion">
-            <Input DefaultValue="@bomberoVM.Direccion" @bind-Value="@bomberoVM.Direccion" />
-        </FormItem>
-        <FormItem Label="Dotaciones">
-            <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
-        </FormItem>
+         <FormItem Label="DNI">
+             <Input DefaultValue="@bomberoVM.Documento" @bind-Value="@bomberoVM.Documento" />
+         </FormItem>
+         <FormItem Label="Direccion">
+             <Input DefaultValue="@bomberoVM.Direccion" @bind-Value="@bomberoVM.Direccion" />
+         </FormItem>
+         <FormItem Label="Dotaciones">
+             <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
+         </FormItem>
 
-        <FormItem Label="Numero Legajo">
-            <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
-        </FormItem>
+         <FormItem Label="Numero Legajo">
+             <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
+         </FormItem>
 
-        <FormItem Label="Fecha de Aceptacion">
-            @*<DatePicker @bind-Value="@bomberoView.FechaAceptacion" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
-            <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-        </FormItem>
+         <FormItem Label="Fecha de Aceptacion">
+             @*<DatePicker @bind-Value="@bomberoView.FechaAceptacion" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
+             <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+         </FormItem>
 
-        <FormItem Label="Numero IOMA">
-            <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
-        </FormItem>
+         <FormItem Label="Numero IOMA">
+             <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
+         </FormItem>
 
-        <FormItem Label="Lugar de nacimiento">
-            <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
-        </FormItem>
+         <FormItem Label="Lugar de nacimiento">
+             <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
+         </FormItem>
 
-        @*<FormItem Label="Grupo Sanguineo" >
+         @*<FormItem Label="Grupo Sanguineo" >
         <Input @bind-Value="@bomberoView.GrupoSanguineo"/>
         </FormItem>*@
 
-        <FormItem Label="Dotaciones">
-            <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
-        </FormItem>
+         <FormItem Label="Dotaciones">
+             <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
+         </FormItem>
 
-        <FormItem Label="Observaciones">
-            <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
-        </FormItem>
+         <FormItem Label="Observaciones">
+             <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
+         </FormItem>
 
-        <FormItem Label="Nivel de estuduio">
-            <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
-        </FormItem>
+         <FormItem Label="Nivel de estuduio">
+             <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
+         </FormItem>
 
-        <FormItem Label="Profesion">
-            <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
-        </FormItem>
+         <FormItem Label="Profesion">
+             <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
+         </FormItem>
 
-        <FormItem Label="Resolucion 1">
-            <Input DefaultValue="@bomberoVM.Resolucion1" @bind-Value="@bomberoVM.Resolucion1" />
-        </FormItem>
-        <FormItem Label="Resolucion 2">
-            <Input DefaultValue="@bomberoVM.Resolucion2" @bind-Value="@bomberoVM.Resolucion2" />
-        </FormItem>
-        <FormItem Label="Resolucion 3">
-            <Input DefaultValue="@bomberoVM.Resolucion3" @bind-Value="@bomberoVM.Resolucion3" />
-        </FormItem>
-        <FormItem Label="Resolucion 4">
-            <Input DefaultValue="@bomberoVM.Resolucion4" @bind-Value="@bomberoVM.Resolucion4" />
-        </FormItem>
-        <FormItem Label="Resolucion 5">
-            <Input DefaultValue="@bomberoVM.Resolucion5" @bind-Value="@bomberoVM.Resolucion5" />
-        </FormItem>
-        <FormItem Label="Resolucion 6">
-            <Input DefaultValue="@bomberoVM.Resolucion6" @bind-Value="@bomberoVM.Resolucion6" />
-        </FormItem>
+         <FormItem Label="Resolucion 1">
+             <Input DefaultValue="@bomberoVM.Resolucion1" @bind-Value="@bomberoVM.Resolucion1" />
+         </FormItem>
+         <FormItem Label="Resolucion 2">
+             <Input DefaultValue="@bomberoVM.Resolucion2" @bind-Value="@bomberoVM.Resolucion2" />
+         </FormItem>
+         <FormItem Label="Resolucion 3">
+             <Input DefaultValue="@bomberoVM.Resolucion3" @bind-Value="@bomberoVM.Resolucion3" />
+         </FormItem>
+         <FormItem Label="Resolucion 4">
+             <Input DefaultValue="@bomberoVM.Resolucion4" @bind-Value="@bomberoVM.Resolucion4" />
+         </FormItem>
+         <FormItem Label="Resolucion 5">
+             <Input DefaultValue="@bomberoVM.Resolucion5" @bind-Value="@bomberoVM.Resolucion5" />
+         </FormItem>
+         <FormItem Label="Resolucion 6">
+             <Input DefaultValue="@bomberoVM.Resolucion6" @bind-Value="@bomberoVM.Resolucion6" />
+         </FormItem>
 
-        <FormItem Label="Es chofer">
-            <Checkbox DefaultValue="@bomberoVM.Chofer" @bind-Checked="@bomberoVM.Chofer">
-            </Checkbox>
-            @if (bomberoVM.Chofer)
+         <FormItem Label="Es chofer">
+             <Checkbox DefaultValue="@bomberoVM.Chofer" @bind-Checked="@bomberoVM.Chofer">
+             </Checkbox>
+             @if (bomberoVM.Chofer)
             {
                 <label id="texto">Fecha vencimiento del carnet</label>
                 <br>
@@ -213,91 +211,91 @@
             <Select TItem="Brigada"
                     TItemValue="string"
                     DataSource="@brigadas"
-                    @bind-Value="@bomberoVM.NombreBrigada"
+            @bind-Value="@bomberoVM.NombreBrigada"
                     DefaultValue="@bomberoVM.NombreBrigada"
                     ValueName="@nameof(Brigada.Nombre)"
                     LabelName="@nameof(Brigada.Nombre)"
                     OnSelectedItemChanged="OnSelectedItemChangedHandler">
             </Select>
         </FormItem>
-@*
+        @*
         <FormItem Label="Vigente desde">
-            <DatePicker DefaultValue="@DateTime.Now" @bind-Value="@bomberoVM.VigenteDesde" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
+        <DatePicker DefaultValue="@DateTime.Now" @bind-Value="@bomberoVM.VigenteDesde" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
         </FormItem>
         <FormItem Label="Vigente hasta">
-            <DatePicker DefaultValue="@null" @bind-Value="@bomberoVM.VigenteHasta" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
+        <DatePicker DefaultValue="@null" @bind-Value="@bomberoVM.VigenteHasta" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
         </FormItem>
         <FormItem Label="Dia de semana">
-            <Select @bind-Value="@bomberoVM.DiaSemana"
-                    Style="width:200px"
-                    TItemValue="Dias"
-                    TItem="Dias"
-                    Bordered="true">
-                <SelectOptions>
-                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Domingo)" Label="Domingo" />
-                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Lunes)" Label="Lunes" />
-                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Martes)" Label="Martes" />
-                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Miercoles)" Label="Miercoles" />
-                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Jueves)" Label="Jueves" />
-                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Viernes)" Label="Viernes" />
-                    <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Sabado)" Label="Sabado" />
-                </SelectOptions>
-            </Select>
+        <Select @bind-Value="@bomberoVM.DiaSemana"
+        Style="width:200px"
+        TItemValue="Dias"
+        TItem="Dias"
+        Bordered="true">
+        <SelectOptions>
+        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Domingo)" Label="Domingo" />
+        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Lunes)" Label="Lunes" />
+        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Martes)" Label="Martes" />
+        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Miercoles)" Label="Miercoles" />
+        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Jueves)" Label="Jueves" />
+        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Viernes)" Label="Viernes" />
+        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Sabado)" Label="Sabado" />
+        </SelectOptions>
+        </Select>
         </FormItem>
 
         <FormItem Label="Horarios">
-            <Select @bind-Value="@horadesde"
-                    Style="width:200px"
-                    TItemValue="int"
-                    TItem="int"
-                    Bordered="true">
-                <SelectOptions>
-                    @for (int i = 1; i < 25 ; i++)
-                {
-                    <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
-                }
-                </SelectOptions>
-            </Select>
+        <Select @bind-Value="@horadesde"
+        Style="width:200px"
+        TItemValue="int"
+        TItem="int"
+        Bordered="true">
+        <SelectOptions>
+        @for (int i = 1; i < 25 ; i++)
+        {
+        <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
+        }
+        </SelectOptions>
+        </Select>
 
-            <Select @bind-Value="@horaasta"
-                    Style="width:200px"
-                    TItemValue="int"
-                    TItem="int"
-                    Bordered="true">
-                <SelectOptions>
-                    @for (int i = 1; i < 25; i++)
-                    {
-                        <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
-                    }
-                </SelectOptions>
-            </Select>
+        <Select @bind-Value="@horaasta"
+        Style="width:200px"
+        TItemValue="int"
+        TItem="int"
+        Bordered="true">
+        <SelectOptions>
+        @for (int i = 1; i < 25; i++)
+        {
+        <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
+        }
+        </SelectOptions>
+        </Select>
         </FormItem>
-                <FormItem Label="Hora hasta">
-                @*<TimePicker TValue="TimeOnly" />
+        <FormItem Label="Hora hasta">
+        @*<TimePicker TValue="TimeOnly" />
         </FormItem>
-        
-        
+
+
         <FormItem Label="Tipo de horario">
-            <Select @bind-Value="@bomberoVM.ModoRotativo"
-                    DefaultValue="TiposRotativos.Fijo"
-                    Style="width:200px"
-                    TItemValue="TiposRotativos"
-                    TItem="TiposRotativos"
-                    Bordered="true">
-                <SelectOptions>
-                    <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Fijo)" Label="Fijo" />
-                    <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Semanal)" Label="Semanal" />
-                    <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Mensual)" Label="Mensual" />
-                </SelectOptions>
-            </Select>
+        <Select @bind-Value="@bomberoVM.ModoRotativo"
+        DefaultValue="TiposRotativos.Fijo"
+        Style="width:200px"
+        TItemValue="TiposRotativos"
+        TItem="TiposRotativos"
+        Bordered="true">
+        <SelectOptions>
+        <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Fijo)" Label="Fijo" />
+        <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Semanal)" Label="Semanal" />
+        <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Mensual)" Label="Mensual" />
+        </SelectOptions>
+        </Select>
         </FormItem>
 
-            @if (bomberoVM.ModoRotativo != TiposRotativos.Fijo)
-            {
-                <FormItem Label="Periodo">
-                    <Input DefaultValue="@TimeOnly.MaxValue" @bind-Value="@bomberoVM.Periodo" />
-                </FormItem>
-            }
+        @if (bomberoVM.ModoRotativo != TiposRotativos.Fijo)
+        {
+        <FormItem Label="Periodo">
+        <Input DefaultValue="@TimeOnly.MaxValue" @bind-Value="@bomberoVM.Periodo" />
+        </FormItem>
+        }
         *@
     </Form>
 
@@ -383,7 +381,7 @@
 }
 @code {
     //variables
-    
+
     private bool busquedaVacia = true;
     //static int horadesde, minutosdesde, horaasta, minutosasta;
     //TimeOnly horacero = new(0,0,0);
@@ -403,7 +401,7 @@
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
     int _pageIndex = 1;
-    int _pageSize = 10;
+    int _pageSize = 6;
     int _total = 0;
 
     protected override async Task OnInitializedAsync()

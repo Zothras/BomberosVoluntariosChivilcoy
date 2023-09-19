@@ -4,22 +4,22 @@
 @inject IMessageService message
 @page "/bomberos/sancionados"
 
-<Table DataSource="sancionesVM" Bordered>
-    <PropertyColumn Property="c=>c.Encargado"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Sancionado"></PropertyColumn>
-    <PropertyColumn Property="c=>c.FechaDesde"></PropertyColumn>
-    <PropertyColumn Property="c=>c.FechaHasta"></PropertyColumn>
-    <PropertyColumn Property="c=>c.TipoSancion"></PropertyColumn>
-    <PropertyColumn Property="c=>c.SancionArea"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Observaciones"></PropertyColumn>
-
-</Table>
+<div style="margin-top: 2em;">
+    <Table DataSource="sancionesVM" PageSize="6" Bordered>
+        <PropertyColumn Property="c=>c.Encargado"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Sancionado"></PropertyColumn>
+        <PropertyColumn Property="c=>c.FechaDesde"></PropertyColumn>
+        <PropertyColumn Property="c=>c.FechaHasta"></PropertyColumn>
+        <PropertyColumn Property="c=>c.TipoSancion"></PropertyColumn>
+        <PropertyColumn Property="c=>c.SancionArea"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Observaciones"></PropertyColumn>
+    </Table>
+</div>
 
 @code {
 
     public class SancionViewModel
     {
-
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
 

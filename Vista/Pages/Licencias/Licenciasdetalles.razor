@@ -3,16 +3,15 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 @page "/Licencias-Detalles"
-<h5>Detalles de las Licencias</h5>
-<style>
 
+<style>
     .ant-table-row > td {
-        color: white;
-        background-color: black;
+        color: black;
+        background-color: white;
     }
 
     .ant-table-row:hover > td {
-        background-color: black !important;
+        background-color: white !important;
     }
 
     .notificacion {
@@ -24,46 +23,81 @@
     .ant-badge {
         padding: 0 5px !important;
     }
+    .inpt-cont--lbl {
+        min-width: 170px;
+        text-align: start;
+        font-weight: bold;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont {
+        min-width: 170px;
+        display: flex;
+        flex-direction: column;
+        padding: .3em 0;
+        width: 100%;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont-inline {
+        min-width: 170px;
+        display: flex;
+        align-items: flex-end;
+        gap: 1em;
+        overflow: hidden !important;
+        height: 100%;
+    }
+
+    .botonesCont {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .ant-table-title {
+        height: 6.5em !important;
+    }
 </style>
 
-<div>
-    <div class="notificacion">
-        <a style="color:darkred;" href="/Licencias-Aprobar">
-            <p style="display:inline-block;">
-                Tienes licencias pendientes
-
-            </p>
-
-            <Badge Count="LicenciasPendientes.Count">
-                <span class="head-example" />
-            </Badge>
-
-
-        </a>
-    </div>
-
-    <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
-
-
-    <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
-
-
-    <Button OnClick="@LicenciasBUscar"></Button>
-
-    <GridRow>
-        <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
-            <Button Type="primary" OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
-        </GridCol>
-    </GridRow>
+<div style="margin-top: 2em;">
     <Table DataSource="LicenciasActivasVM" Bordered>
-
-        <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.Desde" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.Hasta" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
-        <PropertyColumn Property="c=>c.EstadoLicencia" Sortable></PropertyColumn>
-
+        <TitleTemplate>
+            <div class="botonesCont">
+                <div class="inpt-cont-inline">
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Desde: </label>
+                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Hasta: </label>
+                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
+                    </div>
+                    <div>
+                        <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">Buscar</Button>
+                    </div>  
+                </div>
+                <div>
+                    <div class="notificacion">
+                        <a href="/Licencias-Aprobar">
+                            <Badge Count="5">
+                                <i class="fa-sharp fa-regular fa-bell"></i>
+                            </Badge>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </TitleTemplate>
+        <ColumnDefinitions Context="muestra">
+            <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Desde" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Hasta" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.EstadoLicencia" Sortable></PropertyColumn>
+        </ColumnDefinitions>
     </Table>
+    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
+        <Button OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
+    </div>
 </div>
 <Modal Footer="null" Title="@("Agregar la licencia")"
        Visible="@_visibleAgregar"

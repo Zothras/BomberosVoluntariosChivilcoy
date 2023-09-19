@@ -222,8 +222,8 @@
 
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
-    <Header Style="position: fixed;box-shadow: 1px 1px 1px rgb(128, 128, 128);background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
-        <div style="display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
+    <Header Style="position: fixed;box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
+        <div style="font-family: 'Fjalla One', sans-serif;display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
             <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
                 @if (collapsedMenu)
                 {
@@ -241,10 +241,10 @@
         </div>
     </Header>
     <Layout>
-        <div class="side-cont" style="height: 100%;width: 230px;z-index: 100;position: fixed;">
-            <Menu style="height: 100%;background:rgb(230, 230, 230);z-index: 100;margin-top: 5em;overflow:auto;"
-                  Mode=MenuMode.Inline
-                  InlineCollapsed=collapsedMenu>
+        <Sider @bind-Collapsed=@collapsedMenu NoTrigger OnCollapse="OnCollapse" Style="margin-top: 5em;height: 100vh;overflow: auto;background:rgb(230, 230, 230);max-width: 250px;">
+            <Menu Mode=MenuMode.Inline
+                  InlineCollapsed=collapsedMenu
+                   Style="height: 100%;">
                 <MenuItem Key="0">
                     <IconTemplate>
                         <i class="fa-solid fa-user icoSelected" style="color: #263040;padding-right: 6px;"></i>
@@ -425,15 +425,16 @@
                         </MenuItem>
                     </a>
                 </SubMenu>
-                <Sider Style="margin-top:5em; background-color: transparent;"></Sider>
             </Menu>
-        </div>
+        </Sider>
+        <Layout>
+            <Content class="body-sect" Style="display: flex;align-items: center;flex-direction:column;position: relative;margin: 0;margin-top: 5em;
+                overflow: auto;height: 100%;min-width: 360px;min-height: 280px;background: rgb(220,220,220);">
+                @Body
+            </Content>
+        </Layout>
     </Layout>
-    <Content class="body-sect" Style="padding-top: 5em;position: relative; background: rgb(220,220,220);height: 100%;overflow: auto;">
-        <div style="display: flex; justify-content: center; align-items: center;flex-direction:column;position:relative;min-width: 360px;min-height: 640px;">
-            @Body
-        </div>
-    </Content>
+    
 </Layout>
 
 @code {
@@ -444,6 +445,11 @@
         collapsedMenu = !collapsedMenu;
     }
     
+    void OnCollapse(bool isCollapsed)
+    {
+        Console.WriteLine($"Collapsed: {isCollapsed}");
+    }
+
     RenderFragment sub1Title =
     @<span class="spanSalidas" style="position: relative;">
         <Icon class="menuSalidas" Type="team" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />

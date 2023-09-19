@@ -8,9 +8,8 @@
 @using System.Text.Json;
 @using Vista.Pages.Bomberos;
 
-<div>
-    <Table DataSource="BomberosVM" Bordered>
-
+<div style="margin-top: 2em;">
+    <Table DataSource="BomberosVM" PageSize="6" Bordered>
         <TitleTemplate>
             <GridRow>
                 <GridCol Span="4">
@@ -18,7 +17,6 @@
                 </GridCol>
             </GridRow>
         </TitleTemplate>
-
         <ColumnDefinitions>
             <PropertyColumn Property="c=>c.NumeroLegajo" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
@@ -32,9 +30,11 @@
             <PropertyColumn Property="c=>c.Email" Sortable></PropertyColumn>
         </ColumnDefinitions>
     </Table>
+    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
+         @* No funciona, hay que hacer lo mismo que en ImprimirReporteMovil.razor *@
+         <Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialBomberos/Imprimir"); })">Imprimir</Button>
+    </div>
 </div>
-
-<Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialBomberos/Imprimir"); })" Style="position: absolute;right: 25em;top: 2em;">Imprimir</Button>
 
 @code {
 

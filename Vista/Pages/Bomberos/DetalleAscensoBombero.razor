@@ -5,17 +5,15 @@
 @inject IMessageService message
 @page "/bomberos/ascenso"
 
-<Table DataSource="ascensos" Bordered>
-
-    <PropertyColumn Property="b=>b.NombreYApellido"></PropertyColumn>
-    <PropertyColumn Property="b=>b.FechaEmision"></PropertyColumn>
-    <PropertyColumn Property="b=>b.Descripcion"></PropertyColumn>
-    <PropertyColumn Property="b=>b.GradoAntiguo"></PropertyColumn>
-    <PropertyColumn Property="b=>b.GradoAscenso"></PropertyColumn>
-
-</Table>
-
-
+<div style="margin-top: 2em;">
+    <Table DataSource="ascensos" PageSize="6" Bordered>
+        <PropertyColumn Property="b=>b.NombreYApellido"></PropertyColumn>
+        <PropertyColumn Property="b=>b.FechaEmision"></PropertyColumn>
+        <PropertyColumn Property="b=>b.Descripcion"></PropertyColumn>
+        <PropertyColumn Property="b=>b.GradoAntiguo"></PropertyColumn>
+        <PropertyColumn Property="b=>b.GradoAscenso"></PropertyColumn>
+    </Table>
+</div>
 
 @code {
 
