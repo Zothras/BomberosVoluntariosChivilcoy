@@ -672,7 +672,7 @@
 
 
         var properties = typeof(MaterialPeligrosoViewModels).GetProperties();
-        var propertiesToShow = new List<string> { "Controlada", "Venteo", "DilucionDeVapores", "Neutralizacion", "Trasvase", "OtraAccionesMateriales" };
+        var propertiesToShow = new List<string> { "Controlada", "Venteo", "DilucionDeVapores", "Neutralizacion", "Trasvase", "OtraAccionesMateriales" };//En caso que se agrege nuevos datos a la lista, se debera agregar el guardado de la variable, lo mismo con la lista de la siguiente linea
         var propertiesToShow2 = new List<string> { "Descontaminacion", "Confinamiento", "SinAccion", "OtraAccionesPersonas" };
 
         foreach (var prop in properties)
@@ -748,9 +748,56 @@
                     },
                     Damnificados = new(),
                     Moviles = new(),
-                    CuerpoParticipante = new()
+                    CuerpoParticipante = new(),
                 };
-
+            var m_items = _selectedValues.ToList();
+            var m_items2 = _selectedValues2.ToList();
+            for (int i = 0; i < m_items.Count; i++)
+            {
+                if (m_items[i] == "Controlada")
+                {
+                    materiales.Controlada = true;
+                }
+                if (m_items[i] == "Venteo")
+                {
+                    materiales.Venteo = true;
+                }
+                if (m_items[i] == "DilucionDeVapores")
+                {
+                    materiales.DilucionDeVapores = true;
+                }
+                if (m_items[i] == "Neutralizacion")
+                {
+                    materiales.Neutralizacion = true;
+                }
+                if (m_items[i] == "Trasvase")
+                {
+                    materiales.Trasvase = true;
+                }
+                if (m_items[i] == "OtraAccionesMateriales")
+                {
+                    materiales.OtraAccionesMateriales = true;
+                }
+            }
+            for (int i = 0; i < m_items2.Count; i++)
+            {
+                if (m_items2[i] == "Descontaminacion")
+                {
+                    materiales.Descontaminacion = true;
+                }
+                if (m_items2[i] == "Confinamiento")
+                {
+                    materiales.Confinamiento = true;
+                }
+                if (m_items2[i] == "SinAccion")
+                {
+                    materiales.SinAccion = true;
+                }
+                if (m_items2[i] == "OtraAccionesPersonas")
+                {
+                    materiales.OtraAccionesPersonas = true;
+                }
+            }
             foreach (BomberoSalidaViewModels bom in bomberosSalida)
             {
                 Bombero? bomberoSalida = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == bom.NumeroLegajo);
@@ -1026,16 +1073,8 @@
 
     List<string> _items;
     List<string> _items2;
-    
-    IEnumerable<string> _selectedValues;
-    IEnumerable<string> _selectedValues2;
-
-   private async Task UpdateDatabase()
-    {
-        using var dbContext = DbFactory.CreateDbContext();
-        dbContext.Update(_model);
-        await dbContext.SaveChangesAsync();
-    }
+    IEnumerable<string> _selectedValues = Enumerable.Empty<string>();
+    IEnumerable<string> _selectedValues2 = Enumerable.Empty<string>();
 
     private async void OnSelectedItemsChangedHandler(IEnumerable<string> values)
     {
@@ -1050,7 +1089,6 @@
                     property.SetValue(_model, true);
                 }
             }
-            await UpdateDatabase();
         }
     }
 
@@ -1067,7 +1105,6 @@
                     property.SetValue(_model, true);
                 }
             }
-            await UpdateDatabase();
         }
     }
 
