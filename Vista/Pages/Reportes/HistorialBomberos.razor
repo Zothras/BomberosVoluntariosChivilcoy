@@ -1,6 +1,8 @@
 ﻿@implements IDisposable
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IJSRuntime JSRuntime;
+
 @page "/Reportes/HistorialBomberos"
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
@@ -10,13 +12,6 @@
 
 <div style="margin-top: 2em;">
     <Table DataSource="BomberosVM" PageSize="6" Bordered>
-        <TitleTemplate>
-            <GridRow>
-                <GridCol Span="4">
-                    <Title Level="3">Bomberos</Title>
-                </GridCol>
-            </GridRow>
-        </TitleTemplate>
         <ColumnDefinitions>
             <PropertyColumn Property="c=>c.NumeroLegajo" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
@@ -31,8 +26,7 @@
         </ColumnDefinitions>
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-         @* No funciona, hay que hacer lo mismo que en ImprimirReporteMovil.razor *@
-         <Button OnClick="@(() => { navigationManager.NavigateTo($"/HistorialBomberos/Imprimir"); })">Imprimir</Button>
+        <Button OnClick="@(async () => await JSRuntime.InvokeAsync<object>("open", "/Reportes/ImprimirRB", "_blank"))">Imprimir</Button>
     </div>
 </div>
 
@@ -41,9 +35,6 @@
     private Brigada[]? brigadas;
 
     BomberosDbContext Context;
-
-    List<Vista.Data.ViewModels.Personal.BomberoViweModel> todosLosBomberos = new();
-    List<Vista.Data.ViewModels.Personal.BomberoViweModel> Preferencia = new();
 
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
@@ -55,15 +46,10 @@
     static DateTime desde = hasta.AddMonths(-1);
 
     List<Vista.Data.ViewModels.Personal.BomberoViweModel>? BomberosVM = new();
-    List<Bombero>? bomberosRespaldo = new List<Bombero>();
 
     int _pageIndex = 1;
-    int _pageSize = 10;
+    int _pageSize = 6;
     int _total = 0;
-
-    bool _visible = false;
-    bool _visibleDetalle = false;
-    int idBombero;
 
     private async Task cargarbomberosVM()
     {
