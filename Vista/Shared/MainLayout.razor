@@ -10,7 +10,7 @@
     }
 
     .ant-menu-sub.ant-menu-inline{
-        background: rgb(230, 230, 230) !important;
+        background: #fff !important;
     }
 
     .ant-tooltip-content {
@@ -139,7 +139,7 @@
 
     .ant-menu-sub .ant-menu-inline {
         /*padding-left: 24px !important;*/
-        background: rgb(230, 230, 230) !important;
+        background: #fff !important;
     }
 
     .ant-menu-item-selected a:active {
@@ -218,6 +218,17 @@
     .body-sect {
         margin-left: 80px;
     }
+
+    .ant-layout-sider:not(.ant-layout-sider-collapsed) {
+        max-width: 250px!important;
+        flex: 0 0 250px!important;
+    }
+
+    @@media screen and (max-width: 360px) {
+        .ant-layout-sider-collapsed {
+            display: none!important;
+        }
+    }
 </style>
 
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
@@ -241,16 +252,16 @@
         </div>
     </Header>
     <Layout>
-        <Sider @bind-Collapsed=@collapsedMenu NoTrigger OnCollapse="OnCollapse" Style="margin-top: 5em;height: 100vh;overflow: auto;background:rgb(230, 230, 230);max-width: 250px;">
+        <Sider @bind-Collapsed=@collapsedMenu NoTrigger OnCollapse="OnCollapse" Style="margin-top: 5em;height: 100vh;overflow: auto;background:rgb(230, 230, 230);">
             <Menu Mode=MenuMode.Inline
                   InlineCollapsed=collapsedMenu
-                   Style="height: 100%;">
+                   Style="height: 100%;width: 100%;">
                 <MenuItem Key="0">
                     <IconTemplate>
                         <i class="fa-solid fa-user icoSelected" style="color: #263040;padding-right: 6px;"></i>
                     </IconTemplate>
                     <ChildContent>
-                        <li class="nav-item"><a class="nav-link" href="\legajo">Legajo</a></li>
+                         <li class="nav-item"><a class="nav-link" href="/Bomberos/Legajo">Legajo</a></li>
                     </ChildContent>
                 </MenuItem>
                 <MenuItem Key="5" Icon="container">
