@@ -1,23 +1,23 @@
-﻿@page "/Reportes/ImprimirRM"
+﻿@page "/Reportes/ImprimirRB"
 @inject NavigationManager navigationManager
 @layout EmptyLayout
 
 <style>
-    .ant-table-title{
-        display: none!important;
-    }
-
-    .ant-table-pagination.ant-pagination{
+    .ant-table-title {
         display: none !important;
     }
 
-    .ant-btn{
+    .ant-table-pagination.ant-pagination {
+        display: none !important;
+    }
+
+    .ant-btn {
         display: none !important;
     }
 </style>
 
 <div>
-    <HistorialMoviles/>
+    <HistorialBomberos />
 </div>
 
 @code {

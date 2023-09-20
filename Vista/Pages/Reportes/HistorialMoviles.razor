@@ -10,44 +10,6 @@
 @using System.Text.Json;
 @using Vista.Data.ViewModels.Personal;
 
-<style>
-    .inpt-cont--lbl {
-        min-width: 170px;
-        text-align: start;
-        font-weight: bold;
-        overflow: hidden !important;
-    }
-
-    .inpt-cont {
-        min-width: 170px;
-        display: flex;
-        flex-direction: column;
-        padding: .3em 0;
-        width: 100%;
-        overflow: hidden !important;
-    }
-
-    .inpt-cont-inline {
-        min-width: 170px;
-        display: flex;
-        align-items: flex-end;
-        gap: 1em;
-        overflow: hidden !important;
-        height: 100%;
-    }
-
-    .botonesCont{
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
-
-    .ant-table-title{
-        height: 6.5em !important;
-    }
-
-</style>
-
 <EditForm Model="this">
     <div style="margin-top: 2em;">
         <Table DataSource="MovilesSalidas" PageSize="6" Bordered>
@@ -120,8 +82,6 @@
         public int Kilometraje { get; set; }
         public int NumeroParte { get; set; }
         public string NumeroMovil { get; set; }
-        //public DateTime Desde { get; set; }
-        //public DateTime Hasta { get; set; }
         public DateTime? Hrllegada { get; set; }
 
         public string CargoCombustibleTexto
@@ -165,8 +125,8 @@
 
     private async Task Init()
     {
-        Context = DbFactory.CreateDbContext();
         //var moviles = await Context.Set<MovilSalida>().ToListAsync();
+        Context = DbFactory.CreateDbContext();
         await CargarSalidasMovil();
     }
 
