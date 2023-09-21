@@ -14,7 +14,6 @@ public class IncendioViewModels : SalidasViewModels
 
     public List<VehiculoAfectadoIncendio> VehiculoAfectados { get; set; }//Lo cambie por VehiculoAfectadoIncendio
     public TipoEvacuacion TipoEvacuacion { get; set; }
-    [Required, StringLength(255)]
     public TipoSuperficie TipoSuperficieAfectada { get; set; }
 
     public string? DetalleSuperficieAfectadaIncendio { get; set; }
