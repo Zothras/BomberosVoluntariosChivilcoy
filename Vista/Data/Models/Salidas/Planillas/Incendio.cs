@@ -8,27 +8,30 @@ namespace Vista.Data.Models.Salidas.Planillas
     {
         //Localización, datos del solicitante, personas damnificadas y datos del seguro
         public bool DeteccionAutomaticaId { get; set; }
-
         public bool Extintor { get; set; }
         public bool Hidrante { get; set; }
         public List<VehiculoAfectadoIncendio> VehiculoAfectados { get; set; }
-        [StringLength(255)]
         public TipoEvacuacion TipoEvacuacion { get; set; }
+        [Required]
         public TipoSuperficie TipoSuperficieAfectada { get; set; }
-        [Required, StringLength(255)]
-        public string DetalleSuperficieAfectadaIncendio { get; set; }
+        [StringLength(255)]
+        public string? DetalleSuperficieAfectadaIncendio { get; set; }
         public TipoCausaIncendio SuperficieAfectadaCausa { get; set; }
 
         //Fin Superficie Afectada
+        [Required]
         public TipoIncendio Tipo { get; set; }
+
+        [Required]
         public TipoIncendioAbertura? TipoAbertura { get; set; }
-        [Required, StringLength(255)]
-        public string OtraAbertura { get; set; }
+        [StringLength(255)]
+        public string? OtraAbertura { get; set; }
+        [Required]
         public TipoIncendioTecho? TipoTecho { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? OtroTecho { get; set; }
-        [Required, StringLength(255)]
-        public string OtroLugar { get; set; }
+        [StringLength(255)]
+        public string? OtroLugar { get; set; }
         [StringLength(255)]
         public string? NombreEstablecimiento { get; set; }
         public int? CantidadPisos { get; set; }
