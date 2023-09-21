@@ -555,7 +555,7 @@
         }
         @if (current == steps.Length - 1)
         {
-            <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@Cargarmaterial">
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
                 Cargar salida
             </Button>
         }
@@ -693,6 +693,11 @@
     }
 
     public async Task Cargarmaterial()
+    {
+        
+    }
+
+    private async void OnFinish(EditContext editContext)
     {
         try
         {
@@ -866,11 +871,6 @@
             else
                 await message.Error(e.Message, 5);
         }
-    }
-
-    private async void OnFinish(EditContext editContext)
-    {
-
     }
 
     private void OnFinishFailed(EditContext editContext)
