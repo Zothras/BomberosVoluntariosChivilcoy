@@ -21,8 +21,8 @@
         background-color: rgb(62, 24, 24) !important;
         width: 100%;
     }
-    .ant-menu-submenu .ant-menu-item-selected {
-        padding-left: 45px !important;
+    .ant-menu-submenu .ant-menu-item-selected{
+        /* padding-left: 45px !important; */
         border-left: 3px solid rgb(62, 24, 24) !important;
         color: rgb(62, 24, 24) !important;
         font-size: 1em!important;
@@ -220,13 +220,33 @@
     }
 
     .ant-layout-sider:not(.ant-layout-sider-collapsed) {
-        max-width: 250px!important;
-        flex: 0 0 250px!important;
+        max-width: 265px!important;
+        flex: 0 0 265px!important;
     }
 
-    @@media screen and (max-width: 360px) {
+    @@media screen and (max-width: 600px) {
         .ant-layout-sider-collapsed {
             display: none!important;
+        }
+
+        .sidebarAnt {
+            position: fixed !important;
+            z-index: 1001 !important; 
+            width: 255px!important;
+        }
+
+        .body-sect {
+            margin-left: 0!important;
+        }
+    }
+
+    @@media screen and (max-width: 377px) {
+        .head-cont{
+            gap: 0!important;
+        }
+
+        .navbar-brand{
+            font-size: 16px!important;
         }
     }
 </style>
@@ -234,7 +254,7 @@
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
     <Header Style="position: fixed;box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
-        <div style="font-family: 'Fjalla One', sans-serif;display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
+        <div class="head-cont" style="font-family: 'Fjalla One', sans-serif;display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
             <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
                 @if (collapsedMenu)
                 {
@@ -251,8 +271,8 @@
             @*<p class="navbar-brand" style="color: rgb(263040,255,255);position: absolute;right: 10px; transform:translate(50% -50%);">!Hola #Usuario!</p>*@
         </div>
     </Header>
-    <Layout>
-        <Sider @bind-Collapsed=@collapsedMenu NoTrigger OnCollapse="OnCollapse" Style="margin-top: 5em;height: 100vh;overflow: auto;background:rgb(230, 230, 230);">
+    <Layout Style="background: #fff;!important;">
+        <Sider Class="sidebarAnt" @bind-Collapsed=@collapsedMenu NoTrigger OnCollapse="OnCollapse" Style="margin-top: 5em;overflow-y: auto;overflow-x: hidden;background: #fff;">
             <Menu Mode=MenuMode.Inline
                   InlineCollapsed=collapsedMenu
                    Style="height: 100%;width: 100%;">
