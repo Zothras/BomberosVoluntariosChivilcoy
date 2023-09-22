@@ -375,14 +375,14 @@
     </Form>
 </Modal>
 
-@* <Modal Title="@("Datos de la carga de Incendio")"
+<Modal Title="@("Datos de la carga de Incendio")"
        Visible="@imprimirmodal"
        OnOk="@HandleOkIMP"
        OnCancel="@HandleCancelIMP">
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioIndustrialView.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioIndustrialView.NumeroParte}/{false}", true); })">No</button>
-</Modal> *@
+</Modal>
 
 @code {
     BomberosDbContext Context { get; set; }
@@ -493,24 +493,8 @@
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
         await CargarBomberosView();
     }
-    private void OnFinish(EditContext editContext)
+    private async void OnFinish(EditContext editContext)
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(salidaIncendioIndustrialView)}");
-    }
-
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioIndustrialView)}");
-    }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
-
-    public async void SubirIncendioIndustria()
-    {
-
         try
         {
             Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
@@ -643,6 +627,22 @@
                 await message.Error(e.Message, 5);
             imprimirmodal = true;
         }
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioIndustrialView)}");
+    }
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+
+    public async void SubirIncendioIndustria()
+    {
+
+        
 
 
     }

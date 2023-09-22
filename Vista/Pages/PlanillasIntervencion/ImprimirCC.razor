@@ -4,6 +4,7 @@
 @layout EmptyLayout
 @using System;
 @using System.Globalization;
+@inject NavigationManager navigationManager
 
 <!DOCTYPE html>
 <html lang="es-ES">
@@ -391,5 +392,13 @@
     public void Dispose()
     {
         Context?.Dispose();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            navigationManager.NavigateTo("javascript:window.print()");
+        }
     }
 }

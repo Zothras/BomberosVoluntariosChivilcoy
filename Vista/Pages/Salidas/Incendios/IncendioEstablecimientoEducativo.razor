@@ -366,14 +366,14 @@
     </Form>
 </Modal>
 
-@* <Modal Title="@("Datos de la carga de Incendio")"
+<Modal Title="@("Datos de la carga de Incendio")"
        Visible="@imprimirmodal"
        OnOk="@HandleOkIMP"
        OnCancel="@HandleCancelIMP">
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{incendioEducativoModel.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{incendioEducativoModel.NumeroParte}/{false}", true); })">No</button>
-</Modal> *@
+</Modal>
 
 @code {
     BomberosDbContext Context { get; set; }
@@ -483,22 +483,7 @@
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
         await CargarBomberosView();
     }
-    private void OnFinish(EditContext editContext)
-    {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(incendioEducativoModel)}");
-    }
-
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(incendioEducativoModel)}");
-    }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
-
-    public async Task SubirIncendioEstabEducativo()
+    private async void OnFinish(EditContext editContext)
     {
         try
         {
@@ -631,6 +616,21 @@
                 await message.Error(e.Message, 5);
             imprimirmodal = true;
         }
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(incendioEducativoModel)}");
+    }
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+
+    public async Task SubirIncendioEstabEducativo()
+    {
+        
 
 
     }

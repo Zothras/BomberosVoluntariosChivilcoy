@@ -390,14 +390,14 @@
     </Form>
 </Modal>
 
-@* <Modal Title="@("Datos de la carga de Incendio")"
+<Modal Title="@("Datos de la carga de Incendio")"
        Visible="@imprimirmodal"
        OnOk="@HandleOkIMP"
        OnCancel="@HandleCancelIMP">
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioComercioView.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioComercioView.NumeroParte}/{false}", true); })">No</button>
-</Modal> *@
+</Modal>
 
 @code {
 

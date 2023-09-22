@@ -375,14 +375,14 @@
     </Form>
 </Modal>
 
-@* <Modal Title="@("Datos de la carga de Incendio")"
+<Modal Title="@("Datos de la carga de Incendio")"
        Visible="@imprimirmodal"
        OnOk="@HandleOkIMP"
        OnCancel="@HandleCancelIMP">
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioViviendaVista.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioViviendaVista.NumeroParte}/{false}", true); })">No</button>
-</Modal> *@
+</Modal>
 
 @code {
 
@@ -497,22 +497,7 @@
         await CargarBomberosView();
     }
 
-    private void OnFinish(EditContext editContext)
-    {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(salidaIncendioViviendaVista)}");
-    }
-
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioViviendaVista)}");
-    }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
-
-    public async Task SubirIncendioVivienda()
+    private async void OnFinish(EditContext editContext)
     {
         try
         {
@@ -647,6 +632,21 @@
                 await message.Error(e.Message, 5);
             imprimirmodal = true;
         }
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioViviendaVista)}");
+    }
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+
+    public async Task SubirIncendioVivienda()
+    {
+        
 
 
     }
