@@ -233,10 +233,16 @@
             position: fixed !important;
             z-index: 1001 !important; 
             width: 255px!important;
+            top: 0;
+            bottom: 0;
+            overflow-y: scroll!important;
+            overflow-x: hidden;
         }
+
 
         .body-sect {
             margin-left: 0!important;
+            overflow-x: hidden!important;
         }
     }
 
@@ -271,7 +277,7 @@
             @*<p class="navbar-brand" style="color: rgb(263040,255,255);position: absolute;right: 10px; transform:translate(50% -50%);">!Hola #Usuario!</p>*@
         </div>
     </Header>
-    <Layout Style="background: #fff;!important;">
+    <Layout Style="background: #fff;overflow: hidden!important;">
         <Sider Class="sidebarAnt" @bind-Collapsed=@collapsedMenu NoTrigger OnCollapse="OnCollapse" Style="margin-top: 5em;overflow-y: auto;overflow-x: hidden;background: #fff;">
             <Menu Mode=MenuMode.Inline
                   InlineCollapsed=collapsedMenu

@@ -49,19 +49,19 @@ h2 {
 
 
 .indexCont {
-    height: 100%;
-    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 2em;
     gap: 20px;
-    margin-bottom: 118px;
+    margin: 9em 0;
+    max-width: 90%;
+    min-width: 300px;
+    width: 100%;
 }
 
     .indexCont div p {
         display: flex;
-        font-size: 4em;
+        font-size: 3em;
         font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     }

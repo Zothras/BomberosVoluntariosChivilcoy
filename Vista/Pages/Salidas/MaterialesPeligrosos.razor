@@ -5,7 +5,6 @@
 @page "/salidas/materiales-peligrosos"
 @using Vista.Data.ViewModels.MaterialesPeligrosos;
 
-
 <style>
     .ant-carousel .slick-dots li {
         display: none !important;
@@ -38,7 +37,7 @@
     }
 
     .inpt-cont {
-        min-width: 170px;
+        min-width: 100px;
         display: flex;
         flex-direction: column;
         padding: .3em 0;
@@ -66,7 +65,7 @@
     }
 </style>
 
-<div style="max-width: 40%;">
+<div style="max-width: 100%;margin-top: 2em;">
     <Steps Current="current">
         @foreach (var item in steps)
         {
@@ -447,7 +446,7 @@
                              </Select>
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Bombero que lleno la planilla</label>
+                            <label class="inpt-cont--lbl">Lleno la planilla</label>
                             <Select TItem="BomberoViweModel"
                                      TItemValue="int"
                                      DataSource="@bomberoTodos"

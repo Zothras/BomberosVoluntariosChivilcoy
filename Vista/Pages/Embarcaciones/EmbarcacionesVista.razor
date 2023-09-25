@@ -20,37 +20,49 @@
     }
 
     .grid {
-        height: 100%;
-        width: 1036px;
+        max-width: 1300px;
+        min-width: 320px;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-start;
         gap: 12px;
-        margin: 30px .5em;
+        margin: 30px 0;
     }
     #ant-modal-wrap_ant-blazor-688c52c6-93b1-4373-ac71-796fa84c7ba4{
         height: 50em!important;
     }
+    @@media screen and (max-width: 1048px){
+        .grid div:first-child{
+            flex-direction: column!important;
+            align-items:flex-start!important;
+        }
+    }
+
+    @@media screen and (max-width: 719px) {
+        .grid div:first-child div:last-child {
+            flex-direction: column !important;
+        }
+    }
 </style>
-<div style="display: flex;flex-direction: column;justify-content:center;align-items:center;height: 100%;width:100%;">
-    <div style="display: flex;justify-content: space-between;margin: 1em 1em;width: 1036px;padding: 0; align-items: center;">
-        <div style="position: relative;">
-            <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;display: contents;">
-                <b>ALTA / BAJA / MODIFICACION DE EMBARCACION</b>
-            </p>
-        </div>
-        <div>
-            <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Embarcaciones-baja"); })">
-                <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Embarcaciones de baja</Button>
-            </a>
-            <a @onclick="AgregarEmbarcacionModal">
-                <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar Embarcacion</Button>
-            </a>
-        </div>
-    </div>
+
+<div style="display: flex;flex-direction: column;align-items:center;height: 100%;width:80%;">
     <div class="grid">
-        
+        <div style="display: flex;justify-content: space-between;width: 100%;min-width: 320px;align-items: center;">
+            <div style="position: relative;">
+                <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;display: contents;">
+                    <b>ALTA / BAJA / MODIFICACION DE EMBARCACION</b>
+                </p>
+            </div>
+            <div style="min-width: 300px;display: flex; gap: 5px;">
+                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Embarcaciones-baja"); })">
+                    <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Embarcaciones de baja</Button>
+                </a>
+                <a @onclick="AgregarEmbarcacionModal">
+                    <Button Type="@ButtonType.Primary" Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar embarcacion</Button>
+                </a>
+            </div>
+        </div>
         @if (embarcaciones is not null)
         {
             @foreach(Embarcacion e in embarcaciones)
