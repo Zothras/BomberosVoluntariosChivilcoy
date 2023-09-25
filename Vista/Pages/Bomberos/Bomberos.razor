@@ -218,88 +218,148 @@
                     OnSelectedItemChanged="OnSelectedItemChangedHandler">
             </Select>
         </FormItem>
-        @*
-        <FormItem Label="Vigente desde">
-        <DatePicker DefaultValue="@DateTime.Now" @bind-Value="@bomberoVM.VigenteDesde" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
-        </FormItem>
-        <FormItem Label="Vigente hasta">
-        <DatePicker DefaultValue="@null" @bind-Value="@bomberoVM.VigenteHasta" Picker="@DatePickerType.Date" Style="width: 150px;" AllowClear />
-        </FormItem>
-        <FormItem Label="Dia de semana">
-        <Select @bind-Value="@bomberoVM.DiaSemana"
-        Style="width:200px"
-        TItemValue="Dias"
-        TItem="Dias"
-        Bordered="true">
-        <SelectOptions>
-        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Domingo)" Label="Domingo" />
-        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Lunes)" Label="Lunes" />
-        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Martes)" Label="Martes" />
-        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Miercoles)" Label="Miercoles" />
-        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Jueves)" Label="Jueves" />
-        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Viernes)" Label="Viernes" />
-        <SelectOption TItemValue="Dias" TItem="Dias" Value="@(Dias.Sabado)" Label="Sabado" />
-        </SelectOptions>
-        </Select>
-        </FormItem>
-
-        <FormItem Label="Horarios">
-        <Select @bind-Value="@horadesde"
-        Style="width:200px"
-        TItemValue="int"
-        TItem="int"
-        Bordered="true">
-        <SelectOptions>
-        @for (int i = 1; i < 25 ; i++)
-        {
-        <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
-        }
-        </SelectOptions>
-        </Select>
-
-        <Select @bind-Value="@horaasta"
-        Style="width:200px"
-        TItemValue="int"
-        TItem="int"
-        Bordered="true">
-        <SelectOptions>
-        @for (int i = 1; i < 25; i++)
-        {
-        <SelectOption TItemValue="int" TItem="int" Value="@(i)" />
-        }
-        </SelectOptions>
-        </Select>
-        </FormItem>
-        <FormItem Label="Hora hasta">
-        @*<TimePicker TValue="TimeOnly" />
-        </FormItem>
-
-
-        <FormItem Label="Tipo de horario">
-        <Select @bind-Value="@bomberoVM.ModoRotativo"
-        DefaultValue="TiposRotativos.Fijo"
-        Style="width:200px"
-        TItemValue="TiposRotativos"
-        TItem="TiposRotativos"
-        Bordered="true">
-        <SelectOptions>
-        <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Fijo)" Label="Fijo" />
-        <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Semanal)" Label="Semanal" />
-        <SelectOption TItemValue="TiposRotativos" TItem="TiposRotativos" Value="@(TiposRotativos.Mensual)" Label="Mensual" />
-        </SelectOptions>
-        </Select>
-        </FormItem>
-
-        @if (bomberoVM.ModoRotativo != TiposRotativos.Fijo)
-        {
-        <FormItem Label="Periodo">
-        <Input DefaultValue="@TimeOnly.MaxValue" @bind-Value="@bomberoVM.Periodo" />
-        </FormItem>
-        }
-        *@
     </Form>
 
 </Modal>
+@*<Button Type="@ButtonType.Primary" OnClick="()=>ShowModalHorarios(bomberoVM.NumeroLegajo)">Editar horarios</Button>
+<Button Type="@ButtonType.Primary" OnClick="()=>ShowModalAgregarHorarios(bomberoVM.NumeroLegajo)">agregar</Button>
+<Button Type="@ButtonType.Primary" OnClick="()=>crearHorarioLista(bomberoVM.Horarios)">Crear horario lista vm</Button>*@
+@* JORNADA VIGENCIA *@
+@* // Modal Agregar horario y todos los horarios
+    <Modal Title="@("Horario_agregar")"
+       Visible="@_visibleHorariosAgregar"
+       OnCancel="@HandleCancelAgregarHorarios">
+    <Form Model="@horario_plantilla"
+          LabelColSpan="8"
+          WrapperColSpan="16">
+          
+        <FormItem Label="Vigente desde">
+            <DatePicker DefaultValue="@null" TValue="DateTime?" Picker="@DatePickerType.Date" @bind-Value="@horario_plantilla.VigenteDesde" Style="width: 95px;" AllowClear  />
+        </FormItem>
+          
+        <FormItem Label="Vigente desde">
+            <DatePicker TValue="DateTime?" DefaultValue="@null" @bind-Value="@horario_plantilla.VigenteDesde" Picker="@DatePickerType.Date" Style="width: 95px;" AllowClear />
+        </FormItem>
+        
+       
+        <FormItem Label="Vigente hasta">
+            <DatePicker DefaultValue="@null" @bind-Value="@horario_plantilla.VigenteHasta" Picker="@DatePickerType.Date" Style="width: 95px;" AllowClear />
+        </FormItem>
+        
+        <FormItem Label="Dia de semana">
+            <EnumSelect TEnum="Dias" @bind-Value="@horario_plantilla.DiaSemana" />
+        </FormItem>
+        <FormItem Label="Hora hasta">
+
+            <Select TItemValue="int"
+                    TItem="int"
+                    @bind-Value="@uhoradesde">
+                @for (int j = 0; j < 25; j++)
+                {
+                    <SimpleSelectOption Value="j"></SimpleSelectOption>
+                }
+            </Select>
+            <Select TItemValue="int"
+                    TItem="int"
+                    @bind-Value="@uhorahasta">
+                @for (int j = 0; j < 25; j++)
+                {
+                    <SimpleSelectOption Value="j"></SimpleSelectOption>
+                }
+            </Select>
+        </FormItem>
+        
+        <FormItem Label="Hora hasta">
+            <DatePicker DefaultValue="@TimeOnly.MinValue" @bind-Value="horario_plantilla.HoraHasta" Picker="@DatePickerType.Time" Style="width: 95px;" AllowClear  />
+        </FormItem>
+        
+        <Button Type="@ButtonType.Primary" OnClick="()=>AgregarHorarioALalista(horario_plantilla,bomberoVM.Horarios)">Agregar horario</Button>
+    </Form>
+</Modal>
+@{
+    HorarioBombero H = new();
+    H.HoraHasta = new(1,1);
+    H.HoraDesde = new(2,2);
+    H.ModoRotativo = TiposRotativos.Fijo;
+    H.DiaSemana = Dias.Lunes;
+    bomberoVM.Horarios.Add(H);
+}
+<Modal Title="@("Horario")"
+       Visible="@_visibleHorarios"
+       OnCancel="@HandleCancelHorarios"
+       Footer="@footer">
+      <Form Loading="loading" Model="@bomberoVM"
+          LabelColSpan="8"
+          WrapperColSpan="16">
+        @if (bomberoVM.Horarios.Count != 0)
+        {
+            AgregarHora();
+            @for (int i = 0; i < bomberoVM.Horarios.Count; i++)
+            {
+                <FormItem Label="Vigente desde">
+                    <DatePicker DefaultValue="@null" @bind-Value="@bomberoVM.Horarios[i].VigenteDesde" Picker="@DatePickerType.Date" Style="width: 95px;" AllowClear />
+                </FormItem>
+
+                <FormItem Label="Vigente hasta">
+                    <DatePicker DefaultValue="@null" @bind-Value="@bomberoVM.Horarios[i].VigenteHasta" Picker="@DatePickerType.Date" Style="width: 95px;" AllowClear />
+                </FormItem>
+            
+                <FormItem Label="Dia de semana">
+                    <EnumSelect TEnum="Dias" @bind-Value="@bomberoVM.Horarios[i].DiaSemana" />
+                </FormItem>            
+                <FormItem Label="Hora hasta">
+
+                    <Select TItemValue="int"
+                    TItem="int"
+                    @bind-Value="@horadesde[i]">
+                    @for (int j = 0; j < 25; j++)
+                    {
+                        <SimpleSelectOption Value="j" ></SimpleSelectOption>
+                    }
+                    </Select>
+                    <Select TItemValue="int"
+                    TItem="int"
+                    @bind-Value="@horahasta[i]">
+                        @for (int j = 0; j < 25; j++)
+                        {
+                            <SimpleSelectOption Value="j"></SimpleSelectOption>
+                        }
+                    </Select>
+                </FormItem>
+                
+                int horadesde, minutosdesde, horahasta, minutoshasta;
+                <select @bind="@horadesde" style="width:75px">
+                        <option hidden selected>Seleccione una hora</option>
+                        @for (int ind = 1; ind < 25; ind++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+
+                <select @bind="@minutosdesde" style="width:75px">
+                        <option hidden selected>Seleccione una minutos</option>
+                        @for (int ind = 1; ind < 60; ind++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                
+                @if (bomberoVM.Horarios[i].ModoRotativo != TiposRotativos.Fijo)
+                {
+                    <FormItem Label="Periodo">
+                        <Input DefaultValue="@TimeOnly.MaxValue" @bind-Value="@bomberoVM.Horarios[i].Periodo" />
+                    </FormItem>
+                }
+
+            }
+        }
+        else
+        {
+            <Button Type="@ButtonType.Primary">NO HAY HORARIOS</Button>
+        }
+    </Form>
+</Modal>
+*@
 @{
     RenderFragment footer = @<Template>
         <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
@@ -383,8 +443,12 @@
     //variables
 
     private bool busquedaVacia = true;
-    //static int horadesde, minutosdesde, horaasta, minutosasta;
-    //TimeOnly horacero = new(0,0,0);
+    //static int uhoradesde, uminutosdesde, uhorahasta, uminutoshasta;
+    //HorarioBombero? horario_plantilla = new();
+    //TimeOnly timeonly;
+    //List<int> horadesde = new();
+    //List<int> horahasta = new();
+    //ushort[] horadesde = new ushort[64000];?
     #region "tabla"
     //Bombero[]? bomberos;
     private Brigada[]? brigadas;
@@ -523,15 +587,8 @@
 
         //Horarios
         /*
-        public bool es_periodico { get; set; }
-        public DateTime? VigenteDesde { get; set; }
-        public DateTime? VigenteHasta { get; set; }
-        public Dias DiaSemana { get; set; }
-        public TimeOnly HoraDesde { get; set; }
-        public TimeOnly HoraHasta { get; set; }
-        public TimeOnly? Periodo { get; set; }
-        public TiposRotativos ModoRotativo { get; set; }
-        public int BomberoId { get; set; }
+        public List<HorarioBombero> Horarios = new();
+        public List<HorarioBombero> HorariosAgregardos = new();
         */
     }
     #endregion
@@ -556,7 +613,81 @@
     bool _visibleDetalle = false;
     public bool _visibleAgregarS;
     public bool _visibleAgregarA;
+    bool _visibleHorarios = true;
+    bool _visibleHorariosAgregar = false;
     int idBombero;
+    /*
+    public void AgregarHorarioALalista(HorarioBombero horario_plantilla, List<HorarioBombero> Horarios)
+    {
+        horario_plantilla.HoraHasta = new(uhorahasta,0);
+        horario_plantilla.HoraDesde = new(uhoradesde,0);
+        Horarios.Add(horario_plantilla);
+        _visibleHorariosAgregar = false;
+        _visible = true;
+    }
+    public void crearHorarioLista(List<HorarioBombero> Horarios)
+    {
+        HorarioBombero horario = new();
+        Horarios.Add(horario);
+    }
+    private async void ShowModalHorarios(int id)
+    {
+        GetBomberoViewModel(id);
+        await Task.Delay(200);
+        _visible = false;
+        _visibleHorarios = true;
+        idBombero = id;
+    }
+    
+    private void HandleHorarios(MouseEventArgs e)
+        {
+        Console.WriteLine("e");
+        _visibleHorarios = false;
+        _visible = true;
+    }
+    
+    private void HandleCancelHorarios(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visibleHorarios = false;
+        _visible = true;
+    }
+    private async void ShowModalAgregarHorarios(int id)
+    {
+        GetBomberoViewModel(id);
+        await Task.Delay(200);
+        _visibleHorariosAgregar = true;
+        _visible = false;
+        idBombero = id;
+    }
+    
+    private void HandleAgregarHorarios(MouseEventArgs e)
+        {
+        Console.WriteLine("e");
+        _visibleHorariosAgregar = true;
+        _visible = false;
+    }
+    
+    private void HandleCancelAgregarHorarios(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visibleHorariosAgregar = false;
+        _visible = true;
+    }
+    private void AgregarHora()
+    {
+        for (int i = 0; i < bomberoVM.Horarios.Count; i++)
+        {
+            horadesde.Add(0);
+            horahasta.Add(0);
+        }
+
+    }
+    private void ConvertirHora(int e)
+    {
+
+    }
+    */
     private async void ShowModalEditar(int id)
     {
 
@@ -730,9 +861,14 @@
         bombero.Contacto.TelefonoLaboral = bomberoVM.TelefonoLaboral;
         bombero.Contacto.Email = bomberoVM.Email;
         //agregar el seteo de hora desde y asta
-        /*
-        horario.HoraDesde = bomberoVM.HoraDesde;
-        horario.HoraHasta = bomberoVM.HoraHasta;
+        /*Nota: Corregir guardado
+        horario.VigenteDesde = bomberoVM.VigenteDesde;
+        horario.VigenteHasta = bomberoVM.VigenteHasta;
+        horario.DiaSemana = bomberoVM.DiaSemana;
+        horario.HoraDesde = new(horadesde, minutosdesde);
+        horario.HoraHasta = new(horahasta, minutoshasta);
+        horario.Periodo = bomberoVM.Periodo;
+        bombero.Horarios.Add(horario);
         */
 
         await context.SaveChangesAsync();
