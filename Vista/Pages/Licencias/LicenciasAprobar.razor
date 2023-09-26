@@ -7,30 +7,28 @@
 <style>
 
     .ant-table-row > td {
-        color: white;
-        background-color: black;
+        color: black;
+        background-color: white;
     }
 
     .ant-table-row:hover > td {
-        background-color: black !important;
+        background-color: white !important;
     }
 </style>
 <div>
-
-    <Table DataSource="LicenciasActivasVM" Bordered>
-
+    <Table DataSource="LicenciasActivasVM" Bordered Responsive Size="TableSize.Small">
         <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
         <PropertyColumn Property="c=>c.Desde"></PropertyColumn>
         <PropertyColumn Property="c=>c.Hasta"></PropertyColumn>
         <PropertyColumn Property="c=>c.TipoLicencia"></PropertyColumn>
         <PropertyColumn Property="c=>c.EstadoLicencia"></PropertyColumn>
-        <ActionColumn Title="Action">
-        <Popconfirm Title="Esta seguro que quiere aprobarla?"
-        OnConfirm="()=> AprobarLicencia(context.LicenciaId)"
-        OkText="Yes"
-        CancelText="No">
-        <a>Aprobar Licencia</a>
-        </Popconfirm>
+        <ActionColumn Title="Acciones">
+            <Popconfirm Title="¿Quiere aprobar esta licencia?"
+                OnConfirm="()=> AprobarLicencia(context.LicenciaId)"
+                OkText="Si"
+                CancelText="No">
+                    <i class="fa-solid fa-check" style="color: #40c011;cursor: pointer;"></i>
+            </Popconfirm>
         </ActionColumn>
     </Table>
 </div>

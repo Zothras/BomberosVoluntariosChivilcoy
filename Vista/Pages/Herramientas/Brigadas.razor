@@ -84,7 +84,7 @@
 
 @*------------------------------------------------------------------------Tabla-----------------------------------------------------------------------------------------*@
 <div style="margin-top: 2em;">
-    <Table DataSource="bomberos" OnChange="OnChange" TItem="Bombero" @ref="_table" PageSize="6">
+    <Table DataSource="bomberos" OnChange="OnChange" TItem="Bombero" @ref="_table" PageSize="6" Responsive>
         <TitleTemplate>
             <GridRow Style="display: flex;">
                 <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Style="width: 100%;"/>

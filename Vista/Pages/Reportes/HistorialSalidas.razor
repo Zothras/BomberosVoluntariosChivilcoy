@@ -13,43 +13,43 @@
 @using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Rescates;
 
+<div style="margin-top: 2em;">
+    <Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1" Responsive PageSize="6">
+        <TitleTemplate>
+            <GridRow>
+                <GridCol Span="4">
+                    <Title Level="3">Registro Salidas</Title>
+                </GridCol>
+                <GridCol Span="8" Offset="12">
+                    <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+                </GridCol>
+            </GridRow>
+        </TitleTemplate>
+        <ColumnDefinitions>
+            <PropertyColumn Title="N° Parte" Property="c=>c.NumeroParte"
+                            DefaultSortOrder="@SortDirection.Descending"
+                            SorterCompare="@((a,b)=> a - b)" />
+            <PropertyColumn Title="Direccion" Property="c=>c.EntreCalles"
+                            DefaultSortOrder="@SortDirection.Descending"
+                             />
+             <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+            <PropertyColumn Title="Tipo Salida" Property="c=>c.Discriminador"
+                            SortDirections="new[] { SortDirection.Descending }"
+                            Filters="DiscriminadorFilter"
+                            OnFilter="((value,name)=>Enum.GetName(typeof(TipoSalida), name).StartsWith(Enum.GetName(typeof(TipoSalida), value)))" />
 
-<Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1">
-    <TitleTemplate>
-        <GridRow>
-            <GridCol Span="4">
-                <Title Level="3">Registro Salidas</Title>
-            </GridCol>
-            <GridCol Span="8" Offset="12">
-                <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
-            </GridCol>
-        </GridRow>
-    </TitleTemplate>
-    <ColumnDefinitions>
-        <PropertyColumn Title="N° Parte" Property="c=>c.NumeroParte"
-                        DefaultSortOrder="@SortDirection.Descending"
-                        SorterCompare="@((a,b)=> a - b)" />
-        <PropertyColumn Title="Direccion" Property="c=>c.EntreCalles"
-                        DefaultSortOrder="@SortDirection.Descending"
-                         />
-         <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-        <PropertyColumn Title="Tipo Salida" Property="c=>c.Discriminador"
-                        SortDirections="new[] { SortDirection.Descending }"
-                        Filters="DiscriminadorFilter"
-                        OnFilter="((value,name)=>Enum.GetName(typeof(TipoSalida), name).StartsWith(Enum.GetName(typeof(TipoSalida), value)))" />
-
-        <ActionColumn Title="Action">
-            <Space>
-                <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroParte)">Delete</Button></SpaceItem>
-                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button></SpaceItem>
-                <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button></SpaceItem>
-            </Space>
-        </ActionColumn>
-        @*<Column Title="Salidas" @bind-Field="@discriminadores" Sortable />*@
-    </ColumnDefinitions>
+            <ActionColumn Title="Action">
+                <Space>
+                    <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroParte)">Delete</Button></SpaceItem>
+                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button></SpaceItem>
+                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button></SpaceItem>
+                </Space>
+            </ActionColumn>
+            @*<Column Title="Salidas" @bind-Field="@discriminadores" Sortable />*@
+        </ColumnDefinitions>
     
-</Table>
-
+    </Table>
+ </div>
 
 @*-----------------------------------------------------------Modal Detalles-----------------------------------------------------------------------------------------*@
 

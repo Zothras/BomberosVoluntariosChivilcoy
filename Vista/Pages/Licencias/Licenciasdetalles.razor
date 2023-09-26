@@ -17,7 +17,8 @@
     .notificacion {
         display: flex;
         justify-content: flex-end;
-        width: 100%;
+        align-items: center;
+       /* width: 100%;  */
     }
 
     .ant-badge {
@@ -51,16 +52,20 @@
     .botonesCont {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        /* align-items: flex-end; */
     }
 
     .ant-table-title {
         height: 6.5em !important;
     }
+
+    .ant-badge{
+        margin: 20px 10px 0 0!important;
+    }
 </style>
 
 <div style="margin-top: 2em;">
-    <Table DataSource="LicenciasActivasVM" Bordered>
+    <Table DataSource="LicenciasActivasVM" Bordered Responsive Style="min-width: 320px!important;" > 
         <TitleTemplate>
             <div class="botonesCont">
                 <div class="inpt-cont-inline">
@@ -76,15 +81,20 @@
                         <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">Buscar</Button>
                     </div>  
                 </div>
-                <div>
-                    <div class="notificacion">
-                        <a href="/Licencias-Aprobar">
+                    <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
+                    <Overlay>
+                         <Menu Style="min-width:320px;max-width:600px;">
+                            <LicenciasAprobar />
+                        </Menu>
+                    </Overlay>
+                    <ChildContent>
+                        <div class="notificacion">
                             <Badge Count="5">
-                                <i class="fa-sharp fa-regular fa-bell"></i>
+                                <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
                             </Badge>
-                        </a>
-                    </div>
-                </div>
+                        </div>
+                    </ChildContent>
+                </Dropdown>
             </div>
         </TitleTemplate>
         <ColumnDefinitions Context="muestra">
