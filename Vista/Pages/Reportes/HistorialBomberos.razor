@@ -10,8 +10,51 @@
 @using System.Text.Json;
 @using Vista.Pages.Bomberos;
 
+<style>
+    .ant-table-cell {
+        min-width: 100px!important;
+    }
+
+
+    .ant-table-content{
+        min-width: 300px !important;
+    }
+
+    .ant-table{
+        min-width: min-content;
+    }
+
+    @@media (max-width: 960px){
+        .ant-table-row, .ant-table-row-level-0 {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .ant-table.ant-table-bordered > .ant-table-title{
+            height: 15em !important;
+        }
+
+        #ant-blazor-df7d6d62-e78b-479a-b209-8325c3889500{
+            width: 100%!important;
+        }
+
+        #ant-blazor-409acdf0-1470-4ab2-9ad6-e328b6913485{
+            align-items: flex-start!important;
+        }
+
+        .notificacion{
+            margin-top: 15px!important;
+        }
+
+        .inpt-cont-inline {
+            flex-direction: column !important;
+            gap: 0 !important;
+        }
+    }
+</style>
+
 <div style="margin-top: 2em;">
-    <Table DataSource="BomberosVM" PageSize="6" Responsive Bordered>
+    <Table DataSource="BomberosVM" PageSize="6" Responsive Bordered Style="min-width: 300px;">
         <ColumnDefinitions>
             <PropertyColumn Property="c=>c.NumeroLegajo" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>

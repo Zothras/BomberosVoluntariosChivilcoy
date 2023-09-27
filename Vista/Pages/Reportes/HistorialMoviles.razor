@@ -10,6 +10,37 @@
 @using System.Text.Json;
 @using Vista.Data.ViewModels.Personal;
 
+<style>
+    @@media (max-width: 960px) {
+        .ant-table-row, .ant-table-row-level-0 {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .ant-table-title {
+            height: 12.5em !important;
+        }
+
+        .buton-cont {
+            width: 100% !important;
+        }
+
+        #ant-blazor-df7d6d62-e78b-479a-b209-8325c3889500 {
+            width: 100% !important;
+        }
+
+        .inpt-cont-inline {
+            flex-direction: column !important;
+            gap: 0 !important;
+            align-items: flex-start!important;
+        }
+
+        .buttoncont {
+            width: 100% !important;
+        }
+    }
+</style>
+
 <EditForm Model="this">
     <div style="margin-top: 2em;">
         <Table DataSource="MovilesSalidas" PageSize="6" Bordered Responsive>
@@ -30,7 +61,7 @@
                             </Button>
                         </div>
                     </div>
-                    <div>
+                    <div class="buttoncont">
                         <Button OnClick="() => CargarSalidasMovil()">
                             Mostrar todos
                         </Button>

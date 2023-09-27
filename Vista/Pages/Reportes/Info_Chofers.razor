@@ -46,6 +46,38 @@
     .ant-table-title {
         height: 6.5em !important;
     }
+
+    .ant-badge {
+        margin: 20px 10px 0 0 !important;
+    }
+
+    @@media (max-width: 960px) {
+        .ant-table-row, .ant-table-row-level-0 {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .ant-table-title {
+            height: 12.5em !important;
+        }
+
+        .buton-cont {
+            width: 100% !important;
+        }
+
+        #ant-blazor-df7d6d62-e78b-479a-b209-8325c3889500 {
+            width: 100% !important;
+        }
+
+        .inpt-cont-inline {
+            flex-direction: column !important;
+            gap: 0 !important;
+            align-items: flex-start;
+        }
+        .buttoncont{
+            width: 100%!important;
+        }
+    }
 </style>
 
 <div style="margin-top: 2em;">
@@ -67,8 +99,8 @@
                          </Button>
                      </div>
                  </div>
-                 <div>
-                     <Button OnClick="()=>Insertar_todos_choferes(preferencia)">
+                 <div class="buttoncont">
+                     <Button Class="buttoncont" Style="margin-bottom: 5px;" OnClick="()=>Insertar_todos_choferes(preferencia)">
                          Mostrar todos
                      </Button>
                  </div>

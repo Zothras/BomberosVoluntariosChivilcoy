@@ -62,6 +62,37 @@
     .ant-badge{
         margin: 20px 10px 0 0!important;
     }
+
+    @@media (max-width: 960px) {
+        .ant-table-row, .ant-table-row-level-0 {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .ant-table.ant-table-bordered > .ant-table-title {
+            height: 15em !important;
+        }
+
+        .buton-cont{
+            width: 100%!important;
+        }
+        #ant-blazor-df7d6d62-e78b-479a-b209-8325c3889500 {
+            width: 100% !important;
+        }
+
+        .notif-cont {
+            align-items: flex-start !important;
+        }
+
+        .notificacion {
+            margin-top: 15px !important;
+        }
+
+        .inpt-cont-inline {
+            flex-direction: column !important;
+            gap: 0 !important;
+        }
+    }
 </style>
 
 <div style="margin-top: 2em;">
@@ -77,11 +108,11 @@
                         <label class="inpt-cont--lbl">Hasta: </label>
                         <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
                     </div>
-                    <div>
+                    <div class="buton-cont">
                         <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">Buscar</Button>
                     </div>  
                 </div>
-                    <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
+                    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
                     <Overlay>
                          <Menu Style="min-width:320px;max-width:600px;">
                             <LicenciasAprobar />

@@ -63,9 +63,16 @@
     .ant-table-cell {
         text-align: center !important;
     }
+
+    @@media screen and (max-width: 450px){
+        .contenedor{
+            padding: 0 21px!important;
+        }
+    }
+
 </style>
 
-<div style="max-width: 100%;margin-top: 2em;">
+<div class="contenedor" style="max-width: 100%;margin-top: 2em;">
     <Steps Current="current">
         @foreach (var item in steps)
         {

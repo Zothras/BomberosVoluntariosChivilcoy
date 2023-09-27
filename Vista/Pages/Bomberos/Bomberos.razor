@@ -6,7 +6,47 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 
-<div style="margin-top: 2em;">
+<style>
+    .contenedor{
+        margin-top: 2em;
+        min-width: 300px;
+        max-width: 100%;
+    }
+    .ant-table-cell {
+        min-width: 200px !important;
+    }
+
+    .ant-table {
+        min-width: 200px !important;
+    }
+    @@media (max-width: 960px) {
+        .ant-table-row, .ant-table-row-level-0 {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .ant-row {
+            display: flex!important;
+            flex-direction: column!important;
+            gap: 5px!important;
+        }
+
+        .ant-col-4, .ant-col {
+            min-width: 200px;
+            max-width: 100%!important;
+        }
+        .ant-col-offset-12{
+            margin-left: 0!important;
+        }
+
+        .ant-table{
+            min-width: 200px!important;
+            max-width: 100%!important;
+        }
+    }
+</style>
+
+<div class="contenedor">
     <Table @ref="table"
            TItem="Bombero"
            DataSource="@bomberos"
@@ -15,7 +55,8 @@
            Total="_total"
            @bind-PageIndex="_pageIndex"
            @bind-PageSize="_pageSize"
-           Responsive>
+           Responsive
+           Style="max-width: 100%;min-width: 300px;">
         <TitleTemplate>
             <GridRow>
                 <GridCol Span="4">
