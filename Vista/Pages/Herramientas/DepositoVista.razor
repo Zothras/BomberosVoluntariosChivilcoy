@@ -1,6 +1,8 @@
-﻿@inject NavigationManager navigationManager
+﻿@* @implements IDisposable
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/Herramientas/Deposito"
+@inject IMessageService message
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
@@ -8,6 +10,56 @@
 
 <h3>Deposito</h3>
 
-@code {
+<div style="margin-top: 2em;">
+    <Table DataSource="DepositoVM" PageSize="6" Bordered Responsive>
+        <PropertyColumn Property="c=>c.Materiales"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Stock"></PropertyColumn>
+        <PropertyColumn Property="c=>c.EntradaMaterial"></PropertyColumn>
+        <PropertyColumn Property="c=>c.SalidaMaterial"></PropertyColumn>
+    </Table>
+</div>
 
-}
+@code {
+    BomberosDbContext Context;
+    public class DepositoViewModel
+    {
+        public string Materiales { get; set; }
+        [StringLength(255)]
+        public string SalidaMaterial { get; set; }
+        [StringLength(255)]
+        public string EntradaMaterial { get; set; }
+    }
+    public DepositoViewModel DepositoVM = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await CargarMateriales();
+    }
+    public async Task CargarMateriales()
+    {
+        var deposito = await Context.Deposito.ToListAsync();
+        foreach (Deposito m in deposito)
+        {
+            var bombero = await Context.Deposito.Where(D => D.DepositoId == m.DepositoId).SingleOrDefaultAsync();
+            var bomberoEncargado = await Context.Deposito.Where(D => D.DepositoId == m.DepositoId).SingleOrDefaultAsync();
+            DepositoViewModel dep = new()
+                {
+                    Materiales = m.Materiales,
+                    SalidaMaterial = m.SalidaMaterial,
+                    EntradaMaterial = m.EntradaMaterial,
+
+                };
+            DepositoVM.Add(dep);
+        }
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+
+} *@
