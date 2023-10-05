@@ -38,6 +38,12 @@ namespace Vista.Data
         public DbSet<ServicioEspecialPrevencion> ServicioEspecialPrevenciones { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
+
+        public DbSet<Deposito> Depositos { get; set; }
+
+        public DbSet<Material> Materiales { get; set; }
+
+        public DbSet<MovimientoM> Movimientos { get; set; }
         public DbSet<Embarcacion> Embarcacion {get; set;}
         public DbSet<Comunicacion> Comunicacion { get; set; }
         public DbSet<AscensoBombero> AscensoBomberos { get; set; }

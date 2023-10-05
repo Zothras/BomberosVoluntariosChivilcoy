@@ -56,6 +56,8 @@ namespace Vista.Data.Models.Personales
         public List<AscensoBombero> Ascensos { get; set; } = new();
         public List<Licencia> Licencias { get; set; } = new();
 
+        public List<MovimientoM> Destino { get; set; } = new();
+
         [InverseProperty("PersonalSancionado")]
         public List<Sancion> SancionesRecibidas { get; set; } = new();
         [InverseProperty("EncargadoArea")]
