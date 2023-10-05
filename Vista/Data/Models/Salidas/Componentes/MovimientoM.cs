@@ -9,6 +9,7 @@ namespace Vista.Data.Models.Salidas.Componentes
         public TipoMovimiento TipoMovimiento {get; set;}
         public Bombero? DestinoBombero { get; set; }
         public Movil? DestinoMovil { get; set; }
-        public List<Material> Materiales { get; set; } = new();
+        public int Cantidad { get; set; }
+        public Material? Materiales { get; set; }    
     }
 }

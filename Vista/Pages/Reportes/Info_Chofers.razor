@@ -108,22 +108,22 @@
         </TitleTemplate>
         <ColumnDefinitions>
             <Selection Key="@(context.NumeroLegajo.ToString())" />
-             <PropertyColumn Property="c=>c.NumeroLegajo"
+            <PropertyColumn Property="c=>c.NumeroLegajo" Title="Nimero de Legajo"
                              DefaultSortOrder="@SortDirection.Descending"
                              SorterCompare="@((a,b)=> a - b)" />
             <PropertyColumn Property="c=>c.Nombre" Sortable />
 
             <PropertyColumn Property="c=>c.Apellido" Sortable />
 
-            <PropertyColumn Property="c=>c.Dotacion" />
+            <PropertyColumn Property="c => c.DotacionNumero" Title="Dotacion" />
 
-            <PropertyColumn Property="c=>c.VencimientoRegistro" Sortable />
+            <PropertyColumn Property="c=>c.VencimientoRegistro" Title="Vencimiento Registro" Sortable />
 
-            <PropertyColumn Property="c=>c.TelefonoCel" Sortable />
+            <PropertyColumn Property="c=>c.TelefonoCel" Title="Telefono Celular" Sortable />
 
-            <PropertyColumn Property="c=>c.TelefonoFijo" Sortable />
+            <PropertyColumn Property="c=>c.TelefonoFijo" Title="Telefono Fijo" Sortable />
 
-            <PropertyColumn Property="c=>c.TelefonoLaboral" Sortable />
+            <PropertyColumn Property="c=>c.TelefonoLaboral" Title="Telefono Laboral" Sortable />
         </ColumnDefinitions>
     </Table>
  </div>
@@ -152,8 +152,9 @@
         public string? TelefonoLaboral { get; set; }
         [Required, StringLength(255)]
         public string TelefonoFijo { get; set; }
+        public int DotacionNumero { get; set; }
     }
-
+   
     async void Insertar_todos_choferes(List<ChoferesVM> b)
     {
         b.Clear();
@@ -166,7 +167,7 @@
                 {
                     Nombre = chofer.Nombre,
                     Apellido = chofer.Apellido,
-                    Dotacion = chofer.Dotacion,
+                    DotacionNumero = (int)chofer.Dotacion,
                     VencimientoRegistro = chofer.VencimientoRegistro,
                     NumeroLegajo = chofer.NumeroLegajo,
                     TelefonoCel = contactos.TelefonoCel,
