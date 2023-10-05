@@ -10,7 +10,7 @@
 @using Vista.Data.ViewModels.Personal;
 
 <div style="margin-top: 2em;">
-    <Table DataSource="ComunicacionesViewModel" Bordered
+    <Table DataSource="filteredComunicaciones" Bordered
         @bind-SelectedRows="selectedRows"
         Total="_total"
         @bind-PageIndex="_pageIndex"
@@ -21,6 +21,10 @@
             <GridRow>
                 <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
                     <Title Level="3">Comunicaciones</Title>
+                </GridCol>
+
+                <GridCol Span="8" Offset="12">
+                    <Input @bind-Value="searchString" Placeholder="Search" @oninput="Search" />
                 </GridCol>
             </GridRow>
         </TitleTemplate>
@@ -157,7 +161,6 @@
     }
 
 
-    string searchString;
     IEnumerable<ComunicacionViewModel> selectedRows;
     TipoEstadoHandie discriminadoresHandies;
     List<string> discriminadores = new List<string>();
@@ -174,15 +177,19 @@
     List<BomberoViewModel> BomberosVM { get; set; } = new();
     BomberosDbContext Context { get; set; }
 
+    public ITable _table;
     int _pageIndex = 1;
     int _pageSize = 6;
     int _total = 0;
 
+    private string searchString = "";
+    private List<ComunicacionViewModel>? filteredComunicaciones;
+    private List<ComunicacionViewModel>? dataSource;
 
     protected override async Task OnInitializedAsync()
     {
         await Init();
-
+        filteredComunicaciones = ComunicacionesViewModel;
         //Filtro del discriminador, le asigno un valor de un enum a cada numero discriminador
         DiscriminadorFilter = new TableFilter<TipoEstadoHandie>[Enum.GetValues(typeof(TipoEstadoHandie)).Length];
         int i = 0;
@@ -250,13 +257,16 @@
         Console.WriteLine($"row {row.Data.NroEquipo} was clicked");
     }//Toma el valor del valor de la fila seleccionada
 
-    private async Task OnChange(QueryModel<ComunicacionViewModel> queryModel)
+    private void Search(ChangeEventArgs e)
     {
-        Console.WriteLine(JsonSerializer.Serialize(queryModel));
-        //dataSource = queryModel.ExecuteQuery(bomberos.AsQueryable())
-        //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-        //arreglar busqueda-----------------------------------------------------------------------------------------------------------------------------------------
-        await Init();
+        searchString = e.Value.ToString().Trim().ToLower();
+
+        // Apply the filter logic here without clearing the table
+        filteredComunicaciones = ComunicacionesViewModel
+            .Where(c => string.IsNullOrWhiteSpace(searchString) || c.Marca.ToLower().Contains(searchString))
+            .ToList();
+
+        // No need to reload the table here
     }
 
     public void RemoveSelection(string NroEquipoBorrar)
@@ -419,5 +429,6 @@
     {
         message.Error("Operacion cancelada");
     }
+
 
 }
