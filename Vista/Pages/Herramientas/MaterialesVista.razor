@@ -1,0 +1,66 @@
+﻿@* @implements IDisposable
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+
+
+
+@code {
+    BomberosDbContext Context;
+	public class MaterialesViewModel
+	{
+		public DateTime FechaAlta { get; set; }
+		public string? Descripcion { get; set; }
+		public string? Codigo { get; set; }
+		public string Stock { get; set; }
+		public TipoRubro Rubro { get; set; }
+	}
+
+	MaterialesViewModel MaterialesVM { get; set; } = new MaterialesViewModel();
+
+	protected override async Task OnInitializedAsync()
+	{
+		await Init();
+	}
+
+	private async Task Init()
+	{
+		MaterialesVM = new();
+
+		Context = DbFactory.CreateDbContext();
+	}
+    private async void OnFinish(EditContext editContext)
+    {
+        try
+        {
+            Material? material = await Context.Materiales.Where(b => b.MaterialId == ).SingleOrDefaultAsync();
+
+
+            Vista.Data.Models.Salidas.Componentes.Material material1 = new()
+                {
+
+                    FechaAlta = MaterialesVM.FechaAlta,
+                    Descripcion = MaterialesVM.Descripcion,
+                    Codigo = MaterialesVM.Codigo,
+                    Stock = MaterialesVM.Stock,
+                    Rubro = MaterialesVM.Rubro,
+                };
+            Context.Materiales.Add(material1);
+            await Context.SaveChangesAsync();
+            await Init();
+            StateHasChanged();
+            await message.Success("Alta cargada");
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+
+        }
+    }
+} *@
