@@ -15,6 +15,7 @@ namespace Vista.Data.Models.Salidas.Componentes
         //Hasta = finalizacion de la licencia
         public DateTime Desde { get; set; }
         public DateTime Hasta { get; set; }
+    
         public TipoEstadoLicencia EstadoLicencia { get; set; }
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]

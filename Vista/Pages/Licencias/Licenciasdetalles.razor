@@ -96,6 +96,7 @@
 </style>
 
 <div style="margin-top: 2em;">
+    @*dataSource= Contenido que contiene mi tabla *@
     <Table DataSource="LicenciasActivasVM" Bordered Responsive Style="min-width: 320px!important;" > 
         <TitleTemplate>
             <div class="botonesCont">
@@ -112,6 +113,19 @@
                         <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">Buscar</Button>
                     </div>  
                 </div>
+
+                @*Parte del encuadre de texto del buscador  de licencias*@
+                    <div>
+                        <br>
+                        <Input Placeholder="Buscar Licenciado" @bind-Value="@Busqueda" />
+                    </div>
+
+            </div>
+                <div class="buton-cont">
+                    <Button OnClick="@BuscarLicenciado" Style="margin-bottom: 5px;">Buscar</Button>
+                </div>
+            <div>
+
                     <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
                     <Overlay>
                          <Menu Style="min-width:320px;max-width:600px;">
@@ -149,6 +163,9 @@
         Volver
     </Button>
 </Modal>
+
+
+
 @code {
     public class LicencasVm
     {
@@ -161,9 +178,9 @@
         public int PersonaId { get; set; }
         public Bombero? PersonalAfectado { get; set; }
         public string? NombreYApellido { get; set; }
-
     }
 
+    //variables Locales
     DateTime FechaBuscarI;
     DateTime FechaBuscarF;
     BomberosDbContext Context { get; set; }
@@ -171,6 +188,11 @@
     List<LicencasVm> LicenciasActivasVM = new();
     List<Licencia> LicenciasPendientes = new();
     public bool _visibleAgregar = false;
+    string? Busqueda;
+
+
+
+
     protected override async Task OnInitializedAsync()
     {
         await Init();
@@ -183,13 +205,15 @@
         await LicenciasPendiente();
     }
 
+
+
+
     private async Task LicenciasActivas()
     {
         LicenciasActivasVM = new();
         var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
         foreach (var l in Licencias)
         {
-
             LicencasVm LicVm = new()
                 {
                     TipoLicencia = l.TipoLicencia,
@@ -207,10 +231,13 @@
         LicenciasPendientes = new();
         LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
 
+
+
+
     }
     private async Task LicenciasBUscar()
     {
-        LicenciasActivasVM.Clear();
+        LicenciasActivasVM.Clear ();
         foreach (var l in LicenciasActivasVM)
         {
             var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
@@ -226,11 +253,44 @@
                         NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido,
                     };
                 LicenciasActivasVM.Add(LicVm);
-
             }
         }
         await Init();
     }
+
+
+
+
+
+    // BuscarLicenciados
+    private async Task BuscarLicenciado()
+    {
+        LicenciasActivasVM.Clear();
+        var licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
+         
+        foreach (var l in licencias)
+        {
+            var nombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido;
+            if (nombreYApellido == Busqueda)
+            {
+                LicencasVm LicVm = new()
+                    {
+                        TipoLicencia = l.TipoLicencia,
+                        Descripcion = l.Descripcion,
+                        Desde = l.Desde,
+                        Hasta = l.Hasta,
+                        EstadoLicencia = l.EstadoLicencia,
+                        NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
+                    };
+                LicenciasActivasVM.Add(LicVm);
+            }
+        }
+    }
+    
+
+
+
+
     private async void HandleOkAgregar(MouseEventArgs e)
     {
         _visibleAgregar = false;
