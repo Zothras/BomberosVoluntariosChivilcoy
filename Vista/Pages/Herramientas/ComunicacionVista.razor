@@ -24,7 +24,7 @@
                 </GridCol>
 
                 <GridCol Span="8" Offset="12">
-                    <Input @bind-Value="searchString" Placeholder="Search" @oninput="Search" />
+                    <Input @bind-Value="searchString" Placeholder="Buscar" @oninput="Search" />
                 </GridCol>
             </GridRow>
         </TitleTemplate>
@@ -263,7 +263,8 @@
 
         // Apply the filter logic here without clearing the table
         filteredComunicaciones = ComunicacionesViewModel
-            .Where(c => string.IsNullOrWhiteSpace(searchString) || c.Marca.ToLower().Contains(searchString))
+            .Where(c => string.IsNullOrWhiteSpace(searchString) ||
+                (c.Nombre + " " + c.Apellido).ToLower().Contains(searchString))
             .ToList();
 
         // No need to reload the table here
