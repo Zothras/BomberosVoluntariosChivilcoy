@@ -1,0 +1,89 @@
+﻿@implements IDisposable
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/materialesMovimiento"
+
+
+<Select TItem="Material"
+        TItemValue="int"
+        DataSource="@Materiales"
+@bind-Value="@MovimientoVM.MaterialId"
+        LabelName="@nameof(Material.Descripcion)"
+        ValueName="@nameof(Material.MaterialId)"
+        Placeholder="Seleccione Bombero Encargado"
+        DefaultActiveFirstOption="false"
+        EnableSearch>
+</Select>
+
+
+@code {
+    BomberosDbContext Context { get; set; }
+    public class MovimientoMaterialesViewModel
+    {
+        public TipoMovimiento TipoMovimiento { get; set; }
+        public Bombero? DestinoBombero { get; set; }
+        public Movil? DestinoMovil { get; set; }
+        public int Cantidad { get; set; }
+        public int MaterialId { get; set; }
+    }
+    MovimientoMaterialesViewModel MovimientoVM { get; set; } = new MovimientoMaterialesViewModel();
+    List<Material> Materiales = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+
+    private async Task Init()
+    {
+        MovimientoVM = new();
+
+        Context = DbFactory.CreateDbContext();
+        Materiales = await Context.Materiales.ToListAsync();
+    }
+    private async void OnFinish(EditContext editContext)
+    {
+        try
+        {
+
+
+            Vista.Data.Models.Salidas.Componentes.MovimientoM movimiento2 = new()
+                {
+
+                    TipoMovimiento = MovimientoVM.TipoMovimiento,
+                    DestinoBombero = MovimientoVM.DestinoBombero,
+                    DestinoMovil = MovimientoVM.DestinoMovil,
+                    Cantidad = MovimientoVM.Cantidad,
+                    // Materiales = MovimientoVM.Materiales,
+
+                };
+            // Context.Materiales.AddAsync(movimiento2);
+            await Context.SaveChangesAsync();
+            await Init();
+            StateHasChanged();
+            await message.Success("Movimiento cargado");
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+
+        }
+    }
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(MovimientoVM)}");
+    }
+
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}
