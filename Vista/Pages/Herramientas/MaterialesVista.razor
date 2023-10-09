@@ -1,9 +1,40 @@
-﻿@* @implements IDisposable
+﻿@implements IDisposable
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
+@page "/materialesvista"
 
+<Form Model="MaterialesVM"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;">
+    <FormItem Label="Fecha de alta">
+        <DatePicker @bind-Value="MaterialesVM.FechaAlta" />
+    </FormItem>
+    <FormItem Label="Descripción">
+        <Input @bind-Value="MaterialesVM.Descripcion" />
+    </FormItem>
+    <FormItem Label="Código">
+        <Input @bind-Value="MaterialesVM.Codigo" />
+    </FormItem>
+    <FormItem Label="Stock">
+        <Input @bind-Value="MaterialesVM.Stock" />
+    </FormItem>
+    <FormItem Label="Rubro">
+        <EnumSelect TEnum="@TipoRubro" @bind-Value="@MaterialesVM.Rubro" />
+    </FormItem>
+    <FormItem Style="width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" Style="margin-right: 60px;">
+            Guardar Material
+        </Button>
+    </FormItem>
+</Form>
 
 
 @code {
@@ -34,7 +65,7 @@
     {
         try
         {
-            Material? material = await Context.Materiales.Where(b => b.MaterialId == ).SingleOrDefaultAsync();
+            Material? material = await Context.Materiales.FirstOrDefaultAsync(m => m.Equals(MaterialesVM));
 
 
             Vista.Data.Models.Salidas.Componentes.Material material1 = new()
@@ -63,4 +94,12 @@
 
         }
     }
-} *@
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(MaterialesVM)}");
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}
