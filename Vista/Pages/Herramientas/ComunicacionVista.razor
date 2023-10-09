@@ -260,14 +260,9 @@
     private void Search(ChangeEventArgs e)
     {
         searchString = e.Value.ToString().Trim().ToLower();
-
-        // Apply the filter logic here without clearing the table
         filteredComunicaciones = ComunicacionesViewModel
-            .Where(c => string.IsNullOrWhiteSpace(searchString) ||
-                (c.Nombre + " " + c.Apellido).ToLower().Contains(searchString))
+            .Where(c => string.IsNullOrWhiteSpace(searchString) || c.Nombre.ToLower().Contains(searchString))
             .ToList();
-
-        // No need to reload the table here
     }
 
     public void RemoveSelection(string NroEquipoBorrar)
