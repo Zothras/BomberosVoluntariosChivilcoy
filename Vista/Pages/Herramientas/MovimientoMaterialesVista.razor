@@ -20,6 +20,20 @@
 
 @code {
     BomberosDbContext Context { get; set; }
+    Bombero[] TodosBomberos;
+    Movil[] Moviles;
+
+    public class MovilViewModel
+    {
+        public string NumeroMovil { get; set; }
+    }
+
+    public class BomberoViewModel
+    {
+        public string NombreYApellido { get; set; }
+        public int BomberoId { get; set; }
+    }
+
     public class MovimientoMaterialesViewModel
     {
         public TipoMovimiento TipoMovimiento { get; set; }
@@ -30,6 +44,8 @@
     }
     MovimientoMaterialesViewModel MovimientoVM { get; set; } = new MovimientoMaterialesViewModel();
     List<Material> Materiales = new();
+    List<BomberoViewModel> bomberoTodos = new();
+    List<MovilViewModel> MovilTodos = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,6 +55,8 @@
     private async Task Init()
     {
         MovimientoVM = new();
+        await CargarBomberos();
+        await CargarMovil();
 
         Context = DbFactory.CreateDbContext();
         Materiales = await Context.Materiales.ToListAsync();
@@ -74,6 +92,31 @@
             else
                 await message.Error(e.Message, 5);
 
+        }
+    }
+    private async Task CargarBomberos()
+    {
+        var bomberos = await Context.Bomberos.ToListAsync();
+        foreach (var item in bomberos)
+        {
+            BomberoViewModel b = new()
+                {
+                    NombreYApellido = item.Nombre + ' ' + item.Apellido,
+                    BomberoId = item.PersonaId
+                };
+            bomberoTodos.Add(b);
+        }
+    }
+    private async Task CargarMovil()
+    {
+        var movil = await Context.Moviles.ToListAsync();
+        foreach (var item in movil)
+        {
+            MovilViewModel m = new()
+                {
+                    NumeroMovil = item.NumeroMovil
+                };
+            MovilTodos.Add(m);
         }
     }
     private void OnFinishFailed(EditContext editContext)
