@@ -20,7 +20,7 @@ namespace Vista.Data
         public DbSet<DatosCapacitacion> DatosCapacitaciones { get; set; }
         public DbSet<EmbarcacionAfectada> EmbarcacionesAfectadas { get; set; }
         public DbSet<VehiculoAfectadoAccidente> VehiculosAfectadosAccidentes { get; set; }
-        public  DbSet<VehiculoAfectadoIncendio> VehiculosAfectadoIncendios { get; set; }
+        public DbSet<VehiculoAfectadoIncendio> VehiculosAfectadoIncendios { get; set; }
         public DbSet<VehiculoDamnificado> VehiculosDamnificados { get; set; }
         public DbSet<Accidente> Accidentes { get; set; }
         public DbSet<FactorClimatico> FactoresClimaticos { get; set; }
@@ -44,7 +44,7 @@ namespace Vista.Data
         public DbSet<Material> Materiales { get; set; }
 
         public DbSet<MovimientoM> Movimientos { get; set; }
-        public DbSet<Embarcacion> Embarcacion {get; set;}
+        public DbSet<Embarcacion> Embarcacion { get; set; }
         public DbSet<Comunicacion> Comunicacion { get; set; }
         public DbSet<AscensoBombero> AscensoBomberos { get; set; }
         public DbSet<Licencia> Licencias { get; set; }
@@ -61,7 +61,7 @@ namespace Vista.Data
                 .HasIndex(m => m.NumeroMovil)
                 .IsUnique();
 
-            modelBuilder.Entity<Bombero>()   
+            modelBuilder.Entity<Bombero>()
                 .HasIndex(b => b.NumeroLegajo)
                 .IsUnique();
             modelBuilder.Entity<Licencia>()
@@ -94,7 +94,7 @@ namespace Vista.Data
                 .HasValue<Bombero>(1)
                 .HasValue<Persona>(2);
             modelBuilder.Entity<Persona>()
-                .ToTable("Personas");     
+                .ToTable("Personas");
 
             modelBuilder.Entity<Seguro>()
                 .HasDiscriminator<int>("TipoSeguro")
@@ -149,6 +149,13 @@ namespace Vista.Data
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
+            modelBuilder.Entity<Comunicacion>()
+                .HasOne(c => c.Movil)
+                .WithOne(b => b.HandieMovil)
+                .HasForeignKey<Movil>(ei => ei.EquipoId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
 
             modelBuilder.Entity<ServicioEspecial>()
                 .HasOne(se => se.DatosCapacitacion)
@@ -158,7 +165,7 @@ namespace Vista.Data
             // Enum
             modelBuilder
                 .Entity<Persona>()
-                .Property(p => p.Sexo)                
+                .Property(p => p.Sexo)
                 .HasConversion<string>()
                 .HasMaxLength(255);
             modelBuilder
@@ -288,7 +295,7 @@ namespace Vista.Data
                 .Property(S => S.SacionArea)
                 .HasConversion<string>()
                 .HasMaxLength(255);
-        
+
 
             modelBuilder
                 .Entity<IncendioEstablecimientoPublico>()

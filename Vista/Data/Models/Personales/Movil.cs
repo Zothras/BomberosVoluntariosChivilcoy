@@ -22,6 +22,8 @@ namespace Vista.Data.Models.Personales
         [ForeignKey("ImagenId")]
         public ImagenMovil Imagen { get; set; }
         public List<MovilSalida> Salidas { get; set; } = new();
-       //public List<MovilBombero> Bomberos { get; set; } = new();  
+        //public List<MovilBombero> Bomberos { get; set; } = new();  
+        public int? EquipoId { get; set; }
+        public Comunicacion? HandieMovil { get; set; }
     }
 }

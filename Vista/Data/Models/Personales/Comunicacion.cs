@@ -18,6 +18,7 @@ namespace Vista.Data.Models.Personales
         public string? Modelo { get; set; }
         public string? NroSerie { get; set; }
         public TipoEstadoHandie Estado { get; set; }
-        public Bombero? Bombero { get; set; }
+        public Bombero? Bombero { get; set; } 
+        public Movil? Movil { get; set; } 
     }
 }
