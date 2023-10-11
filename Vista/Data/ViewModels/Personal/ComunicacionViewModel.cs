@@ -14,6 +14,7 @@ namespace Vista.Data.ViewModels.Personal
         public string? NroSerie { get; set; }
         public TipoEstadoHandie Estado { get; set; }
         public Bombero? Bombero { get; set; }
+        public Movil? Movil { get; set; }
         public string NombreYApellido
         {
             get { return Bombero.Nombre + "," + Bombero.Apellido; }
