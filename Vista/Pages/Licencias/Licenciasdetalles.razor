@@ -18,12 +18,13 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-       /* width: 100%;  */
+        /* width: 100%;  */
     }
 
     .ant-badge {
         padding: 0 5px !important;
     }
+
     .inpt-cont--lbl {
         min-width: 170px;
         text-align: start;
@@ -52,15 +53,15 @@
     .botonesCont {
         display: flex;
         justify-content: space-between;
-        /* align-items: flex-end; */
+        align-items: flex-end;
     }
 
     .ant-table-title {
         height: 6.5em !important;
     }
 
-    .ant-badge{
-        margin: 20px 10px 0 0!important;
+    .ant-badge {
+        margin: 20px 10px 0 0 !important;
     }
 
     @@media (max-width: 960px) {
@@ -73,9 +74,10 @@
             height: 15em !important;
         }
 
-        .buton-cont{
-            width: 100%!important;
+        .buton-cont {
+            width: 100% !important;
         }
+
         #ant-blazor-df7d6d62-e78b-479a-b209-8325c3889500 {
             width: 100% !important;
         }
@@ -95,52 +97,55 @@
     }
 </style>
 
-<div style="margin-top: 2em;">
+<div style="margin-top: 2em; width: 80%; ">
     @*dataSource= Contenido que contiene mi tabla *@
-    <Table DataSource="LicenciasActivasVM" Bordered Responsive Style="min-width: 320px!important;" > 
-        <TitleTemplate>
-            <div class="botonesCont">
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Desde: </label>
-                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Hasta: </label>
-                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
-                    </div>
-                    <div class="buton-cont">
-                        <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">Buscar</Button>
-                    </div>  
-                </div>
-
-                @*Parte del encuadre de texto del buscador  de licencias*@
-                    <div>
-                        <br>
-                        <Input Placeholder="Buscar Licenciado" @bind-Value="@Busqueda" />
-                    </div>
-
-            </div>
-                <div class="buton-cont">
-                    <Button OnClick="@BuscarLicenciado" Style="margin-bottom: 5px;">Buscar</Button>
-                </div>
-            <div>
-
-                    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
-                    <Overlay>
-                         <Menu Style="min-width:320px;max-width:600px;">
-                            <LicenciasAprobar />
-                        </Menu>
-                    </Overlay>
-                    <ChildContent>
-                        <div class="notificacion">
-                            <Badge Count="5">
-                                <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
-                            </Badge>
+    <Table DataSource="LicenciasActivasVM" Bordered Responsive Style="min-width: 320px!important;">
+            <TitleTemplate>
+                <div class="botonesCont">
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Desde: </label>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
                         </div>
-                    </ChildContent>
-                </Dropdown>
-            </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Hasta: </label>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
+                        </div>
+                        <div class="buton-cont">
+                            <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">
+                                <Icon Type="search" Theme="outline" />
+                            </Button>
+                        </div>
+                    </div>
+
+                    @*Parte del encuadre de texto del buscador  de licencias*@
+                    <div class="inpt-cont-inline">
+                        <div style="display: flex; margin-bottom:  5px;" class="buton-cont">
+                            <Input Placeholder="Buscar Licenciado" @bind-Value="@Busqueda" />
+                            <Button OnClick="@BuscarLicenciado" Style="margin-bottom:  5px;">
+                                <Icon Type="search" Theme="outline" />
+                            </Button>
+                        </div>
+                    </div>
+                    <div>
+                        <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
+                        <Overlay>
+                            <Menu Style="min-width:320px;max-width:600px;">
+                                <LicenciasAprobar />
+                            </Menu>
+                        </Overlay>
+                        <ChildContent>
+                            <div class="notificacion">
+                                <Badge Count="5">
+                                    <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
+                                </Badge>
+                            </div>
+                        </ChildContent>
+                    </Dropdown>
+                </div>
+                </div>
+
+                
         </TitleTemplate>
         <ColumnDefinitions Context="muestra">
             <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
@@ -237,7 +242,7 @@
     }
     private async Task LicenciasBUscar()
     {
-        LicenciasActivasVM.Clear ();
+        LicenciasActivasVM.Clear();
         foreach (var l in LicenciasActivasVM)
         {
             var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
@@ -267,7 +272,7 @@
     {
         LicenciasActivasVM.Clear();
         var licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
-         
+
         foreach (var l in licencias)
         {
             var nombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido;
@@ -286,7 +291,9 @@
             }
         }
     }
-    
+
+
+
 
 
 
