@@ -80,44 +80,47 @@
                 <Checkbox @bind-Checked="@selectMovil" OnChange="() => HandleCheckboxChange(true, checkboxMovilLabel)">Elija el móvil</Checkbox>
             </FormItem>
         </div>
-    }
 
-    @if (selectBombero)
-    {
-        <div>
-            <FormItem Label="Elija el bombero que será asignado">
-                <Select TItem="BomberoViweModel"
-                        TItemValue="int?"
-                        DataSource="@BomberosVM"
-                @bind-Value="@ComunicacionVM.NroLegajo"
-                        LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                        ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                        Placeholder="Seleccione a un bombero"
-                        DefaultActiveFirstOption="false"
-                        EnableSearch
-                        AllowClear="true">
-                </Select>
-            </FormItem>
-        </div>
-    }
 
-    @if (selectMovil)
-    {
-        <div>
-            <FormItem Label="Elija el móvil que será asignado">
-                <Select TItem="MovilViewModel"
-                        TItemValue="string"
-                        DataSource="@MovilesViewModel"
-                @bind-Value="@ComunicacionVM.NumeroMovil"
-                        LabelName="@nameof(MovilViewModel.NumeroMovil)"
-                        ValueName="@nameof(MovilViewModel.NumeroMovil)"
-                        Placeholder="Seleccione un móvil"
-                        DefaultActiveFirstOption="false"
-                        EnableSearch
-                        AllowClear="true">
-                </Select>
-            </FormItem>
-        </div>
+        @if (selectBombero)
+        {
+            <div>
+                <FormItem Label="Elija el bombero que será asignado">
+                    <Select TItem="BomberoViweModel"
+                    TItemValue="int?"
+                    DataSource="@BomberosVM"
+                    @bind-Value="@ComunicacionVM.NroLegajo"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione a un bombero"
+                    DefaultActiveFirstOption="false"
+
+            EnableSearch
+                    AllowClear="true">
+                    </Select>
+                </FormItem>
+            </div>
+        }
+
+        @if (selectMovil)
+        {
+            <div>
+                <FormItem Label="Elija el móvil que será asignado">
+                    <Select TItem="MovilViewModel"
+                    TItemValue="string"
+                    DataSource="@MovilesViewModel"
+                    @bind-Value="@ComunicacionVM.NumeroMovil"
+                    LabelName="@nameof(MovilViewModel.NumeroMovil)"
+                    ValueName="@nameof(MovilViewModel.NumeroMovil)"
+                    Placeholder="Seleccione un móvil"
+                    DefaultActiveFirstOption="false"
+
+            EnableSearch
+                    AllowClear="true">
+                    </Select>
+                </FormItem>
+            </div>
+        }
     }
     <style>
         .ant-col-offset-8 {
@@ -232,19 +235,45 @@
                 return;
             }
 
-            Bombero? bomberoSelec = await Context.Bomberos.SingleOrDefaultAsync(bom => bom.NumeroLegajo == ComunicacionVM.NroLegajo);
-            Movil? movilSelec = await Context.Moviles.SingleOrDefaultAsync(mov => mov.NumeroMovil == ComunicacionVM.NumeroMovil);
-            Comunicacion comunicacion = new()
-                {
-                    NroEquipo = ComunicacionVM.NroEquipo,
-                    Modelo = ComunicacionVM.Modelo,
-                    Marca = ComunicacionVM.Marca,
-                    NroSerie = ComunicacionVM.NroSerie,
-                    Estado = ComunicacionVM.Estado,
-                    Bombero = bomberoSelec,
-                    Movil = movilSelec
-                };
-            Context.Comunicacion.Add(comunicacion);
+            if (selectBombero)
+            {
+                Bombero? bomberoSelec = await Context.Bomberos.SingleOrDefaultAsync(bom => bom.NumeroLegajo == ComunicacionVM.NroLegajo);
+                Comunicacion comunicacion = new()
+                    {
+                        NroEquipo = ComunicacionVM.NroEquipo,
+                        Modelo = ComunicacionVM.Modelo,
+                        Marca = ComunicacionVM.Marca,
+                        NroSerie = ComunicacionVM.NroSerie,
+                        Estado = ComunicacionVM.Estado,
+                        Bombero = bomberoSelec
+                    };
+                Context.Comunicacion.Add(comunicacion);
+            }
+            else if (selectMovil)
+            {
+                Movil? movilSelec = await Context.Moviles.SingleOrDefaultAsync(mov => mov.NumeroMovil == ComunicacionVM.NumeroMovil);
+                Comunicacion comunicacion = new()
+                    {
+                        NroEquipo = ComunicacionVM.NroEquipo,
+                        Modelo = ComunicacionVM.Modelo,
+                        Marca = ComunicacionVM.Marca,
+                        NroSerie = ComunicacionVM.NroSerie,
+                        Estado = ComunicacionVM.Estado,
+                        Movil = movilSelec
+                    };
+                Context.Comunicacion.Add(comunicacion);
+            }
+
+            // Limpiar el valor no seleccionado
+            if (selectBombero)
+            {
+                ComunicacionVM.NumeroMovil = null;
+            }
+            else if (selectMovil)
+            {
+                ComunicacionVM.NroLegajo = null;
+            }
+
             await Context.SaveChangesAsync();
             await Init();
             StateHasChanged();

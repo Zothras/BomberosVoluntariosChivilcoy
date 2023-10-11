@@ -21,9 +21,10 @@
             <GridRow>
                 <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
                     <Title Level="3">Comunicaciones</Title>
+
                 </GridCol>
 
-                <GridCol Span="8" Offset="12">
+                <GridCol Span="4" Offset="20">
                     <Input @bind-Value="searchString" Placeholder="Buscar" @oninput="Search" />
                 </GridCol>
             </GridRow>
@@ -42,7 +43,7 @@
                             OnFilter="((value,name)=>Enum.GetName(typeof(TipoEstadoHandie), name).StartsWith(Enum.GetName(typeof(TipoEstadoHandie), value)))" />
             <PropertyColumn Property="b=>b.Nombre" />
             <PropertyColumn Property="b=>b.Apellido" Sortable />
-            <PropertyColumn Property="b=>b.NroLegajo" Sortable />
+            <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="Numero de Legajo" />
             <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Numero Movil" />
             <PropertyColumn Property="m=>m.Patente" Sortable />
             <ActionColumn Title="Action">
@@ -57,7 +58,7 @@
                         </Popconfirm>
                     </SpaceItem>
                     <SpaceItem>
-                        <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas desasignar el bombero?"
+                        <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas desasignar el handie?"
                                     OnConfirm="()=>Desasignar(context.NroEquipo)"
                                     OnCancel="Cancel">
                             <Button Danger>
@@ -65,6 +66,9 @@
                             </Button>
                         </Popconfirm>
                     </SpaceItem>
+
+
+
                     @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
                     <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
                     <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
@@ -113,50 +117,53 @@
         </FormItem>
         <FormItem Label="Estado">
             <EnumSelect DefaultValue="@ComunicacionVM.Estado" TEnum="TipoEstadoHandie" @bind-Value="@ComunicacionVM.Estado" />
-        </FormItem>  
-        <div>
-            <FormItem Label="Seleccione una opción">
-                <Checkbox @bind-Checked="@selectBombero" OnChange="() => HandleCheckboxChange(true, checkboxBomberoLabel)">Elija el bombero</Checkbox>
-                <Checkbox @bind-Checked="@selectMovil" OnChange="() => HandleCheckboxChange(true, checkboxMovilLabel)">Elija el móvil</Checkbox>
-            </FormItem>
-        </div>
-        @if (selectBombero)
+        </FormItem>
+        @if (ComunicacionVM.Estado == TipoEstadoHandie.Activo)
         {
-            <!-- Mostrar campos para asignar a un bombero -->
             <div>
-                <FormItem Label="@nameof(BomberoVM.NombreYApellido)">
-                    <Select TItem="BomberoViewModel"
-                            TItemValue="int?"
-                            DataSource="@BomberosViewModel"
-                    @bind-Value="@ComunicacionVM.NroLegajo"
-                            LabelName="@nameof(BomberoVM.NombreYApellido)"
-                            ValueName="@nameof(BomberoVM.NumeroLegajo)"
-                            Placeholder="Seleccione a un bombero"
-                            EnableSearch
-                            AllowClear="true">
-                    </Select>
+                <FormItem Label="Seleccione una opción">
+                    <Checkbox @bind-Checked="@selectBombero" OnChange="() => HandleCheckboxChange(true, checkboxBomberoLabel)">Elija el bombero</Checkbox>
+                    <Checkbox @bind-Checked="@selectMovil" OnChange="() => HandleCheckboxChange(true, checkboxMovilLabel)">Elija el móvil</Checkbox>
                 </FormItem>
             </div>
-        }
-        else if (selectMovil)
-        {
-            <!-- Mostrar campos para asignar a un móvil -->
-            <div>
-                <FormItem Label="@nameof(MovilVM.NumeroMovil)">
-                    <Select TItem="MovilViewModel"
-                            TItemValue="string"
-                            DataSource="@MovilesViewModel"
-                    @bind-Value="@ComunicacionVM.NumeroMovil"
-                            LabelName="@nameof(MovilVM.NumeroMovil)"
-                            ValueName="@nameof(MovilVM.NumeroMovil)"
-                            Placeholder="Seleccione un móvil"
-                            EnableSearch
-                            AllowClear="true">
-                    </Select>
-                </FormItem>
-            </div>
-        }
 
+
+            <!-- Mostrar campos para asignar a un bombero o móvil solo si el estado es "activo" -->
+            @if (selectBombero)
+            {
+                <div>
+                    <FormItem Label="@nameof(BomberoVM.NombreYApellido)">
+                        <Select TItem="BomberoViewModel"
+                                TItemValue="int?"
+                                DataSource="@BomberosViewModel"
+                        @bind-Value="@ComunicacionVM.NroLegajo"
+                                LabelName="@nameof(BomberoVM.NombreYApellido)"
+                                ValueName="@nameof(BomberoVM.NumeroLegajo)"
+                                Placeholder="Seleccione a un bombero"
+                                EnableSearch
+                                AllowClear="true">
+                        </Select>
+                    </FormItem>
+                </div>
+            }
+            else if (selectMovil)
+            {
+                <div>
+                    <FormItem Label="@nameof(MovilVM.NumeroMovil)">
+                        <Select TItem="MovilViewModel"
+                                TItemValue="string"
+                                DataSource="@MovilesViewModel"
+                        @bind-Value="@ComunicacionVM.NumeroMovil"
+                                LabelName="@nameof(MovilVM.NumeroMovil)"
+                                ValueName="@nameof(MovilVM.NumeroMovil)"
+                                Placeholder="Seleccione un móvil"
+                                EnableSearch
+                                AllowClear="true">
+                        </Select>
+                    </FormItem>
+                </div>
+            }
+        }
     </Form>
 </Modal>
 
@@ -234,7 +241,6 @@
     private bool selectMovil = false;
     string checkboxMovilLabel = "Elija el móvil";
     string checkboxBomberoLabel = "Elija el bombero";
-
     private void HandleCheckboxChange(bool value, string checkboxName)
     {
         if (checkboxName == "Elija el bombero" && value)
@@ -346,7 +352,7 @@
     {
         searchString = e.Value.ToString().Trim().ToLower();
         filteredComunicaciones = ComunicacionesViewModel
-            .Where(c => string.IsNullOrWhiteSpace(searchString) || c.Nombre.ToLower().Contains(searchString))
+            .Where(c => string.IsNullOrWhiteSpace(searchString) || c.Marca.ToLower().Contains(searchString))
             .ToList();
     }
 
@@ -362,12 +368,19 @@
         {
             Comunicacion? comunicacion = await Context.Comunicacion.FirstOrDefaultAsync(c => c.NroEquipo == NroEquipoBorrar);
             Context.Remove(comunicacion);
-            ComunicacionesViewModel = ComunicacionesViewModel.Where(x => x.NroEquipo != NroEquipoBorrar).ToList();
-            _total = ComunicacionesViewModel.Count;
             await Context.SaveChangesAsync();
+
+            // Actualiza ComunicacionesViewModel sin el handie borrado
+            ComunicacionesViewModel = ComunicacionesViewModel.Where(x => x.NroEquipo != NroEquipoBorrar).ToList();
+
+            // Actualiza la lista filtrada utilizada como origen de datos de la tabla
+            filteredComunicaciones = ComunicacionesViewModel;
+
+            // Forzar una actualización de la interfaz de usuario
             await Init();
             StateHasChanged();
-            await message.Success("Handie elminado correctamente");
+
+            await message.Success("Handie eliminado correctamente");
         }
         catch (Exception ex)
         {
@@ -378,37 +391,41 @@
             else
                 await message.Error(ex.Message, 5);
         }
-
     }
+
     private async Task Desasignar(string NroEquipoDesasignar)
     {
         try
         {
             Bombero? bombero = await Context.Bomberos
-            .Include(b => b.Handie) // Incluye la entidad relacionada Handie en la consulta
-            .Where(x => x.Handie.NroEquipo == NroEquipoDesasignar)
-            .SingleOrDefaultAsync();
+                .Include(b => b.Handie)
+                .Where(x => x.Handie.NroEquipo == NroEquipoDesasignar)
+                .SingleOrDefaultAsync();
             Movil? movil = await Context.Moviles
-            .Include(b => b.HandieMovil) // Incluye la entidad relacionada Handie en la consulta
-            .Where(x => x.HandieMovil.NroEquipo == NroEquipoDesasignar)
-            .SingleOrDefaultAsync();
+                .Include(b => b.HandieMovil)
+                .Where(x => x.HandieMovil.NroEquipo == NroEquipoDesasignar)
+                .SingleOrDefaultAsync();
 
             if (bombero != null)
             {
-                bombero.Handie = null; // Desvincula la entidad relacionada Handie
+                bombero.Handie = null;
                 await Context.SaveChangesAsync();
                 await Init();
+                StateHasChanged();
                 await message.Success("Bombero desasignado correctamente");
             }
             else if (movil != null)
             {
-                bombero.Handie = null; // Desvincula la entidad relacionada Handie
+                movil.HandieMovil = null;
                 await Context.SaveChangesAsync();
             }
+            // Vuelve a cargar los datos de la tabla
             await Init();
-            await message.Success("Movil desasignado correctamente");
+
+            // Forza una actualización de la interfaz de usuario
             StateHasChanged();
 
+            await message.Success("Móvil desasignado correctamente");
         }
         catch (Exception ex)
         {
@@ -419,7 +436,6 @@
             else
                 await message.Error(ex.Message, 5);
         }
-
     }
 
     private async void EditarHandie(string NroEquipoEdit)
@@ -506,6 +522,20 @@
 
     private async void HandleOkAgregar(MouseEventArgs e)
     {
+        // Agrega el nuevo elemento aquí...
+
+        // Guarda los cambios en la base de datos
+        await Context.SaveChangesAsync();
+
+        // Recarga los datos de la tabla
+        await CargarComunicacionVM();
+
+        // Actualiza la lista filtrada utilizada como origen de datos de la tabla
+        filteredComunicaciones = ComunicacionesViewModel;
+
+        // Forzar una actualización de la interfaz de usuario
+        StateHasChanged();
+
         _visibleAgregar = false;
     }
     public void HandleCancelAgregar(MouseEventArgs e)
