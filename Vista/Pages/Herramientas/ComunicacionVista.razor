@@ -474,13 +474,11 @@
             comunicacion.Estado = ComunicacionVM.Estado;
 
             await Context.SaveChangesAsync();
-            await Init();
             StateHasChanged();
             await message.Success("Handie editado correctamente");
         }
         catch (Exception ex)
         {
-            await Init();
             StateHasChanged();
             if (ex.InnerException != null)
                 await message.Error(ex.InnerException.Message, 5);

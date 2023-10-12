@@ -263,6 +263,18 @@
                     };
                 Context.Comunicacion.Add(comunicacion);
             }
+            else
+            {
+                Comunicacion comunicacion = new()
+                    {
+                        NroEquipo = ComunicacionVM.NroEquipo,
+                        Modelo = ComunicacionVM.Modelo,
+                        Marca = ComunicacionVM.Marca,
+                        NroSerie = ComunicacionVM.NroSerie,
+                        Estado = ComunicacionVM.Estado
+                    };
+                Context.Comunicacion.Add(comunicacion);
+            }
 
             // Limpiar el valor no seleccionado
             if (selectBombero)
