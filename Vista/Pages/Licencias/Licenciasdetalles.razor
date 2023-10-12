@@ -118,6 +118,8 @@
                         </div>
                     </div>
 
+
+
                     @*Parte del encuadre de texto del buscador  de licencias*@
                     <div class="inpt-cont-inline">
                         <div style="display: flex; margin-bottom:  5px;" class="buton-cont">
@@ -143,9 +145,9 @@
                         </ChildContent>
                     </Dropdown>
                 </div>
-                </div>
+            </div>
 
-                
+
         </TitleTemplate>
         <ColumnDefinitions Context="muestra">
             <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
@@ -235,33 +237,37 @@
     {
         LicenciasPendientes = new();
         LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
-
-
-
-
     }
+
+
+
     private async Task LicenciasBUscar()
     {
         LicenciasActivasVM.Clear();
-        foreach (var l in LicenciasActivasVM)
+        
+        
+            var licencias = await Context.Licencias
+            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada)
+            .Include(b => b.PersonalAfectado).ToListAsync();
+
+        foreach (var licencia in licencias)
         {
-            var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
-            if (l.Desde >= FechaBuscarI & l.Hasta <= FechaBuscarF)
+            if (licencia.Desde >= FechaBuscarI && licencia.Hasta <= FechaBuscarF)
             {
                 LicencasVm LicVm = new()
                     {
-                        TipoLicencia = l.TipoLicencia,
-                        Descripcion = l.Descripcion,
-                        Desde = l.Desde,
-                        Hasta = l.Hasta,
-                        EstadoLicencia = l.EstadoLicencia,
-                        NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido,
+                        TipoLicencia = licencia.TipoLicencia,
+                        Descripcion = licencia.Descripcion,
+                        Desde = licencia.Desde,
+                        Hasta = licencia.Hasta,
+                        EstadoLicencia = licencia.EstadoLicencia,
+                        NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
                     };
                 LicenciasActivasVM.Add(LicVm);
             }
         }
-        await Init();
-    }
+     
+    }   
 
 
 
@@ -271,13 +277,13 @@
     private async Task BuscarLicenciado()
     {
         LicenciasActivasVM.Clear();
-        var licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
+        var licencias = await Context.Licencias
+        .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada)
+        .Where(l => l.PersonalAfectado.Nombre.ToLower().Contains(Busqueda.ToLower()) || l.PersonalAfectado.Apellido.ToLower().Contains(Busqueda.ToLower()))
+        .Include(b => b.PersonalAfectado).ToListAsync();
 
         foreach (var l in licencias)
         {
-            var nombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido;
-            if (nombreYApellido == Busqueda)
-            {
                 LicencasVm LicVm = new()
                     {
                         TipoLicencia = l.TipoLicencia,
@@ -288,10 +294,8 @@
                         NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
                     };
                 LicenciasActivasVM.Add(LicVm);
-            }
         }
     }
-
 
 
 
