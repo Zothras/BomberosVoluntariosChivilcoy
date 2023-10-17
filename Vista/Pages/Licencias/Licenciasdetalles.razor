@@ -240,20 +240,20 @@
     }
 
 
-
+    // licencias a buscar por fecha y hora
     private async Task LicenciasBUscar()
     {
         LicenciasActivasVM.Clear();
-        
-        
-            var licencias = await Context.Licencias
+
+
+        var licencias = await Context.Licencias
+
+            .Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
             .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada)
             .Include(b => b.PersonalAfectado).ToListAsync();
 
         foreach (var licencia in licencias)
         {
-            if (licencia.Desde >= FechaBuscarI && licencia.Hasta <= FechaBuscarF)
-            {
                 LicencasVm LicVm = new()
                     {
                         TipoLicencia = licencia.TipoLicencia,
@@ -264,7 +264,7 @@
                         NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
                     };
                 LicenciasActivasVM.Add(LicVm);
-            }
+            
         }
      
     }   
