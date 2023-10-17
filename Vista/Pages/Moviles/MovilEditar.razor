@@ -97,27 +97,22 @@
             {
                 <div style="height: 22em;width: 100%;padding: 10px;">
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.Marca" placeholder=" " />
-                        <label class="inpt-label">Marca:</label>
+                        <input type="text" @bind="movilView.Marca" placeholder="Marca: " />
                     </div>
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.Modelo" placeholder=" " />
-                        <label class="inpt-label">Modelo:</label>
+                        <input type="text" @bind="movilView.Modelo" placeholder="Modelo: " />
                     </div>
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.Año" placeholder=" " />
-                        <label class="inpt-label">Año:</label>
+                        <input type="number" @bind="movilView.Año" placeholder="Año: " />
                     </div>
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.Patente" placeholder=" " />
-                        <label class="inpt-label">Patente:</label>
+                        <input type="text" @bind="movilView.Patente" placeholder="Patente: " />
                     </div>
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.Tipo" placeholder=" " />
-                        <label class="inpt-label">Tipo:</label>
+                        <input type="text" @bind="movilView.Tipo" placeholder="Tipo: " />
                     </div>
                     <div class="inpt-container">
-                        <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto de movil</label>
+                        <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto del móvil</label>
                         <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
                         <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre @* <Icon Type="eye" Theme="outline" /> *@</h3>
                     </div>
@@ -127,23 +122,20 @@
             {
                 <div style="height: 22em;width: 100%;padding: 10px;">
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.NumeroMovil" placeholder=" " />
-                        <label class="inpt-label">Nº movil:</label>
+                        <input type="text" @bind="movilView.NumeroMovil" placeholder="Nº del Móvil:" />
                     </div>
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.NumeroMotor" placeholder=" " />
-                        <label class="inpt-label">Nº motor:</label>
+                        <input type="text" @bind="movilView.NumeroMotor" placeholder="Nº Motor:" />
                     </div>
                     <div class="inpt-container">
-                        <input type="text" @bind="movilView.NumeroChasis" placeholder=" " />
-                        <label class="inpt-label">Nº chasis:</label>
+                        <input type="text" @bind="movilView.NumeroChasis" placeholder="Nº Chasis:" />
                     </div>
                     <div class="inpt-container">
                         <select @bind="movilView.Estado" class="select-estadoMovil">
-                            <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del movil</option>
+                            <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del móvil</option>
                             <option value="@TipoEstadoMovil.Activo">Activo</option>
                             <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
-                            <option value="@TipoEstadoMovil.Reparacion">Reparacion</option>
+                            <option value="@TipoEstadoMovil.Reparacion">Reparación</option>
                             <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
                         </select>
                     </div>
@@ -388,9 +380,9 @@
 
     public StepItem[] steps =
     {
-        new StepItem {Title = "First", Content = "First-content"},
-        new StepItem {Title = "Second", Content = "Second-content"},
-        new StepItem {Title = "Last", Content = "Last-content"}
+        new StepItem {Title = "Básico"},
+        new StepItem {Title = "Datos"},
+        new StepItem {Title = "Seguro"}
     };
 
     void OnPreClick()
