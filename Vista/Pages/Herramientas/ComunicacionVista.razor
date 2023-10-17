@@ -9,7 +9,8 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal;
 @using Vista.Data.ViewModels.Personal;
 
-<div style="margin-top: 2em;">
+<div style="margin-top: 2em; display: flex; width: 100%">
+    <div style="display: flex; justify-content: center">
     <Table DataSource="filteredComunicaciones" Bordered
         @bind-SelectedRows="selectedRows"
                Total="_total"
@@ -43,17 +44,17 @@
                             OnFilter="((value,name)=>Enum.GetName(typeof(TipoEstadoHandie), name).StartsWith(Enum.GetName(typeof(TipoEstadoHandie), value)))" />
             <PropertyColumn Property="b=>b.Nombre" />
             <PropertyColumn Property="b=>b.Apellido" Sortable />
-            <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="Numero de Legajo" />
-            <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Numero Movil" />
+            <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="Número de Legajo" />
+            <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Número Movil" />
             <PropertyColumn Property="m=>m.Patente" Sortable />
             <ActionColumn Title="Action">
                 <Space>
                     <SpaceItem>
-                        <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro que deseas borrar el handie?"
+                        <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas borrar el handie?"
                                     OnConfirm="()=>Delete(context.NroEquipo)"
                                     OnCancel="Cancel">
                             <Button Danger>
-                                Eliminar
+                                    <b>Eliminar</b>
                             </Button>
                         </Popconfirm>
                     </SpaceItem>
@@ -62,7 +63,7 @@
                                     OnConfirm="()=>Desasignar(context.NroEquipo)"
                                     OnCancel="Cancel">
                             <Button Danger>
-                                Desasignar
+                                    <b>Desasignar</b>
                             </Button>
                         </Popconfirm>
                     </SpaceItem>
@@ -71,15 +72,15 @@
 
                     @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
                     <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
-                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
+                        <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)"><b>Editar</b></Button></SpaceItem>
                 </Space>
             </ActionColumn>
         </ColumnDefinitions>
     </Table>
-    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-        <Button OnClick="()=>ShowModalAgregar()">Agregar Handie</Button>
     </div>
-
+</div>
+<div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
+    <Button OnClick="()=>ShowModalAgregar()">Agregar Handie</Button>
 </div>
 
 <Modal Footer="null" Title="@("Comunicacion")"
@@ -92,7 +93,7 @@
     </Button>
 </Modal>
 
-<Modal Title="@("Comunicacion")"
+<Modal Title="@("Comunicación")"
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
@@ -380,7 +381,7 @@
             await Init();
             StateHasChanged();
 
-            await message.Success("Handie eliminado correctamente");
+            await message.Success("Handie eliminado correctamente.");
         }
         catch (Exception ex)
         {
@@ -412,7 +413,7 @@
                 await Context.SaveChangesAsync();
                 await Init();
                 StateHasChanged();
-                await message.Success("Bombero desasignado correctamente");
+                await message.Success("Bombero desasignado correctamente.");
             }
             else if (movil != null)
             {
@@ -425,7 +426,7 @@
             // Forza una actualización de la interfaz de usuario
             StateHasChanged();
 
-            await message.Success("Móvil desasignado correctamente");
+            await message.Success("Móvil desasignado correctamente.");
         }
         catch (Exception ex)
         {
@@ -475,7 +476,7 @@
 
             await Context.SaveChangesAsync();
             StateHasChanged();
-            await message.Success("Handie editado correctamente");
+            await message.Success("Handie editado correctamente.");
         }
         catch (Exception ex)
         {
@@ -569,7 +570,7 @@
 
     private void Cancel()
     {
-        message.Error("Operacion cancelada");
+        message.Error("Operación cancelada.");
     }
 
 

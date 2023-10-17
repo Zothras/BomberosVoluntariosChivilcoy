@@ -46,7 +46,8 @@
     }
 </style>
 
-<div class="contenedor">
+<div class="contenedor" style="margin-top: 2em; display: flex; width: 100%">
+    <div style="display: flex; justify-content: center">
     <Table @ref="table"
            TItem="Bombero"
            DataSource="@bomberos"
@@ -93,12 +94,14 @@
         </ColumnDefinitions>
          @*--------------------------------------------Modal-----------------------------------------------*@
     </Table>
-    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
-        <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
-        <Button OnClick="@ShowModalAgregarS">Agregar Sancion</Button>
-        <Button OnClick="@ShowModalAgregarA">Ascender bombero</Button>
     </div>
  </div>
+<div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
+    <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
+    <Button OnClick="@ShowModalAgregarS">Agregar Sancion</Button>
+    <Button OnClick="@ShowModalAgregarA">Ascender bombero</Button>
+</div>
+
 
 
  <Modal Title="@("Bombero")"
