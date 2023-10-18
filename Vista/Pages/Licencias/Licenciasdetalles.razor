@@ -123,7 +123,7 @@
                     @*Parte del encuadre de texto del buscador  de licencias*@
                     <div class="inpt-cont-inline">
                         <div style="display: flex; margin-bottom:  5px;" class="buton-cont">
-                            <Input Placeholder="Buscar Licenciado" @bind-Value="@Busqueda" />
+                            <Input Placeholder="Buscar Licenciado" @bind-Value="@Busqueda" OnPressEnter="BuscarLicenciado" />
                             <Button OnClick="@BuscarLicenciado" Style="margin-bottom:  5px;">
                                 <Icon Type="search" Theme="outline" />
                             </Button>
