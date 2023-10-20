@@ -11,72 +11,72 @@
 
 <div style="margin-top: 2em; display: flex; width: 100%">
     <div style="display: flex; justify-content: center">
-    <Table DataSource="filteredComunicaciones" Bordered
-        @bind-SelectedRows="selectedRows"
-               Total="_total"
-        @bind-PageIndex="_pageIndex"
-        @bind-PageSize="_pageSize"
-           Responsive>
+        <Table DataSource="filteredComunicaciones" Bordered
+             @bind-SelectedRows="selectedRows"
+                    Total="_total"
+             @bind-PageIndex="_pageIndex"
+             @bind-PageSize="_pageSize"
+                  Responsive>
 
-        <TitleTemplate>
-            <GridRow>
-                <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
-                    <Title Level="3">Comunicaciones</Title>
+            <TitleTemplate>
+                <GridRow>
+                    <GridCol Style="width: 100% !important;flex: none !important;display: flex; justify-content: space-between; max-width:none;" Span="4">
+                        <Title Level="3">Comunicaciones</Title>
 
-                </GridCol>
-
-                <GridCol Span="4" Offset="20">
-                    <Input @bind-Value="searchString" Placeholder="Buscar" @oninput="Search" />
-                </GridCol>
-            </GridRow>
-        </TitleTemplate>
-        <ColumnDefinitions>
-            <PropertyColumn Property="c => c.NroEquipo"
-                            DefaultSortOrder="@SortDirection.Descending"
-                            SorterCompare="@((a, b) => string.Compare(a, b))" />
-            <PropertyColumn Property="c=>c.Modelo" Sortable />
-            <PropertyColumn Property="c=>c.Marca" Sortable />
-            <PropertyColumn Property="c=>c.NroSerie" />
-            <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-            <PropertyColumn Title="Estado" Property="c=>c.Estado"
-                            SortDirections="new[] { SortDirection.Descending }"
-                            Filters="DiscriminadorFilter"
-                            OnFilter="((value,name)=>Enum.GetName(typeof(TipoEstadoHandie), name).StartsWith(Enum.GetName(typeof(TipoEstadoHandie), value)))" />
-            <PropertyColumn Property="b=>b.Nombre" />
-            <PropertyColumn Property="b=>b.Apellido" Sortable />
-            <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="Número de Legajo" />
-            <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Número Movil" />
-            <PropertyColumn Property="m=>m.Patente" Sortable />
-            <ActionColumn Title="Action">
-                <Space>
-                    <SpaceItem>
-                        <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas borrar el handie?"
-                                    OnConfirm="()=>Delete(context.NroEquipo)"
-                                    OnCancel="Cancel">
-                            <Button Danger>
+                    </GridCol>
+                    <GridCol Span="4" Offset="20">
+                        <Search Placeholder="Buscar" WrapperStyle="width: 200px;" AllowClear EnterButton="true" @bind-Value="searchString"  OnChange="() => this.Search(new ChangeEventArgs { Value = searchString })" />
+                    </GridCol>
+                    
+                </GridRow>
+            </TitleTemplate>
+            <ColumnDefinitions>
+                <PropertyColumn Property="c => c.NroEquipo"
+                                DefaultSortOrder="@SortDirection.Descending"
+                                SorterCompare="@((a, b) => string.Compare(a, b))" />
+                <PropertyColumn Property="c=>c.Modelo" Sortable />
+                 <PropertyColumn Property="c=>c.Marca" Sortable />
+                 <PropertyColumn Property="c=>c.NroSerie" />
+                 <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
+                 <PropertyColumn Title="Estado" Property="c=>c.Estado"
+                                 SortDirections="new[] { SortDirection.Descending }"
+                                 Filters="DiscriminadorFilter"
+                                 OnFilter="((value,name)=>Enum.GetName(typeof(TipoEstadoHandie), name).StartsWith(Enum.GetName(typeof(TipoEstadoHandie), value)))" />
+                 <PropertyColumn Property="b=>b.Nombre" />
+                 <PropertyColumn Property="b=>b.Apellido" Sortable />
+                 <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="Número de Legajo" />
+                 <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Número Movil" />
+                 <PropertyColumn Property="m=>m.Patente" Sortable />
+                 <ActionColumn Title="Action">
+                     <Space>
+                         <SpaceItem>
+                             <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas borrar el handie?"
+                                         OnConfirm="()=>Delete(context.NroEquipo)"
+                                         OnCancel="Cancel">
+                                 <Button Danger>
                                     <b>Eliminar</b>
-                            </Button>
-                        </Popconfirm>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas desasignar el handie?"
-                                    OnConfirm="()=>Desasignar(context.NroEquipo)"
-                                    OnCancel="Cancel">
-                            <Button Danger>
+                                </Button>
+                            </Popconfirm>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas desasignar el handie?"
+                                        OnConfirm="()=>Desasignar(context.NroEquipo)"
+                                        OnCancel="Cancel">
+                                <Button Danger>
                                     <b>Desasignar</b>
-                            </Button>
-                        </Popconfirm>
-                    </SpaceItem>
+                                </Button>
+                            </Popconfirm>
+                        </SpaceItem>
 
 
 
-                    @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
-                    <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
+                        @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
+                        <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
                         <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)"><b>Editar</b></Button></SpaceItem>
-                </Space>
-            </ActionColumn>
-        </ColumnDefinitions>
-    </Table>
+                    </Space>
+                </ActionColumn>
+            </ColumnDefinitions>
+        </Table>
     </div>
 </div>
 <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
@@ -142,10 +142,10 @@
                                 ValueName="@nameof(BomberoVM.NumeroLegajo)"
                                 Placeholder="Seleccione a un bombero"
                                 EnableSearch
-                                AllowClear="true">
-                        </Select>
-                    </FormItem>
-                </div>
+                                 AllowClear="true">
+                         </Select>
+                     </FormItem>
+                 </div>
             }
             else if (selectMovil)
             {
@@ -159,10 +159,10 @@
                                 ValueName="@nameof(MovilVM.NumeroMovil)"
                                 Placeholder="Seleccione un móvil"
                                 EnableSearch
-                                AllowClear="true">
-                        </Select>
-                    </FormItem>
-                </div>
+                                 AllowClear="true">
+                         </Select>
+                     </FormItem>
+                 </div>
             }
         }
     </Form>
@@ -348,12 +348,21 @@
     {
         Console.WriteLine($"row {row.Data.NroEquipo} was clicked");
     }//Toma el valor del valor de la fila seleccionada
-
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+           this.Search(new ChangeEventArgs { Value = searchString }); // Call the search method when the Enter key is pressed
+        }
+    }
     private void Search(ChangeEventArgs e)
     {
-        searchString = e.Value.ToString().Trim().ToLower();
-        filteredComunicaciones = ComunicacionesViewModel
-            .Where(c => string.IsNullOrWhiteSpace(searchString) || c.Marca.ToLower().Contains(searchString))
+        searchString = e.Value?.ToString()?.Trim()?.ToLower() ?? ""; 
+        filteredComunicaciones = ComunicacionesViewModel?
+            .Where(c =>
+                string.IsNullOrWhiteSpace(searchString) ||
+                (c.Marca?.ToLower() ?? "").Contains(searchString)
+            )
             .ToList();
     }
 
