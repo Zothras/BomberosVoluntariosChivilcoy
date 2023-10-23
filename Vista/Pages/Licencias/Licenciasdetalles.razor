@@ -163,8 +163,10 @@
             </PropertyColumn>
         </ColumnDefinitions>
     </Table>
-    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-        <Button OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
+     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em; .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;}">
+        <Button Class="boton_p"  OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
     </div>
 </div>
 <Modal Footer="null" Title="@("Agregar la licencia")"
