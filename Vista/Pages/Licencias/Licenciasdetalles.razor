@@ -105,16 +105,17 @@
                     <div class="inpt-cont-inline">
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Desde: </label>
-                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
+                            <DatePicker TValue="DateTime"  OnChange="OnChange" @bind-Value="@FechaBuscarI" />
                         </div>
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Hasta: </label>
-                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
+                            <DatePicker TValue="DateTime"  OnChange="OnChange" @bind-Value="@FechaBuscarF" />
                         </div>
                         <div class="buton-cont">
                             <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">
                                 <Icon Type="search" Theme="outline" />
                             </Button>
+
                         </div>
                     </div>
 
@@ -123,12 +124,14 @@
                     @*Parte del encuadre de texto del buscador  de licencias*@
                     <div class="inpt-cont-inline">
                         <div style="display: flex; margin-bottom:  5px;" class="buton-cont">
-                            <Input Placeholder="Buscar Licenciado" @bind-Value="@Busqueda" OnPressEnter="BuscarLicenciado" />
+                            <Input Placeholder="Buscar Licenciado" @bind-Value="@Busqueda" OnPress="BuscarLicenciado" />
                             <Button OnClick="@BuscarLicenciado" Style="margin-bottom:  5px;">
                                 <Icon Type="search" Theme="outline" />
                             </Button>
                         </div>
                     </div>
+
+
                     <div>
                         <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
                         <Overlay>
@@ -154,7 +157,10 @@
             <PropertyColumn Property="c=>c.Desde" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.Hasta" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.EstadoLicencia" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.EstadoLicencia"
+                                    Sortable
+                            Filters="FiltroEstado">
+            </PropertyColumn>
         </ColumnDefinitions>
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
@@ -173,7 +179,8 @@
 
 
 
-@code {
+@code 
+{
     public class LicencasVm
     {
         [Required]
@@ -212,7 +219,7 @@
         await LicenciasPendiente();
     }
 
-
+    public TableFilter<TipoEstadoLicencia>[] FiltroEstado;
 
 
     private async Task LicenciasActivas()
@@ -244,30 +251,24 @@
     private async Task LicenciasBUscar()
     {
         LicenciasActivasVM.Clear();
-
-
         var licencias = await Context.Licencias
-
             .Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
             .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada)
             .Include(b => b.PersonalAfectado).ToListAsync();
-
         foreach (var licencia in licencias)
         {
-                LicencasVm LicVm = new()
-                    {
-                        TipoLicencia = licencia.TipoLicencia,
-                        Descripcion = licencia.Descripcion,
-                        Desde = licencia.Desde,
-                        Hasta = licencia.Hasta,
-                        EstadoLicencia = licencia.EstadoLicencia,
-                        NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
-                    };
-                LicenciasActivasVM.Add(LicVm);
-            
+            LicencasVm LicVm = new()
+                {
+                    TipoLicencia = licencia.TipoLicencia,
+                    Descripcion = licencia.Descripcion,
+                    Desde = licencia.Desde,
+                    Hasta = licencia.Hasta,
+                    EstadoLicencia = licencia.EstadoLicencia,
+                    NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
+                };
+            LicenciasActivasVM.Add(LicVm);
         }
-     
-    }   
+    }
 
 
 
@@ -281,19 +282,18 @@
         .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada)
         .Where(l => l.PersonalAfectado.Nombre.ToLower().Contains(Busqueda.ToLower()) || l.PersonalAfectado.Apellido.ToLower().Contains(Busqueda.ToLower()))
         .Include(b => b.PersonalAfectado).ToListAsync();
-
         foreach (var l in licencias)
         {
-                LicencasVm LicVm = new()
-                    {
-                        TipoLicencia = l.TipoLicencia,
-                        Descripcion = l.Descripcion,
-                        Desde = l.Desde,
-                        Hasta = l.Hasta,
-                        EstadoLicencia = l.EstadoLicencia,
-                        NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
-                    };
-                LicenciasActivasVM.Add(LicVm);
+            LicencasVm LicVm = new()
+                {
+                    TipoLicencia = l.TipoLicencia,
+                    Descripcion = l.Descripcion,
+                    Desde = l.Desde,
+                    Hasta = l.Hasta,
+                    EstadoLicencia = l.EstadoLicencia,
+                    NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
+                };
+            LicenciasActivasVM.Add(LicVm);
         }
     }
 
