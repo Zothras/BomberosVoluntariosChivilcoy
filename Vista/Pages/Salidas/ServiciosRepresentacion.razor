@@ -5,6 +5,12 @@
 @page "/salidas/serviciosRepresentacion"
 @using System.ComponentModel.DataAnnotations;
 @using Vista.Data.ViewModels.Servicios;
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
 
 <h2 style="text-align:center; text-decoration:underline;">Servicio de Representacion</h2>
 
@@ -331,7 +337,7 @@
     </FormItem>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarServicioRepresentacion">
+        <Button Class="boton_p" HtmlType="submit" OnClick="@CargarServicioRepresentacion">
             Cargar salida
         </Button>
     </FormItem>

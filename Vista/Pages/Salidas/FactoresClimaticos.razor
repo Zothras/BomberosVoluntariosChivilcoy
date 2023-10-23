@@ -7,6 +7,15 @@
 @using System.Text.Json;
 @using Vista.Data.ViewModels.FactorClimatico;
 @using Vista.Data.ViewModels.Personal;
+
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
+
+
 <h2 style="text-align:center; text-decoration:underline;">Factores Climaticos</h2>
 
 <Form Model="@modelFactorClimatico"
@@ -148,7 +157,7 @@
     <FormItem Label="">
         <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
         <br />
-        <Button Type="primary" OnClick="@ShowModal">
+        <Button Class="boton_p" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
     </FormItem>
@@ -296,7 +305,7 @@
 
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="@CargarFactorClimatico">
+        <Button Class="boton_p" HtmlType="submit" OnClick="@CargarFactorClimatico">
             Cargar salida
         </Button>
     </FormItem>

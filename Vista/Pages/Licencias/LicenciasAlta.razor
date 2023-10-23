@@ -2,7 +2,12 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
-
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
 
 
 <Form Model="@LicencasVM"
@@ -46,8 +51,8 @@
             display: flex !important;
             justify-content: flex-end !important;
             align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
-         <Button Type="@ButtonType.Primary" HtmlType="submit" Style="margin-right: 60px;">
-            cargar licencia
+         <Button Class="boton_p" HtmlType="submit" Style="margin-right: 60px;">
+            Cargar licencia
         </Button>
     </FormItem>
     

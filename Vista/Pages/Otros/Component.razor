@@ -12,9 +12,14 @@
 @using Vista.Data.ViewModels.Accidente;
 @using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Rescates;
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
 
-
-<Button Type="primary" OnClick="()=>ShowModalEditar()">Editar</Button>
+<Button Class="boton_p" OnClick="()=>ShowModalEditar()">Editar</Button>
 <Modal Title="@("Editar Salida")"
        Visible="@_visibleEditar"
        OnOk="@HandleOk1"

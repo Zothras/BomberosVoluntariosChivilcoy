@@ -5,6 +5,13 @@
 @page "/salidas/incendios-comercio"
 @using Vista.Data.ViewModels;
 @using System.ComponentModel.DataAnnotations;
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
+
 
 <h2 style="text-align:center; text-decoration:underline;">Incendio Comercio</h2>
 <Form Model="@salidaIncendioComercioView"
@@ -140,7 +147,7 @@
     <br />
     <FormItem Label="" style="display: grid;place-items: center;">
         <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-        <Button Type="primary" OnClick="@ShowModal">
+        <Button CLass="boton_p" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
     </FormItem>
@@ -343,7 +350,7 @@
     </div>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Class="boton_p" HtmlType="submit">
             Cargar salida
         </Button>
     </FormItem>

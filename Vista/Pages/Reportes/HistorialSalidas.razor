@@ -13,6 +13,13 @@
 @using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Rescates;
 
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
+
 <div style="margin-top: 2em;">
     <Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1" Responsive PageSize="6">
         <TitleTemplate>
@@ -41,8 +48,8 @@
             <ActionColumn Title="Action">
                 <Space>
                     <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroParte)">Delete</Button></SpaceItem>
-                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button></SpaceItem>
-                    <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button></SpaceItem>
+                    <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button></SpaceItem>
+                    <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button></SpaceItem>
                 </Space>
             </ActionColumn>
             @*<Column Title="Salidas" @bind-Field="@discriminadores" Sortable />*@

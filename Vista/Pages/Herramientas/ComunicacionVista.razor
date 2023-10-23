@@ -9,6 +9,13 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal;
 @using Vista.Data.ViewModels.Personal;
 
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
+
 <div style="margin-top: 2em; display: flex; width: 100%">
     <div style="display: flex; justify-content: center">
         <Table DataSource="filteredComunicaciones" Bordered
@@ -54,7 +61,7 @@
                                          OnConfirm="()=>Delete(context.NroEquipo)"
                                          OnCancel="Cancel">
                                  <Button Danger>
-                                    <b>Eliminar</b>
+                                    Eliminar
                                 </Button>
                             </Popconfirm>
                         </SpaceItem>
@@ -63,7 +70,7 @@
                                         OnConfirm="()=>Desasignar(context.NroEquipo)"
                                         OnCancel="Cancel">
                                 <Button Danger>
-                                    <b>Desasignar</b>
+                                    Desasignar
                                 </Button>
                             </Popconfirm>
                         </SpaceItem>
@@ -72,7 +79,7 @@
 
                         @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
                         <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
-                        <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NroEquipo)"><b>Editar</b></Button></SpaceItem>
+                        <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
                     </Space>
                 </ActionColumn>
             </ColumnDefinitions>
@@ -80,7 +87,7 @@
     </div>
 </div>
 <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-    <Button OnClick="()=>ShowModalAgregar()">Agregar Handie</Button>
+    <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Agregar Handie</Button>
 </div>
 
 <Modal Footer="null" Title="@("Comunicacion")"
@@ -88,7 +95,7 @@
        OnOk="@HandleOkAgregar"
        OnCancel="@HandleCancelAgregar">
     <AgregarComunicacion />
-    <Button Style="margin-right: 134px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregar">
+    <Button Style="margin-right: 134px !important; border: 1px solid black;" OnClick="@HandleCancelAgregar">
         Volver
     </Button>
 </Modal>

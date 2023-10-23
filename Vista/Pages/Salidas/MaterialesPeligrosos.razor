@@ -75,6 +75,11 @@
             overflox: auto!imporant;
         }
     }
+    
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
 
     
 </style>
@@ -261,7 +266,7 @@
                                 <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
                             </div>
                             <div class="inpt-cont">
-                                <Button Type="primary" OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+                                <Button Class="boton_p" OnClick="@AgregarDamnificado">Agregar damnificado</Button>
                             </div>
                         </Modal>
                     }
@@ -560,15 +565,15 @@
     <div class="steps-action">
         @if (current > 0)
         {
-            <Button Type="primary" OnClick="OnPreClick">Anterior</Button>
+            <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
         }
         @if (current < steps.Length - 1)
         {
-            <Button Type="primary" OnClick="OnNextClick">Siguiente</Button>
+            <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
         }
         @if (current == steps.Length - 1)
         {
-            <Button Type="@ButtonType.Primary" HtmlType="submit">
+            <Button Class="boton_p" HtmlType="submit">
                 Cargar salida
             </Button>
         }

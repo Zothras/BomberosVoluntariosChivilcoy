@@ -51,6 +51,12 @@
         font-family: calibri light;
         Font-Weight: bold;
     }
+    
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+
 </style>
 
 <Form Model="@bomberoView"
@@ -205,7 +211,7 @@
     </FormItem>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" OnClick="CrearBombero">
+        <Button Class="boton_p" HtmlType="submit" OnClick="CrearBombero">
             Agregar Bombero
         </Button>
     </FormItem>

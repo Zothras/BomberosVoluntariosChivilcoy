@@ -44,6 +44,12 @@
             max-width: 100%!important;
         }
     }
+    
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+
 </style>
 
 <div class="contenedor" style="margin-top: 2em; display: flex; width: 100%">
@@ -87,8 +93,8 @@
              <ActionColumn Title="Action">
                  <Space>
                      <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
-                     <SpaceItem><Button Type="primary" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
-                     <SpaceItem><Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
+                     <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
+                     <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
                  </Space>
              </ActionColumn>
         </ColumnDefinitions>
@@ -415,7 +421,7 @@
        OnOk="@HandleOkAgregarA"
        OnCancel="@HandleCancelAgregarA">
     <AscensoBombero />
-    <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregarA">
+    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregarA">
         Volver
     </Button>
 </Modal>
@@ -424,7 +430,7 @@
        OnOk="@HandleOkAgregarS"
        OnCancel="@HandleCancelAgregarS">
     <SancionBombero />
-    <Button Style="margin-right: 100px !important;" Type="@ButtonType.Primary" OnClick="@HandleCancelAgregarS">
+    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregarS">
         Volver
     </Button>
 </Modal>

@@ -7,6 +7,12 @@
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
 @using System.Text.Json;
+<style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
 <h2 style="text-align:center; text-decoration:underline;">Incendio Hospital/Clinica</h2>
 
 <Form Model="@HospitalClinicaViewModel"
@@ -128,7 +134,7 @@
     <br />
     <FormItem Label="" style="display: grid;place-items: center;">
         <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-        <Button Type="primary" OnClick="@ShowModal">
+        <Button Class="boton_p" OnClick="@ShowModal">
             Cargo Combustible
         </Button>
     </FormItem>
@@ -329,7 +335,7 @@
     </div>
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Class="boton_p" HtmlType="submit">
             Cargar salida
         </Button>
     </FormItem>

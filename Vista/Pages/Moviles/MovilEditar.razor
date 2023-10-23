@@ -82,6 +82,12 @@
     .ant-modal-footer{
         display: none;
     }
+   
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+
 </style>
 
 <div style="width: 100%;padding: 1em;">
@@ -175,15 +181,15 @@
     <div class="steps-action">
         @if (current > 0)
         {
-            <Button Type="primary" OnClick="OnPreClick">Anterior</Button>
+            <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
         }
         @if (current < steps.Length - 1)
         {
-            <Button Type="primary" OnClick="OnNextClick">Siguiente</Button>
+            <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
         }
         @if (current == steps.Length - 1)
         {
-            <Button Type="primary" @onclick="EditarMovil">
+            <Button Class="boton_p" @onclick="EditarMovil">
                 Editar movil
             </Button>
         }
