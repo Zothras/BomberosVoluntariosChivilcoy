@@ -13,6 +13,7 @@
         background-color: #732D2D !important;
         color: white !important;
     }
+
     .ant-carousel .slick-dots li {
         display: none !important;
     }
@@ -198,67 +199,67 @@
                     </div>
                 </div>
 
-                    @*Datos de damnificados*@
-                    <FormItem Label="¿Hubo damnificados?">
-                        <Switch @bind-Checked="switchValue" />
-                    </FormItem>
-                    @if (switchValue == true)
-                    {
-                        @* datos generales *@
+                @*Datos de damnificados*@
+                <FormItem Label="¿Hubo damnificados?">
+                    <Switch @bind-Checked="switchValue" />
+                </FormItem>
+                @if (switchValue == true)
+                {
+                    @* datos generales *@
 
-                        <FormItem Label="Nombre">
-                            <Input @bind-Value="@damnificado.Nombre" />
-                        </FormItem>
-                        <FormItem Label="Apellido">
-                            <Input @bind-Value="@damnificado.Apellido" />
-                        </FormItem>
-                        <FormItem Label="Documento">
-                            <Input @bind-Value="@damnificado.Dni" />
-                        </FormItem>
-                        <FormItem Label="Tipo sexo">
-                            <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
-                        </FormItem>
-                        <FormItem Label="Lugar De nacimiento">
-                            <Input @bind-Value="@damnificado.LugarDeNacimiento" />
-                        </FormItem>
-                        <FormItem Label="edad">
-                            <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
-                        </FormItem>
-                        <FormItem Label="Tipo material">
-                            <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
-                        </FormItem>
-                        <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
-                        <div>
-                            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                             <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                             <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                             <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-                             <ActionColumn Title="Acciones">
-                                 <Popconfirm Title="Sure to delete?"
-                                             OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                                             OkText="Yes"
-                                             CancelText="No">
-                                     <a>Delete</a>
-                                 </Popconfirm>
-                             </ActionColumn>
-                         </Table>
-                     </div>
-                    }
+                    <FormItem Label="Nombre">
+                        <Input @bind-Value="@damnificado.Nombre" />
+                    </FormItem>
+                    <FormItem Label="Apellido">
+                        <Input @bind-Value="@damnificado.Apellido" />
+                    </FormItem>
+                    <FormItem Label="Documento">
+                        <Input @bind-Value="@damnificado.Dni" />
+                    </FormItem>
+                    <FormItem Label="Tipo sexo">
+                        <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
+                    </FormItem>
+                    <FormItem Label="Lugar De nacimiento">
+                        <Input @bind-Value="@damnificado.LugarDeNacimiento" />
+                    </FormItem>
+                    <FormItem Label="edad">
+                        <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
+                    </FormItem>
+                    <FormItem Label="Tipo material">
+                        <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
+                    </FormItem>
+                    <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+                    <div>
+                        <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+                         <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                         <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                         <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                         <ActionColumn Title="Acciones">
+                             <Popconfirm Title="Sure to delete?"
+                                         OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                         OkText="Yes"
+                                         CancelText="No">
+                                 <a>Delete</a>
+                             </Popconfirm>
+                         </ActionColumn>
+                     </Table>
+                 </div>
+                }
             }
-        </div>
-    </div>
-    @*Moviles de salidas*@
-    @*a la hora de pedir el chofer y movil,
-    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
-    <b><label>Datos de chofer</label></b>
-    <br />
-    <FormItem Label="">
-        <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-        <br />
-        <Button Class="boton_p" OnClick="@ShowModal">
-            Cargo Combustible
-        </Button>
-    </FormItem>
+            else if (current == 2)
+            {
+                @*Moviles de salidas*@
+                @*a la hora de pedir el chofer y movil,
+            pedir dato unico para no cargar todo y buscarlo en la base de datos*@
+                <b><label>Datos de chofer</label></b>
+                <br />
+                <FormItem Label="">
+                    <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
+                    <br />
+                    <Button Class="boton_p" OnClick="@ShowModal">
+                        Cargo Combustible
+                    </Button>
+                </FormItem>
 
 
                 <FormItem Label="Elija el chofer">
@@ -387,32 +388,46 @@
             else if (current == 4)
             {
                 @*Tipo servicio*@
-            <FormItem Label="Tipo Servicio salida">
-                <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelFactorClimatico.TipoServicio" />
-            </FormItem>
+                <FormItem Label="Tipo Servicio salida">
+                    <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelFactorClimatico.TipoServicio" />
+                </FormItem>
 
-            @*propio de la salida de Factor Climatico*@
+                @*propio de la salida de Factor Climatico*@
 
-    <FormItem Label="Tipo Factores Climaticos">
-        <EnumSelect TEnum="TipoFactoresClimaticos" @bind-Value="@modelFactorClimatico.Tipo" />
-    </FormItem>
-    <FormItem Label="Tipo Superficie">
-        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelFactorClimatico.Superficie" />
-    </FormItem>
-    <FormItem Label="Tipo Evacuacion">
-        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelFactorClimatico.Evacuacion" />
-    </FormItem>
-    <FormItem Label="Detalles">
-        <Input @bind-Value="@modelFactorClimatico.DetalleSuperficieDañada">
-    </FormItem>
+                <FormItem Label="Tipo Factores Climaticos">
+                    <EnumSelect TEnum="TipoFactoresClimaticos" @bind-Value="@modelFactorClimatico.Tipo" />
+                </FormItem>
+                <FormItem Label="Tipo Superficie">
+                    <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelFactorClimatico.Superficie" />
+                </FormItem>
+                <FormItem Label="Tipo Evacuacion">
+                    <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelFactorClimatico.Evacuacion" />
+                </FormItem>
+                <FormItem Label="Detalles">
+                    <Input @bind-Value="@modelFactorClimatico.DetalleSuperficieDañada">
+                </FormItem>
+            }
+        </Form>
 
+    </div>
+    <div class="steps-action">
+        @if (current > 0)
+        {
+            <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+        }
+        @if (current < steps.Length - 1)
+        {
+            <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+        }
+        @if (current == steps.Length - 1)
+        {
+            <Button Class="boton_p" HtmlType="submit">
+                Cargar salida
+            </Button>
+        }
+    </div>
+</div>
 
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Class="boton_p" HtmlType="submit" OnClick="@CargarFactorClimatico">
-            Cargar salida
-        </Button>
-    </FormItem>
-</Form>
 <Modal Title="@("Datos de la carga de combustible")"
        Visible="@_visible"
        OnOk="@HandleOk"
@@ -422,7 +437,7 @@
           WrapperColSpan="16"
           OnFinish="OnFinishModel"
           OnFinishFailed="OnFinishFailed"
-          @ref="@_form1">
+    @ref="@_form1">
         <FormItem Label="Numero factura">
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
