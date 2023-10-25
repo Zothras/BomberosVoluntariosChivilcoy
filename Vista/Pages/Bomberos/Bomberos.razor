@@ -7,11 +7,12 @@
 @using System.Text.Json;
 
 <style>
-    .contenedor{
+    .contenedor {
         margin-top: 2em;
         min-width: 300px;
         max-width: 100%;
     }
+
     .ant-table-cell {
         min-width: 200px !important;
     }
@@ -19,6 +20,7 @@
     .ant-table {
         min-width: 200px !important;
     }
+
     @@media (max-width: 960px) {
         .ant-table-row, .ant-table-row-level-0 {
             display: flex !important;
@@ -26,25 +28,26 @@
         }
 
         .ant-row {
-            display: flex!important;
-            flex-direction: column!important;
-            gap: 5px!important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 5px !important;
         }
 
         .ant-col-4, .ant-col {
             min-width: 200px;
-            max-width: 100%!important;
-        }
-        .ant-col-offset-12{
-            margin-left: 0!important;
+            max-width: 100% !important;
         }
 
-        .ant-table{
-            min-width: 200px!important;
-            max-width: 100%!important;
+        .ant-col-offset-12 {
+            margin-left: 0 !important;
+        }
+
+        .ant-table {
+            min-width: 200px !important;
+            max-width: 100% !important;
         }
     }
-    
+
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
@@ -52,18 +55,17 @@
 
 </style>
 
-<div class="contenedor" style="margin-top: 2em; display: flex; width: 100%">
-    <div style="display: flex; justify-content: center">
+<div class="contenedor" style="margin: 2em 1em 0 1em; display: flex; flex-direction: column;">
     <Table @ref="table"
-           TItem="Bombero"
-           DataSource="@bomberos"
-           @bind-SelectedRows="selectedRows"
-           OnChange="OnChange"
-           Total="_total"
-           @bind-PageIndex="_pageIndex"
-           @bind-PageSize="_pageSize"
-           Responsive
-           Style="max-width: 100%;min-width: 300px;">
+            TItem="Bombero"
+            DataSource="@bomberos"
+            @bind-SelectedRows="selectedRows"
+            OnChange="OnChange"
+            Total="_total"
+            @bind-PageIndex="_pageIndex"
+            @bind-PageSize="_pageSize"
+            Responsive
+            Style="max-width: 100%;min-width: 300px;">
         <TitleTemplate>
             <GridRow>
                 <GridCol Span="4">
@@ -71,7 +73,7 @@
                 </GridCol>
                 <GridCol Span="8" Offset="12">
                     <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
-                     @if (String.IsNullOrWhiteSpace(searchString))
+                    @if (String.IsNullOrWhiteSpace(searchString))
                     {
                         bomberos = bomberosRespaldo;
                     }
@@ -85,30 +87,27 @@
                             SorterCompare="@((a,b)=> a - b)" />
             <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
             <PropertyColumn Property="c=>c.Nombre" Sortable />
-             <PropertyColumn Property="c=>c.Apellido" Sortable />
-             <PropertyColumn Property="c=>c.Grado"
-                             SortDirections="new[] { SortDirection.Descending }"
-                             Filters="EscalafonJerarquicoFilter"
-                             OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
-             <ActionColumn Title="Action">
-                 <Space>
-                     <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
-                     <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
-                     <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
-                 </Space>
-             </ActionColumn>
-        </ColumnDefinitions>
-         @*--------------------------------------------Modal-----------------------------------------------*@
+                <PropertyColumn Property="c=>c.Apellido" Sortable />
+                <PropertyColumn Property="c=>c.Grado"
+                                SortDirections="new[] { SortDirection.Descending }"
+                                Filters="EscalafonJerarquicoFilter"
+                                OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+                <ActionColumn Title="Action">
+                    <Space>
+                        <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
+                        <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
+                        <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </ColumnDefinitions>
+            @*--------------------------------------------Modal-----------------------------------------------*@
     </Table>
+    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
+        <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
+        <Button OnClick="@ShowModalAgregarS">Agregar Sancion</Button>
+        <Button OnClick="@ShowModalAgregarA">Ascender bombero</Button>
     </div>
- </div>
-<div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
-    <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
-    <Button OnClick="@ShowModalAgregarS">Agregar Sancion</Button>
-    <Button OnClick="@ShowModalAgregarA">Ascender bombero</Button>
 </div>
-
-
 
  <Modal Title="@("Bombero")"
         Visible="@_visible"
@@ -283,20 +282,20 @@
     <Form Model="@horario_plantilla"
           LabelColSpan="8"
           WrapperColSpan="16">
-          
+
         <FormItem Label="Vigente desde">
             <DatePicker DefaultValue="@null" TValue="DateTime?" Picker="@DatePickerType.Date" @bind-Value="@horario_plantilla.VigenteDesde" Style="width: 95px;" AllowClear  />
         </FormItem>
-          
+
         <FormItem Label="Vigente desde">
             <DatePicker TValue="DateTime?" DefaultValue="@null" @bind-Value="@horario_plantilla.VigenteDesde" Picker="@DatePickerType.Date" Style="width: 95px;" AllowClear />
         </FormItem>
-        
-       
+
+
         <FormItem Label="Vigente hasta">
             <DatePicker DefaultValue="@null" @bind-Value="@horario_plantilla.VigenteHasta" Picker="@DatePickerType.Date" Style="width: 95px;" AllowClear />
         </FormItem>
-        
+
         <FormItem Label="Dia de semana">
             <EnumSelect TEnum="Dias" @bind-Value="@horario_plantilla.DiaSemana" />
         </FormItem>
@@ -319,11 +318,11 @@
                 }
             </Select>
         </FormItem>
-        
+
         <FormItem Label="Hora hasta">
             <DatePicker DefaultValue="@TimeOnly.MinValue" @bind-Value="horario_plantilla.HoraHasta" Picker="@DatePickerType.Time" Style="width: 95px;" AllowClear  />
         </FormItem>
-        
+
         <Button Type="@ButtonType.Primary" OnClick="()=>AgregarHorarioALalista(horario_plantilla,bomberoVM.Horarios)">Agregar horario</Button>
     </Form>
 </Modal>
@@ -354,10 +353,10 @@
                 <FormItem Label="Vigente hasta">
                     <DatePicker DefaultValue="@null" @bind-Value="@bomberoVM.Horarios[i].VigenteHasta" Picker="@DatePickerType.Date" Style="width: 95px;" AllowClear />
                 </FormItem>
-            
+
                 <FormItem Label="Dia de semana">
                     <EnumSelect TEnum="Dias" @bind-Value="@bomberoVM.Horarios[i].DiaSemana" />
-                </FormItem>            
+                </FormItem>
                 <FormItem Label="Hora hasta">
 
                     <Select TItemValue="int"
@@ -377,7 +376,7 @@
                         }
                     </Select>
                 </FormItem>
-                
+
                 int horadesde, minutosdesde, horahasta, minutoshasta;
                 <select @bind="@horadesde" style="width:75px">
                         <option hidden selected>Seleccione una hora</option>
@@ -394,7 +393,7 @@
                             <option value="@i">@i</option>
                         }
                     </select>
-                
+
                 @if (bomberoVM.Horarios[i].ModoRotativo != TiposRotativos.Fijo)
                 {
                     <FormItem Label="Periodo">
@@ -689,14 +688,14 @@
         _visibleHorarios = true;
         idBombero = id;
     }
-    
+
     private void HandleHorarios(MouseEventArgs e)
         {
         Console.WriteLine("e");
         _visibleHorarios = false;
         _visible = true;
     }
-    
+
     private void HandleCancelHorarios(MouseEventArgs e)
     {
         Console.WriteLine("e");
@@ -711,14 +710,14 @@
         _visible = false;
         idBombero = id;
     }
-    
+
     private void HandleAgregarHorarios(MouseEventArgs e)
         {
         Console.WriteLine("e");
         _visibleHorariosAgregar = true;
         _visible = false;
     }
-    
+
     private void HandleCancelAgregarHorarios(MouseEventArgs e)
     {
         Console.WriteLine("e");

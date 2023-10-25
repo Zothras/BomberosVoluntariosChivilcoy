@@ -55,8 +55,7 @@
 
 </style>
 
-<div class="contenedor" style="margin-top: 2em; display: flex; width: 100%">
-    <div style="display: flex; justify-content: center">
+<div class="contenedor" style="margin: 2em 1em 0 1em; display: flex; flex-direction: column;">
     <Table @ref="table"
            TItem="Bombero"
            DataSource="@bomberos"
@@ -102,13 +101,10 @@
         </ColumnDefinitions>
         @*--------------------------------------------Modal-----------------------------------------------*@
     </Table>
-    </div>
-    </div>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
          <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
     </div>
-
-
+ </div>
 
 <Modal Title="@("Bombero")"
        Visible="@_visible"
