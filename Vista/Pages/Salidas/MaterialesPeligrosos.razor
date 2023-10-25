@@ -34,6 +34,9 @@
 
     .steps-action {
         margin-top: 24px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
     }
 
     .inpt-cont {
@@ -104,7 +107,7 @@
                 <div class="slick-contenedor @animationClass">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Descripcion</label>
-                        <Input @bind-Value="@modelMateriales.Descripcion" />
+                        <Input @bind-Value="@modelMateriales.Descripcion"/>
                     </div>
                     <div class="inpt-cont-inline">
                         <div class="inpt-cont">
@@ -1125,6 +1128,4 @@
             }
         }
     }
-
-
 }
