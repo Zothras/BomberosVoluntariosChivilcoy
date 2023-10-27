@@ -1,4 +1,5 @@
-﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
+﻿@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
 
 <style>
     #ImagenMovil {
@@ -45,7 +46,7 @@ else if (!existe)
 
 @code {
     [Parameter]
-    public int? VehiculoId { get; set; }
+    public int? VehiculoIdDetalle { get; set; }
 
     [Parameter]
     public EventCallback OnClose { get; set; }
@@ -58,7 +59,7 @@ else if (!existe)
         {
             Key = "1",
             Tipo = "John Brown",
-            Encargado = 32,
+            Encargado = 1,
             Marca = "New York No. 1 Lake Park",
             Modelo = "developer",
             Patente = ""
@@ -110,55 +111,49 @@ else if (!existe)
         [Required, StringLength(255)]
         public string Nombre { get; set; }
     }
-
+    BomberosDbContext Context;
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
     public bool existe;
 
     protected override async Task OnInitializedAsync()
     {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
         await MostrarDatos();
     }
-
     public async Task MostrarDatos()
     {
-        using var db = DbFactory.CreateDbContext();
-       // Movil? movil = await db.Moviles.Include(m => m.Bomberos).ThenInclude(b => b.Bombero). Where(ma => ma.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+        Movil? movil = await Context.Moviles.Include(e => e.Encargado).Include(i=>i.Imagen).SingleOrDefaultAsync(e => e.VehiculoId == VehiculoIdDetalle);
 
-        //if (movil is not null)
-        //{
-        //    movilView.Marca = movil.Marca;
-        //    movilView.Modelo = movil.Modelo;
-        //    movilView.Año = movil.Año;
-        //    movilView.Patente = movil.Patente;
-        //    movilView.Tipo = movil.Tipo;
-        //    movilView.NumeroMovil = movil.NumeroMovil;
-        //    movilView.NumeroMotor = movil.NumeroMotor;
-        //    movilView.NumeroChasis = movil.NumeroChasis;
-        //    movilView.Estado = movil.Estado;
-            
-            
-        //    foreach (MovilBombero b in movil.Bomberos)
-        //    {
-        //        //if (b.Rol == TipoRol.Encargado)
-        //        //{
-        //        //    movilView.EncargadoId = b.Bombero.PersonaId;
-        //        //    movilView.EncargadoNombre = $"{b.Bombero.Nombre} {b.Bombero.Apellido}";
-        //        //}
-        //    }
-        //    ImagenMovil? imagen = await db.ImagenesMoviles.Where(i => i.ImagenId == movil.ImagenId).SingleOrDefaultAsync();
-
-        //    if (imagen is not null)
-        //    {
-        //        imagenView.Nombre = imagen.NombreImagen;
-        //        imagenView.TipoImagen = imagen.TipoImagen;
-        //        imagenView.Base64 = imagen.Base64Imagen;
-        //    }
-        //    existe = true;
-        //}
-        //else if (movil is null)
-        //{
-        //    existe = false;
-        //}
+        if (movil is not null)
+        {
+            movilView.Marca = movil.Marca;
+            movilView.Modelo = movil.Modelo;
+            movilView.Año = movil.Año;
+            movilView.Patente = movil.Patente;
+            movilView.Tipo = movil.Tipo;
+            movilView.NumeroMovil = movil.NumeroMovil;
+            movilView.NumeroMotor = movil.NumeroMotor;
+            movilView.NumeroChasis = movil.NumeroChasis;
+            movilView.Estado = movil.Estado;
+            movilView.EncargadoNombre = movil.Encargado.Nombre + " " + movil.Encargado.Apellido;
+            imagenView.Nombre = movil.Imagen.NombreImagen;
+            imagenView.TipoImagen = movil.Imagen.TipoImagen;
+            imagenView.Base64 = movil.Imagen.Base64Imagen;
+           
+            existe = true;
+        }
+        else if (movil is null)
+        {
+            existe = false;
+        }
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
     }
 }

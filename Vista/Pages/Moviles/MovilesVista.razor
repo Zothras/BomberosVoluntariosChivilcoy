@@ -96,14 +96,14 @@
             @if (EditarVisible)
             {
                 <Modal Footer="null" Title="Editar" OnCancel="@HandleCancel" Visible="true">
-                    <MovilEditar VehiculoId="@EditarPorId" OnClose="@CerrarModal" />
+                    <MovilEditar VehiculoIdEditar="@EditarPorId" OnClose="@CerrarModal" />
                 </Modal>
             }
 
             @if (DetallesVisible)
             {
                 <Modal Footer="null" Title="Detalles" OnCancel="@HandleDCancel" Visible="true" Style="width: 35%!important;">
-                    <MovilDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
+                    <MovilDetalles VehiculoIdDetalle="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
             @if (AgregarVisible)
@@ -167,11 +167,13 @@
     {
         EditarPorId = id;
         EditarVisible = true;
+        StateHasChanged();
     }
     public void DetallesMovilModal(int id)
     {
         DetallesPorId = id;
         DetallesVisible = true;
+        StateHasChanged();
     }
     public void AgregarMovilModal()
     {

@@ -2,8 +2,8 @@
 @inject IMessageService message
 
 <style>
-    .steps-content{
-        border: none!important;
+    .steps-content {
+        border: none !important;
     }
 
     .inpt-container {
@@ -135,7 +135,7 @@
                                 <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
                             </select>
                         </div>
-                    </div>
+                 </div>
                 }
                 else if (current == 2)
                 {
@@ -151,6 +151,21 @@
                                 <label>Vencimiento: </label>
                             </div>
                             <input type="date" @bind="seguroView.FechaDeVencimiento" />
+                        </div>
+                        <div class ="inpt-container">
+                            
+                          <Select TItem="BomberoViewModel"
+                                        TItemValue="int"
+                                        DataSource="@ListaBomberos"
+                                @bind-Value="@movilView.EncargadoId"
+                                        LabelName="@nameof(BomberoViewModel.NombreYApellido)"
+                                        ValueName="@nameof(BomberoViewModel.PersonaId)"
+                                        Placeholder="Selecione el bombero"
+                                        DefaultActiveFirstOption="false"
+                                        AllowClear="true"
+                                        EnableSearch>
+                          </Select>
+                         
                         </div>
                     </div>
                 }
@@ -242,6 +257,7 @@
         public string ModeloBomba { get; set; }
         [Required, StringLength(255)]
         public TipoEstadoMovil Estado { get; set; }
+        public int EncargadoId { get; set; }
 
     }
 
@@ -262,11 +278,17 @@
         [Required, StringLength(255)]
         public string Nombre { get; set; }
     }
-
+    public class BomberoViewModel
+    {
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string NombreYApellido { get { return Nombre + " " + Apellido; } }
+        public int PersonaId { get; set; }
+    }
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
     public SeguroViewModel seguroView { get; set; } = new();
-
+    public List<BomberoViewModel> ListaBomberos = new();
     protected override async Task OnInitializedAsync()
     {
         await Init();
@@ -275,6 +297,8 @@
     private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
+        await CargarBomberosView();
+
     }
 
     private async void SubirFoto(InputFileChangeEventArgs e)
@@ -291,44 +315,77 @@
 
     private async void SubirMovil()
     {
-        Context = DbFactory.CreateDbContext();
-
-        if (movilView is not null)
+        try
         {
-            Movil? comprobante = await Context.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
-
-            if (comprobante is null)
+            if (movilView is not null)
             {
-                Movil movil = new Movil()
+                Movil? comprobante = await Context.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
+                Bombero? Encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == movilView.EncargadoId);
+                if (comprobante is null)
                 {
-                    Marca = movilView.Marca,
-                    Modelo = movilView.Modelo,
-                    Año = movilView.Año,
-                    Patente = movilView.Patente,
-                    Tipo = movilView.Tipo,
-                    Imagen = new()
-                    {
-                        NombreImagen = imagenView.Nombre,
-                        TipoImagen = imagenView.TipoImagen,
-                        Base64Imagen = imagenView.Base64
-                    },
-                    ModeloBomba = movilView.ModeloBomba,
-                    NumeroChasis = movilView.NumeroChasis,
-                    NumeroMotor = movilView.NumeroMotor,
-                    NumeroMovil = movilView.NumeroMovil,
-                    Estado = movilView.Estado,
-                    Seguro = new()
-                    {
-                        CompañiaAseguradora = seguroView.CompañiaAseguradora,
-                        FechaDeVencimineto = seguroView.FechaDeVencimiento,
-                        NumeroDePoliza = seguroView.NumeroDePoliza
-                    }
-                };
-                Context.Moviles.Add(movil);
-                await Context.SaveChangesAsync();
-                await OnClose.InvokeAsync();
+                    Movil movil = new Movil()
+                        {
+                            Marca = movilView.Marca,
+                            Modelo = movilView.Modelo,
+                            Año = movilView.Año,
+                            Patente = movilView.Patente,
+                            Tipo = movilView.Tipo,
+                            Encargado = Encargado,
+                            Imagen = new()
+                            {
+                                NombreImagen = imagenView.Nombre,
+                                TipoImagen = imagenView.TipoImagen,
+                                Base64Imagen = imagenView.Base64
+                            },
+                            ModeloBomba = movilView.ModeloBomba,
+                            NumeroChasis = movilView.NumeroChasis,
+                            NumeroMotor = movilView.NumeroMotor,
+                            NumeroMovil = movilView.NumeroMovil,
+                            Estado = movilView.Estado,
+                            Seguro = new()
+                            {
+                                CompañiaAseguradora = seguroView.CompañiaAseguradora,
+                                FechaDeVencimineto = seguroView.FechaDeVencimiento,
+                                NumeroDePoliza = seguroView.NumeroDePoliza
+                            }
+                        };
+                    Context.Moviles.Add(movil);
+                    await Context.SaveChangesAsync();
+                    await Init();
+                    await message.Success("Se logro agregar un movil");
+                    await OnClose.InvokeAsync();
+                }
             }
         }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+
+        }
+        
         StateHasChanged();
+    }
+
+    private async Task CargarBomberosView()
+    {
+        ListaBomberos = new();
+        var bomberos = await Context.Bomberos.ToListAsync();
+
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViewModel Bvm = new()
+                {
+                    Apellido = b.Apellido,
+                    Nombre = b.Nombre,
+                    PersonaId = b.PersonaId
+
+                };
+            ListaBomberos.Add(Bvm);
+        }
     }
 }
