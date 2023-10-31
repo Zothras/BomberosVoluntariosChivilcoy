@@ -13,6 +13,12 @@
 
     .ant-table-row:hover > td {
         background-color: white !important;
+
+    }
+
+    .delete
+    {
+        text-align:right;
     }
 </style>
 <div>
@@ -28,12 +34,21 @@
                 OkText="Si"
                 CancelText="No">
                     <i class="fa-solid fa-check" style="color: #40c011;cursor: pointer;"></i>
+                    
             </Popconfirm>
+
+                <Popconfirm Title="Desea Rechazar Licencia?"
+                            OnConfirm="()=> EliminarLicencia(context.LicenciaId)"
+                            OkText="Si"
+                            CancelText="No">
+                    <a class=Delete <Icon Type="delete" Theme="fill"/></a>
+                </Popconfirm>
+
         </ActionColumn>
     </Table>
 </div>
 
-@code {
+     @code {
     public class LicencasVm
     {
         public int LicenciaId { get; set; }
@@ -68,10 +83,10 @@
     private async Task LicenciasPendientes()
     {
         LicenciasActivasVM = new();
-        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).Include(b=> b.PersonalAfectado).ToListAsync();
+        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).Include(b => b.PersonalAfectado).ToListAsync();
         foreach (var l in Licencias)
         {
-            
+
             LicencasVm LicVm = new()
                 {
                     LicenciaId = l.LicenciaId,
@@ -81,7 +96,7 @@
                     Hasta = l.Hasta,
                     EstadoLicencia = l.EstadoLicencia,
                     NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido
-                   
+
 
                 };
             LicenciasActivasVM.Add(LicVm);
@@ -103,5 +118,20 @@
     public void Dispose()
     {
         Context?.Dispose();
+    }
+
+    private async Task EliminarLicencia(int IdLicencia)
+    {
+        var licenciaAEliminar = await Context.Licencias.FirstOrDefaultAsync(l => l.LicenciaId == IdLicencia && l.EstadoLicencia == TipoEstadoLicencia.Pendiente);
+        if (licenciaAEliminar != null)
+        {
+            Context.Licencias.Remove(licenciaAEliminar);
+            await Context.SaveChangesAsync();
+
+            await Init();
+            StateHasChanged();
+            await message.Success("Licencia Rechazada!");
+            StateHasChanged();
+        }
     }
 }
