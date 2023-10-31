@@ -28,27 +28,24 @@
         <PropertyColumn Property="c=>c.Hasta"></PropertyColumn>
         <PropertyColumn Property="c=>c.TipoLicencia"></PropertyColumn>
         <PropertyColumn Property="c=>c.EstadoLicencia"></PropertyColumn>
-        <ActionColumn Title="Acciones">
+        <ActionColumn Title="Acciones" Style="display:flex;justify-content:space-around;">
             <Popconfirm Title="¿Quiere aprobar esta licencia?"
                 OnConfirm="()=> AprobarLicencia(context.LicenciaId)"
                 OkText="Si"
                 CancelText="No">
-                    <i class="fa-solid fa-check" style="color: #40c011;cursor: pointer;"></i>
-                    
+                    <i class="fa-solid fa-check" style="color: #40c011;cursor: pointer;"></i>  
             </Popconfirm>
-
-                <Popconfirm Title="Desea Rechazar Licencia?"
-                            OnConfirm="()=> EliminarLicencia(context.LicenciaId)"
-                            OkText="Si"
-                            CancelText="No">
-                    <a class=Delete <Icon Type="delete" Theme="fill"/></a>
-                </Popconfirm>
-
+            <Popconfirm Title="Desea Rechazar Licencia?"
+                        OnConfirm="()=> EliminarLicencia(context.LicenciaId)"
+                        OkText="Si"
+                        CancelText="No">
+                    <i class="fa-solid fa-trash" style="color: red ;cursor: pointer;"></i>
+            </Popconfirm>
         </ActionColumn>
     </Table>
 </div>
 
-     @code {
+@code {
     public class LicencasVm
     {
         public int LicenciaId { get; set; }
@@ -61,14 +58,12 @@
         public int PersonaId { get; set; }
         public Bombero? PersonalAfectado { get; set; }
         public string? NombreYApellido { get; set; }
-
     }
 
 
     BomberosDbContext Context { get; set; }
     public LicencasVm LicencasVM = new();
     List<LicencasVm> LicenciasActivasVM = new();
-
     protected override async Task OnInitializedAsync()
     {
         await Init();
@@ -120,6 +115,7 @@
         Context?.Dispose();
     }
 
+    //Elimina la licencia que esta en pendiente 
     private async Task EliminarLicencia(int IdLicencia)
     {
         var licenciaAEliminar = await Context.Licencias.FirstOrDefaultAsync(l => l.LicenciaId == IdLicencia && l.EstadoLicencia == TipoEstadoLicencia.Pendiente);
@@ -127,7 +123,6 @@
         {
             Context.Licencias.Remove(licenciaAEliminar);
             await Context.SaveChangesAsync();
-
             await Init();
             StateHasChanged();
             await message.Success("Licencia Rechazada!");
