@@ -24,8 +24,8 @@
 <div>
     <Table DataSource="LicenciasActivasVM" Bordered Responsive Size="TableSize.Small">
         <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Desde"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Hasta"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy"></PropertyColumn>
         <PropertyColumn Property="c=>c.TipoLicencia"></PropertyColumn>
         <PropertyColumn Property="c=>c.EstadoLicencia"></PropertyColumn>
         <ActionColumn Title="Acciones" Style="display:flex;justify-content:space-around;">

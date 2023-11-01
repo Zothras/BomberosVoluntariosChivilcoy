@@ -11,11 +11,11 @@
 
 
 <Form Model="@LicencasVM"
-      LabelColSpan="8"
-      WrapperColSpan="16"
-      OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed"
-      Style="width: 100%;height: 100%;">
+    LabelColSpan="8"
+    WrapperColSpan="16"
+    OnFinish="OnFinish"
+    OnFinishFailed="OnFinishFailed"
+    Style="width: 100%;height: 100%;">
     <FormItem Label="Numero de movil">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
@@ -35,14 +35,20 @@
     <FormItem Label="Tipo Licencia">
         <EnumSelect TEnum="TipoLicencia" @bind-Value="@LicencasVM.TipoLicencia" />
     </FormItem>
+    @if (LicencasVM.TipoLicencia == TipoLicencia.RazonesDeSalud)
+    {
+    <FormItem Label="Adjuntar Certificado Médico">
+        <InputFile/>
+    </FormItem>
+    }
     <FormItem Label="Descripcion">
         <Input @bind-Value="@LicencasVM.Descripcion" />
     </FormItem>
     <FormItem Label="Fecha inicio">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@LicencasVM.Desde" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@LicencasVM.Desde" />
     </FormItem>
     <FormItem Label="Fecha finalizacion">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@LicencasVM.Hasta" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@LicencasVM.Hasta" />
     </FormItem>
     <FormItem Label="Tipo estado licencia">
         <EnumSelect TEnum="TipoEstadoLicencia" @bind-Value="@LicencasVM.EstadoLicencia" />
@@ -51,7 +57,7 @@
             display: flex !important;
             justify-content: flex-end !important;
             align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
-         <Button Class="boton_p" HtmlType="submit" Style="margin-right: 60px;">
+        <Button Class="boton_p" HtmlType="submit" Style="margin-right: 60px;">
             Cargar licencia
         </Button>
     </FormItem>

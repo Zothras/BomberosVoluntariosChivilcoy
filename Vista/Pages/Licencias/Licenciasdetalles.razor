@@ -110,11 +110,11 @@
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Desde: </label>
-                        <DatePicker TValue="DateTime" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
+                            <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Hasta: </label>
-                        <DatePicker TValue="DateTime" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
+                            <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
                     </div>
                     <div class="buton-cont">
                         <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">
@@ -150,8 +150,8 @@
 
         <ColumnDefinitions Context="muestra">
             <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Desde" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Hasta" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy"  Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.EstadoLicencia" Sortable Filterable></PropertyColumn>
         </ColumnDefinitions>
@@ -162,10 +162,10 @@
 </div>
 
 <Modal Footer="null" Title="@("Agregar la licencia")"
-       Visible="@_visibleAgregar"
-       OnOk="@HandleOkAgregar"
-       OnCancel="@HandleCancelAgregar">
-    <LicenciasAlta />
+    Visible="@_visibleAgregar"
+    OnOk="@HandleOkAgregar"
+    OnCancel="@HandleCancelAgregar">
+<LicenciasAlta />
 
     <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregar">
         Volver

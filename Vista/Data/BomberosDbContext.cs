@@ -189,10 +189,10 @@ namespace Vista.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
             modelBuilder
-              .Entity<Licencia>()
-              .Property(p => p.TipoLicencia)
-              .HasConversion<string>()
-              .HasMaxLength(255);
+                .Entity<Licencia>()
+                .Property(p => p.TipoLicencia)
+                .HasConversion<string>()
+                .HasMaxLength(255);
             modelBuilder
                 .Entity<Bombero>()
                 .Property(b => b.Dotacion)
@@ -254,16 +254,16 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-               .Entity<AscensoBombero>()
-               .Property(b => b.GradoAntiguo)
-               .HasConversion<string>()
-               .HasMaxLength(255);
+            .Entity<AscensoBombero>()
+            .Property(b => b.GradoAntiguo)
+            .HasConversion<string>()
+            .HasMaxLength(255);
 
             modelBuilder
-               .Entity<AscensoBombero>()
-               .Property(b => b.GradoAscenso)
-               .HasConversion<string>()
-               .HasMaxLength(255);
+            .Entity<AscensoBombero>()
+            .Property(b => b.GradoAscenso)
+            .HasConversion<string>()
+            .HasMaxLength(255);
 
 
             modelBuilder
