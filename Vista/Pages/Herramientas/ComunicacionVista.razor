@@ -52,29 +52,36 @@
                 <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Número Movil" />
                 <PropertyColumn Property="m=>m.Patente" Sortable />
                 <ActionColumn Title="Action">
-                    <Space>
-                        <SpaceItem>
-                            <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas borrar el handie?"
-                                        OnConfirm="()=>Delete(context.NroEquipo)"
-                                        OnCancel="Cancel">
-                                <Button Danger>
-                                Eliminar
-                            </Button>
-                        </Popconfirm>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas desasignar el handie?"
-                                    OnConfirm="()=>Desasignar(context.NroEquipo)"
-                                    OnCancel="Cancel">
-                            <Button Danger>
-                                Desasignar
-                            </Button>
-                        </Popconfirm>
-                    </SpaceItem>
-                    @*<SpaceItem><Button Danger OnClick="()=>Delete(context.NroEquipo)">Delete</Button></SpaceItem>
-                    <SpaceItem><Button Danger OnClick="()=>Desasignar(context.NroEquipo)">Desasignar</Button></SpaceItem>*@
-                    <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button></SpaceItem>
-                    </Space>
+                <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
+                    <Overlay>
+                        <Menu>
+                            <MenuItem>
+                                <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas borrar el handie?"
+                                            OnConfirm="()=>Delete(context.NroEquipo)"
+                                            OnCancel="Cancel">
+                                    <Button Danger>
+                                        Eliminar
+                                    </Button>
+                                </Popconfirm>
+                            </MenuItem>
+                            <MenuItem>
+                                <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro que deseas desasignar el handie?"
+                                            OnConfirm="()=>Desasignar(context.NroEquipo)"
+                                            OnCancel="Cancel">
+                                    <Button Danger>
+                                        Desasignar
+                                    </Button>
+                                </Popconfirm>
+                            </MenuItem>
+                            <MenuItem>
+                                <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NroEquipo)">Editar</Button>
+                            </MenuItem>
+                        </Menu>;
+                    </Overlay>
+                    <ChildContent>
+                        <Button class="boton_p">Acciones<Icon Type="down" /></Button>
+                    </ChildContent>
+                </Dropdown>
                 </ActionColumn>
         </ColumnDefinitions>
     </Table>
@@ -170,7 +177,7 @@
 
 @code {
 
-
+    
 
     private class ComunicacionViewModel
     {

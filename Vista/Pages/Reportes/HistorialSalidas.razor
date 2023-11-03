@@ -46,11 +46,26 @@
                             OnFilter="((value,name)=>Enum.GetName(typeof(TipoSalida), name).StartsWith(Enum.GetName(typeof(TipoSalida), value)))" />
 
             <ActionColumn Title="Action">
-                <Space>
-                    <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroParte)">Delete</Button></SpaceItem>
-                    <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button></SpaceItem>
-                    <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button></SpaceItem>
-                </Space>
+
+                <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
+                    <Overlay>
+                        <Menu>
+                            <MenuItem>
+                                <Button Danger OnClick="()=>Delete(context.NumeroParte)">Delete</Button>
+                            </MenuItem>
+                            <MenuItem>
+                                <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button>
+                            </MenuItem>
+                            <MenuItem>
+                                <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button>
+                            </MenuItem>
+                        </Menu>;
+                    </Overlay>
+                    <ChildContent>
+                        <Button class="boton_p">Acciones<Icon Type="down" /></Button>
+                    </ChildContent>
+                </Dropdown>
+
             </ActionColumn>
             @*<Column Title="Salidas" @bind-Field="@discriminadores" Sortable />*@
         </ColumnDefinitions>

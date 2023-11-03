@@ -92,11 +92,26 @@
                             Filters="EscalafonJerarquicoFilter"
                             OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
             <ActionColumn Title="Action">
-                <Space>
-                    <SpaceItem><Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button></SpaceItem>
-                    <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button></SpaceItem>
-                    <SpaceItem><Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button></SpaceItem>
-                </Space>
+
+                <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
+                    <Overlay>
+                        <Menu>
+                            <MenuItem>
+                                <Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button>
+                            </MenuItem>
+                            <MenuItem>
+                                <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button>
+                            </MenuItem>
+                            <MenuItem>
+                                <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button>
+                            </MenuItem>
+                        </Menu>;
+                    </Overlay>
+                    <ChildContent>
+                        <Button class="boton_p">Acciones<Icon Type="down" /></Button>
+                    </ChildContent>
+                </Dropdown>
+                    
             </ActionColumn>
         </ColumnDefinitions>
         @*--------------------------------------------Modal-----------------------------------------------*@
