@@ -50,7 +50,7 @@
 		public DateTime FechaAlta { get; set; }
 		public string? Descripcion { get; set; }
 		public string? Codigo { get; set; }
-		public string Stock { get; set; }
+		public int? Stock { get; set; }
 		public TipoRubro Rubro { get; set; }
 	}
 
@@ -75,7 +75,6 @@
 
             Vista.Data.Models.Salidas.Componentes.Material material1 = new()
                 {
-
                     FechaAlta = MaterialesVM.FechaAlta,
                     Descripcion = MaterialesVM.Descripcion,
                     Codigo = MaterialesVM.Codigo,
@@ -97,8 +96,8 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-
         }
+
     }
     private void OnFinishFailed(EditContext editContext)
     {

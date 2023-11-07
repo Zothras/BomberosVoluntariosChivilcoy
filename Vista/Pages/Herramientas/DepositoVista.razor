@@ -1,4 +1,4 @@
-﻿@* @implements IDisposable
+﻿@implements IDisposable
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/Herramientas/Deposito"
@@ -7,25 +7,39 @@
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.Json;
+<style>
 
-<h3>Depositos</h3>
+</style>
+@* <div style="margin-top: 2em; width: 80%; ">
+    <Table DataSource="DepositoActivoVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
+            <TitleTemplate>
 
-<div style="margin-top: 2em;">
-    <Table DataSource="DepositoVM" PageSize="6" Bordered Responsive>
-        <PropertyColumn Property="c=>c.Materiales"></PropertyColumn>
-        <PropertyColumn Property="c=>c.Stock"></PropertyColumn>
-        <PropertyColumn Property="c=>c."></PropertyColumn>
-        <PropertyColumn Property="c=>c."></PropertyColumn>
+            </TitleTemplate>
+            <ColumnDefinitions Context="muestra">
+                <PropertyColumn Property="c=>c." Sortable></PropertyColumn>
+        </ColumnDefinitions>
     </Table>
-</div>
+</div> *@
 
 @code {
     BomberosDbContext Context;
-    public class DepositoViewModel
+
+    public class Deposito
     {
-        public List<Material> Materiales { get; set; } = new();
+        public int MaterialId { get; set; }
+
+        public DateTime FechaAlta { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Codigo { get; set; }
+        public string? Stock { get; set; }
+
+        public TipoRubro Rubro { get; set; }
     }
-    public DepositoViewModel DepositoVM = new();
+
+
+    public Deposito DepositoVM = new();
+    List<Deposito> DepositoActivoVM = new();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,26 +47,12 @@
     }
     private async Task Init()
     {
+        DepositoVM = new();
         Context = DbFactory.CreateDbContext();
-        await CargarMateriales();
-    }
-    public async Task CargarMateriales()
-    {
-        var deposito = await Context.Depositos.ToListAsync();
-        foreach (Deposito m in deposito)
-        {
-            var bombero = await Context.Depositos.Where(D => D.DepositoId == m.DepositoId).SingleOrDefaultAsync();
-            var bomberoEncargado = await Context.Depositos.Where(D => D.DepositoId == m.DepositoId).SingleOrDefaultAsync();
-            DepositoViewModel dep = new()
-                {
-                    Materiales = m.Materiales,
-                };
-            DepositoVM.Add(dep);
-        }
     }
     public void Dispose()
     {
         Context?.Dispose();
     }
 
-} *@
+}

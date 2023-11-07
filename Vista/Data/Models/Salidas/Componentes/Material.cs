@@ -10,7 +10,7 @@ namespace Vista.Data.Models.Salidas.Componentes
 		public DateTime FechaAlta { get; set; }
 		public string? Descripcion { get; set; }
 		public string? Codigo { get; set; }
-        public string Stock { get; set; }
+        public int? Stock { get; set; }
 
 		public TipoRubro Rubro { get; set; }
 	}
