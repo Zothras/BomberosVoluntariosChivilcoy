@@ -86,8 +86,6 @@
         }
     }
 </style>
-<h2 style="text-align:center; text-decoration:underline;">Accidentes</h2>
-
 <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
     <Steps Current="current">
         @foreach (var item in steps)
@@ -96,201 +94,245 @@
         }
     </Steps>
 
-    <Form Model="@accidenteViewModels"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailed">
-
-        @if (current == 0)
-        {
-            <div class="slick-contenedor @animationClass">
-                <div class="inpt-cont">
-                    <label class="inpt-cont--lbl">Descripcion</label>
-                    <Input @bind-Value="@accidenteViewModels.Descripcion" />
-                </div>
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Hora salida</label>
-                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.HoraSalida" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Hora llegada</label>
-                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.HoraLLegada" />
-                    </div>
-                </div>
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Calle/Ruta</label>
-                        <Input @bind-Value="@accidenteViewModels.CalleORuta" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Numero/kilometro</label>
-                        <Input @bind-Value="@accidenteViewModels.NumeroOKilometro" />
-                    </div>
-                </div>
-                <div class="inpt-cont">
-                    <label class="inpt-cont--lbl">Entre calles</label>
-                    <Input @bind-Value="@accidenteViewModels.EntreCalles" />
-                </div>
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">PisoNumero</label>
-                        <Input @bind-Value="@accidenteViewModels.PisoNumero" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Depto</label>
-                        <Input @bind-Value="@accidenteViewModels.Depto" />
-                    </div>
-                </div>
-                <div class="inpt-cont">
-                    <label class="inpt-cont--lbl">Tipo zona</label>
-                    <EnumSelect TEnum="TipoZona" @bind-Value="@accidenteViewModels.TipoZona" />
-                </div>
-            </div>
-        }
-        else if (current == 1)
-        {
-            @*Solicitante datos*@
-            <b><label>Datos de solicitante</label></b>
-            <FormItem Label="Nombre del solicitante">
-                <Input @bind-Value="@accidenteViewModels.NombreSolicitante" />
-            </FormItem>
-            <FormItem Label="Apelldio del solicitante">
-                <Input @bind-Value="@accidenteViewModels.ApellidoSolicitante" />
-            </FormItem>
-            <FormItem Label="documneto del solicitante">
-                <Input @bind-Value="@accidenteViewModels.DniSolicitante" />
-            </FormItem>
-            <FormItem Label="Telefono  del solicitante">
-                <Input @bind-Value="@accidenteViewModels.TelefonoSolicitante" />
-            </FormItem>
-            @*Datos del receptor*@
-            <FormItem Label="Nombre y apellido del receptor">
-                <Input @bind-Value="@accidenteViewModels.NombreYApellidoReceptor" />
-            </FormItem>
-            <FormItem Label="Telefono receptor">
-                <Input @bind-Value="@accidenteViewModels.TelefonoReceptor" />
-            </FormItem>
-            <div>
-                <div>
-                    <b>
-                        <FormItem Label="¿Tiene seguro el lugar?">
-                            <Switch @bind-Checked="switchValueS" />
-                        </FormItem>
-                    </b>
-                </div>
-                <div>
-                    @if (switchValueS == true)
-                    {
-                        <b><label>Seguro del lugar afectado</label></b>
-                        <FormItem Label="Compania Aseguradora">
-                            <Input @bind-Value="@accidenteViewModels.CompaniaAseguradora" />
-                        </FormItem>
-                        <FormItem Label="NumeroPoliza">
-                            <Input @bind-Value="@accidenteViewModels.NumeroPoliza" />
-                        </FormItem>
-                        <FormItem Label="FechaVencimineto">
-                            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.FechaVencimineto" />
-                        </FormItem>
-                    }
-                </div>
-            </div>
-        }
-
-        else if (current == 2)
-        {
-            @*Datos de damnificados*@
-            <FormItem Label="¿Hubo damnificados?">
-                <Switch @bind-Checked="switchValue" />
-            </FormItem>
-            @if (switchValue == true)
+    <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+        <Form Model="@accidenteViewModels"
+              LabelColSpan="8"
+              WrapperColSpan="16"
+              OnFinish="OnFinish"
+              OnFinishFailed="OnFinishFailed"
+              Style="width: 100%;height: 100%;overflow: hidden!important;">
+            @if (current == 0)
             {
-                <FormItem Label="Nombre">
-                    <Input @bind-Value="@damnificado.Nombre" />
-                </FormItem>
-                <FormItem Label="Apellido">
-                    <Input @bind-Value="@damnificado.Apellido" />
-                </FormItem>
-                <FormItem Label="Documento">
-                    <Input @bind-Value="@damnificado.Dni" />
-                </FormItem>
-                <FormItem Label="Tipo sexo">
-                    <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
-                </FormItem>
-                <FormItem Label="Lugar De nacimiento">
-                    <Input @bind-Value="@damnificado.LugarDeNacimiento" />
-                </FormItem>
-                <FormItem Label="edad">
-                    <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
-                </FormItem>
-                <FormItem Label="Tipo material">
-                    <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
-                </FormItem>
-                <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
-                <div>
-                    <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                     <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                     <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                     <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-                     <ActionColumn Title="Acciones">
-                         <Popconfirm Title="Sure to delete?"
-                                     OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                                     OkText="Yes"
-                                     CancelText="No">
-                             <a>Delete</a>
-                         </Popconfirm>
-                     </ActionColumn>
-                 </Table>
-             </div>
+                <div class="slick-contenedor @animationClass">
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Descripcion</label>
+                        <Input @bind-Value="@accidenteViewModels.Descripcion" />
+                    </div>
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Hora salida</label>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.HoraSalida" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Hora llegada</label>
+                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.HoraLLegada" />
+                        </div>
+                    </div>
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Calle/Ruta</label>
+                            <Input @bind-Value="@accidenteViewModels.CalleORuta" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Numero/kilometro</label>
+                            <Input @bind-Value="@accidenteViewModels.NumeroOKilometro" />
+                        </div>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Entre calles</label>
+                        <Input @bind-Value="@accidenteViewModels.EntreCalles" />
+                    </div>
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">PisoNumero</label>
+                            <Input @bind-Value="@accidenteViewModels.PisoNumero" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Depto</label>
+                            <Input @bind-Value="@accidenteViewModels.Depto" />
+                        </div>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo zona</label>
+                        <EnumSelect TEnum="TipoZona" @bind-Value="@accidenteViewModels.TipoZona" />
+                    </div>
+                </div>
             }
-        }
-
-        else if (current == 3)
-        {
-
-            @*Datos de Vehiculos  damnificados*@
-            <FormItem Label="¿Ubo vehiculos damnificados?">
-                <Switch @bind-Checked="switchValueV" />
-            </FormItem>
-            @if (switchValueV == true)
+            else if (current == 1)
             {
-                <FormItem Label="Marca">
-                    <Input @bind-Value="@vehiculo.Marca" />
+                @*Solicitante datos*@
+                <b><label>Datos de solicitante</label></b>
+                <FormItem Label="Nombre del solicitante">
+                    <Input @bind-Value="@accidenteViewModels.NombreSolicitante" />
                 </FormItem>
-                <FormItem Label="Modelo">
-                    <Input @bind-Value="@vehiculo.Modelo" />
+                <FormItem Label="Apelldio del solicitante">
+                    <Input @bind-Value="@accidenteViewModels.ApellidoSolicitante" />
                 </FormItem>
-                <FormItem Label="Año">
-                    <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
+                <FormItem Label="documneto del solicitante">
+                    <Input @bind-Value="@accidenteViewModels.DniSolicitante" />
                 </FormItem>
-                <FormItem Label="Patente">
-                    <Input @bind-Value="@vehiculo.Patente" />
+                <FormItem Label="Telefono  del solicitante">
+                    <Input @bind-Value="@accidenteViewModels.TelefonoSolicitante" />
                 </FormItem>
-                <FormItem Label="tipo">
-                    <Input @bind-Value="@vehiculo.Tipo" />
+                @*Datos del receptor*@
+                <FormItem Label="Nombre y apellido del receptor">
+                    <Input @bind-Value="@accidenteViewModels.NombreYApellidoReceptor" />
                 </FormItem>
-                <FormItem Label="Color">
-                    <Input @bind-Value="@vehiculo.Color" />
+                <FormItem Label="Telefono receptor">
+                    <Input @bind-Value="@accidenteViewModels.TelefonoReceptor" />
                 </FormItem>
-                <FormItem Label="Compania Aseguradora">
-                    <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
-                </FormItem>
-                <FormItem Label="NumeroPoliza">
-                    <Input @bind-Value="@vehiculo.NumeroDePoliza" />
-                </FormItem>
-                <FormItem Label="FechaVencimineto">
-                    <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
-                    <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
-                </FormItem>
-                <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
+                <div>
+                    <div>
+                        <b>
+                            <FormItem Label="¿Tiene seguro el lugar?">
+                                <Switch @bind-Checked="switchValueS" />
+                            </FormItem>
+                        </b>
+                    </div>
+                    <div>
+                        @if (switchValueS == true)
+                        {
+                            <b><label>Seguro del lugar afectado</label></b>
+                            <FormItem Label="Compania Aseguradora">
+                                <Input @bind-Value="@accidenteViewModels.CompaniaAseguradora" />
+                            </FormItem>
+                            <FormItem Label="NumeroPoliza">
+                                <Input @bind-Value="@accidenteViewModels.NumeroPoliza" />
+                            </FormItem>
+                            <FormItem Label="FechaVencimineto">
+                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.FechaVencimineto" />
+                            </FormItem>
+                        }
+                    </div>
+                </div>
             }
-        }
 
-        @*Moviles de salidas*@
-        @*a la hora de pedir el chofer y movil,
+            else if (current == 2)
+            {
+                @*Datos de damnificados*@
+                <FormItem Label="¿Hubo damnificados?">
+                    <Switch @bind-Checked="switchValue" />
+                </FormItem>
+                @if (switchValue == true)
+                {
+                    <FormItem Label="Nombre">
+                        <Input @bind-Value="@damnificado.Nombre" />
+                    </FormItem>
+                    <FormItem Label="Apellido">
+                        <Input @bind-Value="@damnificado.Apellido" />
+                    </FormItem>
+                    <FormItem Label="Documento">
+                        <Input @bind-Value="@damnificado.Dni" />
+                    </FormItem>
+                    <FormItem Label="Tipo sexo">
+                        <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
+                    </FormItem>
+                    <FormItem Label="Lugar De nacimiento">
+                        <Input @bind-Value="@damnificado.LugarDeNacimiento" />
+                    </FormItem>
+                    <FormItem Label="edad">
+                        <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
+                    </FormItem>
+                    <FormItem Label="Tipo material">
+                        <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
+                    </FormItem>
+                    <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+                    <div>
+                        <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+                         <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                         <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                         <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                         <ActionColumn Title="Acciones">
+                             <Popconfirm Title="Sure to delete?"
+                                         OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                         OkText="Yes"
+                                         CancelText="No">
+                                 <a>Delete</a>
+                             </Popconfirm>
+                         </ActionColumn>
+                     </Table>
+                 </div>
+                }
+            }
+
+            else if (current == 3)
+            {
+
+                @*Datos de Vehiculos  damnificados*@
+                <FormItem Label="¿Ubo vehiculos damnificados?">
+                    <Switch @bind-Checked="switchValueV" />
+                </FormItem>
+                @if (switchValueV == true)
+                {
+                    <FormItem Label="Marca">
+                        <Input @bind-Value="@vehiculo.Marca" />
+                    </FormItem>
+                    <FormItem Label="Modelo">
+                        <Input @bind-Value="@vehiculo.Modelo" />
+                    </FormItem>
+                    <FormItem Label="Año">
+                        <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
+                    </FormItem>
+                    <FormItem Label="Patente">
+                        <Input @bind-Value="@vehiculo.Patente" />
+                    </FormItem>
+                    <FormItem Label="tipo">
+                        <Input @bind-Value="@vehiculo.Tipo" />
+                    </FormItem>
+                    <FormItem Label="Color">
+                        <Input @bind-Value="@vehiculo.Color" />
+                    </FormItem>
+                    <FormItem Label="Compania Aseguradora">
+                        <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
+                    </FormItem>
+                    <FormItem Label="NumeroPoliza">
+                        <Input @bind-Value="@vehiculo.NumeroDePoliza" />
+                    </FormItem>
+                    <FormItem Label="FechaVencimineto">
+                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
+                        <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
+                    </FormItem>
+                    <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
+                }
+            }
+            else if (current == 4)
+            {
+
+                @*Datos de Vehiculos  damnificados*@
+                <FormItem Label="¿Ubo vehiculos damnificados?">
+                    <Switch @bind-Checked="switchValueV" />
+                </FormItem>
+                @if (switchValueV == true)
+                {
+                    <FormItem Label="Marca">
+                        <Input @bind-Value="@vehiculo.Marca" />
+                    </FormItem>
+                    <FormItem Label="Modelo">
+                        <Input @bind-Value="@vehiculo.Modelo" />
+                    </FormItem>
+                    <FormItem Label="Año">
+                        <AntDesign.InputNumber @bind-Value="vehiculo.Año" />
+                    </FormItem>
+                    <FormItem Label="Patente">
+                        <Input @bind-Value="@vehiculo.Patente" />
+                    </FormItem>
+                    <FormItem Label="tipo">
+                        <Input @bind-Value="@vehiculo.Tipo" />
+                    </FormItem>
+                    <FormItem Label="Color">
+                        <Input @bind-Value="@vehiculo.Color" />
+                    </FormItem>
+                    <FormItem Label="Compania Aseguradora">
+                        <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
+                    </FormItem>
+                    <FormItem Label="NumeroPoliza">
+                        <Input @bind-Value="@vehiculo.NumeroDePoliza" />
+                    </FormItem>
+                    <FormItem Label="FechaVencimineto">
+                        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
+                        <Checkbox @bind-Checked="chek"> Airbag</Checkbox>
+                    </FormItem>
+                    <Button OnClick="@AgregarDamnificado">Agregar vehiculo damnificado</Button>
+                }
+            }
+
+        </Form>
+    </div>
+</div>
+@*Moviles de salidas*@
+@*a la hora de pedir el chofer y movil,
         pedir dato unico para no cargar todo y buscarlo en la base de datos*@
-        <b><label>Datos de chofer</label></b>
+@* <b><label>Datos de chofer</label></b>
         <br />
         <FormItem Label="">
             <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
@@ -364,7 +406,7 @@
         </div>
 
         @*Cuerpos paraticipantes*@
-        <b><label>Cuerpo Participante</label></b>
+@* <b><label>Cuerpo Participante</label></b>
         <FormItem Label="Tipo Escalafon">
             <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
         </FormItem>
@@ -429,11 +471,11 @@
             </Select>
         </FormItem>
         @*Tipo servicio*@
-        <FormItem Label="Tipo Servicio salida">
+@*  <FormItem Label="Tipo Servicio salida">
             <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@accidenteViewModels.TipoServicio" />
-        </FormItem>
-        @*salidas rescates*@
-        <FormItem Label="Tipo Accidente">
+        </FormItem> *@
+@*salidas rescates*@
+@*  <FormItem Label="Tipo Accidente">
             <EnumSelect TEnum="TipoAccidente" @bind-Value="@accidenteViewModels.Tipo" />
         </FormItem>
 
@@ -498,7 +540,23 @@
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{accidenteViewModels.NumeroParte}/{false}", true); })">No</button>
-</Modal>
+        </Modal>*@
+<div class="steps-action">
+    @if (current > 0)
+    {
+        <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+    }
+    @if (current < steps.Length - 1)
+    {
+        <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+    }
+    @if (current == steps.Length - 1)
+    {
+        <Button Class="boton_p" HtmlType="submit">
+            Cargar salida
+        </Button>
+    }
+</div>
 
 @code {
     BomberosDbContext Context { get; set; }
