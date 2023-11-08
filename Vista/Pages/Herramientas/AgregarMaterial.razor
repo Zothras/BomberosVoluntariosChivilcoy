@@ -1,0 +1,92 @@
+﻿@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@page "/Herramientas/AgregarMaterial"
+@using static Vista.Pages.Herramientas.AgregarMaterial;
+@inject IMessageService message
+<Form Model="@MaterialViewModel"
+    OnFinish="OnFinish"
+    OnFinishFailed="OnFinishFailed"
+    LabelColSpan="8"
+    WrapperColSpan="16">
+    <FormItem Label="Producto">
+        <Input @bind-Value="MaterialViewModel.Descripcion" />
+    </FormItem>
+
+    <FormItem Label="CodigoDeBarra">
+        <Input @bind-Value="MaterialViewModel.Codigo" />
+    </FormItem>
+
+    <FormItem Label="Fecha">
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="MaterialViewModel.FechaAlta" />
+    </FormItem>
+
+    <FormItem Label="CodigoDeBarra">
+        <AntDesign.InputNumber @bind-Value="MaterialViewModel.Stock" />
+    </FormItem>
+
+    <FormItem Label="Rubro">
+        <EnumSelect TEnum="TipoRubro" @bind-Value="MaterialViewModel.Rubro" />
+    </FormItem>
+
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="Sumbit">
+            CargarProducto
+        </Button>
+    </FormItem>
+
+    
+    
+</Form>
+
+@code {
+    public BomberosDbContext Context;
+
+    public class MaterialVM
+    {
+        public DateTime FechaAlta { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Codigo { get; set; }
+        public int? Stock { get; set; }
+        public TipoRubro Rubro { get; set; }
+    }
+
+    //variables locales 
+    public MaterialVM MaterialViewModel { get; set; } = new();
+
+
+
+
+    private void OnFinish(EditContext editContext)
+    {
+        //Context.Materiales.Add(MaterialViewModel);
+        //  await Context.SaveChangesAsync();
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(MaterialViewModel)}");
+    }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        MaterialViewModel = new ();
+        Context = DbFactory.CreateDbContext();
+    }
+
+    private void OnChange(DateTimeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

@@ -24,7 +24,7 @@
 @code {
     BomberosDbContext Context;
 
-    public class Deposito
+    public class DepositoVM
     {
         public int MaterialId { get; set; }
 
@@ -37,8 +37,8 @@
     }
 
 
-    public Deposito DepositoVM = new();
-    List<Deposito> DepositoActivoVM = new();
+    public DepositoVM DepositoVm = new();
+    List<DepositoVM> DepositoActivoVM = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -47,7 +47,7 @@
     }
     private async Task Init()
     {
-        DepositoVM = new();
+        DepositoVm = new();
         Context = DbFactory.CreateDbContext();
     }
     public void Dispose()
