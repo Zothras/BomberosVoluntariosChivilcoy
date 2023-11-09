@@ -20,7 +20,7 @@
         <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="MaterialViewModel.FechaAlta" />
     </FormItem>
 
-    <FormItem Label="CodigoDeBarra">
+    <FormItem Label="Stock">
         <AntDesign.InputNumber @bind-Value="MaterialViewModel.Stock" />
     </FormItem>
 
@@ -30,12 +30,9 @@
 
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button Type="@ButtonType.Primary" HtmlType="Sumbit">
-            CargarProducto
+            Cargar Material
         </Button>
     </FormItem>
-
-    
-    
 </Form>
 
 @code {
@@ -44,22 +41,45 @@
     public class MaterialVM
     {
         public DateTime FechaAlta { get; set; }
-        public string? Descripcion { get; set; }
-        public string? Codigo { get; set; }
-        public int? Stock { get; set; }
+        [Required]
+        public string Descripcion { get; set; }
+        [Required]
+        public string Codigo { get; set; }
+        public int Stock { get; set; }
         public TipoRubro Rubro { get; set; }
     }
 
     //variables locales 
     public MaterialVM MaterialViewModel { get; set; } = new();
 
-
-
-
-    private void OnFinish(EditContext editContext)
+    private async void OnFinish(EditContext editContext)
     {
-        //Context.Materiales.Add(MaterialViewModel);
-        //  await Context.SaveChangesAsync();
+        try
+        {
+            Material material = new Material()
+            {
+                Codigo = MaterialViewModel.Codigo,
+                Descripcion = MaterialViewModel.Descripcion,
+                FechaAlta = MaterialViewModel.FechaAlta,
+                Rubro = MaterialViewModel.Rubro,
+                Stock = MaterialViewModel.Stock
+            };
+            Context.Add(material);
+            await Context.SaveChangesAsync();
+
+            await Init();
+            StateHasChanged();
+            await message.Success("Material creado correctamente");
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+        }
     }
 
     private void OnFinishFailed(EditContext editContext)
@@ -67,12 +87,11 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(MaterialViewModel)}");
     }
 
-
-
     protected override async Task OnInitializedAsync()
     {
         await Init();
     }
+
     private async Task Init()
     {
         MaterialViewModel = new ();
