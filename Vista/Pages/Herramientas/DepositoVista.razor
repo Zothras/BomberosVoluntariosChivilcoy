@@ -10,35 +10,102 @@
 <style>
 
 </style>
-@* <div style="margin-top: 2em; width: 80%; ">
-    <Table DataSource="DepositoActivoVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
-            <TitleTemplate>
-
-            </TitleTemplate>
+<div style="margin-top: 2em; width: 80%; ">
+    <Table DataSource="MaterialActivoVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
             <ColumnDefinitions Context="muestra">
-                <PropertyColumn Property="c=>c." Sortable></PropertyColumn>
-        </ColumnDefinitions>
+                <PropertyColumn Property="c=>c.FechaAlta" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Rubro" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
+            </ColumnDefinitions>
     </Table>
-</div> *@
+        <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
+            <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Cargar Material</Button>
+        </div>
 
+</div> 
+                <div>
+                    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
+                        <Overlay>
+                            <Menu Style="min-width:320px;max-width:600px;">
+                                <AgregarMaterial />
+                            </Menu>
+                        </Overlay>
+                    </Dropdown>
+                </div>
+
+<Modal Footer="null" Title="@("Agregar la Material")"
+    Visible="@_visibleAgregar"
+    OnOk="@HandleOkAgregar"
+    OnCancel="@HandleCancelAgregar">
+<AgregarMaterial />
+    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregar">
+        Volver
+    </Button>
+</Modal>
 @code {
     BomberosDbContext Context;
 
-    public class DepositoVM
-    {
-        public int MaterialId { get; set; }
 
+    public class MaterialVM
+    {
         public DateTime FechaAlta { get; set; }
         public string? Descripcion { get; set; }
         public string? Codigo { get; set; }
-        public string? Stock { get; set; }
-
+        public int? Stock { get; set; }
         public TipoRubro Rubro { get; set; }
+        MaterialVM MaterialVista {get; set;} = new();
     }
 
+    public bool _visibleAgregar = false;
 
-    public DepositoVM DepositoVm = new();
-    List<DepositoVM> DepositoActivoVM = new();
+    List<MaterialVM> MaterialActivoVM = new List<MaterialVM> ();
+
+
+
+    // public async Task CargarMaterial()
+    // {
+    //     int contador = 0;
+
+    //     MaterialActivoVM.Clear();
+    //     var Materiales = await Context.Materiales.ToArrayAsync();
+
+    //     var DepositoDB = await Context.Depositos.ToListAsync();
+
+    //     foreach (Deposito D in DepositoDB)
+    //     {
+    //         MaterialVM materialVM = new()
+    //             {
+    //                 Codigo = D.Codigo,
+    //                 Descripcion = D.DepositoId,
+    //                 FechaAlta = D.Date.Time.FechaAlta,
+    //                 Rubro = D.TipoRubro.Rubro,
+    //             };
+    //             MaterialVM.Add(materialVM);
+    //     }
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+        private async void HandleOkAgregar(MouseEventArgs e)
+        {
+        _visibleAgregar = false;
+        }
+        public async void HandleCancelAgregar(MouseEventArgs e)
+        {
+        Console.WriteLine(e);
+        _visibleAgregar = false;
+        await Init();
+        }
 
 
     protected override async Task OnInitializedAsync()
@@ -47,9 +114,17 @@
     }
     private async Task Init()
     {
-        DepositoVm = new();
+        MaterialActivoVM = new ();
         Context = DbFactory.CreateDbContext();
     }
+
+    private async void ShowModalAgregar()
+    {
+        _visibleAgregar = true;
+        await Init();
+    }
+
+
     public void Dispose()
     {
         Context?.Dispose();
