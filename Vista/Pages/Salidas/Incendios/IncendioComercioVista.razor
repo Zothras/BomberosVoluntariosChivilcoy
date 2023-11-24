@@ -87,6 +87,11 @@
         color: white !important;
     }
 
+    textarea{
+        resize:none !important;
+        min-height:250pxpx !important;
+        width:100% !important;
+    }
 </style>
 
 
@@ -97,7 +102,7 @@
             <Step Title="@item.Title" Subtitle="@item.Content" />
         }
     </Steps>
-    <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+    <div class="steps-content" style="max-height: 580px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
         <Form Model="@salidaIncendioComercioView"
               LabelColSpan="8"
               WrapperColSpan="16"
@@ -552,7 +557,6 @@
                     </div>
                 </div>
 
-
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <Checkbox @bind-Checked="salidaIncendioComercioView.DeteccionAutomaticaId">Deteccion Automatica</Checkbox>
@@ -565,10 +569,10 @@
                     </div>
                 </div>
 
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Detalles</label>
-                        <Input @bind-Value="salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio" />
-                    </div>
+                <div class="inpt-cont">
+                      <label class="inpt-cont--lbl">Detalles</label>
+                      <TextArea Placeholder="Descripcion" @bind-Value="salidaIncendioComercioView.DetalleSuperficieAfectadaIncendio" />
+                </div>
             }
         </Form>
     </div>
@@ -624,7 +628,6 @@
 
     bool switchMoviles { get; set; }
     bool _visible1;
-    public int current { get; set; } = 0;
     bool desactivarSwitch { get; set; }
     bool visibleDamnificados = true;
     bool visibleVerDamnificados;
@@ -632,6 +635,7 @@
     // _items2 = new List<string>();
 
     //Steps
+    public int current { get; set; } = 0;
     private string animationClass = "";
 
     public class StepItem
