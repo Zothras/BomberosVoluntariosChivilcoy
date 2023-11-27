@@ -102,7 +102,7 @@
             <Step Title="@item.Title" Subtitle="@item.Content" />
         }
     </Steps>
-    <div class="steps-content" style="max-height: 580px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+    <div class="steps-content" style="max-height: 620px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
         <Form Model="@salidaIncendioComercioView"
               LabelColSpan="8"
               WrapperColSpan="16"
@@ -494,16 +494,10 @@
             }
             else if (current == 5)
             {
-                <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Tipo de Servicio</label>
                         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioComercioView.TipoServicio" />
                     </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo de Zona</label>
-                        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioComercioView.TipoZona" />
-                    </div>
-                </div>
                    <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Nombre del Establecimiento</label>
                     <Input @bind-Value="salidaIncendioComercioView.NombreEstablecimiento" />

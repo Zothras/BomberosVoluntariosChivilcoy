@@ -142,6 +142,11 @@
                         <label class="inpt-cont--lbl">Entre calles</label>
                         <Input @bind-Value="@salidaIncendioForestalView.EntreCalles" />
                     </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo de Zona</label>
+                        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioForestalView.TipoZona" />
+                    </div>
+                </div>
             }
             else if (current == 1)
             {
@@ -277,7 +282,6 @@
                             <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.FechaVencimineto" />
                         </div>
                     </div>
-                </div>
             }
             else if (current == 3)
             {
@@ -470,17 +474,12 @@
             }
             else if (current == 5)
             {
-                <h6>Datos Salida</h6>
                 <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Tipo de Servicio</label>
                         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioForestalView.TipoServicio" />
                     </div>
 
                 <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo de Zona</label>
-                        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioForestalView.TipoZona" />
-                    </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Lugar</label>
                         <EnumSelect TEnum="TipoIncendioForestal" @bind-Value="@salidaIncendioForestalView.TipoLugar" />
