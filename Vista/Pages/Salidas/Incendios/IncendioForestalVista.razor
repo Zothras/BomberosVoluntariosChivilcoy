@@ -7,6 +7,7 @@
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
 @using System.Text.Json;
+
 <style>
     .ant-carousel .slick-dots li {
         display: none !important;
@@ -88,6 +89,11 @@
         color: white !important;
     }
 
+    textarea {
+        resize: none !important;
+        min-height: 250pxpx !important;
+        width: 100% !important;
+    }
 </style>
 
 <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
@@ -136,24 +142,6 @@
                         <label class="inpt-cont--lbl">Entre calles</label>
                         <Input @bind-Value="@salidaIncendioForestalView.EntreCalles" />
                     </div>
-                <h6>Seguro del lugar</h6>
-
-                <div class="slick-contenedor @animationClass">
-
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Compania aseguradora del establecimiento</label>
-                        <Input @bind-Value="@salidaIncendioForestalView.CompaniaAseguradora" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Numero de poliza</label>
-                        <Input @bind-Value="@salidaIncendioForestalView.NumeroPoliza" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Fecha de vencimiento</label>
-                        <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.FechaVencimineto" />
-                    </div>
-                </div>
-                </div>
             }
             else if (current == 1)
             {
@@ -271,6 +259,27 @@
                 </div>
             }
             else if (current == 2)
+            {
+                    <h6>Seguro del lugar</h6>
+
+                    <div class="slick-contenedor @animationClass">
+
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Compania aseguradora del establecimiento</label>
+                            <Input @bind-Value="@salidaIncendioForestalView.CompaniaAseguradora" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Numero de poliza</label>
+                            <Input @bind-Value="@salidaIncendioForestalView.NumeroPoliza" />
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Fecha de vencimiento</label>
+                            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.FechaVencimineto" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (current == 3)
             {
                 <div class="slick-contenedor @animationClass">
                     <h6>Datos del chofer</h6>
@@ -391,7 +400,7 @@
                     }
                 </div>
             }
-            else if (current == 3)
+            else if (current == 4)
             {
                 <div class="slick-contenedor @animationClass">
                     <h6>Cuerpo Participante</h6>
@@ -459,7 +468,7 @@
                  </div>
              </div>
             }
-            else if (current == 4)
+            else if (current == 5)
             {
                 <h6>Datos Salida</h6>
                 <div class="inpt-cont">
@@ -495,7 +504,7 @@
 
                 <div class="inpt-cont">
                     <label class="inpt-cont--lbl">Detalles</label>
-                    <Input @bind-Value="salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio" />
+                    <TextArea Placeholder="Descripcion" @bind-Value="salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio" />
                 </div>
 
                 <div class="inpt-cont-inline">
@@ -979,8 +988,9 @@
 
     public StepItem[] steps =
     {
-        new StepItem {Title = " ", Content = ""}, /* Datos generales y Seguro */
+        new StepItem {Title = " ", Content = ""}, /* Datos generales*/
         new StepItem {Title = " ", Content = ""}, /* Participantes */
+        new StepItem {Title = " ", Content = ""},/*Seguro*/
         new StepItem {Title = " ", Content = ""}, /* Vehiculos */
         new StepItem {Title = " ", Content = ""}, /* Personal */
         new StepItem {Title = " ", Content = ""}  /* Forestal */
