@@ -49,6 +49,7 @@
 
     public class MaterialVM
     {
+        public int MaterialID { get; set; }
         public DateTime FechaAlta { get; set; }
         public string? Descripcion { get; set; }
         public string? Codigo { get; set; }
@@ -78,13 +79,15 @@
                     FechaAlta = m.FechaAlta
                 };
             MaterialActivoVM.Add(materialVM);
+            await Context.SaveChangesAsync();
+            StateHasChanged();
         }
     }
 
 
     private async Task DepositoActivo()
     {
-        MaterialActivoVM = new();
+        MaterialActivoVM.Clear();
         var materiales = await Context.Materiales.ToListAsync();
         foreach (var material in materiales)
         {
