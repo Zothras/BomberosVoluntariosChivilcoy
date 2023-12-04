@@ -14,31 +14,31 @@
     <Table DataSource="MaterialActivoVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
             <ColumnDefinitions Context="muestra">
                 <PropertyColumn Property="c=>c.FechaAlta" Sortable></PropertyColumn>
-                <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
-                <PropertyColumn Property="c=>c.Rubro" Sortable></PropertyColumn>
-                <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
-            </ColumnDefinitions>
+            <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Rubro" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
+        </ColumnDefinitions>
     </Table>
-        <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-            <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Cargar Material</Button>
-        </div>
+    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
+        <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Cargar Material</Button>
+    </div>
 
-</div> 
-                <div>
-                    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
-                        <Overlay>
-                            <Menu Style="min-width:320px;max-width:600px;">
-                                <AgregarMaterial />
-                            </Menu>
-                        </Overlay>
-                    </Dropdown>
-                </div>
+</div>
+<div>
+    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
+        <Overlay>
+            <Menu Style="min-width:320px;max-width:600px;">
+                <AgregarMaterial />
+            </Menu>
+        </Overlay>
+    </Dropdown>
+</div>
 
 <Modal Footer="null" Title="@("Agregar la Material")"
-    Visible="@_visibleAgregar"
-    OnOk="@HandleOkAgregar"
-    OnCancel="@HandleCancelAgregar">
-<AgregarMaterial />
+        Visible="@_visibleAgregar"
+        OnOk="@HandleOkAgregar"
+        OnCancel="@HandleCancelAgregar">
+    <AgregarMaterial />
     <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregar">
         Volver
     </Button>
@@ -54,58 +54,71 @@
         public string? Codigo { get; set; }
         public int? Stock { get; set; }
         public TipoRubro Rubro { get; set; }
-        MaterialVM MaterialVista {get; set;} = new();
+        MaterialVM MaterialVista { get; set; } = new();
     }
 
     public bool _visibleAgregar = false;
 
-    List<MaterialVM> MaterialActivoVM = new List<MaterialVM> ();
+    List<MaterialVM> MaterialActivoVM = new List<MaterialVM>();
 
 
 
-    // public async Task CargarMaterial()
-    // {
-    //     int contador = 0;
-
-    //     MaterialActivoVM.Clear();
-    //     var Materiales = await Context.Materiales.ToArrayAsync();
-
-    //     var DepositoDB = await Context.Depositos.ToListAsync();
-
-    //     foreach (Deposito D in DepositoDB)
-    //     {
-    //         MaterialVM materialVM = new()
-    //             {
-    //                 Codigo = D.Codigo,
-    //                 Descripcion = D.DepositoId,
-    //                 FechaAlta = D.Date.Time.FechaAlta,
-    //                 Rubro = D.TipoRubro.Rubro,
-    //             };
-    //             MaterialVM.Add(materialVM);
-    //     }
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-        private async void HandleOkAgregar(MouseEventArgs e)
+    public async Task CargarMaterial()
+    {
+        MaterialActivoVM.Clear();
+        var Materiales = await Context.Materiales.ToArrayAsync();
+        foreach (var m in Materiales)
         {
-        _visibleAgregar = false;
+            MaterialVM materialVM = new()
+                {
+                    Codigo = m.Codigo,
+                    Stock = m.Stock,
+                    Rubro = m.Rubro,
+                    Descripcion = m.Descripcion,
+                    FechaAlta = m.FechaAlta
+                };
+            MaterialActivoVM.Add(materialVM);
         }
-        public async void HandleCancelAgregar(MouseEventArgs e)
+    }
+
+
+    private async Task DepositoActivo()
+    {
+        MaterialActivoVM = new();
+        var materiales = await Context.Materiales.ToListAsync();
+        foreach (var material in materiales)
         {
+            MaterialVM materialVM = new MaterialVM
+                {
+                    FechaAlta = material.FechaAlta,
+                    Descripcion = material.Descripcion,
+                    Rubro = material.Rubro,
+                    Codigo = material.Codigo,
+                    Stock = material.Stock
+                };
+            MaterialActivoVM.Add(materialVM);
+        }
+        StateHasChanged();
+    }
+
+
+
+
+
+
+
+
+
+    private async void HandleOkAgregar(MouseEventArgs e)
+    {
+        _visibleAgregar = false;
+    }
+    public async void HandleCancelAgregar(MouseEventArgs e)
+    {
         Console.WriteLine(e);
         _visibleAgregar = false;
         await Init();
-        }
+    }
 
 
     protected override async Task OnInitializedAsync()
@@ -114,7 +127,7 @@
     }
     private async Task Init()
     {
-        MaterialActivoVM = new ();
+        MaterialActivoVM = new();
         Context = DbFactory.CreateDbContext();
     }
 

@@ -4,10 +4,10 @@
 @using static Vista.Pages.Herramientas.AgregarMaterial;
 @inject IMessageService message
 <Form Model="@MaterialViewModel"
-    OnFinish="OnFinish"
-    OnFinishFailed="OnFinishFailed"
-    LabelColSpan="8"
-    WrapperColSpan="16">
+        OnFinish="OnFinish"
+        OnFinishFailed="OnFinishFailed"
+        LabelColSpan="8"
+        WrapperColSpan="16">
     <FormItem Label="Producto">
         <Input @bind-Value="MaterialViewModel.Descripcion" />
     </FormItem>
@@ -42,16 +42,16 @@
     {
         public DateTime FechaAlta { get; set; }
         [Required]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
         [Required]
-        public string Codigo { get; set; }
-        public int Stock { get; set; }
+        public string? Codigo { get; set; }
+        public int? Stock { get; set; }
         public TipoRubro Rubro { get; set; }
     }
 
-    public MaterialVM  MaterialVm = new();
+    public MaterialVM MaterialVm = new();
 
-    //variables locales 
+    //variables locales
     public MaterialVM MaterialViewModel { get; set; } = new();
 
     private async void OnFinish(EditContext editContext)
@@ -59,13 +59,13 @@
         try
         {
             Material material = new Material()
-            {
-                Codigo = MaterialViewModel.Codigo,
-                Descripcion = MaterialViewModel.Descripcion,
-                FechaAlta = MaterialViewModel.FechaAlta,
-                Rubro = MaterialViewModel.Rubro,
-                Stock = MaterialViewModel.Stock
-            };
+                {
+                    Codigo = MaterialViewModel.Codigo,
+                    Descripcion = MaterialViewModel.Descripcion,
+                    FechaAlta = MaterialViewModel.FechaAlta,
+                    Rubro = MaterialViewModel.Rubro,
+                    Stock = MaterialViewModel.Stock
+                };
             Context.Add(material);
             await Context.SaveChangesAsync();
 
@@ -96,7 +96,7 @@
 
     private async Task Init()
     {
-        MaterialViewModel = new ();
+        MaterialViewModel = new();
         Context = DbFactory.CreateDbContext();
     }
 
