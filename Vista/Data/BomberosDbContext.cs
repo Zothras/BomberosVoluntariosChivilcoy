@@ -39,8 +39,6 @@ namespace Vista.Data
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
 
-        public DbSet<Deposito> Depositos { get; set; }
-
         public DbSet<Material> Materiales { get; set; }
 
         public DbSet<MovimientoM> Movimientos { get; set; }
