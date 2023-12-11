@@ -14,9 +14,10 @@
     <Table DataSource="MaterialActivoVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
             <ColumnDefinitions Context="muestra">
                 <PropertyColumn Property="c=>c.FechaAlta" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Rubro" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Rubro" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Stock" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
         </ColumnDefinitions>
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
@@ -43,25 +44,25 @@
         Volver
     </Button>
 </Modal>
+
 @code {
     BomberosDbContext Context;
 
-
     public class MaterialVM
     {
-        public int MaterialID { get; set; }
+        [Required]
         public DateTime FechaAlta { get; set; }
         public string? Descripcion { get; set; }
         public string? Codigo { get; set; }
         public int? Stock { get; set; }
         public TipoRubro Rubro { get; set; }
-        MaterialVM MaterialVista { get; set; } = new();
+
     }
 
+    // variables locales
     public bool _visibleAgregar = false;
 
-    List<MaterialVM> MaterialActivoVM = new List<MaterialVM>();
-
+    List<MaterialVM> MaterialActivoVM = new ();
 
 
     public async Task CargarMaterial()
@@ -80,18 +81,18 @@
                 };
             MaterialActivoVM.Add(materialVM);
             await Context.SaveChangesAsync();
-            StateHasChanged();
+            StateHasChanged(); 
         }
     }
 
-
-    private async Task DepositoActivo()
+    //Condicion Para la muestra de Materiales
+    private async Task MaterialesActivo()
     {
-        MaterialActivoVM.Clear();
+        MaterialActivoVM = new();
         var materiales = await Context.Materiales.ToListAsync();
         foreach (var material in materiales)
         {
-            MaterialVM materialVM = new MaterialVM
+            MaterialVM materialVM = new ()
                 {
                     FechaAlta = material.FechaAlta,
                     Descripcion = material.Descripcion,
@@ -105,17 +106,11 @@
     }
 
 
-
-
-
-
-
-
-
     private async void HandleOkAgregar(MouseEventArgs e)
     {
         _visibleAgregar = false;
     }
+
     public async void HandleCancelAgregar(MouseEventArgs e)
     {
         Console.WriteLine(e);
@@ -123,15 +118,16 @@
         await Init();
     }
 
-
     protected override async Task OnInitializedAsync()
     {
         await Init();
     }
+
     private async Task Init()
     {
         MaterialActivoVM = new();
         Context = DbFactory.CreateDbContext();
+        await MaterialesActivo();
     }
 
     private async void ShowModalAgregar()
