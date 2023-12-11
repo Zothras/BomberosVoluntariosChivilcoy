@@ -570,98 +570,33 @@
         }
         @if (current == steps.Length - 1)
         {
-            <Button Class="boton_p" HtmlType="submit">
+            <Button Class="boton_p" HtmlType="submit" OnClick="ShowModal1">
                 Cargar salida
             </Button>
         }
     </div>
 </div>
-@* 
 
-    <b><label>Salida</label></b>
-    <FormItem Label="Tipo Servicio salida">
-        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioIndustrialView.TipoServicio" />
-    </FormItem>
-    <FormItem Label="Tipo de Zona">
-        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioIndustrialView.TipoZona" />
-    </FormItem>
-    <FormItem Label="Lugar">
-        <EnumSelect TEnum="TipoIncendioIndustria" @bind-Value="@salidaIncendioIndustrialView.TipoLugar" />
-        @if (salidaIncendioIndustrialView.TipoLugar == TipoIncendioIndustria.Otro)
-        {
-            <FormItem Label="OtroLugar">
-                <Input @bind-Value="@salidaIncendioIndustrialView.OtroLugar" />
-            </FormItem>
-        }
-    </FormItem>
-    <FormItem Label="Superficie Afectada Causa">
-        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@salidaIncendioIndustrialView.SuperficieAfectadaCausa" />
-    </FormItem>
-    <FormItem Label="Nombre establecimiento:">
-        <Input @bind-Value="salidaIncendioIndustrialView.NombreEstablecimiento" />
-        <br>
-    </FormItem>
-    <FormItem Label="Cantidad pisos:">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioIndustrialView.CantidadPisos" />
-        <br>
-    </FormItem>
-    <FormItem Label="Pisos afectados">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioIndustrialView.PisoAfectado" />
-        <br>
-    </FormItem>
+@*Despues de la Carga*@
+<Modal Title="@("Success")"
+        Visible="@_visible1"
+        OnOk="@HandleOk1"
+        OnCancel="@HandleCancel1">
+    <Result Status="success"
+            Title="Se cargo correctamente la salida"
+            SubTitle="">
+    </Result>
+</Modal>
 
-    <FormItem Label="Cantidad ambientes:">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioIndustrialView.CantidadAmbientes" />
-        <br>
-    </FormItem>
-    <FormItem Label="Tipo Evacuacion">
-        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@salidaIncendioIndustrialView.TipoEvacuacion" />
-    </FormItem>
-    <FormItem Label="Tipo Superficie">
-        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@salidaIncendioIndustrialView.TipoSuperficieAfectada" />
-    </FormItem>
-    <FormItem Label="Detalles Surpeficie Afectada ">
-        <Input @bind-Value="salidaIncendioIndustrialView.DetalleSuperficieAfectadaIncendio" />
-    </FormItem>
-    <FormItem Label="Tipo Techo">
-        <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@salidaIncendioIndustrialView.TipoTecho" />
-        @if (salidaIncendioIndustrialView.TipoTecho == TipoIncendioTecho.Otro)
-        {
-            <FormItem Label="Otro Techo">
-                <Input @bind-Value="@salidaIncendioIndustrialView.OtroTecho" />
-            </FormItem>
-        }
-    </FormItem>
-    <FormItem Label="Tipo Abertura">
-        <EnumSelect TEnum="TipoIncendioAbertura?" @bind-Value="@salidaIncendioIndustrialView.TipoAbertura" />
-        @if (salidaIncendioIndustrialView.TipoAbertura == TipoIncendioAbertura.Otro)
-        {
-            <FormItem Label="Otro Abertura">
-                <Input @bind-Value="@salidaIncendioIndustrialView.OtraAbertura" />
-            </FormItem>
-        }
-    </FormItem>
-    <div>
-        <b><label>Hubo deteccion automatica?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioIndustrialView.DeteccionAutomaticaId"></Checkbox>
-    </div>
-    <div>
-        <b><label>Habia Extintor?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioIndustrialView.Extintor"></Checkbox>
-    </div>
-    <div>
-        <b><label>Habia Hidrante?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioIndustrialView.Hidrante"></Checkbox>
-    </div>
 <Modal Title="@("Datos de la carga de Incendio")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
+        Visible="@imprimirmodal"
+        OnOk="@HandleOkIMP"
+        OnCancel="@HandleCancelIMP">
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioIndustrialView.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioIndustrialView.NumeroParte}/{false}", true); })">No</button>
 </Modal>
- *@
+
 @code {
     BomberosDbContext Context { get; set; }
     public IncendioIndustriaViewModels salidaIncendioIndustrialView = new();
@@ -1133,9 +1068,9 @@
     }
     private void HandleOk1(MouseEventArgs e)
     {
-        navigationManager.NavigateTo($"/legajo");
         _visible1 = false;
-
+        imprimirmodal = true;
+        @* navigationManager.NavigateTo($"/legajo"); *@
     }
     void deleteRow(int numlegajo)
     {

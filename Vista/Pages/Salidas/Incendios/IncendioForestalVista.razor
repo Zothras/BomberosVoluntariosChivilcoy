@@ -531,12 +531,33 @@
         }
         @if (current == steps.Length - 1)
         {
-            <Button Class="boton_p" HtmlType="submit">
+            <Button Class="boton_p" HtmlType="submit" OnClick="ShowModal1">
                 Cargar salida
             </Button>
         }
     </div>
 </div>
+
+@*Despues de la Carga*@
+<Modal Title="@("Success")"
+       Visible="@_visible1"
+       OnOk="@HandleOk1"
+       OnCancel="@HandleCancel1">
+    <Result Status="success"
+            Title="Se cargo correctamente la salida"
+            SubTitle="">
+    </Result>
+</Modal>
+
+<Modal Title="@("Datos de la carga de Incendio")"
+       Visible="@imprimirmodal"
+       OnOk="@HandleOkIMP"
+       OnCancel="@HandleCancelIMP">
+    <p>Imprimir con croquis</p>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioForestalView.NumeroParte}/{true}", true); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioForestalView.NumeroParte}/{false}", true); })">No</button>
+</Modal>
+
 @code {
     BomberosDbContext Context { get; set; }
     public IncendioForestaViewModels salidaIncendioForestalView = new();
@@ -559,12 +580,11 @@
     bool chek { get; set; }
     bool chekM { get; set; }
     bool chekB { get; set; }
-    bool imprimirmodal;
+
     bool visibleDamnificados = true;
     bool visibleVerDamnificados;
     bool desactivarSwitch { get; set; }
     bool switchMoviles { get; set; }
-    bool _visible1;
 
     int BomberoReceptor;
     string NumeroMovil;
@@ -572,6 +592,12 @@
     int BomberoCuerpo;
     int BomberoEncargado;
     int QuienLLenoPlanilla;
+
+@*Sucess y Imprimir*@
+    bool _visible1;
+    bool imprimirmodal;
+
+
     public int current { get; set; } = 0;//Steps
 
     public async Task AgregarDamnificado()
@@ -899,6 +925,9 @@
     void toggle(bool value) => loading = value;
 
     bool _visible = false;
+
+    @*Sucess*@
+
     private void ShowModal()
     {
         _visible = true;
@@ -933,8 +962,9 @@
     }
     private void HandleOk1(MouseEventArgs e)
     {
-        navigationManager.NavigateTo($"/legajo");
         _visible1 = false;
+        imprimirmodal = true;
+        @* navigationManager.NavigateTo($"/legajo"); *@
     }
     void deleteRow(int numlegajo)
     {
