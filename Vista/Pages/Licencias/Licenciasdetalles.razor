@@ -117,7 +117,7 @@
                             <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
                     </div>
                     <div class="buton-cont">
-                        <Button OnClick="@LicenciasBUscar" Style="margin-bottom: 5px;">
+                        <Button OnClick="@LicenciasBuscar" Style="margin-bottom: 5px;">
                             <Icon Type="search" Theme="outline" />
                         </Button>
                     </div>
@@ -173,7 +173,7 @@
 </Modal>
 
 @code
-{
+ {
     public class LicencasVm
     {
         [Required]
@@ -209,6 +209,7 @@
         await LicenciasPendiente();
     }
 
+
     private async Task LicenciasActivas()
     {
         LicenciasActivasVM = new();
@@ -226,7 +227,9 @@
                 };
             LicenciasActivasVM.Add(LicVm);
         }
+        StateHasChanged();
     }
+
     private async Task LicenciasPendiente()
     {
         LicenciasPendientes = new();
@@ -234,7 +237,7 @@
     }
 
     // licencias a buscar por fecha y hora
-    private async Task LicenciasBUscar()
+    private async Task LicenciasBuscar()
     {
         LicenciasActivasVM.Clear();
         var licencias = await Context.Licencias

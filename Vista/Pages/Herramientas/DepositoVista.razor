@@ -11,7 +11,7 @@
 
 </style>
 <div style="margin-top: 2em; width: 80%; ">
-    <Table DataSource="MaterialActivoVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
+    <Table DataSource="MaterialesVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
             <ColumnDefinitions Context="muestra">
                 <PropertyColumn Property="c=>c.FechaAlta" Format="dd/MM/yyyy"  Sortable></PropertyColumn>
                 <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
@@ -61,13 +61,12 @@
 
     // variables locales
     public bool _visibleAgregar = false;
-
-    List<MaterialVM> MaterialActivoVM = new ();
+    List<MaterialVM> MaterialesVM = new ();
 
 
     public async Task CargarMaterial()
     {
-        MaterialActivoVM.Clear();
+        MaterialesVM.Clear();
         var Materiales = await Context.Materiales.ToArrayAsync();
         foreach (var m in Materiales)
         {
@@ -79,7 +78,7 @@
                     Descripcion = m.Descripcion,
                     FechaAlta = m.FechaAlta
                 };
-            MaterialActivoVM.Add(materialVM);
+            MaterialesVM.Add(materialVM);
             await Context.SaveChangesAsync();
             StateHasChanged(); 
         }
@@ -88,7 +87,7 @@
     //Condicion Para la muestra de Materiales
     private async Task MaterialesActivo()
     {
-        MaterialActivoVM = new();
+        MaterialesVM = new();
         var materiales = await Context.Materiales.ToListAsync();
         foreach (var material in materiales)
         {
@@ -100,7 +99,7 @@
                     Codigo = material.Codigo,
                     Stock = material.Stock
                 };
-            MaterialActivoVM.Add(materialVM);
+            MaterialesVM.Add(materialVM);
         }
         StateHasChanged();
     }
@@ -123,9 +122,10 @@
         await Init();
     }
 
+    // Aca agregamos los metodos creados orientado a vista
     private async Task Init()
     {
-        MaterialActivoVM = new();
+        MaterialesVM = new();
         Context = DbFactory.CreateDbContext();
         await MaterialesActivo();
     }
