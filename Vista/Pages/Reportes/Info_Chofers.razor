@@ -83,50 +83,48 @@
 <div style="margin-top: 2em;">
     <Table DataSource="preferencia" TItem="ChoferesVM" PageSize="6" Responsive>
         <TitleTemplate>
-             <div class="botonesCont">
-                 <div class="inpt-cont-inline">
-                     <div class="inpt-cont">
-                         <label class="inpt-cont--lbl">Desde: </label>
-                         <DatePicker DefaultValue="@desde" @bind-Value="@desde" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
-                     </div>
-                     <div class="inpt-cont">
-                         <label class="inpt-cont--lbl">Hasta: </label>
-                         <DatePicker DefaultValue="@hasta" @bind-Value="@hasta" Picker="@DatePickerType.Month" Style="width: 150px;" AllowClear />
-                     </div>
-                     <div>
-                         <Button OnClick="()=>colocar_preferencia(desde,hasta,preferencia)" Style="margin-bottom: 5px;">
-                             Buscar
-                         </Button>
-                     </div>
-                 </div>
-                 <div class="buttoncont">
-                     <Button Class="buttoncont" Style="margin-bottom: 5px;" OnClick="()=>Insertar_todos_choferes(preferencia)">
-                         Mostrar todos
-                     </Button>
-                 </div>
-             </div>
+            <div class="botonesCont">
+                <div class="inpt-cont-inline">
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Desde: </label>
+                            <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@desde" Style="width: 150px;" AllowClear />
+                    </div>
+
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Hasta: </label>
+                            <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@hasta" Style="width: 150px;" AllowClear />
+                    </div>
+
+                    <div>
+                        <Button OnClick="()=>colocar_preferencia(desde,hasta,preferencia)" Style="margin-bottom: 5px;">
+                            Buscar
+                        </Button>
+                    </div>
+                </div>
+
+                <div class="buttoncont">
+                    <Button Class="buttoncont" Style="margin-bottom: 5px;" OnClick="()=>Insertar_todos_choferes(preferencia)">
+                        Mostrar todos
+                    </Button>
+                </div>
+            </div>
         </TitleTemplate>
+
         <ColumnDefinitions>
             <Selection Key="@(context.NumeroLegajo.ToString())" />
             <PropertyColumn Property="c=>c.NumeroLegajo" Title="Numero de Legajo"
-                             DefaultSortOrder="@SortDirection.Descending"
-                             SorterCompare="@((a,b)=> a - b)" />
+                DefaultSortOrder="@SortDirection.Descending"
+                    SorterCompare="@((a,b)=> a - b)" />
             <PropertyColumn Property="c=>c.Nombre" Sortable />
-
             <PropertyColumn Property="c=>c.Apellido" Sortable />
-
             <PropertyColumn Property="c => c.DotacionNumero" Title="Dotacion" />
-
-            <PropertyColumn Property="c=>c.VencimientoRegistro" Title="Vencimiento Registro" Sortable />
-
+            <PropertyColumn Property="c=>c.VencimientoRegistro" Title="Vencimiento Registro" Format="dd/MM/yyyy" Sortable />
             <PropertyColumn Property="c=>c.TelefonoCel" Title="Telefono Celular" Sortable />
-
             <PropertyColumn Property="c=>c.TelefonoFijo" Title="Telefono Fijo" Sortable />
-
             <PropertyColumn Property="c=>c.TelefonoLaboral" Title="Telefono Laboral" Sortable />
         </ColumnDefinitions>
     </Table>
- </div>
+</div>
 
 @code {
     bool primeravuelta = true;
@@ -192,7 +190,7 @@
                 hasta = DateTime.Compare(h, (DateTime)todosLosChoferes[i].VencimientoRegistro);
                 if (desde <= 0 && hasta >= 0)
                 {
-                        b.Add(todosLosChoferes[i]);
+                    b.Add(todosLosChoferes[i]);
                 }
             }
             StateHasChanged();
