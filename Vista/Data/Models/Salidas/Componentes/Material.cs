@@ -8,9 +8,11 @@ namespace Vista.Data.Models.Salidas.Componentes
         public int MaterialId { get; set; }
 
 		public DateTime FechaAlta { get; set; }
-		public string? Descripcion { get; set; }
-		public string? Codigo { get; set; }
-        public int? Stock { get; set; }
+		[Required, StringLength(255)]
+		public string Descripcion { get; set; }
+        [StringLength(255)]
+        public string? Codigo { get; set; }
+        public int Stock { get; set; }
 
 		public TipoRubro Rubro { get; set; }
 	}
