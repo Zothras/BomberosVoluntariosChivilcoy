@@ -105,19 +105,15 @@
     </Steps>
     <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
         <Form Model="@salidaIncendioForestalView"
-              LabelColSpan="8"
-              WrapperColSpan="16"
-              OnFinish="OnFinish"
-              OnFinishFailed="OnFinishFailed"
-              Style="width: 100%;height: 100%;overflow: hidden!important;">
+            LabelColSpan="8"
+            WrapperColSpan="16"
+            OnFinish="OnFinish"
+            OnFinishFailed="OnFinishFailed"
+            Style="width: 100%;height: 100%;overflow: hidden!important;">
 
             @if (current == 0)
-            {
+            {@*General*@
                 <div class="slick-contenedor @animationClass">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Descripcion</label>
-                        <Input @bind-Value="@salidaIncendioForestalView.Descripcion" />
-                    </div>
                     <div class="inpt-cont-inline">
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Hora salida</label>
@@ -143,13 +139,17 @@
                         <Input @bind-Value="@salidaIncendioForestalView.EntreCalles" />
                     </div>
                     <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Descripcion</label>
+                        <TextArea Placeholder="Descripcion" @bind-Value="@salidaIncendioForestalView.Descripcion" />
+                    </div>
+                    <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Tipo de Zona</label>
                         <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioForestalView.TipoZona" />
                     </div>
                 </div>
             }
             else if (current == 1)
-            {
+            {@*Solicitante | Damnificado*@
                 <div class="slick-contenedor @animationClass">
                     <h6>Datos del solicitante</h6>
 
@@ -264,11 +264,10 @@
                 </div>
             }
             else if (current == 2)
-            {
+            {@*Seguro*@
                     <h6>Seguro del lugar</h6>
 
                     <div class="slick-contenedor @animationClass">
-
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Compania aseguradora del establecimiento</label>
                             <Input @bind-Value="@salidaIncendioForestalView.CompaniaAseguradora" />
@@ -277,14 +276,14 @@
                             <label class="inpt-cont--lbl">Numero de poliza</label>
                             <Input @bind-Value="@salidaIncendioForestalView.NumeroPoliza" />
                         </div>
-                        <div class="inpt-cont">
+                        @*<div class="inpt-cont">
                             <label class="inpt-cont--lbl">Fecha de vencimiento</label>
                             <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.FechaVencimineto" />
-                        </div>
+                        </div>*@
                     </div>
             }
             else if (current == 3)
-            {
+            {@*Chofer | Movil*@
                 <div class="slick-contenedor @animationClass">
                     <h6>Datos del chofer</h6>
 
@@ -405,7 +404,7 @@
                 </div>
             }
             else if (current == 4)
-            {
+            {@*Bomberos*@
                 <div class="slick-contenedor @animationClass">
                     <h6>Cuerpo Participante</h6>
                     <div class="inpt-cont">
@@ -473,19 +472,17 @@
              </div>
             }
             else if (current == 5)
-            {
+            {@*Info-Salida*@
                 <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Tipo de Servicio</label>
                         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioForestalView.TipoServicio" />
-                    </div>
-
+                </div>
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Lugar</label>
                         <EnumSelect TEnum="TipoIncendioForestal" @bind-Value="@salidaIncendioForestalView.TipoLugar" />
                     </div>
                 </div>
-
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Causa</label>
@@ -500,12 +497,10 @@
                         <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@salidaIncendioForestalView.TipoEvacuacion" />
                     </div>
                 </div>
-
                 <div class="inpt-cont">
                     <label class="inpt-cont--lbl">Detalles</label>
                     <TextArea Placeholder="Descripcion" @bind-Value="salidaIncendioForestalView.DetalleSuperficieAfectadaIncendio" />
                 </div>
-
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <Checkbox @bind-Checked="salidaIncendioForestalView.DeteccionAutomaticaId">Deteccion Automatica</Checkbox>
@@ -540,9 +535,9 @@
 
 @*Despues de la Carga*@
 <Modal Title="@("Success")"
-       Visible="@_visible1"
-       OnOk="@HandleOk1"
-       OnCancel="@HandleCancel1">
+    Visible="@_visible1"
+    OnOk="@HandleOk1"
+    OnCancel="@HandleCancel1">
     <Result Status="success"
             Title="Se cargo correctamente la salida"
             SubTitle="">
@@ -550,9 +545,9 @@
 </Modal>
 
 <Modal Title="@("Datos de la carga de Incendio")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
+        Visible="@imprimirmodal"
+        OnOk="@HandleOkIMP"
+        OnCancel="@HandleCancelIMP">
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioForestalView.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioForestalView.NumeroParte}/{false}", true); })">No</button>
