@@ -279,7 +279,7 @@
                         @*<div class="inpt-cont">
                             <label class="inpt-cont--lbl">Fecha de vencimiento</label>
                             <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioForestalView.FechaVencimineto" />
-                        </div>*@
+                        </div>   //Solicitaron Eliminar la fecha de Venc. [Bdd] *@
                     </div>
             }
             else if (current == 3)
@@ -654,6 +654,7 @@
     int QuienLLenoPlanilla;
     int BomberoReceptor;// Falta info..
 
+    @*Metodos*@
     public async Task AgregarCuerpoParticipante()
     {
         var boberos = await Context.Bomberos.ToArrayAsync();

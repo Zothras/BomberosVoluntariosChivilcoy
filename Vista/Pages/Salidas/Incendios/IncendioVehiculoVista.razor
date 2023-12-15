@@ -105,14 +105,14 @@
     </Steps>
     <div class="steps-content" style="max-height: 620px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
         <Form Model="@salidaIncendioVehicularView"
-              LabelColSpan="8"
-              WrapperColSpan="16"
-              OnFinish="OnFinish"
-              OnFinishFailed="OnFinishFailed"
-              Style="width: 100%;height: 100%;overflow: hidden!important;">
+            LabelColSpan="8"
+            WrapperColSpan="16"
+            OnFinish="OnFinish"
+            OnFinishFailed="OnFinishFailed"
+            Style="width: 100%;height: 100%;overflow: hidden!important;">
 
             @if (current == 0)
-            {
+            {@*General*@
                 <div class="slick-contenedor @animationClass">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Descripcion</label>
@@ -149,7 +149,7 @@
                 </div>
             }
             else if (current == 1)
-            {
+            {@*Solicitante y Damnificado*@
                 <div class="slick-contenedor @animationClass">
                     <h6>Datos del solicitante</h6>
 
@@ -197,33 +197,33 @@
                     </div>
 
                     <Modal Footer="null" Title="@("Damnificados")"
-                           Visible="@visibleVerDamnificados"
-                           OnOk="@HandleOkD"
-                           OnCancel="@HandleCancelVD">
+                        Visible="@visibleVerDamnificados"
+                        OnOk="@HandleOkD"
+                        OnCancel="@HandleCancelVD">
                         <div class="inpt-cont">
                             <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                             <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                             <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                             <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-                             <ActionColumn Title="Acciones">
-                                 <Popconfirm Title="¿Quieres borrar este damnificado?"
-                                             OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                                             OkText="Si"
-                                             CancelText="No"
-                                             Style="display: flex;justify-content: center;align-items: center;">
-                                     <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                                 </Popconfirm>
-                             </ActionColumn>
-                         </Table>
-                     </div>
-                 </Modal>
+                            <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                            <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                            <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                            <ActionColumn Title="Acciones">
+                                <Popconfirm Title="¿Quieres borrar este damnificado?"
+                                            OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                            OkText="Si"
+                                            CancelText="No"
+                                            Style="display: flex;justify-content: center;align-items: center;">
+                                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                </Popconfirm>
+                            </ActionColumn>
+                        </Table>
+                    </div>
+                </Modal>
 
-                 @if (switchValue == true)
+                @if (switchValue == true)
                     {
                         <Modal Footer="null" Title="@("Datos del damnificado")"
-                               Visible="@visibleDamnificados"
-                               OnOk="@HandleOkD"
-                               OnCancel="@HandleCancelD">
+                            Visible="@visibleDamnificados"
+                            OnOk="@HandleOkD"
+                            OnCancel="@HandleCancelD">
                             <div class="inpt-cont-inline">
                                 <div class="inpt-cont">
                                     <label class="inpt-cont--lbl">Nombre</label>
@@ -264,7 +264,7 @@
                 </div>
             }
             else if (current == 2)
-            {
+            {@*Seguro*@
                 <h6>Seguro del lugar afectado</h6>
 
                 <div class="slick-contenedor @animationClass">
@@ -276,10 +276,11 @@
                         <label class="inpt-cont--lbl">Numero de poliza</label>
                         <Input @bind-Value="@salidaIncendioVehicularView.NumeroPoliza" />
                     </div>
-                    <div class="inpt-cont">
+                    @*<div class="inpt-cont">
                         <label class="inpt-cont--lbl">Fecha de vencimiento</label>
                         <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioVehicularView.FechaVencimineto" />
                     </div>
+                            //Solicitaron Eliminar la fecha de Venc. [Bdd] *@
 
                     <h6>Seguro del Vehiculo</h6>
                         <div class="inpt-cont">
@@ -290,14 +291,14 @@
                             <label class="inpt-cont--lbl">Numero de poliza</label>
                             <Input @bind-Value="@vehiculo.NumeroDePoliza" />
                         </div>
-                        <div class="inpt-cont">
+                        @*<div class="inpt-cont">
                             <label class="inpt-cont--lbl">Fecha de Venc.</label>
                             <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
-                        </div>
+                        </div>*@
                 </div>
             }
             else if (current == 3)
-            {
+            {@*Chofer y Movil*@
                 <div class="slick-contenedor @animationClass">
                     <h6>Datos del chofer</h6>
 
@@ -314,24 +315,24 @@
                                     DefaultActiveFirstOption="false"
                                     AllowClear="true"
                                                     EnableSearch>
-                         </Select>
-                     </div>
-                     <div class="inpt-cont">
-                         <label class="inpt-cont--lbl">Numero de movil</label>
-                         <Select TItem="Movil"
-                                 TItemValue="string"
-                                 DataSource="@Moviles"
-                         @bind-Value="@NumeroMovil"
-                                 LabelName="@nameof(Movil.NumeroMovil)"
-                                 ValueName="@nameof(Movil.NumeroMovil)"
-                                 Placeholder="Selecione el movil"
-                                 DefaultActiveFirstOption="false"
-                                 AllowClear="true"
+                        </Select>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Numero de movil</label>
+                        <Select TItem="Movil"
+                                TItemValue="string"
+                                DataSource="@Moviles"
+                        @bind-Value="@NumeroMovil"
+                                LabelName="@nameof(Movil.NumeroMovil)"
+                                ValueName="@nameof(Movil.NumeroMovil)"
+                                Placeholder="Selecione el movil"
+                                DefaultActiveFirstOption="false"
+                                AllowClear="true"
                                                     EnableSearch>
-                         </Select>
-                     </div>
-                 </div>
-                 @if (NumeroMovil is not null)
+                        </Select>
+                    </div>
+                </div>
+                @if (NumeroMovil is not null)
                     {
                         foreach (Movil m in Moviles)
                         {
@@ -351,26 +352,26 @@
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Kilometro de salida</label>
                             <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.Kilometraje" Disabled />
-                         </div>
-                         <div class="inpt-cont">
-                             <label class="inpt-cont--lbl">Kilometro de llegada</label>
-                             <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.KmLlegada" />
-                         </div>
-                     </div>
-                     <div class="inpt-cont">
-                         <label class="inpt-cont--lbl">¿Cargo combustible?</label>
-                         <Switch @bind-Checked="switchMoviles" Disabled="@desactivarSwitch" Style="width: 10px!important;" />
-                         @if (switchMoviles == true)
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Kilometro de llegada</label>
+                            <AntDesign.InputNumber @bind-Value="salidaIncendioVehicularView.KmLlegada" />
+                        </div>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">¿Cargo combustible?</label>
+                        <Switch @bind-Checked="switchMoviles" Disabled="@desactivarSwitch" Style="width: 10px!important;" />
+                        @if (switchMoviles == true)
                         {
                             <Modal Title="@("Datos de la carga de combustible")"
-                                   Visible="@_visible"
-                                   OnOk="@HandleOk"
-                                   OnCancel="@HandleCancelMovil">
+                                Visible="@_visible"
+                                OnOk="@HandleOk"
+                                OnCancel="@HandleCancelMovil">
                                 <Form Loading="loading" Model="@movilSalidaViewModels"
-                                      LabelColSpan="8"
-                                      WrapperColSpan="16"
-                                      OnFinish="OnFinishModel"
-                                      OnFinishFailed="OnFinishFailed"
+                                    LabelColSpan="8"
+                                    WrapperColSpan="16"
+                                    OnFinish="OnFinishModel"
+                                    OnFinishFailed="OnFinishFailed"
                                 @ref="@_form1" Context="modalMoviles">
                                     <FormItem Label="Numero factura">
                                         <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
@@ -401,23 +402,23 @@
                     {
                         <div>
                             <Table Size="TableSize.Small" PageSize="4" Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
-                             <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-                             <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
-                             <ActionColumn Title="Acciones">
-                                 <Popconfirm Title="¿Quieres borrar este movil?"
-                                             OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                                             OkText="Si"
-                                             CancelText="No">
-                                     <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                                 </Popconfirm>
-                             </ActionColumn>
-                         </Table>
-                     </div>
+                            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+                            <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
+                            <ActionColumn Title="Acciones">
+                                <Popconfirm Title="¿Quieres borrar este movil?"
+                                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                                            OkText="Si"
+                                            CancelText="No">
+                                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                </Popconfirm>
+                            </ActionColumn>
+                        </Table>
+                    </div>
                     }
                 </div>
             }
             else if (current == 4)
-            {
+            {@*Bombero*@
                 <div class="slick-contenedor @animationClass">
                     <h6>Cuerpo Participante</h6>
 
@@ -432,61 +433,61 @@
                                 Placeholder="Selecione un bombero"
                                 DefaultActiveFirstOption="false"
                                 AllowClear="true" EnableSearch>
-                     </Select>
-                 </div>
-                 <div class="inpt-cont">
-                     <Checkbox @bind-Checked="chekB">¿Salió?</Checkbox>
-                 </div>
-                 <div class="inpt-cont">
-                     <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
-                 </div>
-                 <div class="inpt-cont">
-                     <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
-                         <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-                         <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-                         <ActionColumn Title="Acciones">
-                             <Popconfirm Title="¿Quieres eliminar este bombero?"
-                                         OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                                         OkText="Si"
-                                         CancelText="No">
-                                 <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                             </Popconfirm>
-                         </ActionColumn>
-                     </Table>
-                 </div>
-                 <div class="inpt-cont-inline">
-                     <div class="inpt-cont">
-                         <label class="inpt-cont--lbl">Encargado</label>
-                         <Select TItem="BomberoViweModel"
-                                 TItemValue="int"
-                                 DataSource="@bomberoTodos"
-                         @bind-Value="@BomberoEncargado"
-                                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                 Placeholder="Seleccione  a un  bombero"
-                                 DefaultActiveFirstOption="true"
-                                 AllowClear="true" EnableSearch>
-                         </Select>
-                     </div>
-                     <div class="inpt-cont">
-                         <label class="inpt-cont--lbl">Lleno la planilla</label>
-                         <Select TItem="BomberoViweModel"
-                                 TItemValue="int"
-                                 DataSource="@bomberoTodos"
-                         @bind-Value="@QuienLLenoPlanilla"
-                                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                 Placeholder="Seleccione un bombero"
-                                 DefaultActiveFirstOption="false"
-                                 AllowClear="true"
+                    </Select>
+                </div>
+                <div class="inpt-cont">
+                    <Checkbox @bind-Checked="chekB">¿Salió?</Checkbox>
+                </div>
+                <div class="inpt-cont">
+                    <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
+                </div>
+                <div class="inpt-cont">
+                    <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
+                        <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+                        <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+                        <ActionColumn Title="Acciones">
+                            <Popconfirm Title="¿Quieres eliminar este bombero?"
+                                        OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                                        OkText="Si"
+                                        CancelText="No">
+                                <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                            </Popconfirm>
+                        </ActionColumn>
+                    </Table>
+                </div>
+                <div class="inpt-cont-inline">
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Encargado</label>
+                        <Select TItem="BomberoViweModel"
+                                TItemValue="int"
+                                DataSource="@bomberoTodos"
+                            @bind-Value="@BomberoEncargado"
+                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                Placeholder="Seleccione  a un  bombero"
+                                DefaultActiveFirstOption="true"
+                                AllowClear="true" EnableSearch>
+                        </Select>
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Lleno la planilla</label>
+                        <Select TItem="BomberoViweModel"
+                                TItemValue="int"
+                                DataSource="@bomberoTodos"
+                            @bind-Value="@QuienLLenoPlanilla"
+                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                Placeholder="Seleccione un bombero"
+                                DefaultActiveFirstOption="false"
+                                AllowClear="true"
                                                     EnableSearch>
-                         </Select>
-                     </div>
-                 </div>
-             </div>
+                        </Select>
+                    </div>
+                </div>
+            </div>
             }
             else if (current == 5)
-            {
+            {@*Info-Salida*@
             <div class="slick-contenedor @animationClass">
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
@@ -583,16 +584,16 @@
     </div>
 </div>
 <Modal Title="@("Datos de la carga de Incendio")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
+        Visible="@imprimirmodal"
+        OnOk="@HandleOkIMP"
+        OnCancel="@HandleCancelIMP">
     <p>Imprimir con croquis</p>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioVehicularView.NumeroParte}/{true}", true); })">Si</button>
     <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioVehicularView.NumeroParte}/{false}", true); })">No</button>
 </Modal>
 
 @code {
-
+    @*Context y ViewModels*@
     BomberosDbContext Context { get; set; }
     public IncendioViewModels salidaIncendioVehicularView = new();
     private DamnificadoViewModels damnificado = new();
@@ -603,32 +604,280 @@
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
     private Form<MovilSalidaViewModels> _form1;
-
+    public List<BomberoViweModel> bomberoChoferes = new();
+    public List<BomberoViweModel> bomberoTodos = new();
 
     Bombero[] TodosBomberos;
     Movil[] Moviles;
 
-    public List<BomberoViweModel> bomberoChoferes = new();
-    public List<BomberoViweModel> bomberoTodos = new();
-    bool switchValue { get; set; }
-    bool switchValueS { get; set; }
-    bool chek { get; set; }
-    bool chekM { get; set; }
-    bool chekB { get; set; }
+    @*Sin Uso*@
+    //bool switchValueS { get; set; }
+    //bool chek { get; set; }
+
+
+    @*Sucess y Imprimir*@
     bool imprimirmodal;
-    int BomberoReceptor;
-    string NumeroMovil;
-    int chofer;
+    bool _visible1;
+
+    public void ShowModal1()
+    {
+        _visible1 = true;
+    }
+
+    private void HandleOk1(MouseEventArgs e)
+    {
+        _visible1 = false;
+        imprimirmodal = true;
+        @* navigationManager.NavigateTo($"/legajo"); *@
+    }
+
+    private void HandleCancel1(MouseEventArgs e)
+    {
+        _visible1 = false;
+    }
+
+
+    private void HandleCancelIMP(MouseEventArgs e)
+    {
+        imprimirmodal = false;
+    }
+
+    private void HandleOkIMP(MouseEventArgs e)
+    {
+        imprimirmodal = false;
+    }
+
+
+    @*Damnificados | Bomberos | Moviles y Chofer | Steps *@
+
+    @*Damnificados*@
+    bool switchValue { get; set; }// Cargar Damnificado [Si/No]
+    bool visibleDamnificados = true;// Modal [Carga de Datos]
+    bool visibleVerDamnificados;// Modal Ver Damnificados ya Cargados
+
+    private void HandleOkD(MouseEventArgs e)
+    {
+        visibleDamnificados = false;
+    }
+
+    private void HandleCancelD(MouseEventArgs e)
+    {
+        visibleDamnificados = false;
+    }
+
+    private void HandleCancelVD(MouseEventArgs e)
+    {
+        visibleVerDamnificados = false;
+    }
+    @*Metodo*@
+
+    public async Task AgregarDamnificado()
+    {
+        DamnificadoViewModels dp = new()
+            {
+                Nombre = damnificado.Nombre,
+                Apellido = damnificado.Apellido,
+                Dni = damnificado.Dni,
+                Sexo = damnificado.Sexo,
+                LugarDeNacimiento = damnificado.LugarDeNacimiento,
+                Edad = damnificado.Edad,
+                Estado = damnificado.Estado,
+            };
+        DamnificadosSalida.Add(dp);
+        StateHasChanged();
+    }
+
+
+
+    @*Bomberos*@
+    bool chekB { get; set; }// Bombero Salio [Si/No]
     int BomberoCuerpo;
     int BomberoEncargado;
     int QuienLLenoPlanilla;
+    int BomberoReceptor;// Falta info..
 
-    bool switchMoviles { get; set; }
-    bool _visible1;
-    bool desactivarSwitch { get; set; }
-    bool visibleDamnificados = true;
-    bool visibleVerDamnificados;
-    //Steps
+    @*Metodos*@
+    public async Task AgregarCuerpoParticipante()
+    {
+        var boberos = await Context.Bomberos.ToArrayAsync();
+        foreach (var bom in boberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
+            {
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
+        StateHasChanged();
+
+    }
+
+    public async Task CargarBomberosView()
+    {
+        bomberoTodos = new();
+        bomberoChoferes = new();
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in TodosBomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    FechaNacimiento = b.FechaNacimiento,
+                    Sexo = b.Sexo,
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    Documento = b.Documento,
+                    NumeroLegajo = b.NumeroLegajo,
+                    NumeroIoma = b.NumeroIoma,
+                    LugarNacimiento = b.LugarNacimiento,
+                    Grado = b.Grado,
+                    //NombreImagen = b.NombreImagen,
+                    //TipoImagen = b.TipoImagen,
+                    //Base64Imagen = b.Base64,
+                    Dotacion = b.Dotacion,
+                    //Nombre = b.NombreBrigada,
+                    Resolucion1 = b.Resolucion1,
+                    Resolucion2 = b.Resolucion2,
+                    Resolucion3 = b.Resolucion3,
+                    Resolucion4 = b.Resolucion4,
+                    Resolucion5 = b.Resolucion5,
+                    Resolucion6 = b.Resolucion6,
+                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
+                    Estado = b.Estado,
+                    Chofer = b.Chofer,
+                    VencimientoRegistro = b.VencimientoRegistro,
+                    Direccion = b.Direccion,
+                    Observaciones = b.Observaciones,
+                    Profesion = b.Profesion,
+                    NivelEstudios = b.NivelEstudios,
+                    FechaAceptacion = b.FechaAceptacion,
+                    //TelefonoCel = b.TelefonoCel,
+                    //TelefonoFijo = b.TelefonoFijo,
+                    //TelefonoLaboral = b.TelefonoLaboral,
+                    //Email = b.Email,
+                };
+            bomberoTodos.Add(bombero);
+        }
+        foreach (Bombero c in TodosBomberos)
+        {
+            if (c.Chofer == true)
+            {
+                BomberoViweModel bomberoChofer = new()
+                    {
+                        FechaNacimiento = c.FechaNacimiento,
+                        Sexo = c.Sexo,
+                        Nombre = c.Nombre,
+                        Apellido = c.Apellido,
+                        Documento = c.Documento,
+                        NumeroLegajo = c.NumeroLegajo,
+                        NumeroIoma = c.NumeroIoma,
+                        LugarNacimiento = c.LugarNacimiento,
+                        Grado = c.Grado,
+                        //NombreImagen = b.NombreImagen,
+                        //TipoImagen = b.TipoImagen,
+                        //Base64Imagen = b.Base64,
+                        Dotacion = c.Dotacion,
+                        //Nombre = b.NombreBrigada,
+                        Resolucion1 = c.Resolucion1,
+                        Resolucion2 = c.Resolucion2,
+                        Resolucion3 = c.Resolucion3,
+                        Resolucion4 = c.Resolucion4,
+                        Resolucion5 = c.Resolucion5,
+                        Resolucion6 = c.Resolucion6,
+                        //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
+                        Estado = c.Estado,
+                        Chofer = c.Chofer,
+                        VencimientoRegistro = c.VencimientoRegistro,
+                        Direccion = c.Direccion,
+                        Observaciones = c.Observaciones,
+                        Profesion = c.Profesion,
+                        NivelEstudios = c.NivelEstudios,
+                        FechaAceptacion = c.FechaAceptacion,
+                        //TelefonoCel = b.TelefonoCel,
+                        //TelefonoFijo = b.TelefonoFijo,
+                        //TelefonoLaboral = b.TelefonoLaboral,
+                        //Email = b.Email,
+                    };
+                bomberoChoferes.Add(bomberoChofer);
+            }
+        }
+    }
+
+
+
+
+    @*Moviles | Chofer*@
+    int chofer;
+    string NumeroMovil;
+    bool switchMoviles { get; set; }// Carga de Combustible [Si/No]
+    bool desactivarSwitch { get; set; }// Disable del Anterior Switch
+    bool _visible = false;// Modal de Carga de Combustible
+    bool chekM { get; set; }// Datos sobre Carga de Combustible [Si/No]
+
+    bool loading = false;
+
+    void toggle(bool value) => loading = value;
+
+    //Modals
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        _visible = false;
+    }
+
+    private void OnFinishModel(EditContext editContext)
+    {
+        _visible = false;
+    }
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        _visible = false;
+    }
+
+    private void HandleCancelMovil(MouseEventArgs e)
+    {
+        switchMoviles = false;
+        desactivarSwitch = false;
+    }
+
+@*Metodo*@
+
+    public async Task AgregarMovilSalida()
+    {
+        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
+        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
+        MovilSalidaViewModels m = new()
+            {
+                CargoCombustible = chekM,
+                NumeroFactura = movilSalidaViewModels.NumeroFactura,
+                FechaFactura = movilSalidaViewModels.FechaFactura,
+                TipoConbustible = movilSalidaViewModels.TipoConbustible,
+                CantidadLitros = movilSalidaViewModels.CantidadLitros,
+                QuienLleno = movilSalidaViewModels.QuienLleno,
+                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                KmLlegada = salidaIncendioVehicularView.KmLlegada,
+                Chofer = bomberoChofer,
+                MovilesSalida = Movilsalida,
+            };
+        MovilesSalidasL.Add(m);
+        StateHasChanged();
+    }
+
+
+
+
+    @*Steps*@
     public int current { get; set; } = 0;
     private string animationClass = "";
 
@@ -670,89 +919,10 @@
         ToggleAnimationD();
     }
 
-    private void HandleOkD(MouseEventArgs e)
-    {
-        visibleDamnificados = false;
-    }
 
-    private void HandleCancelD(MouseEventArgs e)
-    {
-        visibleDamnificados = false;
-    }
-    private void HandleCancelVD(MouseEventArgs e)
-    {
-        visibleVerDamnificados = false;
-    }
 
-    private void HandleCancelMovil(MouseEventArgs e)
-    {
-        switchMoviles = false;
-        desactivarSwitch = false;
-    }
 
-    public async Task AgregarDamnificado()
-    {
-
-        DamnificadoViewModels dp = new()
-            {
-                Nombre = damnificado.Nombre,
-                Apellido = damnificado.Apellido,
-                Dni = damnificado.Dni,
-                Sexo = damnificado.Sexo,
-                LugarDeNacimiento = damnificado.LugarDeNacimiento,
-                Edad = damnificado.Edad,
-                Estado = damnificado.Estado,
-
-            };
-        DamnificadosSalida.Add(dp);
-        StateHasChanged();
-    }
-
-    public async Task AgregarMovilSalida()
-    {
-
-        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
-        MovilSalidaViewModels m = new()
-            {
-                CargoCombustible = chekM,
-                NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                FechaFactura = movilSalidaViewModels.FechaFactura,
-                TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                QuienLleno = movilSalidaViewModels.QuienLleno,
-                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                KmLlegada = salidaIncendioVehicularView.KmLlegada,
-                Chofer = bomberoChofer,
-                MovilesSalida = Movilsalida,
-
-            };
-        MovilesSalidasL.Add(m);
-        StateHasChanged();
-
-    }
-
-    public async Task AgregarCuerpoParticipante()
-    {
-        var boberos = await Context.Bomberos.ToArrayAsync();
-        foreach (var bom in boberos)
-        {
-            if (bom.NumeroLegajo == BomberoCuerpo)
-            {
-                BomberoSalidaViewModels b = new()
-                    {
-                        Salio = bomberoSalidaView.Salio,
-                        Nombre = bom.Nombre,
-                        Apellido = bom.Apellido,
-                        NumeroLegajo = BomberoCuerpo
-                    };
-                bomberosSalida.Add(b);
-
-            }
-        }
-        StateHasChanged();
-
-    }
+    @*Init | OnChange y OnFinish*@
 
     protected override async Task OnInitializedAsync()
     {
@@ -769,7 +939,6 @@
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
         await CargarBomberosView();
     }
-
     private async void OnFinish(EditContext editContext)
     {
         try
@@ -895,172 +1064,34 @@
         }
     }
 
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioVehicularView)}");
-    }
     private void OnChange(DateTimeChangedEventArgs args)
     {
         Console.WriteLine($"Selected Time: {args.Date}");
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
-
-    public async Task SubirIncendioVehicular()
+    //OnFinishFailed
+    private void OnFinishFailed(EditContext editContext)
     {
-        
-
-
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioVehicularView)}");
     }
-    public async Task CargarBomberosView()
-    {
-        bomberoTodos = new();
-        bomberoChoferes = new();
-        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
-        foreach (Bombero b in TodosBomberos)
-        {
-            BomberoViweModel bombero = new()
-                {
-                    FechaNacimiento = b.FechaNacimiento,
-                    Sexo = b.Sexo,
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    Documento = b.Documento,
-                    NumeroLegajo = b.NumeroLegajo,
-                    NumeroIoma = b.NumeroIoma,
-                    LugarNacimiento = b.LugarNacimiento,
-                    Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
-                    Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
-                    Resolucion1 = b.Resolucion1,
-                    Resolucion2 = b.Resolucion2,
-                    Resolucion3 = b.Resolucion3,
-                    Resolucion4 = b.Resolucion4,
-                    Resolucion5 = b.Resolucion5,
-                    Resolucion6 = b.Resolucion6,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                    Estado = b.Estado,
-                    Chofer = b.Chofer,
-                    VencimientoRegistro = b.VencimientoRegistro,
-                    Direccion = b.Direccion,
-                    Observaciones = b.Observaciones,
-                    Profesion = b.Profesion,
-                    NivelEstudios = b.NivelEstudios,
-                    FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
-
-                };
-            bomberoTodos.Add(bombero);
-
-        }
-        foreach (Bombero c in TodosBomberos)
-        {
-            if (c.Chofer == true)
-            {
-                BomberoViweModel bomberoChofer = new()
-                    {
-                        FechaNacimiento = c.FechaNacimiento,
-                        Sexo = c.Sexo,
-                        Nombre = c.Nombre,
-                        Apellido = c.Apellido,
-                        Documento = c.Documento,
-                        NumeroLegajo = c.NumeroLegajo,
-                        NumeroIoma = c.NumeroIoma,
-                        LugarNacimiento = c.LugarNacimiento,
-                        Grado = c.Grado,
-                        //NombreImagen = b.NombreImagen,
-                        //TipoImagen = b.TipoImagen,
-                        //Base64Imagen = b.Base64,
-                        Dotacion = c.Dotacion,
-                        //Nombre = b.NombreBrigada,
-                        Resolucion1 = c.Resolucion1,
-                        Resolucion2 = c.Resolucion2,
-                        Resolucion3 = c.Resolucion3,
-                        Resolucion4 = c.Resolucion4,
-                        Resolucion5 = c.Resolucion5,
-                        Resolucion6 = c.Resolucion6,
-                        //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                        Estado = c.Estado,
-                        Chofer = c.Chofer,
-                        VencimientoRegistro = c.VencimientoRegistro,
-                        Direccion = c.Direccion,
-                        Observaciones = c.Observaciones,
-                        Profesion = c.Profesion,
-                        NivelEstudios = c.NivelEstudios,
-                        FechaAceptacion = c.FechaAceptacion,
-                        //TelefonoCel = b.TelefonoCel,
-                        //TelefonoFijo = b.TelefonoFijo,
-                        //TelefonoLaboral = b.TelefonoLaboral,
-                        //Email = b.Email,
-
-                    };
-                bomberoChoferes.Add(bomberoChofer);
-            }
-
-
-        }
-    }
+    
     private void OnFinishFailedModel(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
     }
-    bool loading = false;
 
-    void toggle(bool value) => loading = value;
-
-    bool _visible = false;
-    private void ShowModal()
-    {
-        _visible = true;
-    }
-    public void ShowModal1()
-    {
-        _visible1 = true;
-    }
-    private void HandleCancel(MouseEventArgs e)
+    //Incompleto (Consultar)
+    public async Task SubirIncendioVehicular()
     {
 
-        _visible = false;
     }
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
 
-        imprimirmodal = false;
-    }
-    private void OnFinishModel(EditContext editContext)
-    {
 
-        _visible = false;
-    }
-    private void HandleOk(MouseEventArgs e)
-    {
 
-        _visible = false;
 
-    }
-    private void HandleOkIMP(MouseEventArgs e)
-    {
 
-        imprimirmodal = false;
-
-    }
-    private void HandleCancel1(MouseEventArgs e)
-    {
-
-        _visible1 = false;
-    }
-    private void HandleOk1(MouseEventArgs e)
-    {
-        navigationManager.NavigateTo($"/legajo");
-        _visible1 = false;
-
-    }
+    @*"Delete" y Dispose*@
     void deleteRow(int numlegajo)
     {
         bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
