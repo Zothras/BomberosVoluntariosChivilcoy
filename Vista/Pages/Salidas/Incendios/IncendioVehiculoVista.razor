@@ -577,12 +577,24 @@
         }
         @if (current == steps.Length - 1)
         {
-            <Button Class="boton_p" HtmlType="submit">
+            <Button Class="boton_p" HtmlType="submit" OnClick="ShowModal1">
                 Cargar salida
             </Button>
         }
     </div>
 </div>
+
+@*Despues de la Carga*@
+<Modal Title="@("Success")"
+        Visible="@_visible1"
+        OnOk="@HandleOk1"
+        OnCancel="@HandleCancel1">
+    <Result Status="success"
+            Title="Se cargo correctamente la salida"
+            SubTitle="">
+    </Result>
+</Modal>
+
 <Modal Title="@("Datos de la carga de Incendio")"
         Visible="@imprimirmodal"
         OnOk="@HandleOkIMP"
