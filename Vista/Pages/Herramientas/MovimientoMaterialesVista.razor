@@ -1,44 +1,55 @@
 ﻿@implements IDisposable
 @using System.ComponentModel.DataAnnotations
+@using Vista.Data.Services
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
-@page "/materialesMovimiento"
+@inject StockService StockService
 
 
-<Form Model="MovimientoVM"
-      LabelColSpan="8"
-      WrapperColSpan="16"
-      OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed"
-      Style="width: 100%;height: 100%;">
+@* <Table DataSource="MaterialesVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="5" Size="TableSize.Small">
+         <ColumnDefinitions Context="muestra">
+             <PropertyColumn Property="c=>c.FechaAlta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.Rubro" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.Stock" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
+     </ColumnDefinitions>
+ </Table>
+ *@
+ <Form Model="MovimientoVM"
+       LabelColSpan="8"
+       WrapperColSpan="16"
+       OnFinish="OnFinish"
+       OnFinishFailed="OnFinishFailed"
+       Style="width: 100%;height: 100%;">
 
-    <FormItem Label="Rubro">
-        <EnumSelect TEnum="@TipoMovimiento" @bind-Value="@MovimientoVM.TipoMovimiento" />
-    </FormItem>
-    <CheckboxGroup Style="width:100%" ValueChanged="@OnChange">
+     <FormItem Label="Rubro">
+         <EnumSelect TEnum="@TipoMovimiento" @bind-Value="@MovimientoVM.TipoMovimiento" />
+     </FormItem>
+     <CheckboxGroup Style="width:100%" ValueChanged="@OnChange">
 
-        <Row>
-            <Col Span="8">
-            <Checkbox Label="Bombero" @bind-Value="@chIsBombero">Bombero</Checkbox>
-            </Col>
-            <Col Span="8">
-            <Checkbox Label="Movil" @bind-Value="@chIsMovil">Movil</Checkbox>
-            </Col>
-        </Row>
-    </CheckboxGroup>
+         <Row>
+             <Col Span="8">
+             <Checkbox Label="Bombero" @bind-Value="@chIsBombero">Bombero</Checkbox>
+             </Col>
+             <Col Span="8">
+             <Checkbox Label="Movil" @bind-Value="@chIsMovil">Movil</Checkbox>
+             </Col>
+         </Row>
+     </CheckboxGroup>
 
-    <FormItem Label="Bombero asignado">
-        <Select TItem="BomberoViewModel"
-                TItemValue="int"
-                DataSource="@bomberoTodos"
-                @bind-Value="@MovimientoVM.BomberoAsignado"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Selecione el bombero"
-                DefaultActiveFirstOption="false"
-                AllowClear="true"
-                Disabled="@(!chIsBombero)"
+     <FormItem Label="Bombero asignado">
+         <Select TItem="BomberoViewModel"
+                 TItemValue="int"
+                 DataSource="@bomberoTodos"
+                 @bind-Value="@MovimientoVM.BomberoAsignado"
+                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                 Placeholder="Selecione el bombero"
+                 DefaultActiveFirstOption="false"
+                 AllowClear="true"
+                 Disabled="@(!chIsBombero)"
                 EnableSearch>
         </Select>
     </FormItem>
@@ -68,7 +79,6 @@
                 DefaultActiveFirstOption="false"
                 AllowClear="true"
                 EnableSearch>
-            
         </Select>
     </FormItem>
 
@@ -117,6 +127,7 @@
     }
     public class MovimientoMaterialesViewModel
     {
+        public DateTime FechaIngreso { get; set; }
         public TipoMovimiento TipoMovimiento { get; set; }
         public int Cantidad { get; set; }
         public int MaterialId { get; set; }
@@ -128,6 +139,7 @@
     List<MaterialVM> MaterialesVM = new();
     List<BomberoViewModel> bomberoTodos = new();
     List<MovilViewModel> MovilTodos = new();
+    List<MovimientoMaterialesViewModel> ListasMoviminetos = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -151,9 +163,9 @@
         {
 
             var BomberoDestino = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == MovimientoVM.BomberoAsignado);
-            var MovilDestino = await Context.Moviles.SingleOrDefaultAsync(m =>m.NumeroMovil == MovimientoVM.MovilAsignado);
+            var MovilDestino = await Context.Moviles.SingleOrDefaultAsync(m => m.NumeroMovil == MovimientoVM.MovilAsignado);
             var MaterialAsignado = await Context.Materiales.SingleOrDefaultAsync(ma => ma.MaterialId == MovimientoVM.MaterialId);
-            
+
             Vista.Data.Models.Salidas.Componentes.MovimientoMaterial movimiento = new()
                 {
 
@@ -164,14 +176,15 @@
                     Observaciones = MovimientoVM.Observaciones,
                     FechaIngreso = DateTime.Now,
                     Materiales = MaterialAsignado
-                    
 
                 };
+
             Context.Movimientos.Add(movimiento);
             await Context.SaveChangesAsync();
             await Init();
             StateHasChanged();
             await message.Success("Movimiento cargado");
+            StockService.ActulizarStock(movimiento, MaterialAsignado);
         }
         catch (Exception e)
         {
@@ -231,6 +244,21 @@
             StateHasChanged();
         }
     }
+    // private async Task CargarMovimientos()
+    // {
+    //     ListasMoviminetos=new();
+    //     var Movimientos = await Context.Movimientos.Include(b=>b.DestinoBombero).Include(ma=>ma.Materiales).Include(m=>m.DestinoMovil)
+    //     .ToListAsync();
+    //     foreach (var m in Movimientos)
+    //     {
+    //         MovimientoMaterialesViewModel mov = new()
+    //         {
+    //             FechaIngreso = m.FechaIngreso,
+    //             Observaciones = m.
+    //         };
+    //     }
+
+    // }
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(MovimientoVM)}");

@@ -23,7 +23,9 @@
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
         <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Cargar Material</Button>
     </div>
-
+    <div>
+         <Button Type="primary" @onclick="_=>open()">Movimientos de los materiales</Button>
+    </div>
 </div>
 <div>
     <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
@@ -35,6 +37,11 @@
     </Dropdown>
 </div>
 
+<div>
+     <Drawer Closable="true" Visible="visibleDrawer" Width="720" Placement="right" Title='("Movimientos")'>
+         <MovimientoMaterialesVista />
+     </Drawer>
+</div>
 <Modal Footer="null" Title="@("Agregar Material")"
         Visible="@_visibleAgregar"
         OnOk="@HandleOkAgregar"
@@ -45,9 +52,11 @@
     </Button>
 </Modal>
 
+
 @code {
     BomberosDbContext Context;
-
+    bool _visible;
+    bool visibleDrawer = false;
     public class MaterialVM
     {
         [Required]
@@ -108,14 +117,22 @@
     {
         _visibleAgregar = false;
     }
-
+    void open()
+    {
+        this.visibleDrawer = true;
+    }
     public async void HandleCancelAgregar(MouseEventArgs e)
     {
-        Console.WriteLine(e);
+       
         _visibleAgregar = false;
         await Init();
     }
-
+    public async void HandleCancel(MouseEventArgs e)
+    {
+        
+        _visible = false;
+        // await Init();
+    }
     protected override async Task OnInitializedAsync()
     {
         await Init();
