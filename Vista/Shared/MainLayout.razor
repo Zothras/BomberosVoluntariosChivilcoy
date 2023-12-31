@@ -3,13 +3,14 @@
 @inject NavigationManager navigationManager
 
 <PageTitle>Bomberos Chivilcoy</PageTitle>
+
 <style>
     .ant-menu-vertical > .ant-menu-item, .ant-menu-vertical-left > .ant-menu-item, .ant-menu-vertical-right > .ant-menu-item, .ant-menu-inline > .ant-menu-item, .ant-menu-vertical > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-left > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-vertical-right > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
         width: 100%;
-        padding: 0 2.3em!important;
+        padding: 0 2.3em !important;
     }
 
-    .ant-menu-sub.ant-menu-inline{
+    .ant-menu-sub.ant-menu-inline {
         background: #fff !important;
     }
 
@@ -18,38 +19,30 @@
     }
 
     .ant-menu-item-selected {
-        background-color: rgb(62, 24, 24) !important;
-        width: 100%;
-    }
-    .ant-menu-submenu .ant-menu-item-selected{
-        /* padding-left: 45px !important; */
-        border-left: 3px solid rgb(62, 24, 24) !important;
-        color: rgb(62, 24, 24) !important;
-        font-size: 1em!important;
-        background-color: rgb(210, 210, 210) !important; 
+        background-color: #820014 !important;
         width: 100%;
     }
 
-        .ant-menu-item-selected anticon i {
-            background: rgb(62, 24, 24) !important;
-        }
-        .ant-menu-item a:hover {
-            color: rgb(62, 24, 24) !important;
-        }
+    .ant-menu-submenu .ant-menu-item-selected {
+        /* padding-left: 45px !important; */
+        border-left: 3px solid #820014 !important;
+        color: #820014 !important;
+        font-size: 1em !important;
+        background-color: rgb(210, 210, 210) !important;
+        width: 100%;
+    }
+
+    .ant-menu-item-selected anticon i {
+        background: #820014 !important;
+    }
 
     .ant-menu-item-selected a {
         color: rgb(230, 230, 230) !important;
     }
 
-    .ant-menu-item-selected a:hover {
-        color: rgb(230, 230, 230) !important;
-    }
-
-    .ant-menu-submenu-title .ant-menu-item-selected anticon {
-        color: rgb(230, 230, 230) !important;
-    }
-     
-    .ant-menu-submenu-selected .ant-menu-submenu-title .anticon svg{
+    /* iconos de los submenus */
+    .ant-menu-submenu-selected > .ant-menu-submenu-title .anticon svg,
+    .ant-menu-submenu-selected > .ant-menu-submenu-title i {
         color: rgb(230, 230, 230) !important;
     }
 
@@ -74,28 +67,26 @@
         color: rgb(230, 230, 230) !important;
     }
 
-    /* /titulos/ */
-    .ant-menu-submenu-title:hover {
-        color: #adb5bd !important;
-    }
-        
     /* /arrows/ */
     .xd .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
         color: rgb(230, 230, 230) !important;
     }
+
     .xd2 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
         color: rgb(230, 230, 230) !important;
     }
+
     .xd3 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
         color: rgb(230, 230, 230) !important;
     }
+
     .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
         color: rgb(230, 230, 230) !important;
     }
 
-    .xd4.ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow:hover {
-        color: rgb(230, 230, 230) !important;
-    }
+        .xd4.ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow:hover {
+            color: rgb(230, 230, 230) !important;
+        }
 
     a.nav-link::before {
         margin-left: 8px !important;
@@ -129,26 +120,21 @@
             padding-left: 0px !important;
         }
 
-    .ant-menu-submenu .ant-menu-item-selected .anticon-container i{
-        color: rgb(62, 24, 24) !important;
+    .ant-menu-submenu .ant-menu-item-selected .anticon-container i {
+        color: #820014 !important;
     }
 
-    .ant-menu-submenu-selected{
+    .ant-menu-submenu-selected {
         color: #fff !important;
     }
 
     .ant-menu-sub .ant-menu-inline {
-        /*padding-left: 24px !important;*/
         background: #fff !important;
     }
 
     .ant-menu-item-selected a:active {
-        border-left: 3px solid rgb(62, 24, 24) !important;
+        border-left: 3px solid #820014 !important;
     }
-
-    /* .ant-menu-light .ant-menu-submenu-title:hover, .ant-menu-light .ant-menu-title-content:hover {
-        color: black !important;
-    } */
 
     .ant-menu-light .ant-menu-submenu-arrow:hover {
         background: black !important;
@@ -160,7 +146,7 @@
     }
 
     .ant-menu-submenu-selected {
-        background: rgb(62, 24, 24) !important;
+        background: #820014 !important;
         color: #fff !important;
     }
 
@@ -169,17 +155,17 @@
         }
 
         .ant-menu-submenu-selected .ant-menu-item-selected li {
-            border: 3px solid rgb(62, 24, 24) !important;
-            color: rgb(62, 24, 24) !important;
+            border: 3px solid #820014 !important;
+            color: #820014 !important;
         }
-    
+
         .ant-menu-submenu-selected > .anticon-alert {
             background-color: #fff !important;
             top: 4px !important;
         }
 
-        .ant-menu-submenu-selected ul .ant-menu-item-selected li{
-            border-left: 3px solid rgb(62, 24, 24) !important;
+        .ant-menu-submenu-selected ul .ant-menu-item-selected li {
+            border-left: 3px solid #820014 !important;
         }
 
     .ant-menu-item-selected, .ant-menu-item-selected i, .ant-menu-item-selected:hover {
@@ -207,12 +193,8 @@
         padding-top: 10px !important;
     }
 
-    .ant-menu-item:hover {
-        color: black !important;
-    }
-
-    .ant-menu-submenu .ant-menu-submenu-vertical .ant-menu-submenu-title{
-        padding-left: 0!important;
+    .ant-menu-submenu .ant-menu-submenu-vertical .ant-menu-submenu-title {
+        padding-left: 0 !important;
     }
 
     .body-sect {
@@ -220,46 +202,64 @@
     }
 
     .ant-layout-sider:not(.ant-layout-sider-collapsed) {
-        max-width: 265px!important;
-        flex: 0 0 265px!important;
+        max-width: 265px !important;
+        flex: 0 0 265px !important;
     }
+
+    /* hover para cada seccion de la sidebar */
+    .ant-menu-item:hover span,
+    .ant-menu-item:hover span i,
+    .ant-menu-item:hover span a,
+    .ant-menu-submenu-title:hover span,
+    .ant-menu-submenu-title:hover i {
+        color: #a8071a !important; /*cambiar color al necesario segun la paleta*/
+    }
+
+    .ant-menu-item-selected:hover span i,
+    .ant-menu-item-selected:hover span a,
+    .ant-menu-submenu-selected:hover > .ant-menu-submenu-title span,
+    .ant-menu-submenu-selected:hover > .ant-menu-submenu-title .anticon svg,
+    .ant-menu-submenu-selected:hover > .ant-menu-submenu-title i {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    /* responsive */
 
     @@media screen and (max-width: 600px) {
         .ant-layout-sider-collapsed {
-            display: none!important;
+            display: none !important;
         }
 
         .sidebarAnt {
             position: fixed !important;
-            z-index: 1001 !important; 
-            width: 255px!important;
+            z-index: 1001 !important;
+            width: 255px !important;
             top: 0;
             bottom: 0;
-            overflow-y: scroll!important;
+            overflow-y: scroll !important;
             overflow-x: hidden;
         }
 
-
         .body-sect {
-            margin-left: 0!important;
-            overflow-x: hidden!important;
+            margin-left: 0 !important;
+            overflow-x: hidden !important;
         }
     }
 
     @@media screen and (max-width: 377px) {
-        .head-cont{
-            gap: 0!important;
+        .head-cont {
+            gap: 0 !important;
         }
 
-        .navbar-brand{
-            font-size: 16px!important;
+        .navbar-brand {
+            font-size: 16px !important;
         }
     }
 </style>
 
 @*IMPORTANTE: SACAR TODOS LOS ESTILOS EN LINEA Y HACERLOS EN UN ARCHIVO CSS A PARTE*@
 <Layout>
-    <Header Style="position: fixed;box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;background-color: rgb(62, 24, 24);height: 5em;width: 100%;z-index: 1000;padding: 0;">
+    <Header Style="position: fixed;box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;background-color: #820014;height: 5em;width: 100%;z-index: 1000;padding: 0;">
         <div class="head-cont" style="font-family: 'Fjalla One', sans-serif;display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
             <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
                 @if (collapsedMenu)
@@ -281,13 +281,13 @@
         <Sider Class="sidebarAnt" @bind-Collapsed=@collapsedMenu NoTrigger OnCollapse="OnCollapse" Style="margin-top: 5em;overflow-y: auto;overflow-x: hidden;background: #fff;">
             <Menu Mode=MenuMode.Inline
                   InlineCollapsed=collapsedMenu
-                   Style="height: 100%;width: 100%;">
+                  Style="height: 100%;width: 100%;font-family: 'Inter', sans-serif;font-size: 14px;font-weight: 500;">
                 <MenuItem Key="0">
                     <IconTemplate>
                         <i class="fa-solid fa-user icoSelected" style="color: #263040;padding-right: 6px;"></i>
                     </IconTemplate>
                     <ChildContent>
-                         <li class="nav-item"><a class="nav-link" href="/Bomberos/Legajo">Legajo</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/Bomberos/Legajo">Legajo</a></li>
                     </ChildContent>
                 </MenuItem>
                 <MenuItem Key="5" Icon="container">
@@ -466,12 +466,11 @@
         </Sider>
         <Layout>
             <Content class="body-sect" Style="display: flex;align-items: center;flex-direction:column;position: relative;margin: 0;margin-top: 5em;
-                overflow: auto;height: 100%;min-width: 360px;min-height: 280px;background: rgb(220,220,220);">
+                overflow: auto;height: 100%;min-width: 360px;min-height: 280px;background: rgb(235,235,235);">
                 @Body
             </Content>
         </Layout>
     </Layout>
-    
 </Layout>
 
 @code {
