@@ -3,9 +3,11 @@ using Vista.Data.Models.Personales;
 
 namespace Vista.Data.Models.Salidas.Componentes
 {
-    public class MovimientoM
+    public class MovimientoMaterial
     {
-        public int MovimientoMId { get; set; }
+        public int MovimientoMaterialId { get; set; }
+        public DateTime FechaIngreso { get; set; }
+        public string? Observaciones { get; set; }
         public TipoMovimiento TipoMovimiento {get; set;}
         public Bombero? DestinoBombero { get; set; }
         public Movil? DestinoMovil { get; set; }

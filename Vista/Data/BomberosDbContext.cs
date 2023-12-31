@@ -41,7 +41,7 @@ namespace Vista.Data
 
         public DbSet<Material> Materiales { get; set; }
 
-        public DbSet<MovimientoM> Movimientos { get; set; }
+        public DbSet<MovimientoMaterial> Movimientos { get; set; }
         public DbSet<Embarcacion> Embarcacion { get; set; }
         public DbSet<Comunicacion> Comunicacion { get; set; }
         public DbSet<AscensoBombero> AscensoBomberos { get; set; }
@@ -166,6 +166,11 @@ namespace Vista.Data
                 .Property(p => p.Sexo)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+            modelBuilder
+               .Entity<MovimientoMaterial>()
+               .Property(m => m.TipoMovimiento)
+               .HasConversion<string>()
+               .HasMaxLength(255);
             modelBuilder
                 .Entity<HorarioBombero>()
                 .Property(h => h.ModoRotativo)

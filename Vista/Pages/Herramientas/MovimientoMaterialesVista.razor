@@ -6,23 +6,94 @@
 @page "/materialesMovimiento"
 
 
-<Select TItem="Material"
-        TItemValue="int"
-        DataSource="@Materiales"
-        @bind-Value="@MovimientoVM.MaterialId"
-        LabelName="@nameof(Material.Descripcion)"
-        ValueName="@nameof(Material.MaterialId)"
-        Placeholder="Seleccione Bombero Encargado"
-        DefaultActiveFirstOption="false"
-        EnableSearch>
-</Select>
+<Form Model="MovimientoVM"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;">
+
+    <FormItem Label="Rubro">
+        <EnumSelect TEnum="@TipoMovimiento" @bind-Value="@MovimientoVM.TipoMovimiento" />
+    </FormItem>
+    <CheckboxGroup Style="width:100%" ValueChanged="@OnChange">
+
+        <Row>
+            <Col Span="8">
+            <Checkbox Label="Bombero" @bind-Value="@chIsBombero">Bombero</Checkbox>
+            </Col>
+            <Col Span="8">
+            <Checkbox Label="Movil" @bind-Value="@chIsMovil">Movil</Checkbox>
+            </Col>
+        </Row>
+    </CheckboxGroup>
+
+    <FormItem Label="Bombero asignado">
+        <Select TItem="BomberoViewModel"
+                TItemValue="int"
+                DataSource="@bomberoTodos"
+                @bind-Value="@MovimientoVM.BomberoAsignado"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Selecione el bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                Disabled="@(!chIsBombero)"
+                EnableSearch>
+        </Select>
+    </FormItem>
+
+    <FormItem Label="Movil asignado">
+        <Select TItem="MovilViewModel"
+                TItemValue="string"
+                DataSource="@MovilTodos"
+                @bind-Value="@MovimientoVM.MovilAsignado"
+                LabelName="@nameof(MovilViewModel.NumeroMovil)"
+                ValueName="@nameof(MovilViewModel.NumeroMovil)"
+                Placeholder="Selecione el movil"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                Disabled="@(!chIsMovil)"
+                EnableSearch>
+        </Select>
+    </FormItem>
+    <FormItem Label="Material otorgado">
+        <Select TItem="MaterialVM"
+                TItemValue="int"
+                DataSource="@MaterialesVM"
+                @bind-Value="@MovimientoVM.MaterialId"
+                LabelName="@nameof(MaterialVM.Descripcion)"
+                ValueName="@nameof(MaterialVM.MaterialId)"
+                Placeholder="Selecione el material"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                EnableSearch>
+            
+        </Select>
+    </FormItem>
+
+    <FormItem Label="Ingrese las cantidad">
+        <AntDesign.InputNumber @bind-Value="MovimientoVM.Cantidad" />
+    </FormItem>
+    <FormItem Label="Observaciones">
+        <Input @bind-Value="MovimientoVM.Observaciones" />
+    </FormItem>
+    <FormItem Style="width: 100% !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
+        <Button Class="boton_p" HtmlType="submit" Style="margin-right: 60px;">
+            Guardar movimiento del material
+        </Button>
+    </FormItem>
+</Form>
 
 
 @code {
-    BomberosDbContext Context { get; set; }
-    Bombero[] TodosBomberos;
-    Movil[] Moviles;
 
+    BomberosDbContext Context { get; set; }
+    bool chIsBombero;
+    bool chIsMovil;
     public class MovilViewModel
     {
         public string NumeroMovil { get; set; }
@@ -31,21 +102,33 @@
     public class BomberoViewModel
     {
         public string NombreYApellido { get; set; }
-        public int BomberoId { get; set; }
+        public int NumeroLegajo { get; set; }
     }
+    public class MaterialVM
+    {
+        public int MaterialId { get; set; }
+        [Required]
+        public DateTime FechaAlta { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Codigo { get; set; }
+        public int Stock { get; set; }
+        public TipoRubro Rubro { get; set; }
 
+    }
     public class MovimientoMaterialesViewModel
     {
         public TipoMovimiento TipoMovimiento { get; set; }
-        public Bombero? DestinoBombero { get; set; }
-        public Movil? DestinoMovil { get; set; }
         public int Cantidad { get; set; }
         public int MaterialId { get; set; }
+        public int BomberoAsignado { get; set; }
+        public string? MovilAsignado { get; set; }
+        public string Observaciones { get; set; }
     }
-    MovimientoMaterialesViewModel MovimientoVM { get; set; } = new MovimientoMaterialesViewModel();
-    List<Material> Materiales = new();
+    MovimientoMaterialesViewModel MovimientoVM = new();
+    List<MaterialVM> MaterialesVM = new();
     List<BomberoViewModel> bomberoTodos = new();
     List<MovilViewModel> MovilTodos = new();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,29 +138,36 @@
     private async Task Init()
     {
         MovimientoVM = new();
+        Context = DbFactory.CreateDbContext();
+
+        await CargarMaterial();
         await CargarBomberos();
         await CargarMovil();
 
-        Context = DbFactory.CreateDbContext();
-        Materiales = await Context.Materiales.ToListAsync();
     }
     private async void OnFinish(EditContext editContext)
     {
         try
         {
 
-
-            Vista.Data.Models.Salidas.Componentes.MovimientoM movimiento2 = new()
+            var BomberoDestino = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == MovimientoVM.BomberoAsignado);
+            var MovilDestino = await Context.Moviles.SingleOrDefaultAsync(m =>m.NumeroMovil == MovimientoVM.MovilAsignado);
+            var MaterialAsignado = await Context.Materiales.SingleOrDefaultAsync(ma => ma.MaterialId == MovimientoVM.MaterialId);
+            
+            Vista.Data.Models.Salidas.Componentes.MovimientoMaterial movimiento = new()
                 {
 
                     TipoMovimiento = MovimientoVM.TipoMovimiento,
-                    DestinoBombero = MovimientoVM.DestinoBombero,
-                    DestinoMovil = MovimientoVM.DestinoMovil,
+                    DestinoBombero = BomberoDestino,
+                    DestinoMovil = MovilDestino,
                     Cantidad = MovimientoVM.Cantidad,
-                    // Materiales = MovimientoVM.Materiales,
+                    Observaciones = MovimientoVM.Observaciones,
+                    FechaIngreso = DateTime.Now,
+                    Materiales = MaterialAsignado
+                    
 
                 };
-            // Context.Materiales.AddAsync(movimiento2);
+            Context.Movimientos.Add(movimiento);
             await Context.SaveChangesAsync();
             await Init();
             StateHasChanged();
@@ -96,19 +186,21 @@
     }
     private async Task CargarBomberos()
     {
-        var bomberos = await Context.Bomberos.ToListAsync();
-        foreach (var item in bomberos)
+        bomberoTodos = new();
+        var bom = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (var item in bom)
         {
             BomberoViewModel b = new()
                 {
                     NombreYApellido = item.Nombre + ' ' + item.Apellido,
-                    BomberoId = item.PersonaId
+                    NumeroLegajo = item.NumeroLegajo
                 };
             bomberoTodos.Add(b);
         }
     }
     private async Task CargarMovil()
     {
+        MovilTodos = new();
         var movil = await Context.Moviles.ToListAsync();
         foreach (var item in movil)
         {
@@ -119,9 +211,34 @@
             MovilTodos.Add(m);
         }
     }
+    private async Task CargarMaterial()
+    {
+        MaterialesVM.Clear();
+        var Materiales = await Context.Materiales.ToArrayAsync();
+        foreach (var m in Materiales)
+        {
+            MaterialVM materialVM = new()
+                {
+                    MaterialId = m.MaterialId,
+                    Codigo = m.Codigo,
+                    Stock = m.Stock,
+                    Rubro = m.Rubro,
+                    Descripcion = m.Descripcion,
+                    FechaAlta = m.FechaAlta
+                };
+            MaterialesVM.Add(materialVM);
+            await Context.SaveChangesAsync();
+            StateHasChanged();
+        }
+    }
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(MovimientoVM)}");
+    }
+    void OnChange(string[] checkedValues)
+    {
+
+
     }
 
 
