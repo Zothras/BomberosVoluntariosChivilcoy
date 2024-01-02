@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Blazored.Toast;
-using Vista.Data.Services;
+using Vista.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

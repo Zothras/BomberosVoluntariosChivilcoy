@@ -1,22 +1,27 @@
 ﻿@implements IDisposable
-@using System.ComponentModel.DataAnnotations
-@using Vista.Data.Services
+@    using System.ComponentModel.DataAnnotations
+@    using Vista.Data.Services
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 @inject StockService StockService
 
 
-@* <Table DataSource="MaterialesVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="5" Size="TableSize.Small">
+<Table DataSource="ListasMoviminetosVista" Bordered Responsive Style="min-width: 320px!important;" PageSize="5" Size="TableSize.Small">
          <ColumnDefinitions Context="muestra">
-             <PropertyColumn Property="c=>c.FechaAlta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-         <PropertyColumn Property="c=>c.Descripcion" Sortable></PropertyColumn>
-         <PropertyColumn Property="c=>c.Rubro" Sortable></PropertyColumn>
-         <PropertyColumn Property="c=>c.Stock" Sortable></PropertyColumn>
-         <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
+             <PropertyColumn Property="c=>c.FechaIngreso" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.MaterialAsignado.Codigo" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.TipoMovimiento" 
+                         SortDirections="new[] { SortDirection.Descending }"
+                         Filters="DiscriminadorFilter"
+                         OnFilter="((value,name)=>Enum.GetName(typeof(TipoMovimiento), name).StartsWith(Enum.GetName(typeof(TipoMovimiento), value)))" >
+         </PropertyColumn>
+         <PropertyColumn Property="c=>c.MaterialAsignado.Descripcion" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.BomberoOMovil" Sortable></PropertyColumn>
+         
      </ColumnDefinitions>
  </Table>
- *@
+
  <Form Model="MovimientoVM"
        LabelColSpan="8"
        WrapperColSpan="16"
@@ -41,7 +46,7 @@
 
      <FormItem Label="Bombero asignado">
          <Select TItem="BomberoViewModel"
-                 TItemValue="int"
+                 TItemValue="int?"
                  DataSource="@bomberoTodos"
                  @bind-Value="@MovimientoVM.BomberoAsignado"
                  LabelName="@nameof(BomberoViweModel.NombreYApellido)"
@@ -53,7 +58,7 @@
                 EnableSearch>
         </Select>
     </FormItem>
-
+    
     <FormItem Label="Movil asignado">
         <Select TItem="MovilViewModel"
                 TItemValue="string"
@@ -131,20 +136,56 @@
         public TipoMovimiento TipoMovimiento { get; set; }
         public int Cantidad { get; set; }
         public int MaterialId { get; set; }
-        public int BomberoAsignado { get; set; }
+        public int? BomberoAsignado { get; set; }
         public string? MovilAsignado { get; set; }
         public string Observaciones { get; set; }
     }
+
+    public class TodosMovimientosviewModel
+    {
+        public DateTime FechaIngreso { get; set; }
+        public TipoMovimiento TipoMovimiento { get; set; }
+        public int Cantidad { get; set; }
+        public Bombero? BomberoAsignado { get; set; }
+        public Movil? MovilAsignado { get; set; }
+        public string BomberoOMovil
+        {
+            get
+            {
+                if (BomberoAsignado != null)
+                {
+                    return BomberoAsignado.Nombre +","+ BomberoAsignado.Apellido;
+                }
+                else if (MovilAsignado != null)
+                {
+                    return MovilAsignado.NumeroMovil;
+                }
+                else
+                {
+                    return "No asignado";
+                }
+            }
+        }
+        public Material? MaterialAsignado { get; set; }
+    }
+
     MovimientoMaterialesViewModel MovimientoVM = new();
     List<MaterialVM> MaterialesVM = new();
     List<BomberoViewModel> bomberoTodos = new();
     List<MovilViewModel> MovilTodos = new();
     List<MovimientoMaterialesViewModel> ListasMoviminetos = new();
-
-
+    List<TodosMovimientosviewModel> ListasMoviminetosVista = new();
+    private TableFilter<TipoMovimiento>[] DiscriminadorFilter;
     protected override async Task OnInitializedAsync()
     {
         await Init();
+        DiscriminadorFilter = new TableFilter<TipoMovimiento>[Enum.GetValues(typeof(TipoMovimiento)).Length];
+        int i = 0;
+        foreach (TipoMovimiento value in Enum.GetValues(typeof(TipoMovimiento)))
+        {
+            DiscriminadorFilter[i] = new() { Text = Enum.GetName(typeof(TipoMovimiento), value), Value = value };
+            i++;
+        }
     }
 
     private async Task Init()
@@ -155,6 +196,7 @@
         await CargarMaterial();
         await CargarBomberos();
         await CargarMovil();
+        await CargarMovimientos();
 
     }
     private async void OnFinish(EditContext editContext)
@@ -200,7 +242,7 @@
     private async Task CargarBomberos()
     {
         bomberoTodos = new();
-        var bom = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        var bom = await Context.Bomberos.ToListAsync();
         foreach (var item in bom)
         {
             BomberoViewModel b = new()
@@ -227,7 +269,7 @@
     private async Task CargarMaterial()
     {
         MaterialesVM.Clear();
-        var Materiales = await Context.Materiales.ToArrayAsync();
+        var Materiales = await Context.Materiales.Where(m=>m.Stock > 0).ToArrayAsync();
         foreach (var m in Materiales)
         {
             MaterialVM materialVM = new()
@@ -244,21 +286,27 @@
             StateHasChanged();
         }
     }
-    // private async Task CargarMovimientos()
-    // {
-    //     ListasMoviminetos=new();
-    //     var Movimientos = await Context.Movimientos.Include(b=>b.DestinoBombero).Include(ma=>ma.Materiales).Include(m=>m.DestinoMovil)
-    //     .ToListAsync();
-    //     foreach (var m in Movimientos)
-    //     {
-    //         MovimientoMaterialesViewModel mov = new()
-    //         {
-    //             FechaIngreso = m.FechaIngreso,
-    //             Observaciones = m.
-    //         };
-    //     }
+    private async Task CargarMovimientos()
+    {
+        ListasMoviminetosVista = new();
 
-    // }
+        var Movimientos = await Context.Movimientos.Include(b=>b.DestinoBombero).Include(ma=>ma.Materiales).Include(m=>m.DestinoMovil)
+        .ToListAsync();
+        foreach (var m in Movimientos)
+        {
+            TodosMovimientosviewModel mov = new()
+            {
+                FechaIngreso = m.FechaIngreso,
+                TipoMovimiento=m.TipoMovimiento,
+                MaterialAsignado = m.Materiales,
+                BomberoAsignado = m.DestinoBombero,
+                MovilAsignado = m.DestinoMovil,
+
+            };
+            ListasMoviminetosVista.Add(mov);
+        }
+
+    }
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(MovimientoVM)}");
