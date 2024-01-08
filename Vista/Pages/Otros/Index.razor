@@ -1,8 +1,340 @@
 ﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal;
 @using Vista.Helpers;
+@inject NavigationManager navigationManager
 @page "/"
 
 <style>
+    .gridContainer{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* grid-template-rows: repeat(6, 1fr); */
+        grid-auto-rows: minmax(100px, auto);
+        grid-template-areas:
+        "img img img"
+        "img img img"
+        "img img img"
+        "n0 n1 n2"
+        "n0 n3 n3"
+        "n4 n3 n3"
+        "n5 n5 n6"
+        "n7 n8 n6";
+        max-width: 960px;
+        min-width: 300px;
+        gap: 10px;
+        height: 100vh;
+        margin: 10px;
+    }
+
+    .imgCont{
+        grid-area: img;
+        min-width: 300px;
+    }
+
+    .imgBomberos{
+        width: 100%;
+        object-fit:cover;
+        min-width: 300px;
+        border-radius: 10px;
+        height: 100%;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    }
+
+    article{
+        border-radius: 10px;
+        background: white;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        overflow: hidden;
+    }
+    .art1{
+        grid-area: n0;
+    }
+    .art2{
+        grid-area: n1;
+        background: #fff;
+        padding: 18px;
+        margin-left: 0;
+    }
+
+    .art2 h1{
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+    }
+    .art2 p{
+        margin-top: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+    }
+
+    .art3{
+        grid-area: n2;
+    }
+
+    .art4 {
+        grid-area: n3;
+    }
+
+    .art5 {
+        grid-area: n4;
+        display: flex;
+        background: #ffe7ba;
+        position: relative;
+    }
+
+    .art6 {
+        grid-area: n5;
+    }
+
+    .art7 {
+        grid-area: n6;
+    }
+
+    .art8 {
+        grid-area: n7;
+    }
+
+    #mapDiv div:focus-visible{
+        border: none!important;
+        outline: none!important;
+    }
+
+    /* seccion Bomberos */
+
+    .bomberosArt{
+        height: 100%;
+        position: relative;
+    }
+
+        .imgBomberos2 {
+            filter: brightness(0.5);
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bomberosArt h1{
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 15px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 45px;
+            font-weight: 900;
+            margin-top: 28px;
+        }
+
+        .btnCont{
+            position: absolute;
+            left: 1em;
+            top: 7.5em;
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .bomberosArt button {
+            border-radius: 50%;
+            padding: .3em;
+            height: 30px;
+            width: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* .bomberosArt button:hover {
+            filter: invert(1);
+        } */
+        .bomberosArt i{
+            color: black;
+        }
+
+        button{
+            border: none;
+            outline: none;
+        }
+
+    /* modificaciones a los popover */
+    /* .ant-popover-arrow {
+        left: 5px!important;    
+    } 
+
+    .ant-popover {
+        top: 853px!important;
+    } */
+
+    .ant-popover-inner{
+        border-radius: 6px!important;
+    }
+
+    .ant-popover-inner-content{
+        padding: 3px!important;
+    }
+
+        .ant-popover-inner-content p{
+            font-weight: 600!important;
+            font-family: 'Inter', sans-serif!important;
+        }
+
+    /* seccion Herramientas */
+
+    .btnContA5{
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+        .btnContA5 button{
+            border-radius: 50%;
+            padding: .3em;
+            height: 45px;
+            width: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            margin-top: 2em;
+        }
+
+        .art5-Title {
+            font-size: 1.5em;
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 10px 0 0 16px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* .myPopover .ant-popover-inner {
+            top: 775px !important;
+        }
+
+        .myPopover .ant-popover-arrow {
+            left: 359px !important;
+        } */
+</style>
+
+<div class="gridContainer">
+    <div class="imgCont">
+        <img class="imgBomberos" src="imagenes/bombeross.jpg"/> 
+    </div>
+    
+    <article class="art1">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d409.06599683140723!2d-60.018304051505964!3d-34.89319762296309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bea549b89c92c3%3A0xf5d09238b61d6e33!2sBomberos%20de%20Chivilcoy!5e0!3m2!1ses-419!2sar!4v1688997377809!5m2!1ses-419!2sar"  style="border:0!important;outline: 0!important;width: 100%; height: 100%;border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </article>
+    <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos/Legajo"); })" style="border-radius: 10px;">
+        <article class="art2">
+            <h1>LEGAJO</h1>
+            <i class="fa-solid fa-user icoSelected" style="color: #263040;padding-right: 6px;"></i>
+            <span>Visite su legajo</span>
+        </article>
+    </a>
+    <article class="art3">
+        LICENCIAS
+    </article>
+    <article class="art4">
+        SALIDAS
+    </article>
+    <article class="art5">
+        <h1 class="art5-Title">HERRAMIENTAS</h1>
+        <div class="btnContA5">
+            <Popover OverlayClassName="myPopover" ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
+                    <i class="fa-solid fa-users-gear"></i>
+                </button>
+            </Popover>
+            <Popover ContentTemplate="@art5b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacions"); })">
+                    <i class="fa-solid fa-walkie-talkie"></i>
+                </button>
+            </Popover>
+            <Popover ContentTemplate="@art5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">;
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
+                    <i class="fa-solid fa-file-signature"></i>
+                </button>
+            </Popover>
+        </div>
+        <img src="imagenes/bombero-removebg.png" />
+    </article>
+    <article class="art6">
+        REPORTES
+    </article>
+    <article class="art7">
+        <div class="bomberosArt">
+            <img class="imgBomberos2" src="imagenes/bomberosGrid.jpg"/>
+            <h1>BOMBEROS</h1>
+            <div class="btnCont">
+                <Popover ContentTemplate="@art7a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })">
+                        <i class="fa-solid fa-user-large"></i>
+                    </button>
+                </Popover>
+                <Popover ContentTemplate="@art7b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/retirados"); })">
+                        <i class="fa-solid fa-user-large-slash"></i>
+                    </button>
+                </Popover>
+                <Popover ContentTemplate="@art7c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
+                        <i class="fa-solid fa-user-xmark"></i>
+                    </button>
+                </Popover>
+                <Popover ContentTemplate="@art7d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </Popover>
+            </div>
+        </div>
+    </article>
+    <article class="art8">
+        MOVILES
+    </article>
+    <article class="art9">
+        EMBARCACIONES
+    </article>
+</div>
+
+@code {
+    // art 5
+    private RenderFragment art5a =
+    @<div>
+        <p>Brigadas</p>
+    </div>;
+
+    private RenderFragment art5b =
+    @<div>
+        <p>Comunicacion</p>
+    </div>;
+
+    private RenderFragment art5c =
+    @<div>
+        <p>Deposito</p>
+    </div>;
+    
+    // art 7
+    private RenderFragment art7a =
+    @<div>
+        <p>Activos</p>
+    </div>;
+    private RenderFragment art7b =
+    @<div>
+        <p>Retirados</p>
+    </div>;
+    private RenderFragment art7c =
+    @<div>
+        <p>Sancionados</p>
+    </div>;
+    private RenderFragment art7d =
+    @<div>
+        <p>Ascensos</p>
+    </div>;
+}
+
+@* <style>
     @@media screen and (max-width: 600px) {
 
         .bannerImg img{
@@ -17,7 +349,6 @@
     <h2 class="wave">BOMBEROS V.C.</h2>
 </div>
 <div class="indexCont">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d409.06599683140723!2d-60.018304051505964!3d-34.89319762296309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bea549b89c92c3%3A0xf5d09238b61d6e33!2sBomberos%20de%20Chivilcoy!5e0!3m2!1ses-419!2sar!4v1688997377809!5m2!1ses-419!2sar" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     <div>
         <p>2346 42-4319</p>
     </div>
@@ -30,4 +361,4 @@
     </Footer>
 </div>
 @code {
-}
+} *@

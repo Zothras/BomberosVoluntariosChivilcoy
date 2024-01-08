@@ -100,21 +100,37 @@
         background-color: #732D2D !important;
         color: white !important;
     }
-</style>
 
-<div style="margin-top: 2em; width: 80%; ">
+    .template{
+        width: 100%;
+        height: 100%;
+        max-width: 97%;
+        min-width: 400px;
+        max-height: 100%;
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1em;
+    }
+
+</style>
+<div class="template">
     @*dataSource= Contenido que contiene mi tabla *@
-    <Table DataSource="LicenciasActivasVM" Bordered Responsive Style="min-width: 320px!important;" PageSize="6">
+    <Table Class="Tabla" DataSource="LicenciasActivasVM" Bordered Responsive>
         <TitleTemplate>
             <div class="botonesCont">
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Desde: </label>
-                            <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
+                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Hasta: </label>
-                            <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
+                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
                     </div>
                     <div class="buton-cont">
                         <Button OnClick="@LicenciasBuscar" Style="margin-bottom: 5px;">
@@ -128,7 +144,6 @@
                         <Search Placeholder="Buscar" WrapperStyle="width: 200px;" AllowClear EnterButton="true" @bind-Value="Busqueda" OnChange="BuscarLicenciado" />
                     </div>
                 </div>
-
                 <div>
                     <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
                         <Overlay>
@@ -147,13 +162,12 @@
                 </div>
             </div>
         </TitleTemplate>
-
         <ColumnDefinitions Context="muestra">
-            <PropertyColumn Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy"  Sortable></PropertyColumn>
+            <PropertyColumn Title="Nombre y apellido" Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.EstadoLicencia" Sortable Filterable></PropertyColumn>
+            <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
+            <PropertyColumn Title="Estado" Property="c=>c.EstadoLicencia" Sortable Filterable></PropertyColumn>
         </ColumnDefinitions>
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
@@ -165,8 +179,8 @@
     Visible="@_visibleAgregar"
     OnOk="@HandleOkAgregar"
     OnCancel="@HandleCancelAgregar">
-<LicenciasAlta />
 
+    <LicenciasAlta />
     <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregar">
         Volver
     </Button>
