@@ -52,8 +52,11 @@
     <FormItem Label="Fecha finalizacion">
         <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@LicencasVM.Hasta" />
     </FormItem>
+    <FormItem Label="Duración en días">
+        <span>@LicencasVM.DuracionEnDias</span>
+    </FormItem>
     <FormItem Label="Tipo estado licencia">
-        <EnumSelect TEnum="TipoEstadoLicencia" @bind-Value="@LicencasVM.EstadoLicencia" />
+        <EnumSelect TEnum="TipoEstadoLicencia" @bind-Value="@LicencasVM.EstadoLicencia" Disabled/>
     </FormItem>
     <FormItem Style="width: 100% !important;
             display: flex !important;
@@ -78,6 +81,14 @@
         public DateTime Hasta { get; set; }
         public TipoEstadoLicencia EstadoLicencia { get; set; }
         public Bombero? PersonalAfectado { get; set; }
+
+        public int DuracionEnDias
+        {
+            get
+            {
+                return (Hasta - Desde).Days + 1;
+            }
+        }
     }
 
     BomberosDbContext Context { get; set; }
@@ -86,11 +97,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+       
         await Init();
     }
     private async Task Init()
     {
         LicencasVM = new();
+        LicencasVM.EstadoLicencia = TipoEstadoLicencia.Pendiente;
         Context = DbFactory.CreateDbContext();
         await CargarBomberosView();
     }

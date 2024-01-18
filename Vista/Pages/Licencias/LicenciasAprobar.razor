@@ -36,7 +36,7 @@
                     <i class="fa-solid fa-check" style="color: #40c011;cursor: pointer;"></i>  
             </Popconfirm>
             <Popconfirm Title="Desea Rechazar Licencia?"
-                        OnConfirm="()=> EliminarLicencia(context.LicenciaId)"
+                        OnConfirm="()=> RechazarLicencia(context.LicenciaId)"
                         OkText="Si"
                         CancelText="No">
                     <i class="fa-solid fa-trash" style="color: red ;cursor: pointer;"></i>
@@ -110,23 +110,23 @@
         StateHasChanged();
         await message.Success("Licencia Aprobada!");
     }
+    //Elimina la licencia que esta en pendiente 
+    private async Task RechazarLicencia(int IdLicencia)
+    {
+        var licenciaARechazar = await Context.Licencias.SingleOrDefaultAsync(l => l.LicenciaId == IdLicencia);
+        if (licenciaARechazar != null)
+        {
+            licenciaARechazar.EstadoLicencia = TipoEstadoLicencia.Rechazada;
+        }
+        await Context.SaveChangesAsync();
+
+        await Init();
+        StateHasChanged();
+        await message.Success("Licencia Rechazada!");
+
+    }
     public void Dispose()
     {
         Context?.Dispose();
-    }
-
-    //Elimina la licencia que esta en pendiente 
-    private async Task EliminarLicencia(int IdLicencia)
-    {
-        var licenciaAEliminar = await Context.Licencias.FirstOrDefaultAsync(l => l.LicenciaId == IdLicencia && l.EstadoLicencia == TipoEstadoLicencia.Pendiente);
-        if (licenciaAEliminar != null)
-        {
-            Context.Licencias.Remove(licenciaAEliminar);
-            await Context.SaveChangesAsync();
-            await Init();
-            StateHasChanged();
-            await message.Success("Licencia Rechazada!");
-            StateHasChanged();
-        }
     }
 }

@@ -101,7 +101,7 @@
         color: white !important;
     }
 
-    .template{
+    .template {
         width: 100%;
         height: 100%;
         max-width: 97%;
@@ -142,32 +142,55 @@
                 <div class="inpt-cont-inline">
                     <div style="display: flex; margin-bottom:  5px;" class="buton-cont">
                         <Search Placeholder="Buscar" WrapperStyle="width: 200px;" AllowClear EnterButton="true" @bind-Value="Busqueda" OnChange="BuscarLicenciado" />
-                    </div>
-                </div>
-                <div>
-                    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
-                        <Overlay>
-                            <Menu Style="min-width:320px;max-width:600px;">
-                                <LicenciasAprobar />
-                            </Menu>
-                        </Overlay>
-                        <ChildContent>
-                            <div class="notificacion">
-                                <Badge Count="LicenciasPendientes.Count">
-                                    <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
-                                </Badge>
-                            </div>
-                        </ChildContent>
-                    </Dropdown>
-                </div>
-            </div>
-        </TitleTemplate>
-        <ColumnDefinitions Context="muestra">
-            <PropertyColumn Title="Nombre y apellido" Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-            <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
-            <PropertyColumn Title="Estado" Property="c=>c.EstadoLicencia" Sortable Filterable></PropertyColumn>
+                     </div>
+                 </div>
+                 <div>
+                     <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
+                         <Overlay>
+                             <Menu Style="min-width:320px;max-width:600px;">
+                                 <LicenciasAprobar />
+                             </Menu>
+                         </Overlay>
+                         <ChildContent>
+                             <div class="notificacion">
+                                 <Badge Count="LicenciasPendientes.Count">
+                                     <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
+                                 </Badge>
+                             </div>
+                         </ChildContent>
+                     </Dropdown>
+                 </div>
+             </div>
+         </TitleTemplate>
+         <ColumnDefinitions Context="muestra">
+             <PropertyColumn Title="Nombre y apellido" Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
+             <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+             <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+             <PropertyColumn Property="c=>c.DuracionEnDias" Sortable></PropertyColumn>
+             <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
+             <PropertyColumn Title="Estado" Property="c => c.EstadoLicencia" Sortable Filterable>
+                <Template>
+                    @{
+                        string color;
+                        if (LicencasVM.EstadoLicencia == TipoEstadoLicencia.Rechazada)
+                        {
+                            color = "red";
+                            <p style="color: @color">@TipoEstadoLicencia.Rechazada</p>
+                        }
+                        else if (LicencasVM.EstadoLicencia == TipoEstadoLicencia.Aprobada)
+                        {
+                            color = "green";
+                            <p style="color: @color">@TipoEstadoLicencia.Aprobada</p>
+                        }
+                        else
+                        {
+                            color = "yellow";
+                            <p style="color: @color">@TipoEstadoLicencia.Pendiente</p>
+                        }
+                    }
+                    
+                </Template>
+             </PropertyColumn>
         </ColumnDefinitions>
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
@@ -176,9 +199,9 @@
 </div>
 
 <Modal Footer="null" Title="@("Agregar la licencia")"
-    Visible="@_visibleAgregar"
-    OnOk="@HandleOkAgregar"
-    OnCancel="@HandleCancelAgregar">
+       Visible="@_visibleAgregar"
+       OnOk="@HandleOkAgregar"
+       OnCancel="@HandleCancelAgregar">
 
     <LicenciasAlta />
     <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregar">
@@ -186,7 +209,7 @@
     </Button>
 </Modal>
 
-@code{
+@code {
     public class LicencasVm
     {
         [Required]
@@ -198,6 +221,14 @@
         public int PersonaId { get; set; }
         public Bombero? PersonalAfectado { get; set; }
         public string? NombreYApellido { get; set; }
+
+        public int DuracionEnDias
+        {
+            get
+            {
+                return (Hasta - Desde).Days + 1;
+            }
+        }
     }
 
     //variables Locales
@@ -224,24 +255,55 @@
 
 
     private async Task LicenciasActivas()
+{
+    LicenciasActivasVM.Clear();
+        var Licencias = await Context.Licencias
+        .Include(b => b.PersonalAfectado)
+        .ToListAsync();
+
+    foreach (var l in Licencias)
     {
-        LicenciasActivasVM = new();
-        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada).Include(b => b.PersonalAfectado).ToListAsync();
-        foreach (var l in Licencias)
+        LicencasVm LicVm = new()
         {
-            LicencasVm LicVm = new()
-                {
-                    TipoLicencia = l.TipoLicencia,
-                    Descripcion = l.Descripcion,
-                    Desde = l.Desde,
-                    Hasta = l.Hasta,
-                    EstadoLicencia = l.EstadoLicencia,
-                    NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido,
-                };
-            LicenciasActivasVM.Add(LicVm);
-        }
-        StateHasChanged();
+            TipoLicencia = l.TipoLicencia,
+            Descripcion = l.Descripcion,
+            Desde = l.Desde,
+            Hasta = l.Hasta,
+            EstadoLicencia = l.EstadoLicencia,
+            NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
+        };
+
+        LicenciasActivasVM.Add(LicVm);
     }
+
+    StateHasChanged();
+}
+
+private async Task LicenciasBuscar()
+{
+    LicenciasActivasVM.Clear();
+    var licencias = await Context.Licencias
+        .Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
+        .Include(b => b.PersonalAfectado)
+        .ToListAsync();
+
+    foreach (var licencia in licencias)
+    {
+        LicencasVm LicVm = new()
+        {
+            TipoLicencia = licencia.TipoLicencia,
+            Descripcion = licencia.Descripcion,
+            Desde = licencia.Desde,
+            Hasta = licencia.Hasta,
+            EstadoLicencia = licencia.EstadoLicencia,
+            NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
+        };
+
+        LicenciasActivasVM.Add(LicVm);
+    }
+
+    StateHasChanged();
+}
 
     private async Task LicenciasPendiente()
     {
@@ -249,35 +311,12 @@
         LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
     }
 
-    // licencias a buscar por fecha y hora
-    private async Task LicenciasBuscar()
-    {
-        LicenciasActivasVM.Clear();
-        var licencias = await Context.Licencias
-            .Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
-            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada)
-            .Include(b => b.PersonalAfectado).ToListAsync();
-        foreach (var licencia in licencias)
-        {
-            LicencasVm LicVm = new()
-                {
-                    TipoLicencia = licencia.TipoLicencia,
-                    Descripcion = licencia.Descripcion,
-                    Desde = licencia.Desde,
-                    Hasta = licencia.Hasta,
-                    EstadoLicencia = licencia.EstadoLicencia,
-                    NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
-                };
-            LicenciasActivasVM.Add(LicVm);
-        }
-    }
 
     // BuscarLicenciados
     private async Task BuscarLicenciado()
     {
         LicenciasActivasVM.Clear();
         var licencias = await Context.Licencias
-        .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Aprobada)
         .Where(l => l.PersonalAfectado.Nombre.ToLower().Contains(Busqueda.ToLower()) || l.PersonalAfectado.Apellido.ToLower().Contains(Busqueda.ToLower()))
         .Include(b => b.PersonalAfectado).ToListAsync();
         foreach (var l in licencias)
