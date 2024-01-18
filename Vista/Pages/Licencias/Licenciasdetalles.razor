@@ -171,24 +171,19 @@
              <PropertyColumn Title="Estado" Property="c => c.EstadoLicencia" Sortable Filterable>
                 <Template>
                     @{
-                        string color;
-                        if (LicencasVM.EstadoLicencia == TipoEstadoLicencia.Rechazada)
+                        if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
                         {
-                            color = "red";
-                            <p style="color: @color">@TipoEstadoLicencia.Rechazada</p>
+                            <p style="color: red;">@TipoEstadoLicencia.Rechazada</p>
                         }
-                        else if (LicencasVM.EstadoLicencia == TipoEstadoLicencia.Aprobada)
+                        else if (muestra.EstadoLicencia == TipoEstadoLicencia.Aprobada)
                         {
-                            color = "green";
-                            <p style="color: @color">@TipoEstadoLicencia.Aprobada</p>
+                            <p style="color: green;">@TipoEstadoLicencia.Aprobada</p>
                         }
                         else
                         {
-                            color = "yellow";
-                            <p style="color: @color">@TipoEstadoLicencia.Pendiente</p>
+                            <p style="color: yellow;">@TipoEstadoLicencia.Pendiente</p>
                         }
                     }
-                    
                 </Template>
              </PropertyColumn>
         </ColumnDefinitions>
