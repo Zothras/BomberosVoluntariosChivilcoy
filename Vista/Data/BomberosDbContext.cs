@@ -439,6 +439,12 @@ namespace Vista.Data
                 .Property(c => c.Estado)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+
+            modelBuilder
+                .Entity<MovilSalida>()
+                .Property(d => d.DotacionSalida)
+                .HasConversion<string>()
+                .HasMaxLength(255);
         }
     }
 }
