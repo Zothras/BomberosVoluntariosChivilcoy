@@ -1,6 +1,7 @@
 ﻿using Vista.Data.Models.Salidas.Planillas;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Models.Salidas.Componentes;
+using Vista.Data.Enums;
 
 namespace Vista.Data.Models.Personales
 {
@@ -16,6 +17,7 @@ namespace Vista.Data.Models.Personales
         public string? CantidadLitros { get; set; }
         public string? QuienLleno { get; set; }
         public string? TelefonoQuienLleno { get; set; }
+        public DotacionesSalidas DotacionSalida { get; set; }
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]
         public Bombero Chofer { get; set; }
