@@ -65,7 +65,9 @@ namespace Vista.Data.Models.Personales
 
         public List<HorarioBombero> Horarios { get; set; } = new();
         public List<Limpieza> Limpieza { get; set; } = new();
-        
-        
+
+        public int MovilId { get; set; }
+        public Movil? MovilLimpieza { get; set; }
+
     }
 }
