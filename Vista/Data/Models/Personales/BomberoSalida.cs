@@ -17,5 +17,7 @@ namespace Vista.Data.Models.Personales
 
         public int SalidaId { get; set; }
         public Salida Salida { get; set; }
+        public int MovilSalidaId { get; set; }
+        public MovilSalida MovilSalida { get; set; }
     }
 }

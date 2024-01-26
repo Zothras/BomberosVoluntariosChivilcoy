@@ -40,7 +40,7 @@ namespace Vista.Data
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<MovilSalida> MovilesSalida { get; set; }
         public DbSet<BomberoSalida> BomberosSalida { get; set; }
-       
+        public DbSet<Limpieza> Limpiezas { get; set; }
         public DbSet<Material> Materiales { get; set; }
 
         public DbSet<MovimientoMaterial> Movimientos { get; set; }
@@ -401,6 +401,11 @@ namespace Vista.Data
             modelBuilder
                 .Entity<BomberoSalida>()
                 .Property(b => b.Grado)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+            modelBuilder
+                .Entity<Limpieza>()
+                .Property(t => t.Incidente)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 

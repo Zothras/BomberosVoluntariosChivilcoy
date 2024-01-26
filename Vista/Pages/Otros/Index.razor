@@ -59,7 +59,7 @@
         font-weight: 700;
         font-family: 'Inter', sans-serif;
     }
-    .art2 p{
+    .art2 span{
         margin-top: 10px;
         font-family: 'Inter', sans-serif;
         font-size: 15px;
@@ -67,6 +67,22 @@
 
     .art3{
         grid-area: n2;
+        background: #262626;
+        padding: 18px;
+        margin-left: 0;
+    }
+
+    .art3 h1 {
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        color: white;
+    }
+
+    .art3 span {
+        margin-top: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        color: white;
     }
 
     .art4 {
@@ -154,15 +170,6 @@
             outline: none;
         }
 
-    /* modificaciones a los popover */
-    /* .ant-popover-arrow {
-        left: 5px!important;    
-    } 
-
-    .ant-popover {
-        top: 853px!important;
-    } */
-
     .ant-popover-inner{
         border-radius: 6px!important;
     }
@@ -189,8 +196,8 @@
         .btnContA5 button{
             border-radius: 50%;
             padding: .3em;
-            height: 45px;
-            width: 45px;
+            height: 40px;
+            width: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -208,13 +215,29 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* .myPopover .ant-popover-inner {
-            top: 775px !important;
-        }
+    .art4{
+        background: #ad2102;
+        display: flex;
+        
+    }
 
-        .myPopover .ant-popover-arrow {
-            left: 359px !important;
-        } */
+    .art4 button{
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 42px;
+        width: 42px;
+        margin: 3px;
+    }
+
+    .art4-cont {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        justify-content: space-between;
+    }
 </style>
 
 <div class="gridContainer">
@@ -232,14 +255,110 @@
             <span>Visite su legajo</span>
         </article>
     </a>
-    <article class="art3">
-        LICENCIAS
-    </article>
+    <a @onclick="@(() => { navigationManager.NavigateTo("/Licencias-Detalles"); })" style="border-radius: 10px;">
+        <article class="art3">
+            <h1>LICENCIAS</h1>
+            <i class="fa-solid fa-file-signature" style="color: white;padding-right: 6px;"></i>
+            <span>Ver las licencias</span>
+        </article>
+    </a>
     <article class="art4">
-        SALIDAS
+        <div class="art4-cont">
+            <div>
+                <div>
+                    @* incendios *@
+                    <Popover OverlayClassName="myPopover" ContentTemplate="@art4d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4e" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover OverlayClassName="myPopover" ContentTemplate="@art4f" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4g" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover OverlayClassName="myPopover" ContentTemplate="@art4a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                            <i class="fa-solid fa-circle-radiation"></i>
+                        </button>
+                    </Popover>
+                    <br />
+                    <Popover ContentTemplate="@art4h" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover OverlayClassName="myPopover" ContentTemplate="@art4i" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4j" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover OverlayClassName="myPopover" ContentTemplate="@art4k" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
+                            <i class="fa-sharp fa-solid fa-fire"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
+                            <i class="fa-sharp fa-solid fa-cloud-bolt"></i>
+                        </button>
+                    </Popover>
+                </div>
+                <div>
+                    @* rescates *@
+                    <Popover OverlayClassName="myPopover" ContentTemplate="@art4n" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
+                            <i class="fa-solid fa-fire-extinguisher"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4o" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
+                            <i class="fa-solid fa-fire-extinguisher"></i>
+                        </button>
+                    </Popover>
+                    @* servicios *@
+                    <Popover ContentTemplate="@art4l" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
+                            <i class="fa-solid fa-helmet-safety"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4m" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
+                            <i class="fa-solid fa-helmet-safety"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
+                            <i class="fa-solid fa-person-falling-burst"></i>
+                        </button>
+                    </Popover>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-start; width: 100%;">
+                <h2 style="font-size: 1.5rem;padding: 0;position: inherit;color: white;margin-left: 5px;">
+                    CARGAR SALIDAS
+                </h2>
+            </div>
+        </div>
+        <img src="imagenes/bombero-removebg.png" />
     </article>
     <article class="art5">
-        <h1 class="art5-Title">HERRAMIENTAS</h1>
+        <h1 class="art5-Title" style="padding: 10px 0 0 8px;">HERRAMIENTAS</h1>
         <div class="btnContA5">
             <Popover OverlayClassName="myPopover" ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
@@ -247,20 +366,49 @@
                 </button>
             </Popover>
             <Popover ContentTemplate="@art5b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacions"); })">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
                     <i class="fa-solid fa-walkie-talkie"></i>
                 </button>
             </Popover>
-            <Popover ContentTemplate="@art5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">;
+            <Popover ContentTemplate="@art5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
                     <i class="fa-solid fa-file-signature"></i>
                 </button>
             </Popover>
         </div>
-        <img src="imagenes/bombero-removebg.png" />
+        <img src="imagenes/herramientas.png" style="margin-right: -26px;" />
     </article>
-    <article class="art6">
-        REPORTES
+    <article class="art6" style="background: #22075e;">
+        <div style="display: flex;padding: 20px;align-items: center;justify-content: space-evenly;height: 100%;">
+            <h1 style="color: white;">REPORTES</h1>
+            <style>
+                .art6 button{ 
+                    border-radius: 50%;
+                    width: 35px;
+                    height: 35px;
+                }
+            </style>
+            <Popover ContentTemplate="@art6a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialSalidas"); })">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </button>
+            </Popover>
+            <Popover ContentTemplate="@art6b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
+                    <i class="fa-solid fa-users-gear"></i>
+                </button>
+            </Popover>
+            <Popover ContentTemplate="@art6c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
+                    <i class="fa-solid fa-id-card"></i>
+                </button>
+            </Popover>
+            <Popover ContentTemplate="@art6d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
+                    <i class="fa-solid fa-truck-droplet icoSelected"></i>
+                </button>
+            </Popover>
+        </div>
     </article>
     <article class="art7">
         <div class="bomberosArt">
@@ -290,15 +438,101 @@
             </div>
         </div>
     </article>
-    <article class="art8">
-        MOVILES
-    </article>
-    <article class="art9">
-        EMBARCACIONES
-    </article>
+    <a @onclick="@(() => { navigationManager.NavigateTo("/moviles"); })" style="border-radius: 10px;">
+        <article class="art8">
+            <div class="bomberosArt" style="height: 112px;">
+                <img class="imgBomberos2" style="filter: brightness(0.6);" src="imagenes/moviles.jpg" />
+                <h1 style="font-size: 33px;margin-top: 0;">MOVILES</h1>
+                <i style="position: absolute;left: 17px;top: 53px;color: white;" class="fa-solid fa-truck-droplet icoSelected"></i>
+                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver moviles</p>
+            </div>
+        </article>
+    </a>
+    <a @onclick="@(() => { navigationManager.NavigateTo("/embarcaciones"); })" style="border-radius: 10px;">
+        <article class="art9">
+            <div class="bomberosArt" style="height: 112px;">
+                <img class="imgBomberos2" style="filter: brightness(0.5);" src="imagenes/embarcacion.jpg" />
+                <h1 style="font-size: 33px;margin-top: 0;">EMBARCACIONES</h1>
+                <i style="position: absolute;left: 17px;top: 53px;color: white;" class="fa-sharp fa-solid fa-ship"></i>
+                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver embarcaciones</p>
+            </div>
+        </article>
+    </a>
 </div>
 
 @code {
+    // art 4
+    private RenderFragment art4a =
+    @<div>
+        <p>Materiales peligrosos</p>
+    </div>;
+
+    private RenderFragment art4b =
+    @<div>
+        <p>Factores climaticos</p>
+    </div>;
+
+    private RenderFragment art4c =
+    @<div>
+        <p>Accidentes</p>
+    </div>;
+    private RenderFragment art4d =
+    @<div>
+        <p>Incendio comercial</p>
+    </div>;
+
+    private RenderFragment art4e =
+    @<div>
+        <p>Incendio forestal</p>
+    </div>;
+
+    private RenderFragment art4f =
+    @<div>
+        <p>Incendio industrial</p>
+    </div>;
+    private RenderFragment art4g =
+    @<div>
+        <p>Incendio vehicular</p>
+    </div>;
+
+    private RenderFragment art4h =
+    @<div>
+        <p>Incendio est. educativo</p>
+    </div>;
+
+    private RenderFragment art4i =
+    @<div>
+        <p>Incendio hostiptales / clinicas</p>
+    </div>;
+    private RenderFragment art4j =
+    @<div>
+        <p>Incendio est. publico</p>
+    </div>;
+
+    private RenderFragment art4k =
+    @<div>
+        <p>Incendio viviendas</p>
+    </div>;
+
+    private RenderFragment art4l =
+    @<div>
+        <p>Servicio representacion</p>
+    </div>;
+    private RenderFragment art4m =
+    @<div>
+        <p>Servicio prevencion</p>
+    </div>;
+
+    private RenderFragment art4n =
+    @<div>
+        <p>Rescate persona</p>
+    </div>;
+
+    private RenderFragment art4o =
+    @<div>
+        <p>Rescate animal</p>
+    </div>;
+
     // art 5
     private RenderFragment art5a =
     @<div>
@@ -315,6 +549,24 @@
         <p>Deposito</p>
     </div>;
     
+    // art 6
+    private RenderFragment art6a =
+    @<div>
+        <p>Salidas</p>
+    </div>;
+    private RenderFragment art6b =
+    @<div>
+        <p>Bomberos</p>
+    </div>;
+    private RenderFragment art6c =
+    @<div>
+        <p>Choferes</p>
+    </div>;
+    private RenderFragment art6d =
+    @<div>
+        <p>Moviles</p>
+    </div>;
+
     // art 7
     private RenderFragment art7a =
     @<div>
@@ -333,32 +585,3 @@
         <p>Ascensos</p>
     </div>;
 }
-
-@* <style>
-    @@media screen and (max-width: 600px) {
-
-        .bannerImg img{
-            width: 100vh!important;
-        }
-    }
-</style>
-
-<div class="bannerImg">
-    <img style="height: 100vh; width: 100%;" src="imagenes/bomberindex.jpg" asp-append-version="true" />
-    <h2 class="border">BOMBEROS V.C.</h2>
-    <h2 class="wave">BOMBEROS V.C.</h2>
-</div>
-<div class="indexCont">
-    <div>
-        <p>2346 42-4319</p>
-    </div>
-</div>
-<div style="height: 100%;width: 100%;">
-    <Footer Style="display: flex; flex-direction: row;background-color: rgb(62, 24, 24); width: 100%;color: white;justify-content: center;">
-        <div class="copyright py-4 text-center text-white">
-            <div class="container"><small>Copyright &copy;2023 <b>Bomberos Voluntarios Chivilcoy</b> - Todos los Derechos Reservados.</small></div>
-        </div>
-    </Footer>
-</div>
-@code {
-} *@
