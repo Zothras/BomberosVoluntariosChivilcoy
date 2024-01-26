@@ -188,9 +188,9 @@
                             <p style="color: @color">@TipoEstadoLicencia.Pendiente</p>
                         }
                     }
-                    
+
                 </Template>
-             </PropertyColumn>
+            </PropertyColumn>
         </ColumnDefinitions>
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
@@ -255,55 +255,55 @@
 
 
     private async Task LicenciasActivas()
-{
-    LicenciasActivasVM.Clear();
+    {
+        LicenciasActivasVM.Clear();
         var Licencias = await Context.Licencias
         .Include(b => b.PersonalAfectado)
         .ToListAsync();
 
-    foreach (var l in Licencias)
-    {
-        LicencasVm LicVm = new()
+        foreach (var l in Licencias)
         {
-            TipoLicencia = l.TipoLicencia,
-            Descripcion = l.Descripcion,
-            Desde = l.Desde,
-            Hasta = l.Hasta,
-            EstadoLicencia = l.EstadoLicencia,
-            NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
-        };
+            LicencasVm LicVm = new()
+                {
+                    TipoLicencia = l.TipoLicencia,
+                    Descripcion = l.Descripcion,
+                    Desde = l.Desde,
+                    Hasta = l.Hasta,
+                    EstadoLicencia = l.EstadoLicencia,
+                    NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
+                };
 
-        LicenciasActivasVM.Add(LicVm);
+            LicenciasActivasVM.Add(LicVm);
+        }
+
+        StateHasChanged();
     }
 
-    StateHasChanged();
-}
-
-private async Task LicenciasBuscar()
-{
-    LicenciasActivasVM.Clear();
-    var licencias = await Context.Licencias
-        .Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
-        .Include(b => b.PersonalAfectado)
-        .ToListAsync();
-
-    foreach (var licencia in licencias)
+    private async Task LicenciasBuscar()
     {
-        LicencasVm LicVm = new()
+        LicenciasActivasVM.Clear();
+        var licencias = await Context.Licencias
+            .Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
+            .Include(b => b.PersonalAfectado)
+            .ToListAsync();
+
+        foreach (var licencia in licencias)
         {
-            TipoLicencia = licencia.TipoLicencia,
-            Descripcion = licencia.Descripcion,
-            Desde = licencia.Desde,
-            Hasta = licencia.Hasta,
-            EstadoLicencia = licencia.EstadoLicencia,
-            NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
-        };
+            LicencasVm LicVm = new()
+                {
+                    TipoLicencia = licencia.TipoLicencia,
+                    Descripcion = licencia.Descripcion,
+                    Desde = licencia.Desde,
+                    Hasta = licencia.Hasta,
+                    EstadoLicencia = licencia.EstadoLicencia,
+                    NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
+                };
 
-        LicenciasActivasVM.Add(LicVm);
+            LicenciasActivasVM.Add(LicVm);
+        }
+
+        StateHasChanged();
     }
-
-    StateHasChanged();
-}
 
     private async Task LicenciasPendiente()
     {
