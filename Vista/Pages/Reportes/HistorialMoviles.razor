@@ -11,6 +11,25 @@
 @using Vista.Data.ViewModels.Personal;
 
 <style>
+
+    .template {
+        width: 100%;
+        height: 100%;
+        max-width: 97%;
+        min-width: 400px;
+        max-height: 100vh;
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1em;
+        padding: 0;
+        overflow: auto;
+    }
+
     @@media (max-width: 960px) {
         .ant-table-row, .ant-table-row-level-0 {
             display: flex !important;
@@ -40,48 +59,47 @@
         }
     }
 </style>
-
-<EditForm Model="this">
-    <div style="margin-top: 2em;">
-        <Table DataSource="MovilesSalidas" PageSize="6" Bordered Responsive>
-            <TitleTemplate>
-                <div class="botonesCont">
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Desde: </label>
-                            <InputDate @bind-Value="fechaInicio" />
+<div class="template">
+    <EditForm Model="this">
+            <Table DataSource="MovilesSalidas" PageSize="6" Bordered Responsive>
+                <TitleTemplate>
+                    <div class="botonesCont">
+                        <div class="inpt-cont-inline">
+                            <div class="inpt-cont">
+                                <label class="inpt-cont--lbl">Desde: </label>
+                                <InputDate @bind-Value="fechaInicio" />
+                            </div>
+                            <div class="inpt-cont">
+                                <label class="inpt-cont--lbl">Hasta: </label>
+                                <InputDate @bind-Value="fechaFin" />
+                            </div>
+                            <div>
+                                <Button OnClick="()=> FiltrarResultados(fechaInicio, fechaFin)">
+                                    Filtrar
+                                </Button>
+                            </div>
                         </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Hasta: </label>
-                            <InputDate @bind-Value="fechaFin" />
-                        </div>
-                        <div>
-                            <Button OnClick="()=> FiltrarResultados(fechaInicio, fechaFin)">
-                                Filtrar
+                        <div class="buttoncont">
+                            <Button OnClick="() => CargarSalidasMovil()">
+                                Mostrar todos
                             </Button>
                         </div>
                     </div>
-                    <div class="buttoncont">
-                        <Button OnClick="() => CargarSalidasMovil()">
-                            Mostrar todos
-                        </Button>
-                    </div>
-                </div>
-            </TitleTemplate>
+                </TitleTemplate>
     
-            <ColumnDefinitions Context="muestra">
-                <PropertyColumn Property="c=>c.NumeroMovil" Sortable></PropertyColumn>
-                <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
-                <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
-                <PropertyColumn Property="c=>c.Hrllegada" Sortable></PropertyColumn>
-                <PropertyColumn Property="c=>c.CargoCombustibleTexto" Sortable> cargo </PropertyColumn>
-            </ColumnDefinitions> 
-        </Table>
-        <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-            <Button OnClick="@(async () => await JSRuntime.InvokeAsync<object>("open", "/Reportes/ImprimirRM", "_blank"))">Imprimir</Button>
-        </div>
-    </div>
-</EditForm>
+                <ColumnDefinitions Context="muestra">
+                    <PropertyColumn Property="c=>c.NumeroMovil" Sortable></PropertyColumn>
+                    <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
+                    <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
+                    <PropertyColumn Property="c=>c.Hrllegada" Sortable></PropertyColumn>
+                    <PropertyColumn Property="c=>c.CargoCombustibleTexto" Sortable> cargo </PropertyColumn>
+                </ColumnDefinitions> 
+            </Table>
+            <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
+                <Button OnClick="@(async () => await JSRuntime.InvokeAsync<object>("open", "/Reportes/ImprimirRM", "_blank"))">Imprimir</Button>
+            </div>
+    </EditForm>
+</div>
 
 @code {
     BomberosDbContext Context;

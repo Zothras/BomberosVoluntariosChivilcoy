@@ -5,7 +5,27 @@
 @inject IMessageService message
 @page "/bomberos/ascenso"
 
-<div style="margin-top: 2em;">
+<style>
+    .template {
+        width: 100%;
+        height: 100%;
+        max-width: 97%;
+        min-width: 400px;
+        max-height: 100vh;
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1em;
+        padding: 0;
+        overflow: auto;
+    }
+</style>
+
+<div class="template">
     <Table DataSource="ascensos" PageSize="6" Bordered Responsive>
         <PropertyColumn Property="b=>b.NombreYApellido"></PropertyColumn>
         <PropertyColumn Property="b=>b.FechaEmision"></PropertyColumn>
