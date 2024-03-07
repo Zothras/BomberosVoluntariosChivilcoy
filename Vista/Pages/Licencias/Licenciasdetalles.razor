@@ -2,6 +2,7 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
+@inject MessageService _message
 @page "/Licencias-Detalles"
 
 <style>
@@ -23,6 +24,7 @@
 
     .ant-badge {
         padding: 0 5px !important;
+        font-size: 22px!important;
     }
 
     .inpt-cont--lbl {
@@ -61,7 +63,13 @@
     }
 
     .ant-badge {
-        margin: 20px 10px 0 0 !important;
+        margin: 0 !important;
+        padding: 0 10px !important;
+        height: 100%!important;
+        width: 100%!important;
+        display: flex!important;
+        align-items: center!important;
+        justify-content: center!important;
     }
 
     @@media (max-width: 960px) {
@@ -97,8 +105,10 @@
     }
 
     .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
+        background-color: #f5f5f5 !important;
+        color: dimgray !important;
+        border: 1px solid dimgray !important;
+        border-radius: 5px;
     }
 
     .template {
@@ -106,7 +116,7 @@
         height: 100%;
         max-width: 97%;
         min-width: 400px;
-        max-height: 100%;
+        max-height: 100vh;
         border-radius: 10px;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         background: #fff;
@@ -115,12 +125,47 @@
         justify-content: center;
         align-items: center;
         margin: 1em;
+        padding: 0;
+        overflow: auto; 
     }
 
+    .ant-table-wrapper{
+        width: 100%;
+        height: 100%;
+        padding: 0 25px;
+    }
+
+    /* sacamos borde superior */
+    .ant-table.ant-table-bordered > .ant-table-title {
+        border: none!important;
+    }
+
+    .template::-webkit-scrollbar {
+        width: 5px!important;
+    }
+    .template::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px!important;
+    }
+
+    .ant-table-title {
+        padding: 16px 0!important;
+    }
+
+    .ant-spin-container{
+        padding: 5px 0!important;
+    }
+
+    .ant-dropdown-trigger{
+        height: 32px !important;
+    }
+   /*  .ant-table-tbody{
+        overflow: scroll!important;
+    } */
 </style>
 <div class="template">
     @*dataSource= Contenido que contiene mi tabla *@
-    <Table Class="Tabla" DataSource="LicenciasActivasVM" Bordered Responsive>
+    <Table Class="Tabla" DataSource="LicenciasActivasVM" PageSize="20" Responsive Style="border: none;width: 100%;">
         <TitleTemplate>
             <div class="botonesCont">
                 <div class="inpt-cont-inline">
@@ -140,25 +185,26 @@
                 </div>
                 @*Parte del encuadre de texto del buscador  de licencias*@
                 <div class="inpt-cont-inline">
-                    <div style="display: flex; margin-bottom:  5px;" class="buton-cont">
+                    <div style="display: flex; margin-bottom: 5px;" class="buton-cont">
                         <Search Placeholder="Buscar" WrapperStyle="width: 200px;" AllowClear EnterButton="true" @bind-Value="Busqueda" OnChange="BuscarLicenciado" />
-                     </div>
-                 </div>
-                 <div>
-                     <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
-                         <Overlay>
-                             <Menu Style="min-width:320px;max-width:600px;">
-                                 <LicenciasAprobar />
-                             </Menu>
-                         </Overlay>
-                         <ChildContent>
-                             <div class="notificacion">
-                                 <Badge Count="LicenciasPendientes.Count">
-                                     <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
-                                 </Badge>
-                             </div>
-                         </ChildContent>
-                     </Dropdown>
+                    </div>
+                </div>
+                <div style="display: flex;">
+                    <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
+                    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
+                        <Overlay>
+                            <Menu Style="min-width:320px;max-width:600px;">
+                                <LicenciasAprobar />
+                            </Menu>
+                        </Overlay>
+                        <ChildContent>
+                            <div class="notificacion">
+                                <Badge Count="LicenciasPendientes.Count">
+                                    <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
+                                </Badge>
+                            </div>
+                        </ChildContent>
+                    </Dropdown>
                  </div>
              </div>
          </TitleTemplate>
@@ -188,9 +234,6 @@
             </PropertyColumn>
         </ColumnDefinitions>
     </Table>
-    <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
-        <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
-    </div>
 </div>
 
 <Modal Footer="null" Title="@("Agregar la licencia")"
@@ -205,6 +248,7 @@
 </Modal>
 
 @code {
+
     public class LicencasVm
     {
         [Required]
