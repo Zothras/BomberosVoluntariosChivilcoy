@@ -1,5 +1,4 @@
 ﻿using Vista.Data.Enums;
-using Vista.Data.Migrations;
 
 namespace Vista.Data.ViewModels.Personal
 {
