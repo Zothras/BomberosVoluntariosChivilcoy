@@ -24,6 +24,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAntDesign();
 builder.Services.AddBlazoredToast();
+builder.Services.AddHostedService<InitData>();
 builder.Services.AddScoped<StockService>();
 
 var app = builder.Build();
