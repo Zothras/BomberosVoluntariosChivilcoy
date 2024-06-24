@@ -255,7 +255,7 @@
                     <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.CuerpoActivo)" Label="Cuerpo activo" />
                     <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Reserva)" Label="Reserva" />
                     <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.ComisionDirectiva)" Label="Comision directiva" />
-                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Retirado)" Label="Retirado" />
+                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Inactivo)" Label="Inactivo" />
                 </SelectOptions>
             </Select>
         </FormItem>
@@ -550,7 +550,7 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         brigadas = await db.Brigadas.ToArrayAsync();
-        bomberos = await db.Bomberos.Where(x => x.Estado != EstadoBombero.Retirado).ToListAsync();//Se trae a todos los bomberos que no esten en reserva
+        bomberos = await db.Bomberos.Where(x => x.Estado != EstadoBombero.Inactivo).ToListAsync();//Se trae a todos los bomberos que no esten en reserva
 
         bomberosRespaldo = bomberos;
 
