@@ -113,17 +113,21 @@
             </GridRow>
         </TitleTemplate>
         <ColumnDefinitions>
-            <PropertyColumn Property="c=>c.Brigada.Nombre"
-                                SorterCompare="@((a,b)=> a.Length - b.Length)"
-                                SortDirections="new[] { SortDirection.Descending }"
-                                Filters="nameFilters"
-                                OnFilter="((value,name)=>name.StartsWith(value))"
-                                Title="Brigada" />
-                <PropertyColumn Property="c=>c.Nombre" Sortable />
-                <PropertyColumn Property="c=>c.NumeroLegajo"
-                                DefaultSortOrder="@SortDirection.Descending"
-                SorterCompare="@((a,b)=> a - b)" />
-        
+            <PropertyColumn Property="c => c.Brigada.BrigadaId"
+                            Title="Brigada"
+                            Sortable />
+            <PropertyColumn Property="c => c.Brigada.Nombre"
+                            Title="Nombre de Brigada"
+                            SorterCompare="@((a, b) => string.Compare(a, b, StringComparison.Ordinal))"
+                            SortDirections="new[] { SortDirection.Descending }"
+                            Filters="nameFilters"
+                            OnFilter="((value, name) => name.StartsWith(value))" />
+            <PropertyColumn Property="c => c.NumeroLegajo"
+                            Title="Número de Legajo"
+                            DefaultSortOrder="@SortDirection.Descending"
+                            SorterCompare="@((a, b) => a - b)" />
+        </ColumnDefinitions>
+
             @*corregir-------------------------------------------------------------------------------------------------------------------------------------------------------*@
             @*else if (bomberosFiltrados is not null)
             {
@@ -146,7 +150,6 @@
                 bomberosFiltrados = new List<Bombero>();
 
             }*@
-        </ColumnDefinitions>
     </Table>
      <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;gap: 10px;">
          <Button OnClick="@ShowModalEliminar">
@@ -218,41 +221,70 @@
 
     public async void CrearBrigada()
     {
-        if (!String.IsNullOrWhiteSpace(brigadaVM.nombreBrigada))
+        if (!string.IsNullOrWhiteSpace(brigadaVM.nombreBrigada))
         {
-            //agregar condicional para ver si ya existe la brigada
             using var db = await DbFactory.CreateDbContextAsync();
 
-            Brigada brigada = new()
+            // Verificar si ya existe una brigada con el mismo nombre
+            bool existeBrigada = await db.Brigadas
+                .AnyAsync(b => b.Nombre == brigadaVM.nombreBrigada);
+
+            if (existeBrigada)
             {
-                Nombre = brigadaVM.nombreBrigada
-            };
+                Console.WriteLine($"Error: Ya existe una brigada con el nombre '{brigadaVM.nombreBrigada}'.");
+                return;
+            }
+
+            Brigada brigada = new()
+                {
+                    Nombre = brigadaVM.nombreBrigada
+                };
 
             await db.Brigadas.AddAsync(brigada);
             await db.SaveChangesAsync();
+
             brigadaVM.nombreBrigada = string.Empty;
-            //brigadas = await db.Brigadas.ToArrayAsync();
-            await OnInitializedAsync();//Actualza los datos 
+            await OnInitializedAsync(); // Actualiza los datos
             StateHasChanged();
         }
     }
 
+
     //eliminar una brigada segun el nombre
     public async void EliminarBrigada()
     {
-
-        using var db = DbFactory.CreateDbContext();
-        Brigada? brigada = await db.Brigadas.Where(b => b.Nombre == BrigadaEliminar).SingleOrDefaultAsync();
-        if (brigada is not null)
+        if (string.IsNullOrEmpty(BrigadaEliminar))
         {
-            db.Remove(brigada);
+            Console.WriteLine("Error: Nombre de brigada para eliminar no proporcionado.");
+            return;
         }
-        await db.SaveChangesAsync();
-        BrigadaEliminar = string.Empty;
-        //brigadas = await db.Brigadas.ToArrayAsync();
-        await OnInitializedAsync();
-        StateHasChanged();
+
+        try
+        {
+            using var db = DbFactory.CreateDbContext();
+            Brigada? brigada = await db.Brigadas.Where(b => b.Nombre == BrigadaEliminar).SingleOrDefaultAsync();
+
+            if (brigada is not null)
+            {
+                db.Brigadas.Remove(brigada);
+                await db.SaveChangesAsync();
+                Console.WriteLine($"Brigada '{BrigadaEliminar}' eliminada exitosamente.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: Brigada con nombre '{BrigadaEliminar}' no encontrada.");
+            }
+
+            BrigadaEliminar = string.Empty;
+            await OnInitializedAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al eliminar la brigada: {ex.Message}");
+        }
     }
+
 
     private class BrigadaViewModel
     {
