@@ -421,7 +421,7 @@
                     </button>
                 </Popover>
                 <Popover ContentTemplate="@art7b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/retirados"); })">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/inactivos"); })">
                         <i class="fa-solid fa-user-large-slash"></i>
                     </button>
                 </Popover>
@@ -574,7 +574,7 @@
     </div>;
     private RenderFragment art7b =
     @<div>
-        <p>Retirados</p>
+        <p>Inactivos</p>
     </div>;
     private RenderFragment art7c =
     @<div>

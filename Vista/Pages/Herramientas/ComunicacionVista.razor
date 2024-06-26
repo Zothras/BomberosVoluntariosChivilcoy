@@ -68,7 +68,6 @@
                 <PropertyColumn Property="b=>b.Apellido" Sortable />
                 <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="Número de Legajo" />
                 <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Número Movil" />
-                <PropertyColumn Property="m=>m.Patente" Sortable />
                 <ActionColumn Title="Action">
                 <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
@@ -212,7 +211,6 @@
         //Propiedades a mostrar de un movil
         public Movil? Movil { get; set; }
         public string? NumeroMovil = " ";
-        public string? Patente = " ";
         //Propiedades a mostrar de un bombero
         public Bombero? Bombero { get; set; }
         public string? Nombre = " ";
@@ -231,7 +229,6 @@
     }
     public class MovilViewModel
     {
-        public string Patente { get; set; }
         public string NumeroMovil { get; set; }
         public Comunicacion? HandieMovil { get; set; }
     }
@@ -326,7 +323,6 @@
                     NroSerie = c.NroSerie,
                     Nombre = c.Bombero?.Nombre,
                     Apellido = c.Bombero?.Apellido,
-                    Patente = c.Movil?.Patente,
                     NumeroMovil = c.Movil?.NumeroMovil,
                     NroLegajo = c.Bombero?.NumeroLegajo,
                     Estado = c.Estado
@@ -362,7 +358,6 @@
             MovilViewModel movilVM = new()
                 {
                     NumeroMovil = m.NumeroMovil,
-                    Patente = m.Patente,
                     HandieMovil = m.HandieMovil
                 };
             MovilesViewModel.Add(movilVM);

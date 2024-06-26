@@ -5,6 +5,6 @@
         CuerpoActivo,
         Reserva,
         ComisionDirectiva,
-        Retirado,
+        Inactivo,
     }
 }

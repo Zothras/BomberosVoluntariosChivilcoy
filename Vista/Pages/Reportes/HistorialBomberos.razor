@@ -88,6 +88,7 @@
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">
         <Button OnClick="@(async () => await JSRuntime.InvokeAsync<object>("open", "/Reportes/ImprimirRB", "_blank"))">Imprimir</Button>
+        <Button OnClick="@(async () => await GuardarEnExcel())">Exportar en Excel</Button>
     </div>
 </div>
 
@@ -105,12 +106,32 @@
 
     static DateTime hasta = DateTime.Now;
     static DateTime desde = hasta.AddMonths(-1);
-
+    
     List<Vista.Data.ViewModels.Personal.BomberoViweModel>? BomberosVM = new();
 
     int _pageIndex = 1;
     int _pageSize = 6;
     int _total = 0;
+
+    private async Task GuardarEnExcel()
+    {
+        CrearExcel crear = new CrearExcel();
+        var ListaBomberos = await Context.Bomberos.Select(b => new
+        {
+            b.NumeroLegajo,
+            b.Nombre,
+            b.Apellido,
+            b.Grado,
+            TelefonoCel = b.Contacto.TelefonoCel,
+            TelefonoFijo = b.Contacto.TelefonoFijo,
+            TelefonoLaboral = b.Contacto.TelefonoLaboral,
+            Email = b.Contacto.Email
+        }).ToListAsync();
+        string ExcNombre = "DatosBomberos.xlsx";
+
+        byte[] fileBytes = crear.ExportarEnExcel(ListaBomberos);
+        await JSRuntime.InvokeVoidAsync("BlazorDownloadFile.saveAsFile", ExcNombre, Convert.ToBase64String(fileBytes), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
 
     private async Task cargarbomberosVM()
     {
