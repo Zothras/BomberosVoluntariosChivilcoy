@@ -116,7 +116,17 @@
     private async Task GuardarEnExcel()
     {
         CrearExcel crear = new CrearExcel();
-        var ListaBomberos = await Context.Bomberos.ToListAsync();
+        var ListaBomberos = await Context.Bomberos.Select(b => new
+        {
+            b.NumeroLegajo,
+            b.Nombre,
+            b.Apellido,
+            b.Grado,
+            TelefonoCel = b.Contacto.TelefonoCel,
+            TelefonoFijo = b.Contacto.TelefonoFijo,
+            TelefonoLaboral = b.Contacto.TelefonoLaboral,
+            Email = b.Contacto.Email
+        }).ToListAsync();
         string ExcNombre = "DatosBomberos.xlsx";
 
         byte[] fileBytes = crear.ExportarEnExcel(ListaBomberos);
