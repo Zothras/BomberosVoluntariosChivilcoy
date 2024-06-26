@@ -1,35 +1,14 @@
-﻿@inject NavigationManager navigationManager
+﻿@page "/Herramientas/Brigadas"
+
+@using AntDesign
+@using AntDesign.TableModels
+@using System.Linq
+@using Microsoft.AspNetCore.Components.Web
+@inject NavigationManager NavigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/Herramientas/Brigadas"
-@using AntDesign.TableModels;
-@using System.Text.Json;
-@using System.Text.RegularExpressions;
-@using System.Linq;
 
-@*
-<label>Ingrese el nombre de la brigada :</label>
-<input @bind="BrigadaNueva.Nombre" type="text" />
-<Input @bind-Value="@brigadaVM.nombreBrigada" Placeholder="Agregar brigada" />
-<button @onclick="CrearBrigada">Crear</button>
-
-<Input @bind-Value="@BrigadaEliminar" Placeholder="Eliminar brigada" />
-
-
-<button @onclick="EliminarBrigada">Eliminar</button>
-
-
-<h3>Lista actual de brigadas:</h3>
-<br />
-@if (brigadas is not null)
-{
-    @foreach (Brigada b in brigadas)
-    {
-        <label>@b.Nombre   <button @onclick="@(() => { navigationManager.NavigateTo($"/bomberos/AgregarBrigada{b.BrigadaId}"); })"><i class="fas fa-eye"></i></button></label>
-        <br>
-    }
-}*@
 <style>
-    .ant-table-wrapper{
+    .ant-table-wrapper {
         width: 40em !important;
     }
 
@@ -43,33 +22,57 @@
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         background: #fff;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         margin: 1em;
         padding: 0;
         overflow: auto;
     }
+
+        .template .column {
+            flex: 1;
+            border-radius: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+        }
+
+    .brigada-button {
+        border-radius: 20px;
+        background-color: #D99534;
+        color: white;
+        padding: 10px;
+        margin: 10px;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        margin-bottom: 40px;
+    }
+
+    .red-heading {
+        background-color: #820014;
+        color: white;
+        text-align: center;
+        border-radius: 10px 10px 0 0; /* Ajusta los bordes circulares según tus necesidades */
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+    }
+
+
+    .bombero-card {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px;
+        cursor: grab;
+    }
+
+        .brigada-button:active, .bombero-card:active {
+            cursor: grabbing;
+        }
+
 </style>
-
-@*--------------------------------------------------------------------------Modal Agregar---------------------------------------------------------------------------------*@
-
-
-<Modal Title="@("Agregar Brigada")"
-       Visible="@_visibleAgregar"
-       OnOk="@HandleOkAgregar"
-       OnCancel="@HandleCancelAgregar">
-    <Form Loading="loading" Model="@brigadaVM"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailedAgregar"
-    @ref="@_formAgregar">
-        <FormItem Label="Nombre Brigada">
-            <Input @bind-Value="@context.nombreBrigada" />
-        </FormItem>
-    </Form>
-</Modal>
 
 
 @*--------------------------------------------------------------------------Modal Eliminar---------------------------------------------------------------------------------*@
@@ -83,7 +86,7 @@
           WrapperColSpan="16"
           OnFinish="OnFinishEliminar"
           OnFinishFailed="OnFinishFailedEliminar"
-        @ref="@_formEliminar">
+          @ref="@_formEliminar">
         <FormItem Label="Nombre Brigada">
             <Select TItem="Brigada"
                     TItemValue="string"
@@ -99,78 +102,98 @@
     </Form>
 </Modal>
 
-@*  //*@
-@*------------------------------------------------------------------------Tabla-----------------------------------------------------------------------------------------*@
-<div class="template">
-    <Table DataSource="bomberos" OnChange="OnChange" TItem="Bombero" @ref="_table" PageSize="6" Responsive>
-        <TitleTemplate>
-            <GridRow Style="display: flex;">
-                <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Style="width: 100%;"/>
-                @if (String.IsNullOrWhiteSpace(searchString))
+<div class="template" style="display: flex; justify-content: space-between;">
+    <div class="column" style="flex: 2; display: flex; flex-direction: column;">
+        <!-- Lista de brigadas -->
+        <h3 class="red-heading">Brigadas</h3>
+        <div style="flex: 1; overflow-y: auto; min-height: 0;">
+            <div class="brigadas-container">
+                @if (brigadas != null)
                 {
-                    bomberos = bomberosRespaldo;
+                    @foreach (var brigada in PagedBrigadas.Take(3))
+                    {
+                        <div class="brigada-button"
+                             @ondrop="@(e => OnDrop(e, brigada.BrigadaId))"
+                        @ondragover:preventDefault
+                             @ondragover="OnDragOver"
+                             @ondragleave="OnDragLeave">
+                            @brigada.Nombre
+                        </div>
+                    }
                 }
-            </GridRow>
-        </TitleTemplate>
-        <ColumnDefinitions>
-            <PropertyColumn Property="c => c.Brigada.BrigadaId"
-                            Title="Brigada"
-                            Sortable />
-            <PropertyColumn Property="c => c.Brigada.Nombre"
-                            Title="Nombre de Brigada"
-                            SorterCompare="@((a, b) => string.Compare(a, b, StringComparison.Ordinal))"
-                            SortDirections="new[] { SortDirection.Descending }"
-                            Filters="nameFilters"
-                            OnFilter="((value, name) => name.StartsWith(value))" />
-            <PropertyColumn Property="c => c.NumeroLegajo"
-                            Title="Número de Legajo"
-                            DefaultSortOrder="@SortDirection.Descending"
-                            SorterCompare="@((a, b) => a - b)" />
-        </ColumnDefinitions>
-
-            @*corregir-------------------------------------------------------------------------------------------------------------------------------------------------------*@
-            @*else if (bomberosFiltrados is not null)
+            </div>
+        </div>
+        <div class="footer" style="background-color: #820014; padding: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; border-radius: 0 0 10px 10px;">
+            <!-- Controles de paginación -->
+            @if (totalItems > 3)
             {
-                @foreach (Bombero bom in bomberosFiltrados)
+                <div>
+                    <Pagination Total="@totalItems" PageSize="3" CurrentPageIndex="@currentPage" OnChange="@OnPageChange" />
+                </div>
+            }
+            else
+            {
+                <div></div> <!-- Espacio vacío para mantener el layout -->
+            }
+            <!-- Botón para mostrar modal de agregar brigada -->
+            <div>
+                <Button OnClick="@ShowModalAgregar" Style="background-color: #D99534; border-color: #D99534;">Agregar Brigada</Button>
+            </div>
+        </div>
+    </div>
+    <div class="column" style="flex: 1; display: flex; flex-direction: column;">
+        <!-- Lista de bomberos sin brigada -->
+        <h3 class="red-heading">Bomberos sin Brigada</h3>
+        <div style="flex: 1; overflow-y: auto; min-height: 0;">
+            @if (PagedBomberosSinBrigada != null && PagedBomberosSinBrigada.Any())
+            {
+                @foreach (var bombero in PagedBomberosSinBrigada)
                 {
-
-                    <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Brigada.Nombre"
-                                        SorterCompare="@((a,b)=> a.Length - b.Length)"
-                                        SortDirections="new[] { SortDirection.Descending }"
-                                        Filters="nameFilters"
-                                        OnFilter="((value,name)=>name.StartsWith(value))"
-                                        Title="Brigada" />
-                    <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.Nombre" Sortable />
-                    <PropertyColumn Property="bomberosFiltrados=> bomberosFiltrados.NumeroLegajo"
-                                        DefaultSortOrder="@SortDirection.Descending"
-                    SorterCompare="@((a,b)=> a - b)" />
-
+                    <div class="bombero-card" draggable="true" @ondragstart="@(e => OnDragStart(e, bombero.NumeroLegajo))">
+                        @bombero.Nombre @bombero.Apellido
+                    </div>
                 }
+            }
+            else
+            {
+                <p>No hay bomberos sin brigada disponibles.</p>
+            }
+        </div>
+        <div class="footer" style="background-color: #820014; padding: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; border-radius: 0 0 10px 10px;">
+            <Pagination Total="@totalBomberosSinBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChange" />
+        </div>
 
-                bomberosFiltrados = new List<Bombero>();
+    </div>
+    <!-- Modal Agregar Brigada -->
+    <Modal Title="@("Agregar Brigada")"
+           Visible="@_visibleAgregar"
+           OnOk="@HandleOkAgregar"
+           OnCancel="@HandleCancelAgregar">
+        <Form Loading="loading" Model="@brigadaVM"
+              LabelColSpan="8"
+              WrapperColSpan="16"
+              OnFinish="OnFinish"
+              OnFinishFailed="OnFinishFailedAgregar"
+              @ref="@_formAgregar">
+            <FormItem Label="Nombre Brigada">
+                <Input @bind-Value="@brigadaVM.nombreBrigada" />
+            </FormItem>
+        </Form>
+    </Modal>
+</div>
 
-            }*@
-    </Table>
-     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;gap: 10px;">
-         <Button OnClick="@ShowModalEliminar">
-             Eliminar Brigada
-         </Button>
-         <Button OnClick="@ShowModalAgregar">
-             Agregar Brigada
-         </Button>
-     </div>
- </div>
 
-
-@*------------------------------------------------------------------------Fin Tabla-----------------------------------------------------------------------------------------*@
+@*------------------------------------------------------------------------Fin Brigadas-----------------------------------------------------------------------------------------*@
 
 @code {
 
-    private BrigadaViewModel brigadaVM= new BrigadaViewModel();
+    private BrigadaViewModel brigadaVM = new BrigadaViewModel();
     List<Bombero>? bomberos = new List<Bombero>();//lo hago con lista porque no me deja usar el buscador en OnChange por pasar valores nulos
     List<Bombero>? bomberosRespaldo = new List<Bombero>();
     List<string>? bomberosFiltro = new List<string>();
+    List<Bombero>? bomberosSinBrigada = new List<Bombero>();
     private bool busquedaVacia = true;
+
 
     private Brigada BrigadaNueva { get; set; } = new();
 
@@ -182,6 +205,8 @@
     IEnumerable<Bombero> dataSource;
     ITable _table;
 
+    private int? draggedBomberoId;
+
     private List<Bombero> bomberosFiltrados = new List<Bombero>();
 
     private void getDatosMostrarBombero()
@@ -191,7 +216,7 @@
             //string bomber = $"{b.Nombre} {b.Brigada.Nombre}";
             bomberosFiltro.Add(b.Nombre);
         }
-    }
+    } @*<-- Filtrado de Bomberos???*@
 
     protected override async Task OnInitializedAsync()
     {
@@ -199,25 +224,130 @@
 
         brigadas = await db.Brigadas.ToArrayAsync();
         bomberos = await db.Bomberos.ToListAsync();
-        bomberosRespaldo = bomberos;
-        getDatosMostrarBombero();
-        //se añade cada brigada a lo bomberos, ya que sino el valor queda nulo
-        for (int i = 0; i < bomberos.Count(); i++)
-        {
-            Brigada? brigada = await db.Brigadas.Where(b => b.BrigadaId == bomberos[i].BrigadaId).SingleOrDefaultAsync();
-            bomberos[i].Brigada.Nombre = brigada.Nombre;
-            bomberos[i].Brigada.BrigadaId = brigada.BrigadaId;
 
-        }
 
-        //Se añade los valores para filtrar la brigada
+        // Se añade los valores para filtrar la brigada
         nameFilters = new TableFilter<string>[brigadas.Count()];
-        for (int i = 0; i < nameFilters.Count(); i++)
+        for (int i = 0; i < nameFilters.Length; i++)
         {
-            nameFilters[i] = new() { Text = brigadas[i].Nombre, Value = brigadas[i].Nombre };
+            nameFilters[i] = new TableFilter<string> { Text = brigadas[i].Nombre, Value = brigadas[i].Nombre };
         }
+
+        // Cargar bomberos sin brigada
+        bomberosSinBrigada = bomberos.Where(b => b.BrigadaId == null).ToList();
+
+
         StateHasChanged();
     }
+
+    // Paginacion
+    private int currentPage = 1;
+    private int pageSize = 3;
+    private int totalItems => brigadas?.Count() ?? 0;
+    private List<Brigada> PagedBrigadas => brigadas?.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList() ?? new List<Brigada>();
+
+    private void OnPageChange(PaginationEventArgs args)
+    {
+        currentPage = args.Page;
+    }
+
+    // Paginacion Bomberos
+
+    private List<Bombero> PagedBomberosSinBrigada => bomberosSinBrigada
+    .Skip((currentPageBomberos - 1) * pageSizeBomberos)
+    .Take(pageSizeBomberos)
+    .ToList();
+
+    private int currentPageBomberos = 1;
+    private int pageSizeBomberos = 5; // Ajusta este valor según tus necesidades
+    private int totalBomberosSinBrigada => bomberosSinBrigada?.Count ?? 0;
+
+    private void OnDragLeave()
+    {
+        
+    }
+
+    private void OnDragStart(DragEventArgs e, int bomberoId)
+    {
+        draggedBomberoId = bomberoId;
+    }
+
+    private void OnDragOver(DragEventArgs e)
+    {
+        e.DataTransfer.EffectAllowed = "move";
+        e.DataTransfer.DropEffect = "move";
+    }
+
+    private async Task OnDrop(DragEventArgs e, int brigadaId)
+    {
+        if (draggedBomberoId.HasValue)
+        {
+            try
+            {
+                await AssignBomberoToBrigada(draggedBomberoId.Value, brigadaId);
+                Console.WriteLine($"Bombero asignado a la brigada con ID {brigadaId} correctamente.");
+
+                // Actualizar las listas locales
+                await UpdateLocalLists(draggedBomberoId.Value, brigadaId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al asignar bombero a brigada: {ex.Message}");
+            }
+        }
+
+        draggedBomberoId = null;
+        StateHasChanged();
+    }
+
+    private async Task UpdateLocalLists(int bomberoId, int brigadaId)
+    {
+        // Remover el bombero de la lista de bomberos sin brigada
+        var bombero = bomberosSinBrigada.FirstOrDefault(b => b.NumeroLegajo == bomberoId);
+        if (bombero != null)
+        {
+            bomberosSinBrigada.Remove(bombero);
+            bombero.BrigadaId = brigadaId;
+
+            // Actualizar la lista de brigadas si es necesario
+            var brigada = brigadas.FirstOrDefault(b => b.BrigadaId == brigadaId);
+            if (brigada != null && brigada.Bomberos != null)
+            {
+                brigada.Bomberos.Add(bombero);
+            }
+        }
+
+        // Recargar los datos si es necesario
+        await OnInitializedAsync();
+    }
+
+    private async Task<Bombero> AssignBomberoToBrigada(int bomberoId, int brigadaId)
+    {
+        using (var db = DbFactory.CreateDbContext())
+        {
+            var bombero = await db.Bomberos.FirstOrDefaultAsync(b => b.NumeroLegajo == bomberoId);
+            if (bombero == null)
+            {
+                Console.WriteLine($"Bombero con ID {bomberoId} no encontrado.");
+                return null;
+            }
+
+            var brigada = await db.Brigadas.FindAsync(brigadaId);
+            if (brigada == null)
+            {
+                Console.WriteLine($"Brigada con ID {brigadaId} no encontrada.");
+                return null;
+            }
+
+            bombero.BrigadaId = brigadaId;
+            db.Update(bombero);
+            await db.SaveChangesAsync();
+
+            Console.WriteLine($"Bombero {bombero.Nombre} asignado a la brigada {brigada.Nombre} correctamente.");
+            return bombero;
+        }
+    }
+
 
     public async void CrearBrigada()
     {
@@ -397,14 +527,14 @@
     }
     #endregion
 
-    void OnChange(QueryModel<Bombero> query)
+    @*void OnChange(QueryModel<Bombero> query)
     {
         Console.WriteLine(JsonSerializer.Serialize(query));
 
         dataSource = query.ExecuteQuery(bomberos.AsQueryable())
-            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase) 
+            .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase)
             || x.Brigada.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-    }
+    }*@
 
     private void search(string value)
     {
@@ -425,7 +555,7 @@
     {
         busquedaVacia = string.IsNullOrWhiteSpace(searchString);
         if (busquedaVacia) bomberos = bomberosRespaldo;
-    
+
 
         //QueryModel<Bombero> query = new QueryModel<Bombero>
         //    {
@@ -482,7 +612,7 @@
 
     //    public void OnSearchValueChanged()
     //    {
-            
+
     //        FilterModel = new List<ITableFilterModel>();
     //        if (!string.IsNullOrEmpty(SearchValue))
     //        {
@@ -499,8 +629,8 @@
     //        brigada
     //    }
     //}
-   
-    
+
+
 
 }
 

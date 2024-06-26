@@ -57,6 +57,10 @@ namespace Vista.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Brigada>()
+                .HasIndex(b => b.Nombre)
+                .IsUnique();
+
             modelBuilder.Entity<Movil>()
                 .HasIndex(m => m.NumeroMovil)
                 .IsUnique();
@@ -64,8 +68,10 @@ namespace Vista.Data
             modelBuilder.Entity<Bombero>()
                 .HasIndex(b => b.NumeroLegajo)
                 .IsUnique();
+
             modelBuilder.Entity<Licencia>()
              .HasKey(l => l.LicenciaId);
+
             modelBuilder.Entity<Licencia>()
                 .ToTable("Licencias");
             modelBuilder.Entity<Comunicacion>()
