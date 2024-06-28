@@ -6,6 +6,7 @@ using Blazored.Toast;
 using Vista.Services;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using AntDesign;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,13 +40,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//Localizacion
-app.UseRequestLocalization(new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture("es-ES"),
-    SupportedCultures = new[] { new CultureInfo("es-ES") },
-    SupportedUICultures = new[] { new CultureInfo("es-ES") }
-});
+//Localizacion AntDesign
+LocaleProvider.SetLocale("es-Es");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
