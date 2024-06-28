@@ -12,6 +12,17 @@
         width: 40em !important;
     }
 
+    .footer-brigadas{
+        background-color: #820014;
+        padding: 10px;
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 0 0 10px 10px;
+    }
+
     .template {
         width: 100%;
         height: 100%;
@@ -34,19 +45,35 @@
             border: 1px solid #ccc;
         }
 
-    .brigada-button {
-        border-radius: 20px;
-        background-color: #D99534;
-        color: white;
+    .lista{
+        border-radius: 10px;
         padding: 10px;
         margin: 10px;
         text-align: center;
-        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 80px;
-        margin-bottom: 40px;
+        height: 55px;
+        margin-bottom: 20px;
+    }
+
+        .lista.brigada {
+            background-color: #D99534;
+            cursor: pointer;
+            color: white;
+        }
+
+        .lista.bombero{
+            border: 1px solid #ccc;
+            cursor: grab;
+        }
+        
+            .lista.bombero:active {
+                cursor: grabbing;
+            }
+
+    .brigada:hover{
+        border-color: red;
     }
 
     .red-heading {
@@ -59,48 +86,12 @@
         border: 1px solid #ccc;
     }
 
-
-    .bombero-card {
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        padding: 10px;
-        margin: 10px;
-        cursor: grab;
-    }
-
-        .brigada-button:active, .bombero-card:active {
-            cursor: grabbing;
-        }
-
 </style>
 
 
 @*--------------------------------------------------------------------------Modal Eliminar---------------------------------------------------------------------------------*@
 
-<Modal Title="@("Agregar Brigada")"
-       Visible="@_visibleEliminar"
-       OnOk="@HandleOkEliminar"
-       OnCancel="@HandleCancelEliminar">
-    <Form Loading="loading" Model="@brigadaVM"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinishEliminar"
-          OnFinishFailed="OnFinishFailedEliminar"
-          @ref="@_formEliminar">
-        <FormItem Label="Nombre Brigada">
-            <Select TItem="Brigada"
-                    TItemValue="string"
-                    DataSource="@brigadas"
-                    @bind-Value="@BrigadaEliminar"
-                    DefaultValue="@("Elegir Brigada")"
-                    ValueName="@nameof(Brigada.Nombre)"
-                    LabelName="@nameof(Brigada.Nombre)"
-                    Style="width:120px"
-                    OnSelectedItemChanged="OnSelectedItemChangedHandler">
-            </Select>
-        </FormItem>
-    </Form>
-</Modal>
+
 
 <div class="template" style="display: flex; justify-content: space-between;">
     <div class="column" style="flex: 2; display: flex; flex-direction: column;">
@@ -110,11 +101,12 @@
             <div class="brigadas-container">
                 @if (brigadas != null)
                 {
-                    @foreach (var brigada in PagedBrigadas.Take(3))
+                    @foreach (var brigada in PagedBrigadas.Take(5))
                     {
-                        <div class="brigada-button"
+                        <div class="lista brigada"
+                             @onclick="() => SelectBrigada(brigada.BrigadaId)"
                              @ondrop="@(e => OnDrop(e, brigada.BrigadaId))"
-                        @ondragover:preventDefault
+                             @ondragover:preventDefault
                              @ondragover="OnDragOver"
                              @ondragleave="OnDragLeave">
                             @brigada.Nombre
@@ -123,44 +115,86 @@
                 }
             </div>
         </div>
-        <div class="footer" style="background-color: #820014; padding: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; border-radius: 0 0 10px 10px;">
+        <div class="footer-brigadas">
             <!-- Controles de paginación -->
-            @if (totalItems > 3)
+            @if (totalItems > 5)
             {
                 <div>
-                    <Pagination Total="@totalItems" PageSize="3" CurrentPageIndex="@currentPage" OnChange="@OnPageChange" />
+                    <Pagination Total="@totalItems" PageSize="5" CurrentPageIndex="@currentPage" OnChange="@OnPageChange" />
                 </div>
             }
             else
             {
                 <div></div> <!-- Espacio vacío para mantener el layout -->
             }
+                
+
             <!-- Botón para mostrar modal de agregar brigada -->
             <div>
-                <Button OnClick="@ShowModalAgregar" Style="background-color: #D99534; border-color: #D99534;">Agregar Brigada</Button>
+                <Button Type="@ButtonType.Dashed" OnClick="@ShowModalEliminar" Style="border-color: red; color:red;">Eliminar Brigada</Button>
+                <Button Type="@ButtonType.Primary" OnClick="@ShowModalAgregar" Style="background-color: #D99534; border-color: #D99534;">Agregar Brigada</Button>
             </div>
         </div>
     </div>
     <div class="column" style="flex: 1; display: flex; flex-direction: column;">
         <!-- Lista de bomberos sin brigada -->
-        <h3 class="red-heading">Bomberos sin Brigada</h3>
-        <div style="flex: 1; overflow-y: auto; min-height: 0;">
-            @if (PagedBomberosSinBrigada != null && PagedBomberosSinBrigada.Any())
+
+        <h3 class="red-heading">
+            @if (selectedBrigadaId == null)
             {
-                @foreach (var bombero in PagedBomberosSinBrigada)
+                <span>Bomberos sin Brigada</span>
+            }
+            else
+            {
+                <span>Bomberos de la Brigada @selectedBrigadaName</span>
+            }
+        </h3>
+
+        <div style="flex: 1; overflow-y: auto; min-height: 0;">
+            @if (selectedBrigadaId == null)
+            {
+                @if (PagedBomberosSinBrigada != null && PagedBomberosSinBrigada.Any())
                 {
-                    <div class="bombero-card" draggable="true" @ondragstart="@(e => OnDragStart(e, bombero.NumeroLegajo))">
-                        @bombero.Nombre @bombero.Apellido
-                    </div>
+                    @foreach (var bombero in PagedBomberosSinBrigada)
+                    {
+                        <div class="lista bombero" draggable="true" @ondragstart="@(e => OnDragStart(e, bombero.NumeroLegajo))">
+                            @bombero.Apellido @bombero.Nombre
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No hay bomberos sin brigada disponibles.</p>
                 }
             }
             else
             {
-                <p>No hay bomberos sin brigada disponibles.</p>
+                @if (PagedBomberosEnBrigada != null && PagedBomberosEnBrigada.Any())
+                {
+                    @foreach (var bombero in PagedBomberosEnBrigada)
+                    {
+                        <div class="lista bombero" draggable="false" cursor="pointer">
+                            @bombero.Apellido @bombero.Nombre
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No hay bomberos en esta brigada.</p>
+                }
             }
         </div>
-        <div class="footer" style="background-color: #820014; padding: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; border-radius: 0 0 10px 10px;">
-            <Pagination Total="@totalBomberosSinBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChange" />
+        <div class="footer-brigadas">
+            @if (selectedBrigadaId == null){
+                <Pagination Total="@totalBomberosSinBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChange" />
+            }
+            else
+            {
+                <Pagination Total="@totalBomberosEnBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChange" />
+                <Button Type="@ButtonType.Link" OnClick="@ClearSelectedBrigada">Volver a Bomberos sin Brigada</Button>
+            }
+            
+            
         </div>
 
     </div>
@@ -177,6 +211,33 @@
               @ref="@_formAgregar">
             <FormItem Label="Nombre Brigada">
                 <Input @bind-Value="@brigadaVM.nombreBrigada" />
+            </FormItem>
+        </Form>
+    </Modal>
+
+    <!-- Modal Eliminar Brigada -->
+
+    <Modal Title="@("Agregar Brigada")"
+           Visible="@_visibleEliminar"
+           OnOk="@HandleOkEliminar"
+           OnCancel="@HandleCancelEliminar">
+        <Form Loading="loading" Model="@brigadaVM"
+              LabelColSpan="8"
+              WrapperColSpan="16"
+              OnFinish="OnFinishEliminar"
+              OnFinishFailed="OnFinishFailedEliminar"
+              @ref="@_formEliminar">
+            <FormItem Label="Nombre Brigada">
+                <Select TItem="Brigada"
+                        TItemValue="string"
+                        DataSource="@brigadas"
+                        @bind-Value="@BrigadaEliminar"
+                        DefaultValue="@("Elegir Brigada")"
+                        ValueName="@nameof(Brigada.Nombre)"
+                        LabelName="@nameof(Brigada.Nombre)"
+                        Style="width:120px"
+                        OnSelectedItemChanged="OnSelectedItemChangedHandler">
+                </Select>
             </FormItem>
         </Form>
     </Modal>
@@ -213,7 +274,6 @@
     {
         foreach (Bombero b in bomberos)
         {
-            //string bomber = $"{b.Nombre} {b.Brigada.Nombre}";
             bomberosFiltro.Add(b.Nombre);
         }
     } @*<-- Filtrado de Bomberos???*@
@@ -225,24 +285,93 @@
         brigadas = await db.Brigadas.ToArrayAsync();
         bomberos = await db.Bomberos.ToListAsync();
 
-
-        // Se añade los valores para filtrar la brigada
-        nameFilters = new TableFilter<string>[brigadas.Count()];
-        for (int i = 0; i < nameFilters.Length; i++)
-        {
-            nameFilters[i] = new TableFilter<string> { Text = brigadas[i].Nombre, Value = brigadas[i].Nombre };
-        }
-
         // Cargar bomberos sin brigada
         bomberosSinBrigada = bomberos.Where(b => b.BrigadaId == null).ToList();
 
-
         StateHasChanged();
     }
+    
+    // Brigadas Bomberos Test
+
+    private int? selectedBrigadaId;
+    private string selectedBrigadaName;
+    private List<Bombero> BomberosEnBrigadaSeleccionada = new List<Bombero>();
+    private int totalBomberosEnBrigada;
+    private List<Bombero> PagedBomberosEnBrigada { get; set; } = new List<Bombero>();
+
+    private void SelectBrigada(int brigadaId)
+    {
+        selectedBrigadaId = brigadaId;
+        var brigada = brigadas.FirstOrDefault(b => b.BrigadaId == brigadaId);
+        if (brigada != null)
+        {
+            selectedBrigadaName = brigada.Nombre;
+            // Aquí deberías cargar los bomberos de la brigada seleccionada
+            // Esto es un ejemplo, deberás adaptarlo a tu lógica de carga de datos
+            LoadBomberosEnBrigada(brigadaId);
+        }
+    }
+
+    private void ClearSelectedBrigada()
+    {
+        selectedBrigadaId = null;
+        selectedBrigadaName = null;
+        BomberosEnBrigadaSeleccionada.Clear();
+    }
+
+    private List<Bombero> GetBomberosByBrigadaId(int brigadaId)
+    {
+        return bomberos.Where(b => b.BrigadaId == brigadaId).ToList();
+    }
+    
+    private async Task LoadBomberosEnBrigada(int brigadaId)
+    {
+        try
+        {
+            // Asumimos que tienes un servicio inyectado llamado _bomberoService
+            var result = GetBomberosByBrigadaId(brigadaId);
+
+            if (result != null)
+            {
+                BomberosEnBrigadaSeleccionada = result.ToList();
+                totalBomberosEnBrigada = BomberosEnBrigadaSeleccionada.Count;
+
+                // Reiniciar la paginación
+                currentPageBomberos = 1;
+
+                // Actualizar la lista paginada
+                UpdatePagedBomberosEnBrigada();
+            }
+            else
+            {
+                BomberosEnBrigadaSeleccionada = new List<Bombero>();
+                totalBomberosEnBrigada = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Manejar el error, por ejemplo:
+            Console.WriteLine($"Error al cargar bomberos de la brigada: {ex.Message}");
+            // Podrías también mostrar un mensaje de error al usuario
+            // await _messageService.Error("No se pudieron cargar los bomberos de la brigada.");
+        }
+    }
+
+    private void UpdatePagedBomberosEnBrigada()
+    {
+        PagedBomberosEnBrigada = BomberosEnBrigadaSeleccionada
+            .Skip((currentPageBomberos - 1) * pageSizeBomberos)
+            .Take(pageSizeBomberos)
+            .ToList();
+    }
+
+    // -- Fin --
+
+
 
     // Paginacion
     private int currentPage = 1;
-    private int pageSize = 3;
+    private int pageSize = 5;
     private int totalItems => brigadas?.Count() ?? 0;
     private List<Brigada> PagedBrigadas => brigadas?.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList() ?? new List<Brigada>();
 
@@ -264,18 +393,19 @@
 
     private void OnDragLeave()
     {
-        
+
     }
 
     private void OnDragStart(DragEventArgs e, int bomberoId)
     {
         draggedBomberoId = bomberoId;
+        e.DataTransfer.EffectAllowed = "move";
+        e.DataTransfer.DropEffect = "move";
     }
 
     private void OnDragOver(DragEventArgs e)
     {
-        e.DataTransfer.EffectAllowed = "move";
-        e.DataTransfer.DropEffect = "move";
+        
     }
 
     private async Task OnDrop(DragEventArgs e, int brigadaId)
