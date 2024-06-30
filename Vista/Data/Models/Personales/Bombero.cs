@@ -34,7 +34,7 @@ namespace Vista.Data.Models.Personales
 
         public List<Firma> Firmas { get; set; }
 
-        public int ?BrigadaId { get; set; }
+        public int? BrigadaId { get; set; }
         public Brigada Brigada { get; set; }
         public int ImagenId { get; set; }
         [ForeignKey("ImagenId")]

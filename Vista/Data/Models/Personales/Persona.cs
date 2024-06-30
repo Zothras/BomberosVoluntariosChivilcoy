@@ -8,6 +8,7 @@ namespace Vista.Data.Models.Personales
         public int PersonaId { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public TipoSexo Sexo { get; set; }
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Nombre { get; set; }
         [Required, StringLength(255)]
@@ -18,8 +19,6 @@ namespace Vista.Data.Models.Personales
         public string LugarNacimiento { get; set; }
         [Required, StringLength(255)]
         public string Documento { get; set; }
-        [Required, StringLength(255)]
-        public string GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]

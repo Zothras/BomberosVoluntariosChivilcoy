@@ -19,6 +19,7 @@ namespace Vista.Data.ViewModels.Personal
         public int NumeroLegajo { get; set; }
         public EscalafonJerarquico Grado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
@@ -30,8 +31,6 @@ namespace Vista.Data.ViewModels.Personal
         public string LugarNacimiento { get; set; }
         [Required, StringLength(255)]
         public string Documento { get; set; }
-        [Required, StringLength(255)]
-        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]

@@ -9,7 +9,6 @@
         ABPositivo,
         ABNegativo,
         OPositivo,
-        ONegativo,
-
+        ONegativo
     }
 }

@@ -51,7 +51,7 @@
         font-family: calibri light;
         Font-Weight: bold;
     }
-    
+
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
@@ -202,7 +202,7 @@
         <Select TItem="Brigada"
                 TItemValue="int"
                 DataSource="@brigadas"
-        @bind-Value="@bomberoView.NombreBrigada"
+                @bind-Value="@bomberoView.NombreBrigada"
                 Placeholder="Elegir Brigada"
                 LabelName="@nameof(Brigada.Nombre)"
                 ValueName="@nameof(Brigada.BrigadaId)"
@@ -236,6 +236,7 @@
         public int NumeroLegajo { get; set; }
         public EscalafonJerarquico Grado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
@@ -247,8 +248,6 @@
         public string LugarNacimiento { get; set; }
         [Required, StringLength(255)]
         public string Documento { get; set; }
-        [Required, StringLength(255)]
-        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]
@@ -372,7 +371,7 @@
                         Resolucion4 = bomberoView.Resolucion4,
                         Resolucion5 = bomberoView.Resolucion5,
                         Resolucion6 = bomberoView.Resolucion6,
-                        GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo),
+                        GrupoSanguineo = bomberoView.GrupoSanguineo,
                         Estado = bomberoView.Estado,
                         Chofer = bomberoView.Chofer,
                         VencimientoRegistro = bomberoView.VencimientoRegistro,
@@ -396,10 +395,10 @@
                 //imagenView = new();
                 //brigadaView = new();
                 bomberoView = new();
-                
+
 
             }
-            
+
         }
         StateHasChanged();
         navigationManager.NavigateTo($"/bomberos/agregar", true);

@@ -123,7 +123,7 @@
     <input type="text" @bind="contactoView.Email" />
     <br>
 
-@*
+    @*
     <h5>Horarios</h5>
 
     <label>Vigente Desde:</label>
@@ -188,6 +188,7 @@ else
         public EscalafonJerarquico Grado { get; set; }
         [Required, StringLength(255)]
         public TipoDotaciones Dotacion { get; set; }
+        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
@@ -199,8 +200,6 @@ else
         public string LugarNacimiento { get; set; }
         [Required, StringLength(255)]
         public string Documento { get; set; }
-        [Required, StringLength(255)]
-        public string GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
         [Required, StringLength(255)]

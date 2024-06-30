@@ -454,7 +454,6 @@
         public string LugarNacimiento { get; set; }
         [Required, StringLength(255)]
         public string Documento { get; set; }
-        [Required, StringLength(255)]
         public TipoGrupoSanguineo GrupoSanguineo { get; set; }
         [Required, StringLength(255)]
         public string Observaciones { get; set; }
@@ -613,7 +612,7 @@
                 Resolucion4 = bombero.Resolucion4,
                 Resolucion5 = bombero.Resolucion5,
                 Resolucion6 = bombero.Resolucion6,
-                GrupoSanguineo = (TipoGrupoSanguineo)Enum.Parse(typeof(TipoGrupoSanguineo), bombero.GrupoSanguineo),
+                GrupoSanguineo = bombero.GrupoSanguineo,
                 Estado = bombero.Estado,
                 Chofer = bombero.Chofer,
                 VencimientoRegistro = bombero.VencimientoRegistro,
@@ -667,7 +666,7 @@
         bombero.Resolucion4 = bomberoVM.Resolucion4;
         bombero.Resolucion5 = bomberoVM.Resolucion5;
         bombero.Resolucion6 = bomberoVM.Resolucion6;
-        bombero.GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), bomberoVM.GrupoSanguineo);
+        bombero.GrupoSanguineo = bomberoVM.GrupoSanguineo;
         bombero.Estado = bomberoVM.Estado;
         bombero.Chofer = bomberoVM.Chofer;
         bombero.VencimientoRegistro = bomberoVM.VencimientoRegistro;
