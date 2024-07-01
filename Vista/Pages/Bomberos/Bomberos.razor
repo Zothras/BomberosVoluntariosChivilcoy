@@ -194,6 +194,14 @@
              <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
         </FormItem>
 
+        <FormItem Label="Altura (cm)">
+            <AntDesign.InputNumber DefaultValue="@bomberoVM.Altura" @bind-Value="@bomberoVM.Altura" />
+        </FormItem>
+
+        <FormItem Label="Peso">
+            <AntDesign.InputNumber DefaultValue="@bomberoVM.Peso" @bind-Value="@bomberoVM.Peso" />
+        </FormItem>
+
          <FormItem Label="Observaciones">
              <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
          </FormItem>
@@ -491,6 +499,8 @@
     <p>Documento: @bomberoVM.Documento</p>
     <p>LugarNacimiento: @bomberoVM.LugarNacimiento</p>
     <p>GrupoSanguineo: @bomberoVM.GrupoSanguineo</p>
+    <p>Altura: @bomberoVM.Altura cm</p>
+    <p>Peso: @bomberoVM.Peso kg</p>
     <p>Observaciones: @bomberoVM.Observaciones</p>
     <p>Profesion: @bomberoVM.Profesion</p>
     <p>NivelEstudios: @bomberoVM.NivelEstudios</p>
@@ -612,6 +622,10 @@
         public EscalafonJerarquico Grado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
         public TipoGrupoSanguineo GrupoSanguineo { get; set; }
+        [Required]
+        public int Altura { get; set; }
+        [Required]
+        public int Peso { get; set; }
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
@@ -863,6 +877,8 @@
                 Resolucion5 = bombero.Resolucion5,
                 Resolucion6 = bombero.Resolucion6,
                 GrupoSanguineo = bombero.GrupoSanguineo,
+                Altura = bombero.Altura,
+                Peso = bombero.Peso,
                 Estado = bombero.Estado,
                 Chofer = bombero.Chofer,
                 VencimientoRegistro = bombero.VencimientoRegistro,
@@ -924,6 +940,8 @@
         bombero.Resolucion5 = bomberoVM.Resolucion5;
         bombero.Resolucion6 = bomberoVM.Resolucion6;
         bombero.GrupoSanguineo = bomberoVM.GrupoSanguineo;
+        bombero.Altura = bomberoVM.Altura;
+        bombero.Peso = bomberoVM.Peso;
         bombero.Estado = bomberoVM.Estado;
         bombero.Chofer = bomberoVM.Chofer;
         bombero.VencimientoRegistro = bomberoVM.VencimientoRegistro;

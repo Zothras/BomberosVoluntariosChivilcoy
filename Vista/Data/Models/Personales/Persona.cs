@@ -9,6 +9,10 @@ namespace Vista.Data.Models.Personales
         public DateTime FechaNacimiento { get; set; }
         public TipoSexo Sexo { get; set; }
         public TipoGrupoSanguineo GrupoSanguineo { get; set; }
+        [Required]
+        public int Altura { get; set; }
+        [Required]
+        public int Peso { get; set; }
         [Required, StringLength(255)]
         public string Nombre { get; set; }
         [Required, StringLength(255)]

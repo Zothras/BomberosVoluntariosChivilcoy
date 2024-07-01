@@ -43,6 +43,12 @@
     <label>Grupo Sanguineo:</label>
     <input type="text" @bind="bomberoView.GrupoSanguineo" />
     <br>
+    <label>Altura (cm):</label>
+    <input type="text" @bind="bomberoView.Altura" />
+    <br>
+    <label>Peso:</label>
+    <input type="text" @bind="bomberoView.Peso" />
+    <br>
     <label>Observaciones:</label>
     <input type="text" @bind="bomberoView.Observaciones" />
     <br>
@@ -131,6 +137,10 @@ else
         [Required, StringLength(255)]
         public TipoDotaciones Dotacion { get; set; }
         public TipoGrupoSanguineo GrupoSanguineo { get; set; }
+        [Required]
+        public int Altura { get; set; }
+        [Required]
+        public int Peso { get; set; }
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
@@ -199,6 +209,8 @@ else
             bomberoView.Apellido = bombero.Apellido;
             bomberoView.Direccion = bombero.Direccion;
             bomberoView.GrupoSanguineo = bombero.GrupoSanguineo;
+            bomberoView.Altura = bombero.Altura;
+            bomberoView.Peso = bombero.Peso;
             bomberoView.Grado = bombero.Grado;
             bomberoView.Documento = bombero.Documento;
             bomberoView.Dotacion = bombero.Dotacion;
@@ -277,6 +289,8 @@ else
                     bombero.Resolucion5 = bomberoView.Resolucion5;
                     bombero.Resolucion6 = bomberoView.Resolucion6;
                     bombero.GrupoSanguineo = bomberoView.GrupoSanguineo;
+                    bombero.Altura = bomberoView.Altura;
+                    bombero.Peso = bomberoView.Peso;
                     bombero.Estado = bomberoView.Estado;
                     bombero.Chofer = bomberoView.Chofer;
                     bombero.VencimientoRegistro = bomberoView.VencimientoRegistro;

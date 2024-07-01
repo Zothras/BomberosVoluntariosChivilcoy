@@ -123,6 +123,14 @@
         <EnumSelect TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoView.GrupoSanguineo" />
     </FormItem>
 
+    <FormItem Label="Altura (cm)">
+        <AntDesign.InputNumber @bind-Value="@bomberoView.Altura" />
+    </FormItem>
+
+    <FormItem Label="Peso">
+        <AntDesign.InputNumber @bind-Value="@bomberoView.Peso" />
+    </FormItem>
+
     <FormItem Label="Observaciones">
         <Input @bind-Value="@bomberoView.Observaciones" />
     </FormItem>
@@ -240,6 +248,10 @@
         public EscalafonJerarquico Grado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
         public TipoGrupoSanguineo GrupoSanguineo { get; set; }
+        [Required]
+        public int Altura { get; set; }
+        [Required]
+        public int Peso { get; set; }
         [Required, StringLength(255)]
         public string Brigada { get; set; }
         public bool Chofer { get; set; }
@@ -395,6 +407,8 @@
                         Resolucion5 = bomberoView.Resolucion5,
                         Resolucion6 = bomberoView.Resolucion6,
                         GrupoSanguineo = bomberoView.GrupoSanguineo,
+                        Altura = bomberoView.Altura,
+                        Peso = bomberoView.Peso,
                         Estado = bomberoView.Estado,
                         Chofer = bomberoView.Chofer,
                         VencimientoRegistro = bomberoView.VencimientoRegistro,
