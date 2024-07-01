@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IJSRuntime JSRuntime;
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
 @using System.ComponentModel.DataAnnotations;
@@ -71,7 +72,9 @@
     <span>Upload</span>
     </Button>
     </Upload>*@
-    <InputFile OnChange="SubirFoto" />
+    <FormItem Label="Foto">
+        <InputFile OnChange="SubirFoto"/>
+    </FormItem>
 
     <FormItem Label="Nombre">
         <Input @bind-Value="@bomberoView.Nombre" />
@@ -334,6 +337,22 @@
         bomberoView.NombreImagen = e.File.Name;
     }
 
+    private async Task AgregarFotoPorDefecto(string rutaArchivo)
+    {
+        using var fileStream = File.OpenRead(rutaArchivo);
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        memoryStream.Position = 0;
+
+        string imagenBase64 = Convert.ToBase64String(memoryStream.ToArray());
+        string tipoImagen = "image/png"; // Asumiendo que es un archivo PNG
+        string nombreImagen = Path.GetFileName(rutaArchivo);
+
+        bomberoView.Base64 = imagenBase64;
+        bomberoView.TipoImagen = tipoImagen;
+        bomberoView.NombreImagen = nombreImagen;
+    }
+
     public async void CrearBombero()
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -345,6 +364,10 @@
             if (comprobante is null)
             {
                 Brigada? brigadaSelec = await db.Brigadas.Where(bri => bri.BrigadaId == bomberoView.NombreBrigada).SingleOrDefaultAsync();
+                if (string.IsNullOrEmpty(bomberoView.Base64))
+                {
+                    await AgregarFotoPorDefecto("wwwroot/imagenes/FotoPorDefecto.png");
+                }
                 Bombero bombero = new Bombero()
                     {
                         FechaNacimiento = bomberoView.FechaNacimiento,

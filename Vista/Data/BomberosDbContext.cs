@@ -209,8 +209,9 @@ namespace Vista.Data
                 .Property(b => b.Dotacion)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+
             modelBuilder
-                .Entity<Bombero>()
+                .Entity<Persona>()
                 .Property(b => b.GrupoSanguineo)
                 .HasConversion<string>()
                 .HasMaxLength(255);
