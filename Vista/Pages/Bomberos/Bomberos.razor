@@ -893,7 +893,7 @@
         Bombero? bombero = await context.Bomberos
         .Where(b => b.NumeroLegajo == id)
         .Include(c => c.Contacto)
-        .Include(h => h.Horarios.Count)
+        //.Include(h => h.Horarios.Count)
         .SingleOrDefaultAsync();
         Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
         //HorarioBombero horario = await context.HorariosBomberos.Where(h => h.BomberoId == id).SingleOrDefaultAsync();

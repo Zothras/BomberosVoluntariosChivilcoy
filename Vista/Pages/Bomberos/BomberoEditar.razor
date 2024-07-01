@@ -81,27 +81,6 @@
         <label>No es chofer</label>
     }
     <br>
-    @*<select @bind="bomberoView.Grado">
-        <option value="@EscalafonJerarquico.Jefe">Jefe</option>
-        <option value="@EscalafonJerarquico.SegundoJefe">2ºdo Jefe</option>
-        <option value="@EscalafonJerarquico.PrimerOficial">1ºer Oficial</option>
-        <option value="@EscalafonJerarquico.SegundoOficial">2ºdo Oficial</option>
-        <option value="@EscalafonJerarquico.TercerOficial">3ºer Oficial</option>
-        <option value="@EscalafonJerarquico.AuxiliarMayor">Auxiliar Mayor</option>
-        <option value="@EscalafonJerarquico.PrimerAuxiliar">1ºer Auxiliar</option>
-        <option value="@EscalafonJerarquico.SegundoAuxiliar">2ºdo Auxiliar</option>
-        <option value="@EscalafonJerarquico.Ayudante">Ayudante</option>
-        <option value="@EscalafonJerarquico.SegundoAyudante">2ºdo Ayudante</option>
-        <option value="@EscalafonJerarquico.Bombero">Bombero</option>
-        <option value="@EscalafonJerarquico.Aspirante">Aspirante</option>
-    </select>
-    <br>
-    <select @bind="bomberoView.Estado">
-        <option value="@EstadoBombero.Retirado">Retirado</option>
-        <option value="@EstadoBombero.ComisionDirectiva">Comision Directiva</option>
-        <option value="@EstadoBombero.CuerpoActivo">Cuerpo Activo</option>
-    </select>*@
-    <br>
     <select @bind="bomberoView.Sexo">
         <option value="@TipoSexo.Hombre">Masculino</option>
         <option value="@TipoSexo.Mujer">Femenino</option>
@@ -122,41 +101,6 @@
     <label>Email:</label>
     <input type="text" @bind="contactoView.Email" />
     <br>
-
-    @*
-    <h5>Horarios</h5>
-
-    <label>Vigente Desde:</label>
-    <input type="datetime" @bind="Horarios[0].VigenteDesde" />
-    <br>
-    <select @bind="Horarios[0].DiaSemana">
-        <option value="@Dias.Domingo">Miercoles</option>
-        <option value="@Dias.Lunes">Lunes</option>
-        <option value="@Dias.Martes">Martes</option>
-        <option value="@Dias.Miercoles">Miercoles</option>
-        <option value="@Dias.Jueves">Lunes</option>
-        <option value="@Dias.Viernes">Martes</option>
-        <option value="@Dias.Sabado">Miercoles</option>
-    </select>
-    <label>Hora Desde:</label>
-    <input type="TimeOnly?" @bind="Horarios[0].HoraDesde" />
-    <br>
-    <label>Hora Hasta:</label>
-    <input type="TimeOnly?" @bind="Horarios[0].HoraHasta" />
-    <br>
-    <input type="checkbox" @bind="Horarios[0].es_periodico" />
-    if (Horarios[0].es_periodico)
-    {
-        <input type="TimeOnly?" @bind="Horarios[0].Periodo" />
-    }
-    <br>
-    <select @bind="Horarios[0].ModoRotativo">
-        <option value="@TiposRotativos.Fijo">Miercoles</option>
-        <option value="@TiposRotativos.Semanal">Lunes</option>
-        <option value="@TiposRotativos.Mensual">Martes</option>
-    </select>
-    <button @onclick="GenerarHorario">Insertar otro horarios</button>
-    *@
     <button @onclick="EditarBombero">Editar bombero</button>
 }
 else
@@ -172,8 +116,6 @@ else
     public ContactoViewModel contactoView { get; set; } = new();
     public Bombero[]? bomberos;
     public bool existe;
-    //int tamaño_horario = 0;
-    //public List<HorariosViewModel> Horarios = new();
 
     public class BomberosViewModel
     {
@@ -240,54 +182,7 @@ else
         [Required, StringLength(255)]
         public string Nombre { get; set; }
     }
-    /*
-    public class HorariosViewModel
-    {
-        public bool es_periodico {get; set;}
-        public DateTime? VigenteDesde { get; set; }
-        public Dias DiaSemana { get; set; }
-        public TimeOnly HoraDesde { get; set; }
-        public TimeOnly HoraHasta { get; set; }
-        public TimeOnly? Periodo { get; set; }
-        public TiposRotativos ModoRotativo { get; set; }
-        public int BomberoId { get; set; }
-    }
-    */
-    /*
-    public void GenerarHorario(DateTime date)
-    {
-        <br>
-        <label>Vigente Desde:</label>
-        <input type="datetime" @bind="Horarios[0].VigenteDesde" />
-        <br>
-        <select @bind="Horarios[0].DiaSemana">
-            <option value="@Dias.Domingo">Miercoles</option>
-            <option value="@Dias.Lunes">Lunes</option>
-            <option value="@Dias.Martes">Martes</option>
-            <option value="@Dias.Miercoles">Miercoles</option>
-            <option value="@Dias.Jueves">Lunes</option>
-            <option value="@Dias.Viernes">Martes</option>
-            <option value="@Dias.Sabado">Miercoles</option>
-        </select>
-        <label>Hora Desde:</label>
-        <input type="TimeOnly?" @bind="Horarios[0].HoraDesde" />
-        <br>
-        <label>Hora Hasta:</label>
-        <input type="TimeOnly?" @bind="Horarios[0].HoraHasta" />
-        <br>
-        <input type="checkbox" @bind="Horarios[0].es_periodico" />
-        if (Horarios[0].es_periodico)
-        {
-            <input type="TimeOnly?" @bind="Horarios[0].Periodo" />
-        }
-        <br>
-        <select @bind="Horarios[0].ModoRotativo">
-            <option value="@TiposRotativos.Fijo">Miercoles</option>
-            <option value="@TiposRotativos.Semanal">Lunes</option>
-            <option value="@TiposRotativos.Mensual">Martes</option>
-        </select>
-    }
-    */
+
     protected override async Task OnInitializedAsync()
     {
         using var db = DbFactory.CreateDbContext();
@@ -302,7 +197,6 @@ else
             bomberoView.NumeroIoma = bombero.NumeroIoma;
             bomberoView.Profesion = bombero.Profesion;
             bomberoView.Apellido = bombero.Apellido;
-            //bomberoView.Brigada = bombero.Brigada;
             bomberoView.Direccion = bombero.Direccion;
             bomberoView.GrupoSanguineo = bombero.GrupoSanguineo;
             bomberoView.Grado = bombero.Grado;
@@ -349,75 +243,93 @@ else
         }
     }
 
-    private async void SubirFoto(InputFileChangeEventArgs e)
+
+    public async Task EditarBombero()
     {
-        string imagenBase64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream());
-
-        imagenView.Base64 = imagenBase64;
-        imagenView.TipoImagen = e.File.ContentType;
-        imagenView.Nombre = e.File.Name;
-    }
-
-    public async void EditarBombero()
-    {
-        using var db = DbFactory.CreateDbContext();
-
-        if (bomberoView.NumeroLegajo != 0)
+        try
         {
-            Bombero? bombero = await db.Bomberos.Where(b => b.NumeroLegajo == bomberoView.NumeroLegajo).Include(b => b.Contacto).SingleOrDefaultAsync();
+            using var db = await DbFactory.CreateDbContextAsync();
 
-            if (bombero is not null)
+            if (BomberoId.HasValue)
             {
-                bombero.FechaNacimiento = bomberoView.FechaNacimiento;
-                bombero.Sexo = bomberoView.Sexo;
-                bombero.Nombre = bomberoView.Nombre;
-                bombero.Apellido = bomberoView.Apellido;
-                bombero.Documento = bomberoView.Documento;
-                bombero.NumeroLegajo = bomberoView.NumeroLegajo;
-                bombero.NumeroIoma = bomberoView.NumeroIoma;
-                bombero.LugarNacimiento = bomberoView.LugarNacimiento;
-                bombero.Grado = bomberoView.Grado;
-                bombero.Imagen = new()
-                    {
-                        NombreImagen = imagenView.Nombre,
-                        TipoImagen = imagenView.TipoImagen,
-                        Base64Imagen = imagenView.Base64
-                    };
-                bombero.Dotacion = bomberoView.Dotacion;
-                //bombero.Brigada = bomberoView.Brigada;
-                bombero.Resolucion1 = bomberoView.Resolucion1;
-                bombero.Resolucion2 = bomberoView.Resolucion2;
-                bombero.Resolucion3 = bomberoView.Resolucion3;
-                bombero.Resolucion4 = bomberoView.Resolucion4;
-                bombero.Resolucion5 = bomberoView.Resolucion5;
-                bombero.Resolucion6 = bomberoView.Resolucion6;
-                bombero.GrupoSanguineo = bomberoView.GrupoSanguineo;
-                bombero.Estado = bomberoView.Estado;
-                bombero.Chofer = bomberoView.Chofer;
-                bombero.VencimientoRegistro = bomberoView.VencimientoRegistro;
-                bombero.Direccion = bomberoView.Direccion;
-                bombero.Observaciones = bomberoView.Observaciones;
-                bombero.Profesion = bomberoView.Profesion;
-                bombero.NivelEstudios = bomberoView.NivelEstudios;
-                bombero.FechaAceptacion = bomberoView.FechaAceptacion;
+                Bombero? bombero = await db.Bomberos
+                    .Include(b => b.Contacto)
+                    .Include(b => b.Imagen)
+                    .FirstOrDefaultAsync(b => b.PersonaId == BomberoId);
 
-                Contacto? contacto = await db.Contactos.Where(c => c.ContactoId == bombero.Contacto.ContactoId).SingleOrDefaultAsync();
-                if (contacto is not null)
+                if (bombero is not null)
                 {
-                    db.Remove(contacto);
-                }
-                bombero.Contacto = new()
+                    // Actualizar propiedades del bombero
+                    bombero.FechaNacimiento = bomberoView.FechaNacimiento;
+                    bombero.Sexo = bomberoView.Sexo;
+                    bombero.Nombre = bomberoView.Nombre;
+                    bombero.Apellido = bomberoView.Apellido;
+                    bombero.Documento = bomberoView.Documento;
+                    bombero.NumeroLegajo = bomberoView.NumeroLegajo;
+                    bombero.NumeroIoma = bomberoView.NumeroIoma;
+                    bombero.LugarNacimiento = bomberoView.LugarNacimiento;
+                    bombero.Grado = bomberoView.Grado;
+                    bombero.Dotacion = bomberoView.Dotacion;
+                    bombero.Resolucion1 = bomberoView.Resolucion1;
+                    bombero.Resolucion2 = bomberoView.Resolucion2;
+                    bombero.Resolucion3 = bomberoView.Resolucion3;
+                    bombero.Resolucion4 = bomberoView.Resolucion4;
+                    bombero.Resolucion5 = bomberoView.Resolucion5;
+                    bombero.Resolucion6 = bomberoView.Resolucion6;
+                    bombero.GrupoSanguineo = bomberoView.GrupoSanguineo;
+                    bombero.Estado = bomberoView.Estado;
+                    bombero.Chofer = bomberoView.Chofer;
+                    bombero.VencimientoRegistro = bomberoView.VencimientoRegistro;
+                    bombero.Direccion = bomberoView.Direccion;
+                    bombero.Observaciones = bomberoView.Observaciones;
+                    bombero.Profesion = bomberoView.Profesion;
+                    bombero.NivelEstudios = bomberoView.NivelEstudios;
+                    bombero.FechaAceptacion = bomberoView.FechaAceptacion;
 
+                    /* Actualizar imagen si se ha subido una nueva
+                    if (!string.IsNullOrEmpty(imagenView.Base64))
                     {
-                        TelefonoCel = contactoView.TelefonoCel,
-                        TelefonoFijo = contactoView.TelefonoFijo,
-                        TelefonoLaboral = contactoView.TelefonoLaboral,
-                        Email = contactoView.Email
-                    };
+                        if (bombero.Imagen == null)
+                        {
+                            bombero.Imagen = new Imagen();
+                        }
+                        bombero.Imagen.NombreImagen = imagenView.Nombre;
+                        bombero.Imagen.TipoImagen = imagenView.TipoImagen;
+                        bombero.Imagen.Base64Imagen = imagenView.Base64;
+                    }*/
 
-                await db.SaveChangesAsync();
+                    // Actualizar o crear contacto
+                    if (bombero.Contacto == null)
+                    {
+                        bombero.Contacto = new Contacto();
+                    }
+                    bombero.Contacto.TelefonoCel = contactoView.TelefonoCel;
+                    bombero.Contacto.TelefonoFijo = contactoView.TelefonoFijo;
+                    bombero.Contacto.TelefonoLaboral = contactoView.TelefonoLaboral;
+                    bombero.Contacto.Email = contactoView.Email;
+
+                    await db.SaveChangesAsync();
+                    navigationManager.NavigateTo("/bomberos");
+                }
+                else
+                {
+                    // Manejar el caso en que no se encuentra el bombero
+                    Console.WriteLine($"No se encontró el bombero con PersonaId {BomberoId}");
+                }
             }
         }
-        navigationManager.NavigateTo("/bomberos");
+        catch (Exception ex)
+        {
+            // Manejar la excepción (por ejemplo, registrarla o mostrar un mensaje al usuario)
+            Console.WriteLine($"Error al editar el bombero: {ex.Message}");
+        }
+    }
+
+    private async Task SubirFoto(InputFileChangeEventArgs e)
+    {
+        imagenView.Base64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream());
+        imagenView.TipoImagen = e.File.ContentType;
+        imagenView.Nombre = e.File.Name;
+        StateHasChanged();
     }
 }
