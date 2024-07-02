@@ -155,6 +155,13 @@ namespace Vista.Data
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
+            modelBuilder.Entity<Brigada>()
+                .HasMany(br => br.Bomberos)
+                .WithOne(bo => bo.Brigada)
+                .HasForeignKey(bo => bo.BrigadaId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
             modelBuilder.Entity<Comunicacion>()
                 .HasOne(c => c.Movil)
                 .WithOne(b => b.HandieMovil)
