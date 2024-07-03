@@ -2,7 +2,7 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/bomberos"
 @using Vista.Services;
-@inject IBomberosService BomberosService;
+@inject IBomberoService BomberoService;
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
@@ -598,7 +598,7 @@
             return;
         }
 
-        bool isDeleted = await BomberosService.BorrarBombero(bombero);
+        bool isDeleted = await BomberoService.BorrarBombero(bombero);
 
         if (isDeleted)
         {

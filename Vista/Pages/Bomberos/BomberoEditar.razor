@@ -2,7 +2,7 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/bomberos/editar/{BomberoId:int?}"
 @using Vista.Services
-@inject IBomberosService BomberosService;
+@inject IBomberoService BomberoService;
 
 @if (existe)
 {
@@ -265,7 +265,7 @@ else
         {
             bombero.PersonaId = BomberoId.Value;  // Asegurar que PersonaId está configurado
 
-            bool result = await BomberosService.EditarBombero(bombero);
+            bool result = await BomberoService.EditarBombero(bombero);
             if (result)
             {
                 navigationManager.NavigateTo("/bomberos");

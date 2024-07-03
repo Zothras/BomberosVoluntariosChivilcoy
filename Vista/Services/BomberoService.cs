@@ -11,18 +11,20 @@ using Vista.Data.Models.Salidas.Componentes;
 
 namespace Vista.Services
 {
-    public interface IBomberosService
+    public interface IBomberoService
     {
         Task<Bombero> CrearBombero(Bombero bombero);
         Task <bool>BorrarBombero(Bombero bombero);
         Task<bool> EditarBombero(Bombero bombero);
+        Task<Sancion> SancionarBombero(Sancion sancion);
+        Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso);
     }
 
-    public class BomberosService : IBomberosService
+    public class BomberoService : IBomberoService
     {
         private readonly BomberosDbContext _context;
 
-        public BomberosService(BomberosDbContext context)
+        public BomberoService(BomberosDbContext context)
         {
             _context = context;
         }
@@ -144,6 +146,38 @@ namespace Vista.Services
                 Console.WriteLine($"ERROR: Ocurrió un error inesperado. {ex.Message}");
                 return false;
             }
+        }
+        public async Task<Sancion> SancionarBombero(Sancion sancion)
+        {
+            Bombero? BomberoSancionado = await _context.Bomberos.Where(b => b.NumeroLegajo == sancion.PersonalSancionado.NumeroLegajo).SingleOrDefaultAsync();
+            Bombero? BomberoEncargado = await _context.Bomberos.Where(b => b.NumeroLegajo == sancion.EncargadoArea.NumeroLegajo).SingleOrDefaultAsync();
+
+            if (BomberoSancionado == null || BomberoEncargado == null)
+            {
+                throw new InvalidOperationException("No se pudieron encontrar los bomberos.");
+            }
+
+            sancion.PersonalSancionado = BomberoSancionado;
+            sancion.EncargadoArea = BomberoEncargado;
+
+            _context.Sanciones.Add(sancion);
+            await _context.SaveChangesAsync();
+            return sancion;
+        }
+        public async Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso)
+        {
+            Bombero? BomberoAfectado = await _context.Bomberos.Where(b => b.NumeroLegajo == ascenso.PersonalAfectado.NumeroLegajo).SingleOrDefaultAsync();
+
+            if (BomberoAfectado == null)
+            {
+                throw new InvalidOperationException("No se pudo encontrar el BomberoAfectado.");
+            }
+
+            ascenso.PersonalAfectado = BomberoAfectado;
+
+            _context.AscensoBomberos.Add(ascenso);
+            await _context.SaveChangesAsync();
+            return ascenso;
         }
     }
 }

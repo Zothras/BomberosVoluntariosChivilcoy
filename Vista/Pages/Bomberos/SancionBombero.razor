@@ -1,14 +1,15 @@
 ﻿@implements IDisposable
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
+@using Vista.Services
+@inject IBomberoService BomberoService
 
 <Form Model="@SancionVM"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
-      Style="width: 100%;height: 100%;"
-      Responsive>
+      Style="widthwidth: 100%;height: 100%;">
     
     <FormItem Label="Fecha Desde:">
         <DatePicker @bind-Value="SancionVM.FechaDesde" />
@@ -124,8 +125,7 @@
                     EncargadoArea = BomberoEncargado,
                     observaciones = SancionVM.observaciones
                 };
-            Context.Sanciones.Add(Sancion);
-            await Context.SaveChangesAsync();
+            await BomberoService.SancionarBombero(Sancion);
             await Init();
             StateHasChanged();
             await message.Success("Sancion cargada correctamente");

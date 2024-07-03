@@ -2,7 +2,7 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IJSRuntime JSRuntime
 @using Vista.Services
-@inject IBomberosService BomberosService;
+@inject IBomberoService BomberoService;
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
 @using System.ComponentModel.DataAnnotations;
@@ -380,7 +380,7 @@
                 Email = bomberoView.Email
             }
         };
-        await BomberosService.CrearBombero(bombero);
+        await BomberoService.CrearBombero(bombero);
         bomberoView = new BomberosViewModel();
         StateHasChanged();
         navigationManager.NavigateTo($"/bomberos/agregar", true);

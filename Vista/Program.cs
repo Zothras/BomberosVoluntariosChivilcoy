@@ -29,7 +29,7 @@ builder.Services.AddAntDesign();
 builder.Services.AddBlazoredToast();
 builder.Services.AddHostedService<InitData>();
 builder.Services.AddScoped<StockService>();
-builder.Services.AddScoped<IBomberosService, BomberosService>();
+builder.Services.AddScoped<IBomberoService, BomberoService>();
 
 var app = builder.Build();
 
