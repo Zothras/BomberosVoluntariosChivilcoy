@@ -1,6 +1,8 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/bomberos/editar/{BomberoId:int?}"
+@using Vista.Services
+@inject IBomberosService BomberosService;
 
 @if (existe)
 {
@@ -58,22 +60,22 @@
     <label>Nivel De Estudios:</label>
     <input type="text" @bind="bomberoView.NivelEstudios" />
     <br>
-    <label>Resulucion 1:</label>
+    <label>Resolucion 1:</label>
     <input type="text" @bind="bomberoView.Resolucion1" />
     <br>
-    <label>Resulucion 2:</label>
+    <label>Resolucion 2:</label>
     <input type="text" @bind="bomberoView.Resolucion2" />
     <br>
-    <label>Resulucion 3:</label>
+    <label>Resolucion 3:</label>
     <input type="text" @bind="bomberoView.Resolucion3" />
     <br>
-    <label>Resulucion 4:</label>
+    <label>Resolucion 4:</label>
     <input type="text" @bind="bomberoView.Resolucion4" />
     <br>
-    <label>Resulucion 5:</label>
+    <label>Resolucion 5:</label>
     <input type="text" @bind="bomberoView.Resolucion5" />
     <br>
-    <label>Resulucion 6:</label>
+    <label>Resolucion 6:</label>
     <input type="text" @bind="bomberoView.Resolucion6" />
     <br>
     <input type="checkbox" @bind="bomberoView.Chofer" />
@@ -117,6 +119,7 @@ else
 @code {
     [Parameter]
     public int? BomberoId { get; set; }
+    private Bombero bombero = new Bombero();
     public ImagenViewModel imagenView { get; set; } = new();
     public BomberosViewModel bomberoView { get; set; } = new();
     public ContactoViewModel contactoView { get; set; } = new();
@@ -258,84 +261,23 @@ else
 
     public async Task EditarBombero()
     {
-        try
+        if (BomberoId.HasValue)
         {
-            using var db = await DbFactory.CreateDbContextAsync();
+            bombero.PersonaId = BomberoId.Value;  // Asegurar que PersonaId está configurado
 
-            if (BomberoId.HasValue)
+            bool result = await BomberosService.EditarBombero(bombero);
+            if (result)
             {
-                Bombero? bombero = await db.Bomberos
-                    .Include(b => b.Contacto)
-                    .Include(b => b.Imagen)
-                    .FirstOrDefaultAsync(b => b.PersonaId == BomberoId);
-
-                if (bombero is not null)
-                {
-                    // Actualizar propiedades del bombero
-                    bombero.FechaNacimiento = bomberoView.FechaNacimiento;
-                    bombero.Sexo = bomberoView.Sexo;
-                    bombero.Nombre = bomberoView.Nombre;
-                    bombero.Apellido = bomberoView.Apellido;
-                    bombero.Documento = bomberoView.Documento;
-                    bombero.NumeroLegajo = bomberoView.NumeroLegajo;
-                    bombero.NumeroIoma = bomberoView.NumeroIoma;
-                    bombero.LugarNacimiento = bomberoView.LugarNacimiento;
-                    bombero.Grado = bomberoView.Grado;
-                    bombero.Dotacion = bomberoView.Dotacion;
-                    bombero.Resolucion1 = bomberoView.Resolucion1;
-                    bombero.Resolucion2 = bomberoView.Resolucion2;
-                    bombero.Resolucion3 = bomberoView.Resolucion3;
-                    bombero.Resolucion4 = bomberoView.Resolucion4;
-                    bombero.Resolucion5 = bomberoView.Resolucion5;
-                    bombero.Resolucion6 = bomberoView.Resolucion6;
-                    bombero.GrupoSanguineo = bomberoView.GrupoSanguineo;
-                    bombero.Altura = bomberoView.Altura;
-                    bombero.Peso = bomberoView.Peso;
-                    bombero.Estado = bomberoView.Estado;
-                    bombero.Chofer = bomberoView.Chofer;
-                    bombero.VencimientoRegistro = bomberoView.VencimientoRegistro;
-                    bombero.Direccion = bomberoView.Direccion;
-                    bombero.Observaciones = bomberoView.Observaciones;
-                    bombero.Profesion = bomberoView.Profesion;
-                    bombero.NivelEstudios = bomberoView.NivelEstudios;
-                    bombero.FechaAceptacion = bomberoView.FechaAceptacion;
-
-                    /* Actualizar imagen si se ha subido una nueva
-                    if (!string.IsNullOrEmpty(imagenView.Base64))
-                    {
-                        if (bombero.Imagen == null)
-                        {
-                            bombero.Imagen = new Imagen();
-                        }
-                        bombero.Imagen.NombreImagen = imagenView.Nombre;
-                        bombero.Imagen.TipoImagen = imagenView.TipoImagen;
-                        bombero.Imagen.Base64Imagen = imagenView.Base64;
-                    }*/
-
-                    // Actualizar o crear contacto
-                    if (bombero.Contacto == null)
-                    {
-                        bombero.Contacto = new Contacto();
-                    }
-                    bombero.Contacto.TelefonoCel = contactoView.TelefonoCel;
-                    bombero.Contacto.TelefonoFijo = contactoView.TelefonoFijo;
-                    bombero.Contacto.TelefonoLaboral = contactoView.TelefonoLaboral;
-                    bombero.Contacto.Email = contactoView.Email;
-
-                    await db.SaveChangesAsync();
-                    navigationManager.NavigateTo("/bomberos");
-                }
-                else
-                {
-                    // Manejar el caso en que no se encuentra el bombero
-                    Console.WriteLine($"No se encontró el bombero con PersonaId {BomberoId}");
-                }
+                navigationManager.NavigateTo("/bomberos");
+            }
+            else
+            {
+                Console.WriteLine("No se pudo editar el bombero.");
             }
         }
-        catch (Exception ex)
+        else
         {
-            // Manejar la excepción (por ejemplo, registrarla o mostrar un mensaje al usuario)
-            Console.WriteLine($"Error al editar el bombero: {ex.Message}");
+            Console.WriteLine("BomberoId no es válido.");
         }
     }
 

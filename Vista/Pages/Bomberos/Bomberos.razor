@@ -1,6 +1,8 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/bomberos"
+@using Vista.Services;
+@inject IBomberosService BomberosService;
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
@@ -121,7 +123,7 @@
                         </Menu>;
                     </Overlay>
                     <ChildContent>
-                        <Button class="boton_p">Acciones<Icon Type="down" /></Button>
+                        <Button class="boton_p">Acciones<Icon Type="down"/></Button>
                     </ChildContent>
                 </Dropdown>
    
@@ -156,7 +158,6 @@
 
          <FormItem Label="Fecha de Nacimiento">
              <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-             @*<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" @bind-Value="@bomberoView.FechaNacimiento" Style="width: 100%;"/>*@
          </FormItem>
 
          <FormItem Label="DNI">
@@ -174,7 +175,6 @@
          </FormItem>
 
          <FormItem Label="Fecha de Aceptacion">
-             @*<DatePicker @bind-Value="@bomberoView.FechaAceptacion" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
              <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
          </FormItem>
 
@@ -185,10 +185,6 @@
          <FormItem Label="Lugar de nacimiento">
              <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
          </FormItem>
-
-         @*<FormItem Label="Grupo Sanguineo" >
-        <Input @bind-Value="@bomberoView.GrupoSanguineo"/>
-        </FormItem>*@
 
          <FormItem Label="Grupo Sanguineo">
              <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
@@ -240,7 +236,6 @@
             {
                 <label id="texto">Fecha vencimiento del carnet</label>
                 <br>
-                @*<DatePicker @bind-Value="@bomberoView.VencimientoRegistro" TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />*@
                 <DatePicker DefaultValue="@bomberoVM.VencimientoRegistro" @bind-Value="@bomberoVM.VencimientoRegistro" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
             }
             @if (!bomberoVM.Chofer)
@@ -572,21 +567,17 @@
             i++;
         }
 
-
         StateHasChanged();
     }
 
     void OnRowClick(RowData<Bombero> row)
     {
-        Console.WriteLine($"row {row.Data.Brigada.BrigadaId} was clicked");
-    }//Toma el valor del valor de la fila seleccionada
+        Console.WriteLine($"row {row.Data.Brigada.BrigadaId} was clicked"); //Toma el valor del valor de la fila seleccionada
+    }
 
     private async Task OnChange(QueryModel<Bombero> queryModel)
     {
         Console.WriteLine(JsonSerializer.Serialize(queryModel));
-        //dataSource = queryModel.ExecuteQuery(bomberos.AsQueryable())
-        //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Nombre.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-        //arreglar busqueda-----------------------------------------------------------------------------------------------------------------------------------------
         OnInitializedAsync();
     }
 
@@ -599,12 +590,26 @@
     private async void Delete(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        context.Remove(bombero);
-        bomberos = bomberos.Where(x => x.NumeroLegajo != id).ToList();
-        _total = bomberos.Count;
-        await context.SaveChangesAsync();
-        StateHasChanged();
+        Bombero? bombero = await context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == id);
+
+        if (bombero == null)
+        {
+            Console.WriteLine($"ERROR: No se encontró un bombero con el Número Legajo {id}.");
+            return;
+        }
+
+        bool isDeleted = await BomberosService.BorrarBombero(bombero);
+
+        if (isDeleted)
+        {
+            bomberos = bomberos.Where(x => x.NumeroLegajo != id).ToList();
+            _total = bomberos.Count;
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("ERROR: No se pudo eliminar el bombero.");
+        }        
     }
     #endregion
     //----------------------------------------------------------------------------------------------
