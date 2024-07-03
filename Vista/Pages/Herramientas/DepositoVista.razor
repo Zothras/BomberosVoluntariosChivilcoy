@@ -56,7 +56,7 @@
 </div>
 
 <div>
-     <Drawer Closable="true" Visible="visibleDrawer" Width="720" Placement="right" Title='("Movimientos")'>
+     <Drawer Closable="true" Visible="visibleDrawer" Width="720" Placement="right" Title='("Movimientos")' OnClose="close">
          <MovimientoMaterialesVista />
      </Drawer>
 </div>
@@ -138,6 +138,10 @@
     void open()
     {
         this.visibleDrawer = true;
+    }
+    void close()
+    {
+        this.visibleDrawer = false;
     }
     public async void HandleCancelAgregar(MouseEventArgs e)
     {

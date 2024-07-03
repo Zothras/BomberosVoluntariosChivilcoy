@@ -2,6 +2,8 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/Herramientas/AgregarMaterial"
 @using static Vista.Pages.Herramientas.AgregarMaterial;
+@using Vista.Services
+@inject IDepositoService DepositoService
 @inject IMessageService message
 <Form Model="@MaterialViewModel"
         OnFinish="OnFinish"
@@ -50,8 +52,6 @@
         public TipoRubro Rubro { get; set; }
     }
 
-    public MaterialVM MaterialVm = new();
-
     //variables locales
     public MaterialVM MaterialViewModel { get; set; } = new();
 
@@ -67,9 +67,7 @@
                     Rubro = MaterialViewModel.Rubro,
                     Stock = MaterialViewModel.Stock
                 };
-            Context.Add(material);
-            await Context.SaveChangesAsync();
-
+            await DepositoService.AgregarMaterial(material);
             await Init();
             StateHasChanged();
             await message.Success("Material creado correctamente");

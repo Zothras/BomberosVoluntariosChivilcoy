@@ -28,9 +28,12 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddAntDesign();
 builder.Services.AddBlazoredToast();
 builder.Services.AddHostedService<InitData>();
-builder.Services.AddScoped<StockService>();
 builder.Services.AddScoped<IBomberoService, BomberoService>();
 builder.Services.AddScoped<IBrigadaService, BrigadaService>();
+builder.Services.AddScoped<IDepositoService, DepositoService>();
+
+//Errores detallados
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 var app = builder.Build();
 

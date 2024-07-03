@@ -1,11 +1,10 @@
 ﻿@implements IDisposable
 @using System.ComponentModel.DataAnnotations
 @using Vista.Services;
+@inject IDepositoService DepositoService
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
-@inject StockService StockService
-
 
 <Table DataSource="ListasMoviminetosVista" Bordered Responsive Style="min-width: 320px!important;" PageSize="5" Size="TableSize.Small">
          <ColumnDefinitions Context="muestra">
@@ -105,7 +104,6 @@
 
 
 @code {
-
     BomberosDbContext Context { get; set; }
     bool chIsBombero;
     bool chIsMovil;
@@ -203,14 +201,16 @@
     {
         try
         {
-
-            var BomberoDestino = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == MovimientoVM.BomberoAsignado);
-            var MovilDestino = await Context.Moviles.SingleOrDefaultAsync(m => m.NumeroMovil == MovimientoVM.MovilAsignado);
+            var BomberoDestino = MovimientoVM.BomberoAsignado.HasValue ? await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == MovimientoVM.BomberoAsignado) : null;
+            var MovilDestino = !string.IsNullOrEmpty(MovimientoVM.MovilAsignado) ? await Context.Moviles.SingleOrDefaultAsync(m => m.NumeroMovil == MovimientoVM.MovilAsignado) : null;
             var MaterialAsignado = await Context.Materiales.SingleOrDefaultAsync(ma => ma.MaterialId == MovimientoVM.MaterialId);
-
+            if (MaterialAsignado == null)
+            {
+                await message.Error("No se encontró el material asignado.");
+                return;
+            }
             Vista.Data.Models.Salidas.Componentes.MovimientoMaterial movimiento = new()
                 {
-
                     TipoMovimiento = MovimientoVM.TipoMovimiento,
                     DestinoBombero = BomberoDestino,
                     DestinoMovil = MovilDestino,
@@ -218,15 +218,12 @@
                     Observaciones = MovimientoVM.Observaciones,
                     FechaIngreso = DateTime.Now,
                     Materiales = MaterialAsignado
-
                 };
-
-            Context.Movimientos.Add(movimiento);
-            await Context.SaveChangesAsync();
+            await DepositoService.CargarMovimiento(movimiento);
             await Init();
             StateHasChanged();
             await message.Success("Movimiento cargado");
-            StockService.ActulizarStock(movimiento, MaterialAsignado);
+            await DepositoService.ActualizarStock(movimiento, MaterialAsignado);
         }
         catch (Exception e)
         {
