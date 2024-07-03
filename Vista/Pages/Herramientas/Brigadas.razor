@@ -1,4 +1,7 @@
 ﻿@page "/Herramientas/Brigadas"
+@using Vista.Services;
+@inject IBrigadaService BrigadaService;
+
 
 @using AntDesign
 @using AntDesign.TableModels
@@ -290,7 +293,7 @@
 
         StateHasChanged();
     }
-    
+
     // Brigadas Bomberos Test
 
     private int? selectedBrigadaId;
@@ -323,7 +326,7 @@
     {
         return bomberos.Where(b => b.BrigadaId == brigadaId).ToList();
     }
-    
+
     private async Task LoadBomberosEnBrigada(int brigadaId)
     {
         try
@@ -405,7 +408,7 @@
 
     private void OnDragOver(DragEventArgs e)
     {
-        
+
     }
 
     private async Task OnDrop(DragEventArgs e, int brigadaId)
@@ -511,30 +514,26 @@
 
 
     //eliminar una brigada segun el nombre
-    public async void EliminarBrigada()
+    public async Task EliminarBrigada()
     {
         if (string.IsNullOrEmpty(BrigadaEliminar))
         {
             Console.WriteLine("Error: Nombre de brigada para eliminar no proporcionado.");
             return;
         }
-
         try
         {
             using var db = DbFactory.CreateDbContext();
             Brigada? brigada = await db.Brigadas.Where(b => b.Nombre == BrigadaEliminar).SingleOrDefaultAsync();
-
             if (brigada is not null)
             {
-                db.Brigadas.Remove(brigada);
-                await db.SaveChangesAsync();
+                await BrigadaService.EliminarBrigada(brigada);
                 Console.WriteLine($"Brigada '{BrigadaEliminar}' eliminada exitosamente.");
             }
             else
             {
                 Console.WriteLine($"Error: Brigada con nombre '{BrigadaEliminar}' no encontrada.");
             }
-
             BrigadaEliminar = string.Empty;
             await OnInitializedAsync();
             StateHasChanged();

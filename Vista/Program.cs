@@ -30,6 +30,7 @@ builder.Services.AddBlazoredToast();
 builder.Services.AddHostedService<InitData>();
 builder.Services.AddScoped<StockService>();
 builder.Services.AddScoped<IBomberoService, BomberoService>();
+builder.Services.AddScoped<IBrigadaService, BrigadaService>();
 
 var app = builder.Build();
 
