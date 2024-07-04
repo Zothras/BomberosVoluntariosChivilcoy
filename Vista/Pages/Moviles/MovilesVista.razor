@@ -1,4 +1,6 @@
-﻿@inject NavigationManager navigationManager
+﻿@using Vista.Services
+@inject IMovilService MovilService
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService _message
 @page "/moviles"
@@ -198,16 +200,12 @@
         AgregarVisible = true;
     }
 
-    public async void CambiarEstado(int id, TipoEstadoMovil estado)
+    public async void CambiarEstado(int movilid, TipoEstadoMovil estado)
     {
-        Movil? movil_a_modificar = await Context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
-        if (movil_a_modificar is not null)
-        {
-            movil_a_modificar.Estado = estado;
-        }
-        await Context.SaveChangesAsync();
+        await MovilService.CambiarEstado(movilid, estado);
         moviles = await Context.Moviles.ToArrayAsync();
         StateHasChanged();
+        await _message.Success("Este movil se dio de baja");
     }
 
     private void Cancel()

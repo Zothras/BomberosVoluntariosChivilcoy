@@ -1,4 +1,6 @@
-﻿@inject NavigationManager navigationManager
+﻿@using Vista.Services
+@inject IMovilService MovilService
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService _message
 @page "/Moviles/Moviles-baja"
@@ -12,6 +14,24 @@
             transition: .3s ease;
         }*/
 
+    .template {
+        width: 100%;
+        height: 100%;
+        max-width: 97%;
+        min-width: 400px;
+        max-height: 100vh;
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1em;
+        padding: 0;
+        overflow: auto;
+    }
+
     .botonCarta {
         width: 33.3%;
         outline: none;
@@ -20,38 +40,50 @@
     }
 
     .grid {
-        height: 100%;
-        width: 1036px;
+        max-width: 1300px;
+        min-width: 320px;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-start;
         gap: 12px;
-        margin: 30px .5em;
+        margin: 30px 0;
+    }
+
+    @@media screen and (max-width: 1048px) {
+        .grid div:first-child {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+    }
+
+    @@media screen and (max-width: 719px) {
+        .grid div:first-child div:last-child {
+            flex-direction: column !important;
+        }
     }
 </style>
 
-
-<div style="display: flex;flex-direction: column;justify-content:center;align-items:center;height: 100%;width:100%;">
-    <div style="display: flex;justify-content: space-between;margin: 1em 1em;width: 1036px;padding: 0; align-items: center;">
-        <div style="position: relative;">
-            <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;">
-                <b>ALTA / BAJA / MODIFICACION DE MOVILES</b>
-            </p>
-        </div>
-        <div>
-            <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles"); })">
-                <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Moviles activos</Button>
-            </a>
-        </div>
-    </div>
+<div class="template">
     <div class="grid">
-        @if (moviles_de_baja is not null)
+        <div style="display: flex;justify-content: space-between;width: 100%;min-width: 320px;align-items: center;">
+            <div style="position: relative;">
+                <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;display: contents;">
+                    <b>ALTA / BAJA / MODIFICACIÓN DE MÓVILES</b>
+                </p>
+            </div>
+            <div>
+                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles"); })">
+                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Moviles activos</Button>
+                </a>
+            </div>
+        </div>
+        @if (moviles is not null)
         {
-            @foreach (Movil m in moviles_de_baja)
+            @foreach (Movil m in moviles)
             {
-                if (m.Estado != TipoEstadoMovil.Inactivo) continue;
-                <card class="cartaPropia" style="margin-bottom: 5px;display: flex; flex-direction: column;height: 345px;width: 250px;border-radius: 3px;box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
+                if (m.Estado == TipoEstadoMovil.Activo) continue;
+                <card class="cartaPropia" style="margin-bottom: 15px;display: flex; flex-direction: column;height: 345px;width: 250px;border-radius: 3px;box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
                     <div style="width: 100%;height: 75%;margin: 0; padding: 0;">
                         <img src="@CargarImage(m)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;border-radius: 3px 3px 0 0;">
                     </div>
@@ -70,7 +102,7 @@
                                         OnConfirm="()=>CambiarEstado(m.VehiculoId,TipoEstadoMovil.Activo)"
                                         OnCancel="Cancel">
                                 <Button class="botonCarta" Style="width: 100%!important;height: 100%;border-radius: 0 0 3px 0;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;">
-                                    <Icon Type="up" Theme="outline" />
+                                    <Icon Type="down" Theme="outline" />
                                 </Button>
                             </Popconfirm>
                         </div>
@@ -81,14 +113,20 @@
             @if (EditarVisible)
             {
                 <Modal Footer="null" Title="Editar" OnCancel="@HandleCancel" Visible="true">
-                    <MovilEditar VehiculoId="@EditarPorId" OnClose="@CerrarModal" />
+                    <MovilEditar VehiculoIdEditar="@EditarPorId" OnClose="@CerrarModal" />
                 </Modal>
             }
 
             @if (DetallesVisible)
             {
                 <Modal Footer="null" Title="Detalles" OnCancel="@HandleDCancel" Visible="true" Style="width: 35%!important;">
-                    <MovilDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
+                    <MovilDetalles VehiculoIdDetalle="@DetallesPorId" OnClose="@CerrarDModal" />
+                </Modal>
+            }
+            @if (AgregarVisible)
+            {
+                <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
+                    <MovilAgregar OnClose="@CerrarAModal" />
                 </Modal>
             }
         }
@@ -99,19 +137,19 @@
             </div>
             //Hay que ver si se puede cambiar el contenido despues del delay
             @code {
-                RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
-            }
+            RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+        }
         }
     </div>
 </div>
 
 @code {
-    public Movil[]? moviles_de_baja;
+    Movil[]? moviles;
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
+    bool AgregarVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
-    bool flag = false;
     BomberosDbContext Context { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -123,7 +161,7 @@
     {
         Context = DbFactory.CreateDbContext();
 
-        moviles_de_baja = await Context.Moviles.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
+        moviles = await Context.Moviles.ToArrayAsync();
     }
 
     public string CargarImage(Movil movil)
@@ -141,32 +179,35 @@
 
         return src;
     }
-    public async void CambiarEstado(int id, TipoEstadoMovil estado)
-    {
-        Context = DbFactory.CreateDbContext();
-        Movil? movil_a_modificar = await Context.Moviles.Where(m => m.VehiculoId == id).SingleOrDefaultAsync();
-        if (movil_a_modificar is not null)
-        {
-            movil_a_modificar.Estado = estado;
-        }
-        moviles_de_baja = await Context.Moviles.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
-        await Context.SaveChangesAsync();
-        StateHasChanged();
-    }
-    private void Cancel()
-    {
-        _message.Error("Operación cancelada.");
-    }
 
     public void EditarMovilModal(int id)
     {
         EditarPorId = id;
         EditarVisible = true;
+        StateHasChanged();
     }
     public void DetallesMovilModal(int id)
     {
         DetallesPorId = id;
         DetallesVisible = true;
+        StateHasChanged();
+    }
+    public void AgregarMovilModal()
+    {
+        AgregarVisible = true;
+    }
+
+    public async void CambiarEstado(int movilid, TipoEstadoMovil estado)
+    {
+        await MovilService.CambiarEstado(movilid, estado);
+        moviles = await Context.Moviles.ToArrayAsync();
+        StateHasChanged();
+        await _message.Success("Este movil se dio de alta");
+    }
+
+    private void Cancel()
+    {
+        _message.Error("Operación cancelada.");
     }
 
     private void HandleCancel(MouseEventArgs e)
@@ -187,5 +228,21 @@
     private void CerrarDModal()
     {
         DetallesVisible = false;
+    }
+
+    private void HandleACancel(MouseEventArgs e)
+    {
+        CerrarAModal();
+    }
+    private async void CerrarAModal()
+    {
+        AgregarVisible = false;
+        await Init();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
     }
 }

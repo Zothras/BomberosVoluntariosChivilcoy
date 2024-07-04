@@ -1,4 +1,6 @@
 ﻿@implements IDisposable
+@using Vista.Services
+@inject IMovilService MovilService
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 
@@ -304,38 +306,44 @@
 
     }
 
-    public async void EditarMovil()
+    public async void EditarMovil() //FUNCION FINALIZAR EDITAR
     {
         try
         {
             if (movilView.NumeroMovil is not null)
             {
-                Movil? movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoIdEditar); ;
+                //Movil? movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoIdEditar); ;
+                Movil? comprobante = await Context.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
                 Bombero? EncargadoNew = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == int.Parse(movilView.EncargadoId));
-                if (movil is not null)
+                if (comprobante is not null)
                 {
-                    movil.Marca = movilView.Marca;
-                    movil.Modelo = movilView.Modelo;
-                    movil.Año = movilView.Año;
-                    movil.Patente = movilView.Patente;
-                    movil.Tipo = movilView.Tipo;
-                    movil.Imagen = new()
+                    Movil movil = new Movil()
                         {
-                            NombreImagen = imagenView.Nombre,
-                            TipoImagen = imagenView.TipoImagen,
-                            Base64Imagen = imagenView.Base64
+                            VehiculoId = comprobante.VehiculoId,
+                            Marca = movilView.Marca,
+                            Modelo = movilView.Modelo,
+                            Año = movilView.Año,
+                            Patente = movilView.Patente,
+                            Tipo = movilView.Tipo,
+                            Encargado = EncargadoNew,
+                            Imagen = new()
+                            {
+                                NombreImagen = imagenView.Nombre,
+                                TipoImagen = imagenView.TipoImagen,
+                                Base64Imagen = imagenView.Base64
+                            },
+                            //ModeloBomba no se implementa en la edición
+                            NumeroChasis = movilView.NumeroChasis,
+                            NumeroMotor = movilView.NumeroMotor,
+                            NumeroMovil = movilView.NumeroMovil,
+                            Estado = movilView.Estado,
+                            //Seguro no se implementa en la edicion
                         };
-                    movil.NumeroChasis = movilView.NumeroChasis;
-                    movil.NumeroMotor = movilView.NumeroMotor;
-                    movil.NumeroMovil = movilView.NumeroMovil;
-                    movil.Estado = movilView.Estado;
-                    movil.Encargado = EncargadoNew;
-
-                    await Context.SaveChangesAsync();
+                    MovilService.EditarMovil(movil);
                     StateHasChanged();
                     await Init();
-                    await message.Success("Se logro editar correctamente");
                     await OnClose.InvokeAsync();
+                    await message.Success("Se logro editar correctamente");
                 }
             }
             
