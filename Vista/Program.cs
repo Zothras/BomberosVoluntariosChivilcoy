@@ -31,6 +31,7 @@ builder.Services.AddHostedService<InitData>();
 builder.Services.AddScoped<IBomberoService, BomberoService>();
 builder.Services.AddScoped<IBrigadaService, BrigadaService>();
 builder.Services.AddScoped<IDepositoService, DepositoService>();
+builder.Services.AddScoped<IMovilService, MovilService>();
 
 //Errores detallados
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
