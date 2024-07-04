@@ -848,7 +848,7 @@
     {
         using var context = DbFactory.CreateDbContext();
         Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
+        Brigada? brigada = bombero.Brigada != null ? await context.Brigadas.SingleOrDefaultAsync(m => m.BrigadaId == bombero.BrigadaId) : null;
         //Bombero? imagen = await context.Bomberos.Include(i => i.ImagenId).SingleOrDefaultAsync();
         Bombero? bombero1 = await context.Bomberos
             .Include(b => b.Contacto)
@@ -873,7 +873,7 @@
 
                 Dotacion = bombero.Dotacion,
 
-                NombreBrigada = brigada.Nombre,
+                NombreBrigada = brigada != null ? brigada.Nombre : "",
 
                 Resolucion1 = bombero.Resolucion1,
                 Resolucion2 = bombero.Resolucion2,
@@ -916,7 +916,8 @@
         .Include(c => c.Contacto)
         //.Include(h => h.Horarios.Count)
         .SingleOrDefaultAsync();
-        Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
+        //viejo brigada: Brigada? brigada = await context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefaultAsync();
+        Brigada? brigada = bombero.Brigada != null ? await context.Brigadas.SingleOrDefaultAsync(m => m.BrigadaId == bombero.BrigadaId) : null;
         //HorarioBombero horario = await context.HorariosBomberos.Where(h => h.BomberoId == id).SingleOrDefaultAsync();
 
         bombero.FechaNacimiento = bomberoVM.FechaNacimiento;
@@ -937,7 +938,7 @@
         //    Base64Imagen = bomberoVM.Base64
         //},
         bombero.Dotacion = bomberoVM.Dotacion;
-        brigada.Nombre = bomberoVM.NombreBrigada;
+        if (brigada != null) brigada.Nombre = bomberoVM.NombreBrigada != null ? bomberoVM.NombreBrigada : "";
         bombero.Resolucion1 = bomberoVM.Resolucion1;
         bombero.Resolucion2 = bomberoVM.Resolucion2;
         bombero.Resolucion3 = bomberoVM.Resolucion3;
