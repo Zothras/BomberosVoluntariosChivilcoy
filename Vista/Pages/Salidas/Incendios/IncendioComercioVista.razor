@@ -138,18 +138,6 @@
                                DamnificadosSalida="@DamnificadosSalida"
                                switchValue="@switchDamificados"
                                valorswitch="@HandleSwitchChanged" />
-                <div class="slick-contenedor @animationClass">
-                    <h6>Datos del recepcionista</h6>
-
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Nombre y apellido</label>
-                        <Input @bind-Value="@salidaIncendioComercioView.NombreYApellidoReceptor" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Telefono</label>
-                        <Input @bind-Value="@salidaIncendioComercioView.TelefonoReceptor" />
-                    </div>
-                </div>
             }
             else if (current == 2)
             {
@@ -218,7 +206,7 @@
             }
             @if (current == steps.Length - 1)
             {
-                <FormItem WrapperColOffset="8" WrapperColSpan="16">
+                <FormItem WrapperColSpan="16">
                     <Button Class="boton_p" HtmlType="submit">
                         Cargar salida
                     </Button>
