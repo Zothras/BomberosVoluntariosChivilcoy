@@ -124,10 +124,6 @@
 
             <div class="inpt-cont-inline">
                 <div class="inpt-cont">
-                    <label class="inpt-cont--lbl">Numero de parte</label>
-                    <Input @bind-Value="@salidaIncendioViviendaVista.NumeroParte" />
-                </div>
-                <div class="inpt-cont">
                     <label class="inpt-cont--lbl">PisoNumero</label>
                     <Input @bind-Value="@salidaIncendioViviendaVista.PisoNumero" />
                 </div>
@@ -256,7 +252,6 @@
     @*Steps*@
     public int current { get; set; } = 0;
     private string animationClass = "";
-    bool switchValue { get; set; }
 
     public class StepItem
     {
@@ -275,6 +270,7 @@
         new StepItem {Title = " ", Content = ""}  /* Salida */
     };
 
+    bool switchDamificados { get; set; }
     private void HandleSwitchChanged(bool value)
     {
         switchDamificados = value;
@@ -298,7 +294,6 @@
 
     public List<BomberoViweModel> bomberoChoferes = new();
     public List<BomberoViweModel> bomberoTodos = new();
-    bool switchDamificados { get; set; }
     bool damnsihubo { get; set; }
     bool switchValueS { get; set; }
     bool chek { get; set; }
@@ -522,6 +517,7 @@
     private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioViviendaVista)}");
+        message.Error("Error al cargar, posible información ausente");
     }
     private void OnChange(DateTimeChangedEventArgs args)
     {

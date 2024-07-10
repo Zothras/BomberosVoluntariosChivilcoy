@@ -2,6 +2,10 @@
 @using Vista.Data.ViewModels.Personal;
 
 <div class="slick-contenedor @animationClass">
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Numero de parte</label>
+        <Input @bind-Value="@Model.NumeroParte" />
+    </div>
     <div class="inpt-cont-inline">
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Hora salida</label>

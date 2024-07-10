@@ -552,11 +552,13 @@
     //OnFinishFailed
     private void OnFinishFailed(EditContext editContext)
     {
+        message.Error("Hubo un error al cargar los datos");
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(salidaIncendioForestalView)}");
     }
 
     private void OnFinishFailedModel(EditContext editContext)
     {
+        message.Error("Hubo un error al cargar los datos2");
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
     }
 

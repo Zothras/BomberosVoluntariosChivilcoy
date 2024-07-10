@@ -22,11 +22,9 @@ namespace Vista.Data.Models.Salidas.Planillas
         [Required]
         public TipoIncendio Tipo { get; set; }
 
-        [Required]
         public TipoIncendioAbertura? TipoAbertura { get; set; }
         [StringLength(255)]
         public string? OtraAbertura { get; set; }
-        [Required]
         public TipoIncendioTecho? TipoTecho { get; set; }
         [StringLength(255)]
         public string? OtroTecho { get; set; }
