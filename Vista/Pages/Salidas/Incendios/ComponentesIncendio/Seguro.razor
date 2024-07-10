@@ -1,0 +1,26 @@
+﻿@using Vista.Data.ViewModels.Incendios;
+@using Vista.Data.ViewModels.Personal;
+
+
+<h6>Seguro del lugar</h6>
+
+<div class="slick-contenedor @animationClass">
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Compania aseguradora del establecimiento</label>
+        <Input @bind-Value="@Model.CompaniaAseguradora" />
+    </div>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Numero de poliza</label>
+        <Input @bind-Value="@Model.NumeroPoliza" />
+    </div>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Fecha de vencimiento</label>
+        <DatePicker TVlue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@Model.FechaVencimineto" />
+    </div>
+</div>
+
+@code {
+    [Parameter] public IncendioViewModels Model { get; set; }
+    [Parameter] public string animationClass { get; set; }
+    [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+}

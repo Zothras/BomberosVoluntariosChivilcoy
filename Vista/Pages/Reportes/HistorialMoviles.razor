@@ -183,7 +183,7 @@
     private async Task CargarSalidasMovil()
     {
         MovilesSalidas.Clear();
-        var movilsalidaVM = await Context.Set<MovilSalida>().Include(m => m.Salida).ToArrayAsync();
+        var movilsalidaVM = await Context.Set<MovilSalida>().ToArrayAsync();
         foreach (var s in movilsalidaVM)
         {
             var movil = await Context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == s.MovilId);
@@ -191,9 +191,9 @@
                 {
                     CargoCombustible = s.CargoCombustible,
                     Kilometraje = s.KmLlegada,
-                    NumeroParte = s.Salida.NumeroParte,
+                    //NumeroParte = s.Salida.NumeroParte,
                     NumeroMovil = movil.NumeroMovil,
-                    Hrllegada = s.Salida.HoraSalida
+                    //Hrllegada = s.Salida.HoraSalida
                 };
             MovilesSalidas.Add(msvm);
         }

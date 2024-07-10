@@ -1,0 +1,127 @@
+﻿@using Vista.Data.ViewModels.Incendios;
+@using Vista.Data.ViewModels.Personal;
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+
+<div class="slick-contenedor @animationClass">
+    <h6>Cuerpo Participante</h6>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Elija el bombero</label>
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberoTodos"
+                @bind-Value="@BomberoCuerpo"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Selecione un bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true" EnableSearch>
+        </Select>
+    </div>
+    <div class="inpt-cont">
+        <Checkbox @bind-Checked="chekB">¿Salió?</Checkbox>
+    </div>
+    <div class="inpt-cont">
+        <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
+    </div>
+    <div class="inpt-cont">
+        <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
+            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="¿Quieres eliminar este bombero?"
+                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                            OkText="Si"
+                            CancelText="No">
+                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
+    <div class="inpt-cont-inline">
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Encargado</label>
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberoTodos"
+                    Value="@BomberoEncargado"
+                    ValueChanged="@UpdateBomberoEncargado"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione  a un  bombero"
+                    DefaultActiveFirstOption="true"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Lleno la planilla</label>
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberoTodos"
+                    Value="@QuienLLenoPlanilla"
+                    ValueChanged="@UpdateQuienLLenoPlanilla"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione un bombero"
+                    DefaultActiveFirstOption="false"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public IncendioViewModels Model { get; set; }
+    [Parameter] public string animationClass { get; set; }
+    [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+    [Parameter] public List<BomberoViweModel> bomberoTodos { get; set; }
+    [Parameter] public BomberoSalidaViewModels bomberoSalidaView { get; set; }
+    [Parameter] public List<BomberoSalidaViewModels> bomberosSalida { get; set; }
+    [Parameter] public int BomberoEncargado { get; set; }
+    [Parameter] public EventCallback<int> BomberoEncargadoCall { get; set; }
+    [Parameter] public int QuienLLenoPlanilla { get; set; }
+    [Parameter] public EventCallback<int> QuienLLenoPlanillaCall { get; set; }
+
+    //Info
+    bool chekB { get; set; }// Bombero Salio [Si/No]
+    int BomberoCuerpo;
+
+    private async Task UpdateBomberoEncargado(int value)
+    {
+        BomberoEncargado = value;
+        await BomberoEncargadoCall.InvokeAsync(value);
+    }
+
+    private async Task UpdateQuienLLenoPlanilla(int value)
+    {
+        QuienLLenoPlanilla = value;
+        await QuienLLenoPlanillaCall.InvokeAsync(value);
+    }
+
+    BomberosDbContext Context { get; set; }
+    public async Task AgregarCuerpoParticipante()
+    {
+        Context = DbFactory.CreateDbContext();
+        var boberos = await Context.Bomberos.ToArrayAsync();
+        foreach (var bom in boberos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
+            {
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = bomberoSalidaView.Salio,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
+        StateHasChanged();
+    }
+
+    void deleteRow(int numlegajo)
+    {
+        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+}

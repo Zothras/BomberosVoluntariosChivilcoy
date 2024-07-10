@@ -7,388 +7,240 @@
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
 @using System.Text.Json;
+@using Vista.Pages.Salidas.Incendios.ComponentesIncendio;
+
 <style>
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
     }
+
+    .ant-carousel .slick-dots li {
+        display: none !important;
+    }
+
+    .ant-form-item-control-input-content, .ant-form-item-label {
+        padding: 0 !important;
+    }
+
+    .ant-form-item-row:nth-child(2) {
+        display: flex !important;
+    }
+
+    .ant-input-number {
+        width: auto !important;
+    }
+
+    .steps-content {
+        margin-top: 16px;
+        border: 1px dashed #e9e9e9;
+        border-radius: 6px;
+        background-color: #fafafa;
+        min-height: 200px;
+        text-align: center;
+        padding-top: 80px;
+    }
+
+    .steps-action {
+        margin-top: 24px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+    }
+
+    .inpt-cont {
+        min-width: 100px;
+        display: flex;
+        flex-direction: column;
+        padding: .3em 0;
+        width: 100%;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont-inline {
+        min-width: 170px;
+        display: flex;
+        gap: 1em;
+        padding: .3em 0;
+        overflow: hidden !important;
+    }
+
+    .inpt-cont--lbl {
+        min-width: 170px;
+        text-align: start;
+        font-weight: bold;
+        overflow: hidden !important;
+    }
+
+    .ant-table-cell {
+        text-align: center !important;
+    }
+
+    @@media screen and (max-width: 450px) {
+        .contenedor {
+            padding: 0 21px !important;
+        }
+
+        .ant-picker-datetime-panel {
+            flex-direction: column;
+        }
+
+        .ant-picker-panel-container {
+            overflox: auto !imporant;
+        }
+    }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+
+    textarea {
+        resize: none !important;
+        min-height: 250pxpx !important;
+        width: 100% !important;
+    }
 </style>
-<h2 style="text-align:center; text-decoration:underline;">Incendio Vivienda</h2>
 
 <Form Model="@salidaIncendioViviendaVista"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed">
-    @*Datos generales de las salidas*@
-    <FormItem Label="Numero de parte">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.NumeroParte" Disabled />
-    </FormItem>
-    <FormItem Label="Descripcion">
-        <Input @bind-Value="@salidaIncendioViviendaVista.Descripcion" />
-    </FormItem>
-    <FormItem Label="Dato Hora salida">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioViviendaVista.HoraSalida" />
-    </FormItem>
-    <FormItem Label="Dato Hora llegada">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioViviendaVista.HoraLLegada" />
-    </FormItem>
-    @*<FormItem Label="Kilometro salida">
-    <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.KmSalida" />
-    </FormItem>
-    <FormItem Label="Kilometro llegada">
-    <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.KmLlegada" />
-    </FormItem>*@
-    <FormItem Label="Calle/Ruta">
-        <Input @bind-Value="@salidaIncendioViviendaVista.CalleORuta" />
-    </FormItem>
-    <FormItem Label="Numero/kilometro">
-        <Input @bind-Value="@salidaIncendioViviendaVista.NumeroOKilometro" />
-    </FormItem>
-    <FormItem Label="Entre calles">
-        <Input @bind-Value="@salidaIncendioViviendaVista.EntreCalles" />
-    </FormItem>
-    <FormItem Label="PisoNumero">
-        <Input @bind-Value="@salidaIncendioViviendaVista.PisoNumero" />
-    </FormItem>
-    <FormItem Label="Depto">
-        <Input @bind-Value="@salidaIncendioViviendaVista.Depto" />
-    </FormItem>
-    @*Solicitante datos*@
-    <b><label>Datos de solicitante</label></b>
-    <FormItem Label="Nombre del solicitante">
-        <Input @bind-Value="@salidaIncendioViviendaVista.NombreSolicitante" />
-    </FormItem>
-    <FormItem Label="Apelldio del solicitante">
-        <Input @bind-Value="@salidaIncendioViviendaVista.ApellidoSolicitante" />
-    </FormItem>
-    <FormItem Label="documneto del solicitante">
-        <Input @bind-Value="@salidaIncendioViviendaVista.DniSolicitante" />
-    </FormItem>
-    <FormItem Label="Telefono  del solicitante">
-        <Input @bind-Value="@salidaIncendioViviendaVista.TelefonoSolicitante" />
-    </FormItem>
-    <div>
-        <div>
-            <b>
-                <FormItem Label="¿Tiene seguro el lugar?">
-                    <Switch @bind-Checked="switchValueS" />
-                </FormItem>
-            </b>
-        </div>
-        <div>
-            @if (switchValueS == true)
-            {
-                <b><label>Seguro del lugar afectado</label></b>
-                <FormItem Label="Compania Aseguradora">
-                    <Input @bind-Value="@salidaIncendioViviendaVista.CompaniaAseguradora" />
-                </FormItem>
-                <FormItem Label="NumeroPoliza">
-                    <Input @bind-Value="@salidaIncendioViviendaVista.NumeroPoliza" />
-                </FormItem>
-                <FormItem Label="FechaVencimineto">
-                    <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidaIncendioViviendaVista.FechaVencimineto" />
-                </FormItem>
-            }
-        </div>
-    </div>
-    @*Datos de damnificados*@
-    <FormItem Label="¿Hubo damnificados?">
-        <Switch @bind-Checked="switchValue" />
-    </FormItem>
-    @if (switchValue == true)
-    {
-        <FormItem Label="Nombre">
-            <Input @bind-Value="@damnificado.Nombre" />
-        </FormItem>
-        <FormItem Label="Apellido">
-            <Input @bind-Value="@damnificado.Apellido" />
-        </FormItem>
-        <FormItem Label="Documento">
-            <Input @bind-Value="@damnificado.Dni" />
-        </FormItem>
-        <FormItem Label="Tipo sexo">
-            <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
-        </FormItem>
-        <FormItem Label="Lugar De nacimiento">
-            <Input @bind-Value="@damnificado.LugarDeNacimiento" />
-        </FormItem>
-        <FormItem Label="edad">
-            <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
-        </FormItem>
-        <FormItem Label="Tipo material">
-            <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
-        </FormItem>
-        <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
-        <div>
-            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-            <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-            <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-            <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-            <ActionColumn Title="Acciones">
-                <Popconfirm Title="Sure to delete?"
-                            OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                            OkText="Yes"
-                            CancelText="No">
-                    <a>Delete</a>
-                </Popconfirm>
-            </ActionColumn>
-        </Table>
-    </div>
-    }
-    @*Moviles de salidas*@
-    @*a la hora de pedir el chofer y movil,
-    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
-    @*Moviles de salidas*@
-    <b><label>Datos de chofer</label></b>
-    <br />
-    <FormItem Label="" style="display: grid;place-items: center;">
-        <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
-        <Button Class="boton_p" OnClick="@ShowModal">
-            Cargo Combustible
-        </Button>
-    </FormItem>
-
-    <FormItem Label="Elija el chofer">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoChoferes"
-        @bind-Value="@chofer"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione el bombero"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-
-    <FormItem Label="Numero de movil">
-        <Select TItem="Movil"
-                TItemValue="string"
-                DataSource="@Moviles"
-                @bind-Value="@NumeroMovil"
-                LabelName="@nameof(Movil.NumeroMovil)"
-                ValueName="@nameof(Movil.NumeroMovil)"
-                Placeholder="Seleccione el movil"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-
-    </FormItem>
-    <br />
-    @if (NumeroMovil is not null)
-    {
-        foreach (Movil m in Moviles)
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%; overflow: hidden!important;">
+    @*Datos*@
+    <Steps Current="current">
+        @foreach (var item in steps)
         {
-            if (m.NumeroMovil == NumeroMovil)
-            {
-                salidaIncendioViviendaVista.Kilometraje = m.Kilometraje;
-                break;
-            }
+            <Step Title="@item.Title" Subtitle="@item.Content" />
         }
-    }
-    <FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.Kilometraje" Disabled />
-    </FormItem>
-    <FormItem Label="Kilometro llegada">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.KmLlegada" />
-    </FormItem>
-    <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
-    <div>
-        <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
-            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Chofer.Nombre"></PropertyColumn>
-            <ActionColumn Title="Action">
-                <Popconfirm Title="Sure to delete?"
-                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                            OkText="Yes"
-                            CancelText="No">
-                    <a>Delete</a>
-                </Popconfirm>
-            </ActionColumn>
-        </Table>
-    </div>
-
-    @*Cuerpos paraticipantes*@
-    <b><label>Cuerpo Participante</label></b>
-    <FormItem Label="Elija el bombero">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoTodos"
-                @bind-Value="@BomberoCuerpo"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione el bombero"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
-    <br />
-    <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
-    <br />
-    <div>
-        <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
-            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-            <ActionColumn Title="Action">
-                <Popconfirm Title="Sure to delete?"
-                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                            OkText="Yes"
-                            CancelText="No">
-                    <a>Delete</a>
-                </Popconfirm>
-            </ActionColumn>
-        </Table>
-    </div>
-    <b><label>Elija al encargado</label></b>
-    <FormItem Label="Encargado">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoTodos"
-                @bind-Value="@BomberoEncargado"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione un encargado"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    <b><label>Quien lleno planilla</label></b>
-    <FormItem Label="Bombero que lleno la planilla">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoTodos"
-                @bind-Value="@QuienLLenoPlanilla"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione un encargado"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    @*Tipo servicio*@
-    <b><label>Salida</label></b>
-    <FormItem Label="Tipo Servicio salida">
-        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@salidaIncendioViviendaVista.TipoServicio" />
-    </FormItem>
-    <FormItem Label="Tipo de Zona">
-        <EnumSelect TEnum="TipoZona" @bind-Value="@salidaIncendioViviendaVista.TipoZona" />
-    </FormItem>
-    <FormItem Label="Lugar">
-        <EnumSelect TEnum="TipoIncendioVivienda" @bind-Value="@salidaIncendioViviendaVista.TipoLugar" />
-        @if (salidaIncendioViviendaVista.TipoLugar == TipoIncendioVivienda.Otro)
+    </Steps>
+    <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+        @if (current == 0)
         {
-            <FormItem Label="OtroLugar">
-                <Input @bind-Value="@salidaIncendioViviendaVista.OtroLugar" />
+            <DatosGenerales Model="@salidaIncendioViviendaVista"
+                            OnChange="@OnChange"
+                            animationClass="@animationClass" />
+
+            <div class="inpt-cont-inline">
+                <div class="inpt-cont">
+                    <label class="inpt-cont--lbl">Numero de parte</label>
+                    <Input @bind-Value="@salidaIncendioViviendaVista.NumeroParte" />
+                </div>
+                <div class="inpt-cont">
+                    <label class="inpt-cont--lbl">PisoNumero</label>
+                    <Input @bind-Value="@salidaIncendioViviendaVista.PisoNumero" />
+                </div>
+                <div class="inpt-cont">
+                    <label class="inpt-cont--lbl">Depto</label>
+                    <Input @bind-Value="@salidaIncendioViviendaVista.Depto" />
+                </div>
+            </div>
+        }
+        else if (current == 1)
+        {
+            <Participantes Model="@salidaIncendioViviendaVista"
+                           OnChange="@OnChange"
+                           animationClass="@animationClass"
+                           damnificado="@damnificado"
+                           DamnificadosSalida="@DamnificadosSalida"
+                           switchValue="@switchDamificados"
+                           valorswitch="@HandleSwitchChanged" />
+        }
+        else if (current == 2)
+        {
+            <Seguro Model="@salidaIncendioViviendaVista"
+                    OnChange="@OnChange"
+                    animationClass="@animationClass" />
+        }
+        else if (current == 3)
+        {
+            <Vehiculos Model="@salidaIncendioViviendaVista"
+                       OnChange="@OnChange"
+                       animationClass="@animationClass"
+                       bomberoChoferes="@bomberoChoferes"
+                       movilSalidaViewModels="@movilSalidaViewModels"
+                       chofer="@chofer"
+                       Moviles="@Moviles"
+                       NumeroMovil="@NumeroMovil"
+                       MovilesSalidasL="@MovilesSalidasL" />
+        }
+        else if (current == 4)
+        {
+            <Personal Model="@salidaIncendioViviendaVista"
+                      OnChange="@OnChange"
+                      animationClass="@animationClass"
+                      bomberoTodos="@bomberoTodos"
+                      bomberoSalidaView="@bomberoSalidaView"
+                      bomberosSalida="@bomberosSalida"
+                      BomberoEncargado="@BomberoEncargado"
+                      QuienLLenoPlanilla="@QuienLLenoPlanilla"
+                      BomberoEncargadoCall="@HandleBomberoEncargadoChanged"
+                      QuienLLenoPlanillaCall="@HandleQuienLLenoPlanillaChanged" />
+        }
+        else if (current == 5)
+        {
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Lugar</label>
+                <EnumSelect TEnum="TipoIncendioVivienda" @bind-Value="@salidaIncendioViviendaVista.TipoLugar" />
+                @if (salidaIncendioViviendaVista.TipoLugar == TipoIncendioVivienda.Otro)
+                {
+                    <FormItem Label="OtroLugar">
+                        <Input @bind-Value="@salidaIncendioViviendaVista.OtroLugar" />
+                    </FormItem>
+                }
+            </div>
+            <Establecimiento Model="@salidaIncendioViviendaVista"
+                             OnChange="@OnChange"
+                             animationClass="@animationClass" />
+        }
+        else if (current == 6)
+        {
+            <div class="slick-contenedor">
+                <DatosSalida Model="@salidaIncendioViviendaVista"
+                             animationClass="@animationClass"
+                             OnChange="@OnChange" />
+            </div>
+        }
+    </div>
+    <div class="steps-action">
+        @if (current > 0)
+        {
+            <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+        }
+        @if (current < steps.Length - 1)
+        {
+            <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+        }
+        @if (current == steps.Length - 1)
+        {
+            <FormItem WrapperColOffset="8" WrapperColSpan="16">
+                <Button Class="boton_p" HtmlType="submit">
+                    Cargar salida
+                </Button>
             </FormItem>
         }
-    </FormItem>
-    <FormItem Label="Superficie Afectada Causa">
-        <EnumSelect TEnum="TipoCausaIncendio" @bind-Value="@salidaIncendioViviendaVista.SuperficieAfectadaCausa" />
-    </FormItem>
-    <FormItem Label="Nombre establecimiento:">
-        <Input @bind-Value="salidaIncendioViviendaVista.NombreEstablecimiento" />
-        <br>
-    </FormItem>
-    <FormItem Label="Cantidad pisos:">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.CantidadPisos" />
-        <br>
-    </FormItem>
-    <FormItem Label="Pisos afectados">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.PisoAfectado" />
-        <br>
-    </FormItem>
+    </div>
+    @*Despues de la Carga*@
+    <Modal Title="@("Success")"
+           Visible="@_visible1"
+           OnOk="@HandleOk1"
+           OnCancel="@HandleCancel1">
+        <Result Status="success"
+                Title="Se cargo correctamente la salida"
+                SubTitle="">
+        </Result>
+    </Modal>
 
-    <FormItem Label="Cantidad ambientes:">
-        <AntDesign.InputNumber @bind-Value="salidaIncendioViviendaVista.CantidadAmbientes" />
-        <br>
-    </FormItem>
-    <FormItem Label="Tipo Evacuacion">
-        <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@salidaIncendioViviendaVista.TipoEvacuacion" />
-    </FormItem>
-    <FormItem Label="Tipo Superficie">
-        <EnumSelect TEnum="TipoSuperficie" @bind-Value="@salidaIncendioViviendaVista.TipoSuperficieAfectada" />
-    </FormItem>
-    <FormItem Label="Detalles Surpeficie Afectada ">
-        <Input @bind-Value="salidaIncendioViviendaVista.DetalleSuperficieAfectadaIncendio" />
-    </FormItem>
-    <FormItem Label="Tipo Techo">
-        <EnumSelect TEnum="TipoIncendioTecho?" @bind-Value="@salidaIncendioViviendaVista.TipoTecho" />
-        @if (salidaIncendioViviendaVista.TipoTecho == TipoIncendioTecho.Otro)
-        {
-            <FormItem Label="Otro Techo">
-                <Input @bind-Value="@salidaIncendioViviendaVista.OtroTecho" />
-            </FormItem>
-        }
-    </FormItem>
-    <FormItem Label="Tipo Abertura">
-        <EnumSelect TEnum="TipoIncendioAbertura?" @bind-Value="@salidaIncendioViviendaVista.TipoAbertura" />
-        @if (salidaIncendioViviendaVista.TipoAbertura == TipoIncendioAbertura.Otro)
-        {
-            <FormItem Label="Otro Abertura">
-                <Input @bind-Value="@salidaIncendioViviendaVista.OtraAbertura" />
-            </FormItem>
-        }
-    </FormItem>
-    <div>
-        <b><label>Hubo deteccion automatica?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioViviendaVista.DeteccionAutomaticaId"></Checkbox>
-    </div>
-    <div>
-        <b><label>Habia Extintor?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioViviendaVista.Extintor"></Checkbox>
-    </div>
-    <div>
-        <b><label>Habia Hidrante?</label></b>
-        <Checkbox @bind-Checked="salidaIncendioViviendaVista.Hidrante"></Checkbox>
-    </div>
-
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Class="boton_p" HtmlType="submit">
-            Cargar salida
-        </Button>
-    </FormItem>
+    <Modal Title="@("Datos de la carga de Incendio")"
+           Visible="@imprimirmodal"
+           OnOk="@HandleOkIMP"
+           OnCancel="@HandleCancelIMP">
+        <p>Imprimir con croquis</p>
+        <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioViviendaVista.NumeroParte}/{true}", true); })">Si</button>
+        <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioViviendaVista.NumeroParte}/{false}", true); })">No</button>
+    </Modal>
 </Form>
-<Modal Title="@("Datos de la carga de combustible")"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
-    <Form Loading="loading" Model="@movilSalidaViewModels"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinishModel"
-          OnFinishFailed="OnFinishFailed"
-    @ref="@_form1">
-        <FormItem Label="Numero factura">
-            <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
-        </FormItem>
-        <FormItem Label="Fecha factura">
-            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
-        </FormItem>
-        <FormItem Label="Tipo Combustible">
-            <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
-        </FormItem>
-        <FormItem Label="Cantidad de Litros">
-            <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
-        </FormItem>
-        <FormItem Label="Quien lleno">
-            <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
-        </FormItem>
-        <FormItem Label="TelefonoQuienLleno">
-            <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
-        </FormItem>
-    </Form>
-</Modal>
-
-<Modal Title="@("Datos de la carga de Incendio")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
-    <p>Imprimir con croquis</p>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioViviendaVista.NumeroParte}/{true}", true); })">Si</button>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioViviendaVista.NumeroParte}/{false}", true); })">No</button>
-</Modal>
 
 @code {
 
@@ -400,15 +252,54 @@
     public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
-    private Form<MovilSalidaViewModels> _form1;
 
+    @*Steps*@
+    public int current { get; set; } = 0;
+    private string animationClass = "";
+    bool switchValue { get; set; }
+
+    public class StepItem
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+    }
+
+    public StepItem[] steps =
+    {
+        new StepItem {Title = " ", Content = ""}, /* Datos generales*/
+        new StepItem {Title = " ", Content = ""}, /* Participantes */
+        new StepItem {Title = " ", Content = ""},/*Seguro*/
+        new StepItem {Title = " ", Content = ""}, /* Vehiculos */
+        new StepItem {Title = " ", Content = ""}, /* Personal */
+        new StepItem {Title = " ", Content = ""},  /* Vivienda */
+        new StepItem {Title = " ", Content = ""}  /* Salida */
+    };
+
+    private void HandleSwitchChanged(bool value)
+    {
+        switchDamificados = value;
+        StateHasChanged();
+    }
+
+    private void HandleBomberoEncargadoChanged(int value)
+    {
+        BomberoEncargado = value;
+        StateHasChanged();
+    }
+
+    private void HandleQuienLLenoPlanillaChanged(int value)
+    {
+        QuienLLenoPlanilla = value;
+        StateHasChanged();
+    }
 
     Bombero[] TodosBomberos;
     Movil[] Moviles;
 
     public List<BomberoViweModel> bomberoChoferes = new();
     public List<BomberoViweModel> bomberoTodos = new();
-    bool switchValue { get; set; }
+    bool switchDamificados { get; set; }
+    bool damnsihubo { get; set; }
     bool switchValueS { get; set; }
     bool chek { get; set; }
     bool chekM { get; set; }
@@ -418,73 +309,57 @@
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
-    int BomberoCuerpo;
     int BomberoEncargado;
     int QuienLLenoPlanilla;
 
-
-    public async Task AgregarDamnificado()
+    private void ToggleAnimationD()
     {
-
-        DamnificadoViewModels dp = new()
-            {
-                Nombre = damnificado.Nombre,
-                Apellido = damnificado.Apellido,
-                Dni = damnificado.Dni,
-                Sexo = damnificado.Sexo,
-                LugarDeNacimiento = damnificado.LugarDeNacimiento,
-                Edad = damnificado.Edad,
-                Estado = damnificado.Estado,
-
-            };
-        DamnificadosSalida.Add(dp);
-        StateHasChanged();
+        animationClass = "slick-contenedor-D";
     }
 
-    public async Task AgregarMovilSalida()
+    public void ShowModal1()
     {
-
-        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
-        MovilSalidaViewModels m = new()
-            {
-                CargoCombustible = chekM,
-                NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                FechaFactura = movilSalidaViewModels.FechaFactura,
-                TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                QuienLleno = movilSalidaViewModels.QuienLleno,
-                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                KmLlegada = salidaIncendioViviendaVista.KmLlegada,
-                Chofer = bomberoChofer,
-                MovilesSalida = Movilsalida,
-
-            };
-        MovilesSalidasL.Add(m);
-        StateHasChanged();
-
+        _visible1 = true;
     }
 
-    public async Task AgregarCuerpoParticipante()
+    private void HandleOk1(MouseEventArgs e)
     {
-        var boberos = await Context.Bomberos.ToArrayAsync();
-        foreach (var bom in boberos)
-        {
-            if (bom.NumeroLegajo == BomberoCuerpo)
-            {
-                BomberoSalidaViewModels b = new()
-                    {
-                        Salio = bomberoSalidaView.Salio,
-                        Nombre = bom.Nombre,
-                        Apellido = bom.Apellido,
-                        NumeroLegajo = BomberoCuerpo
-                    };
-                bomberosSalida.Add(b);
+        _visible1 = false;
+        imprimirmodal = true;
+        @* navigationManager.NavigateTo($"/legajo"); *@
+    }
 
-            }
-        }
-        StateHasChanged();
+    private void HandleCancel1(MouseEventArgs e)
+    {
+        _visible1 = false;
+    }
 
+
+    private void HandleOkIMP(MouseEventArgs e)
+    {
+        imprimirmodal = false;
+    }
+
+    private void HandleCancelIMP(MouseEventArgs e)
+    {
+        imprimirmodal = false;
+    }
+
+    private void ToggleAnimationI()
+    {
+        animationClass = "slick-contenedor-I";
+    }
+
+    void OnPreClick()
+    {
+        current--;
+        ToggleAnimationI();
+    }
+
+    void OnNextClick()
+    {
+        current++;
+        ToggleAnimationD();
     }
 
     protected override async Task OnInitializedAsync()
@@ -503,6 +378,7 @@
         await CargarBomberosView();
     }
 
+    //Carga de datos
     private async void OnFinish(EditContext editContext)
     {
         try
@@ -513,9 +389,10 @@
 
             if (salidaIncendioViviendaVista is not null)
             {
-                Vista.Data.Models.Salidas.Planillas.IncendioVivienda? numeroParte = await Context.IncendiosViviendas.Where(m => m.NumeroParte == salidaIncendioViviendaVista.NumeroParte).SingleOrDefaultAsync();
+                //Vista.Data.Models.Salidas.Planillas.IncendioVivienda? numeroParte = await Context.IncendiosViviendas.Where(m => m.NumeroParte == salidaIncendioViviendaVista.NumeroParte).SingleOrDefaultAsync();
                 if (salidaIncendioViviendaVista is not null)
                 {
+                    //Informacion de salida
                     Vista.Data.Models.Salidas.Planillas.IncendioVivienda salidaIncendioVivienda = new()
                         {
                             Tipo = salidaIncendioViviendaVista.Tipo,
@@ -566,34 +443,36 @@
                             Moviles = new(),
                             CuerpoParticipante = new()
                         };
+
+                    //Cuerpo participante y chofer
                     foreach (BomberoSalidaViewModels bom in bomberosSalida)
                     {
                         Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
+                        if (bomberoSalida == null) break;
                         BomberoSalida BomSalida = new()
                             {
                                 Salio = bom.Salio,
-                                Bombero = bomberoSalida
+                                Bombero = bomberoSalida,
                             };
                         salidaIncendioVivienda.CuerpoParticipante.Add(BomSalida);
                     }
 
+                    //Moviles
                     foreach (MovilSalidaViewModels m in MovilesSalidasL)
                     {
                         Bombero? bomberoChofer = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
                         Movil? Movilsalida = await Context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil);
-                        if (Movilsalida is not null)
-                        {
-                            Movilsalida.Kilometraje = m.KmLlegada;
-                        }
+                        if (bomberoChofer == null || Movilsalida == null) break;
+                        Movilsalida.Kilometraje = m.KmLlegada;
                         MovilSalida movilS = new()
                             {
                                 CargoCombustible = m.CargoCombustible,
-                                NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                                FechaFactura = movilSalidaViewModels.FechaFactura,
-                                TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                                CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                                QuienLleno = movilSalidaViewModels.QuienLleno,
-                                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                                NumeroFactura = m.NumeroFactura,
+                                FechaFactura = m.FechaFactura,
+                                TipoConbustible = m.TipoConbustible,
+                                CantidadLitros = m.CantidadLitros,
+                                QuienLleno = m.QuienLleno,
+                                TelefonoQuienLleno = m.TelefonoQuienLleno,
                                 KmLlegada = m.KmLlegada,
                                 Chofer = bomberoChofer,
                                 Movil = Movilsalida
@@ -601,7 +480,7 @@
                         salidaIncendioVivienda.Moviles.Add(movilS);
                     }
 
-
+                    //Damnificados
                     foreach (DamnificadoViewModels d in DamnificadosSalida)
                     {
 
@@ -620,10 +499,11 @@
                     await Context.IncendiosViviendas.AddAsync(salidaIncendioVivienda);
                     await Context.SaveChangesAsync();
 
-
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
+                    //ShowModal1(); Arreglar imprimir
+                    _visible1 = true;
                     imprimirmodal = true;
                 }
             }
@@ -636,7 +516,6 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-            imprimirmodal = true;
         }
     }
 
@@ -648,13 +527,6 @@
     {
         Console.WriteLine($"Selected Time: {args.Date}");
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
-
-    public async Task SubirIncendioVivienda()
-    {
-        
-
-
     }
     public async Task CargarBomberosView()
     {
@@ -700,123 +572,14 @@
                     //Email = b.Email,
 
                 };
-            bomberoTodos.Add(bombero);
-
-        }
-        foreach (Bombero c in bomberos)
-        {
-            if (c.Chofer == true)
+            if (b.Chofer == true)
             {
-                BomberoViweModel bomberoChofer = new()
-                    {
-                        FechaNacimiento = c.FechaNacimiento,
-                        Sexo = c.Sexo,
-                        Nombre = c.Nombre,
-                        Apellido = c.Apellido,
-                        Documento = c.Documento,
-                        NumeroLegajo = c.NumeroLegajo,
-                        NumeroIoma = c.NumeroIoma,
-                        LugarNacimiento = c.LugarNacimiento,
-                        Grado = c.Grado,
-                        //NombreImagen = b.NombreImagen,
-                        //TipoImagen = b.TipoImagen,
-                        //Base64Imagen = b.Base64,
-                        Dotacion = c.Dotacion,
-                        //Nombre = b.NombreBrigada,
-                        Resolucion1 = c.Resolucion1,
-                        Resolucion2 = c.Resolucion2,
-                        Resolucion3 = c.Resolucion3,
-                        Resolucion4 = c.Resolucion4,
-                        Resolucion5 = c.Resolucion5,
-                        Resolucion6 = c.Resolucion6,
-                        //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                        Estado = c.Estado,
-                        Chofer = c.Chofer,
-                        VencimientoRegistro = c.VencimientoRegistro,
-                        Direccion = c.Direccion,
-                        Observaciones = c.Observaciones,
-                        Profesion = c.Profesion,
-                        NivelEstudios = c.NivelEstudios,
-                        FechaAceptacion = c.FechaAceptacion,
-                        //TelefonoCel = b.TelefonoCel,
-                        //TelefonoFijo = b.TelefonoFijo,
-                        //TelefonoLaboral = b.TelefonoLaboral,
-                        //Email = b.Email,
-
-                    };
-                bomberoChoferes.Add(bomberoChofer);
+                bomberoChoferes.Add(bombero);
             }
-
-
+            bomberoTodos.Add(bombero);
         }
     }
-    private void OnFinishFailedModel(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
-    }
-    bool loading = false;
 
-    void toggle(bool value) => loading = value;
-
-    bool _visible = false;
-    private void ShowModal()
-    {
-        _visible = true;
-    }
-    public void ShowModal1()
-    {
-        _visible1 = true;
-    }
-    private void HandleCancel(MouseEventArgs e)
-    {
-
-        _visible = false;
-    }
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
-
-        imprimirmodal = false;
-    }
-    private void OnFinishModel(EditContext editContext)
-    {
-
-        _visible = false;
-    }
-    private void HandleOk(MouseEventArgs e)
-    {
-
-        _visible = false;
-
-    }
-    private void HandleOkIMP(MouseEventArgs e)
-    {
-
-        imprimirmodal = false;
-
-    }
-    private void HandleCancel1(MouseEventArgs e)
-    {
-
-        _visible1 = false;
-    }
-    private void HandleOk1(MouseEventArgs e)
-    {
-        navigationManager.NavigateTo($"/legajo");
-        _visible1 = false;
-
-    }
-    void deleteRow(int numlegajo)
-    {
-        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
-    }
-    void deleteRowMovil(string NumMovil)
-    {
-        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
-    }
-    void deleteRowDamnificados(string Dni)
-    {
-        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
-    }
     public void Dispose()
     {
         Context?.Dispose();

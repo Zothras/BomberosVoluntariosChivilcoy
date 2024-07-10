@@ -14,10 +14,5 @@ namespace Vista.Data.Models.Personales
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]
         public Bombero Bombero { get; set; }
-
-        public int SalidaId { get; set; }
-        public Salida Salida { get; set; }
-        public int MovilSalidaId { get; set; }
-        public MovilSalida MovilSalida { get; set; }
     }
 }
