@@ -17,7 +17,11 @@
         max-height: 100vh;
         border-radius: 10px;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        background: #fff;
+        background: linear-gradient(to top, white 59%, #A63333 41%) !important;
+        /* background-image: url('imagenes/BomberoActivos.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat; */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -65,8 +69,8 @@
             max-width: 100% !important;
         }
     }
-    .ant-table-thead .ant-table-cell{
-        background-color: #A63333 !important;
+    .ant-table-thead .ant-table-cell{ /* Color de las columnas. */
+        background-color: #A34546 !important;
         color: white !important;
     }
 
@@ -74,11 +78,18 @@
         background-color: #732D2D !important;
         color: white !important;
     }
-
+</style>
+<style> 
+    .colorfondo{
+     background: linear-gradient(to top, white 56%, #A63333 44%) !important;
+    }
+    .color{
+     background-color: #A63333 !important;
+    }
 </style>
 
 <div class="template">
-    <Table @ref="table"
+    <Table Class="colorfondo" @ref="table"
             TItem="Bombero"
             DataSource="@bomberos"
             @bind-SelectedRows="selectedRows"
@@ -87,28 +98,31 @@
             @bind-PageIndex="_pageIndex"
             @bind-PageSize="_pageSize"
             Responsive
-            Style="max-width: 100%;min-width: 300px;">
-        <TitleTemplate>
-            <GridRow>
+            Style="max-width: 77%;min-width: 600px;">
+        <TitleTemplate>  
+            <div class="color">
+            <GridRow >
                 <GridCol Span="4">
-                    <Title Level="3">Bomberos</Title>
+                    <Title Style="color: white; background-color: #A63333" Level="3">Bomberos</Title>
                 </GridCol>
-                <GridCol Span="8" Offset="12">
-                    <Search Placeholder="Search" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput />
+                <GridCol Span="4" Offset="13">
+                    <Search Placeholder="Buscar Numerario" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Class="ant-table-thead .ant-table-cell" />
                     @if (String.IsNullOrWhiteSpace(searchString))
                     {
                         bomberos = bomberosRespaldo;
                     }
                 </GridCol>
+                <div style="display: flex;justify-content: flex-end;margin-top: 0em; margin-left: 10px; gap: 10px;">
+                    <Button Class="ant-btn-primary" OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="background-color: #4CAF50">+ Agregar Numerario</Button>
+                </div>
             </GridRow>
+            </div>
         </TitleTemplate>
         <ColumnDefinitions>
-            <Selection Key="@(context.NumeroLegajo.ToString())" />
-
-            <PropertyColumn Title="Foto" Property="c=>c.Imagen" Sortable >
-            </PropertyColumn>
-            <PropertyColumn Property="c=>c.Nombre" Sortable />
-            <PropertyColumn Property="c=>c.Apellido" Sortable />
+            <Selection Key="@(context.NumeroLegajo.ToString())"/>
+            <PropertyColumn Title="Foto" Property="c=>c.Imagen"/>
+            <PropertyColumn Property="c=>c.Nombre" Sortable/>
+            <PropertyColumn Property="c=>c.Apellido" Sortable/>
             <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo"
                             DefaultSortOrder="@SortDirection.Descending"
                             SorterCompare="@((a,b)=> a - b)" />
@@ -125,7 +139,7 @@
                     <Overlay>
                         <Menu>
                             <MenuItem>
-                               <Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Delete</Button>
+                               <Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Borrar</Button>
                             </MenuItem>
                             <MenuItem>
                                <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button>
@@ -139,13 +153,14 @@
                         <Button class="boton_p">Acciones<Icon Type="down"/></Button>
                     </ChildContent>
                 </Dropdown>
-   
                 </ActionColumn>
             </ColumnDefinitions>
             @*--------------------------------------------Modal-----------------------------------------------*@
     </Table>
 </div>
 
+
+           
  <Modal Title="@("Bombero")"
         Visible="@_visible"
         OnOk="@HandleOk"
@@ -310,9 +325,31 @@
 </Modal>
 @{
     RenderFragment footer = @<Template>
-        <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Salir</Button>
+        <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Cerrar</Button>
     </Template>;
 }
+@*NO BORRAR -----------------------------------------------------*@
+
+@* <Modal Footer="null" Title="@("Ascenso")"
+       Visible="@_visibleAgregarA"
+       OnOk="@HandleOkAgregarA"
+       OnCancel="@HandleCancelAgregarA">
+    <AscensoBombero />
+    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregarA">
+        Volver
+    </Button>
+</Modal>
+<Modal Footer="null" Title="@("Sancion")" Style=""
+       Visible="@_visibleAgregarS"
+       OnOk="@HandleOkAgregarS"
+       OnCancel="@HandleCancelAgregarS">
+    <SancionBombero />
+    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregarS">
+        Volver
+    </Button>
+</Modal> *@
+
+@*NO BORRAR -----------------------------------------------------*@
 
 <Modal Title="@("Detalles de bombero")"
        Visible="@_visibleDetalle"
@@ -322,9 +359,8 @@
     <p>Nombre: @bomberoVM.Nombre</p>
     <p>Apellido: @bomberoVM.Apellido</p>
     <p>Direccion: @bomberoVM.Direccion</p>
-    <p>FechaNacimiento: @bomberoVM.FechaNacimiento</p>
-    <p>FechaNacimiento: @bomberoVM.FechaNacimiento</p>
-    <p>NumeroLegajo: @bomberoVM.NumeroLegajo</p>
+    <p>Fecha De Nacimiento: @bomberoVM.FechaNacimiento</p>
+    <p>Numero De Legajo: @bomberoVM.NumeroLegajo</p>
     <p>Grado: @bomberoVM.Grado</p>
     <p>Dotacion: @bomberoVM.Dotacion</p>
     <p>Brigada: @bomberoVM.Brigada</p>
@@ -339,29 +375,29 @@
     }
 
 
-    <p>VencimientoRegistro: @bomberoVM.VencimientoRegistro</p>
+    <p>Vencimiento del Registro: @bomberoVM.VencimientoRegistro</p>
     <p>Sexo: @bomberoVM.Sexo</p>
-    <p>LugarNacimiento: @bomberoVM.LugarNacimiento</p>
+    <p>Lugar de Nacimiento: @bomberoVM.LugarNacimiento</p>
     <p>Documento: @bomberoVM.Documento</p>
-    <p>LugarNacimiento: @bomberoVM.LugarNacimiento</p>
-    <p>GrupoSanguineo: @bomberoVM.GrupoSanguineo</p>
+    <p>Lugar de Nacimiento: @bomberoVM.LugarNacimiento</p>
+    <p>Grupo Sanguineo: @bomberoVM.GrupoSanguineo</p>
     <p>Altura: @bomberoVM.Altura cm</p>
     <p>Peso: @bomberoVM.Peso kg</p>
     <p>Observaciones: @bomberoVM.Observaciones</p>
     <p>Profesion: @bomberoVM.Profesion</p>
-    <p>NivelEstudios: @bomberoVM.NivelEstudios</p>
-    <p>NumeroIoma: @bomberoVM.NumeroIoma</p>
-    <p>Resolucion1: @bomberoVM.Resolucion1</p>
-    <p>Resolucion2: @bomberoVM.Resolucion2</p>
-    <p>Resolucion3: @bomberoVM.Resolucion3</p>
-    <p>Resolucion4: @bomberoVM.Resolucion4</p>
-    <p>Resolucion5: @bomberoVM.Resolucion5</p>
-    <p>Resolucion6: @bomberoVM.Resolucion6</p>
-    <p>TelefonoCel: @bomberoVM.TelefonoCel</p>
-    <p>TelefonoLaboral: @bomberoVM.TelefonoLaboral</p>
-    <p>TelefonoFijo: @bomberoVM.TelefonoFijo</p>
+    <p>Nivel de Estudios: @bomberoVM.NivelEstudios</p>
+    <p>Numero de Ioma: @bomberoVM.NumeroIoma</p>
+    <p>Resolucion 1: @bomberoVM.Resolucion1</p>
+    <p>Resolucion 2: @bomberoVM.Resolucion2</p>
+    <p>Resolucion 3: @bomberoVM.Resolucion3</p>
+    <p>Resolucion 4: @bomberoVM.Resolucion4</p>
+    <p>Resolucion 5: @bomberoVM.Resolucion5</p>
+    <p>Resolucion 6: @bomberoVM.Resolucion6</p>
+    <p>Telefono Cel: @bomberoVM.TelefonoCel</p>
+    <p>Telefono Laboral: @bomberoVM.TelefonoLaboral</p>
+    <p>Telefono Fijo: @bomberoVM.TelefonoFijo</p>
     <p>Email: @bomberoVM.Email</p>
-    <p>NombreBrigada: @bomberoVM.NombreBrigada</p>
+    <p>Nombre de Brigada: @bomberoVM.NombreBrigada</p>
 </Modal>
 @if (selectedRows != null && selectedRows.Any())
 {
@@ -418,7 +454,7 @@
 
     void OnRowClick(RowData<Bombero> row)
     {
-        Console.WriteLine($"row {row.Data.Brigada.BrigadaId} was clicked"); //Toma el valor del valor de la fila seleccionada
+        Console.WriteLine($"La fila {row.Data.Brigada.BrigadaId} fue seleccionada"); //Toma el valor del valor de la fila seleccionada
     }
 
     private async Task OnChange(QueryModel<Bombero> queryModel)

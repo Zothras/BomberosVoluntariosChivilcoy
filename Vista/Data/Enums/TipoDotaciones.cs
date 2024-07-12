@@ -3,9 +3,9 @@
     public enum TipoDotaciones
     {
         _0,
-        uno,
-        dos,
-        tres,
-        cuatro
+        _1,
+        _2,
+        _3,
+        _4
     }
 }
