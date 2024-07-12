@@ -11,7 +11,21 @@ namespace Vista.Data.ViewModels.Personal
         public string Nombre { get; set; }
         [Required, StringLength(255)]
         public string Apellido { get; set; }
-        public string NombreYApellido { get { return Nombre + "," + Apellido; } }
+        private string _nombreYApellido;
+        public string NombreYApellido
+        {
+            get { return Nombre + "," + Apellido; }
+            set
+            {
+                _nombreYApellido = value;
+                var partes = value.Split(',');
+                if (partes.Length == 2)
+                {
+                    Nombre = partes[0].Trim();
+                    Apellido = partes[1].Trim();
+                }
+            }
+        }
         [Required, StringLength(255)]
         public string Dni { get; set; }
         public TipoSexo Sexo { get; set; }

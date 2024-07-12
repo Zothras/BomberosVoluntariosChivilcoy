@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Vista.Data.Models.Salidas.Componentes;
 
 namespace Vista.Data.ViewModels.Personal
 {
@@ -21,5 +22,7 @@ namespace Vista.Data.ViewModels.Personal
         [Required, StringLength(255)]
         public string NumeroDePoliza { get; set; }
         public DateTime FechaDeVencimineto { get; set; }
+        public int? DamnificadoId { get; set; }
+        public Damnificado? Damnificado { get; set; }
     }
 }

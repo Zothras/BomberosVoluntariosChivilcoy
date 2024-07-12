@@ -18,11 +18,9 @@ public class IncendioViewModels : SalidasViewModels
 
     public string? DetalleSuperficieAfectadaIncendio { get; set; }
     public TipoCausaIncendio SuperficieAfectadaCausa { get; set; }
-    [Required]
     public TipoIncendioAbertura? TipoAbertura { get; set; }
     [StringLength(255)]
     public string? OtraAbertura { get; set; }
-    [Required]
     public TipoIncendioTecho? TipoTecho { get; set; }
     [StringLength(255)]
     public string? OtroTecho { get; set; }

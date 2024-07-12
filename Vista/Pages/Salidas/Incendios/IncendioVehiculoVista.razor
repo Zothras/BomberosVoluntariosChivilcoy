@@ -129,24 +129,9 @@
             }
             else if (current == 2)
             {@*Seguro*@
-                <div class="slick-contenedor @animationClass">
-                    <Seguro Model="@salidaIncendioVehicularView"
-                            OnChange="@OnChange"
-                            animationClass="@animationClass" />
-                    <h6>Seguro del Vehiculo</h6>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Compania aseguradora </label>
-                        <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Numero de poliza</label>
-                        <Input @bind-Value="@vehiculo.NumeroDePoliza" />
-                    </div>
-                    @*<div class="inpt-cont">
-                <label class="inpt-cont--lbl">Fecha de Venc.</label>
-                <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
-                </div>*@
-                </div>
+                <Seguro Model="@salidaIncendioVehicularView"
+                        OnChange="@OnChange"
+                        animationClass="@animationClass" />
             }
             else if (current == 3)
             {@*Chofer y Movil*@
@@ -175,10 +160,13 @@
             }
             else if (current == 5)
             {@*Vehiculo*@
-                <VehiculoAfectado Model="@salidaIncendioVehicularView"
-                                  OnChange="@OnChange"
-                                  animationClass="@animationClass"
-                                  vehiculo="@vehiculo" />
+                <DatosVehiculoDamnificado Model="@salidaIncendioVehicularView"
+                                          OnChange="@OnChange"
+                                          animationClass="@animationClass"
+                                          vehiculo="@vehiculo"
+                                          DamnificadosSalida="@DamnificadosSalida"
+                                          damnificadoVehiculoId="@damnificadoVehiculoId"
+                                          damnificadoVehiculoCall="@HandleDamnificadoVehiculo" />
             }
             else if (current == 6)
             {@*Info-Salida*@
@@ -244,6 +232,7 @@
     public List<BomberoSalidaViewModels> bomberosSalida = new();
     public List<BomberoViweModel> bomberoChoferes = new();
     public List<BomberoViweModel> bomberoTodos = new();
+    public string damnificadoVehiculoId;
 
     Bombero[] TodosBomberos;
     Movil[] Moviles;
@@ -268,6 +257,12 @@
     private void HandleQuienLLenoPlanillaChanged(int value)
     {
         QuienLLenoPlanilla = value;
+        StateHasChanged();
+    }
+
+    private void HandleDamnificadoVehiculo(string value)
+    {
+        damnificadoVehiculoId = value;
         StateHasChanged();
     }
 
@@ -445,6 +440,7 @@
     {
         try
         {
+
             Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
             Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
             Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
@@ -529,10 +525,18 @@
                         salidaIncendioVehicular.Moviles.Add(movilS);
                     }
 
-
+                    VehiculoDamnificado AgregarVehiculo = new()
+                        {
+                            Marca = vehiculo.Marca,
+                            Patente = vehiculo.Patente,
+                            Tipo = vehiculo.Tipo,
+                            Año = vehiculo.Año,
+                            Modelo = vehiculo.Modelo,
+                            Color = vehiculo.Color,
+                            Airbag = vehiculo.Airbag
+                        };
                     foreach (DamnificadoViewModels d in DamnificadosSalida)
                     {
-
                         Damnificado damn = new()
                             {
                                 Nombre = d.Nombre,
@@ -542,13 +546,12 @@
                                 LugarDeNacimiento = d.LugarDeNacimiento,
                                 Edad = d.Edad,
                                 Estado = d.Estado,
+                                VehiculoDamnificado = d.NombreYApellido == damnificadoVehiculoId ? AgregarVehiculo : null
                             };
                         salidaIncendioVehicular.Damnificados.Add(damn);
                     }
                     await Context.Set<Incendio>().AddAsync(salidaIncendioVehicular);
                     await Context.SaveChangesAsync();
-
-
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
@@ -587,7 +590,7 @@
     }
 
     @*"Delete" y Dispose*@
-   
+
     public void Dispose()
     {
         Context?.Dispose();
