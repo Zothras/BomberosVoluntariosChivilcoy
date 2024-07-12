@@ -9,8 +9,7 @@ namespace Vista.Data.Models.Salidas.Componentes
         public string Color { get; set; }
         public bool Airbag { get; set; }
 
-        public int DamnificadoId { get; set; }
-        [ForeignKey(nameof(DamnificadoId))]
+        public int? DamnificadoId { get; set; }
         public Damnificado? Damnificado { get; set; }
     }
 }
