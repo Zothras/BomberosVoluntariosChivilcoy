@@ -17,7 +17,7 @@ namespace Vista.Data.Models.Personales
         [Required, StringLength(255)]
         public string Tipo { get; set; }
 
-        public int? SeguroId { get; set; }
-        public SeguroVehiculo? Seguro { get; set; }
+        public int SeguroId { get; set; }
+        public SeguroVehiculo Seguro { get; set; }
     }
 }

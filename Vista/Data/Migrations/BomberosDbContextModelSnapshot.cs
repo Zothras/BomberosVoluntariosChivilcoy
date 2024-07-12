@@ -399,7 +399,7 @@ namespace Vista.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("SeguroId")
+                    b.Property<int>("SeguroId")
                         .HasColumnType("int");
 
                     b.Property<string>("Tipo")
@@ -1138,9 +1138,10 @@ namespace Vista.Data.Migrations
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("DamnificadoId")
+                    b.Property<int>("DamnificadoId")
                         .HasColumnType("int");
 
                     b.HasIndex("DamnificadoId")
@@ -1258,6 +1259,7 @@ namespace Vista.Data.Migrations
                         .HasColumnName("Incendio_Tipo");
 
                     b.Property<string>("TipoAbertura")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -1272,6 +1274,7 @@ namespace Vista.Data.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("TipoTecho")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -1674,7 +1677,9 @@ namespace Vista.Data.Migrations
                 {
                     b.HasOne("Vista.Data.Models.Salidas.Componentes.SeguroVehiculo", "Seguro")
                         .WithOne("Vehiculo")
-                        .HasForeignKey("Vista.Data.Models.Personales.Vehiculo", "SeguroId");
+                        .HasForeignKey("Vista.Data.Models.Personales.Vehiculo", "SeguroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Seguro");
                 });
@@ -1928,7 +1933,9 @@ namespace Vista.Data.Migrations
                 {
                     b.HasOne("Vista.Data.Models.Salidas.Componentes.Damnificado", "Damnificado")
                         .WithOne("VehiculoDamnificado")
-                        .HasForeignKey("Vista.Data.Models.Salidas.Componentes.VehiculoDamnificado", "DamnificadoId");
+                        .HasForeignKey("Vista.Data.Models.Salidas.Componentes.VehiculoDamnificado", "DamnificadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Damnificado");
                 });
