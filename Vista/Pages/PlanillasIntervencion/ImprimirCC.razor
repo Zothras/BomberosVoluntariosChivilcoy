@@ -13,6 +13,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+
+        html, body {
+            overflow-y: auto !important;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -184,20 +189,20 @@
                     <li style="display: inline-block;">FECHA: @IntervencionVM.Fecha.Date</li>
                     <li style="display: inline-block;margin-left: 8.5em;">DIA: @IntervencionVM.Fecha.DayOfWeek</li>
                     <li>AVISADO POR: @IntervencionVM.AvisadoPor </li>
-                    <li>RECEPCIONADO POR:</li>
-                    <li>TIPO SERVICIO:</li>
-                    <li>DIRECCION:</li>
-                    <li>JEFE DE LA INTERVENCION:</li>
+                    <li>RECEPCIONADO POR: @IntervencionVM.Recepcionista</li>
+                    <li>TIPO SERVICIO: @IntervencionVM.TipoServicio</li>
+                    <li>DIRECCION: </li>
+                    <li>JEFE DE LA INTERVENCION: </li>
                 </ul>
             </div>
             <div>
                 <ul>
-                    <li>HORA DE SALIDA:</li>
-                    <li>HORA DE REGRESO:</li>
-                    <li>TEL. NUMERO:</li>
-                    <li style="margin-left: 3em;">CAUSA:</li>
-                    <li style="margin-left: 3em;">ZONA:</li>
-                    <li style="margin-left: 3em;">LUGAR:</li>
+                    <li>HORA DE SALIDA: @IntervencionVM.HoraSalida</li>
+                    <li>HORA DE REGRESO: @IntervencionVM.HoraLlegada</li>
+                    <li>TEL. NUMERO: +@IntervencionVM.TelNumero</li>
+                    <li style="margin-left: 3em;">CAUSA: @IntervencionVM.Causa</li>
+                    <li style="margin-left: 3em;">ZONA: @IntervencionVM.Zona</li>
+                    <li style="margin-left: 3em;">LUGAR: @IntervencionVM.Lugar</li>
                 </ul>
             </div>
         </div>
@@ -314,9 +319,9 @@
             Console.WriteLine(dateValue.ToString("dddd", culture));
         }
     }
-    
-    
-    
+
+
+
     [Parameter]
     public int? NumeroParte { get; set; }
 
@@ -333,6 +338,8 @@
 
         public string HoraSalida { get; set; }
 
+        public string HoraLlegada { get; set; }
+
         public string NombreConfecciono { get; set; }
 
         public string ApellidoConfecciono { get; set; }
@@ -347,6 +354,15 @@
 
         public int NumeroParte { get; set; }
 
+        public string Recepcionista{ get; set; }
+
+        public string TelNumero { get; set; }
+
+        public TipoCausaIncendio Causa { get; set; }
+
+        public TipoZona Zona { get; set; }
+
+        public string Lugar { get; set; }
     }
 
     BomberosDbContext Context { get; set; }
@@ -372,20 +388,26 @@
     {
 
         var salida = await Context.Set<Salida>().SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte);
-
         if (salida != null)
         {
-            var quienlleno = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.QuienLlenoId); 
+            var quienlleno = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.QuienLlenoId);
             var encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.EncargadoId);
 
-
-            IntervencionVM.Fecha = salida.HoraSalida;
-            IntervencionVM.AvisadoPor = salida.NombreSolicitante;
+            IntervencionVM.Fecha = salida.HoraSalida.Date;
+            IntervencionVM.HoraSalida = "" + salida.HoraSalida.TimeOfDay;
+            IntervencionVM.HoraLlegada = "" + salida.HoraLlegada.TimeOfDay;
+            IntervencionVM.AvisadoPor = salida.NombreSolicitante + "," + salida.ApellidoSolicitante;
             IntervencionVM.NombreConfecciono = quienlleno.Nombre;
             IntervencionVM.ApellidoConfecciono = quienlleno.Apellido;
             IntervencionVM.GraduadoNombre = encargado.Nombre;
             IntervencionVM.GraduadoApellido = encargado.Apellido;
             IntervencionVM.NumeroParte = salida.NumeroParte;
+            IntervencionVM.Recepcionista = salida.ReceptorBombero != null ? salida.ReceptorBombero.Nombre + salida.ReceptorBombero.Apellido : "No se registro recepcionista.";
+            IntervencionVM.TipoServicio = "" + salida.TipoServicio;
+            IntervencionVM.TelNumero = salida.TelefonoReceptor;
+            IntervencionVM.Causa = (salida as Incendio).SuperficieAfectadaCausa;
+            IntervencionVM.Zona = salida.TipoZona;
+            IntervencionVM.Lugar = "" + (salida as dynamic).TipoLugar;
         }
     }
 

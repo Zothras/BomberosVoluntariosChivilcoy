@@ -359,7 +359,7 @@
                         };
                     await MovilService.AgregarMovil(movil);
                     await Init();
-                    await message.Success("Se logro agregar un movil");
+                    await message.Success("Se agrego el movil");
                     await OnClose.InvokeAsync();
                 }
                 else
@@ -373,7 +373,7 @@
             await Init();
             StateHasChanged();
             if (e.InnerException != null)
-                await message.Error("Información de movil ausente u ocurrión un error inesperado");
+                await message.Error("Información de movil ausente u ocurrio un error inesperado");
                 //await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(("Error inesperado: " + e.Message), 5);

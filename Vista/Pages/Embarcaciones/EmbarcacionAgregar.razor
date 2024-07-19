@@ -1,9 +1,11 @@
-﻿@inject IDbContextFactory<BomberosDbContext> DbFactory
+﻿@using Vista.Services
+@inject IEmbarcacionService EmbarcacionService
+@inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 
 <style>
-    .steps-content{
-        border: none!important;
+    .steps-content {
+        border: none !important;
     }
 
     .inpt-container {
@@ -75,7 +77,7 @@
         padding: 6em 0;
     }
 
-    
+
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
@@ -142,18 +144,17 @@
                         </div>
                         <div class="inpt-container">
                             <Select TItem="BomberoViweModel"
-                                TItemValue="int"
-                                DataSource="@BomberoTodos"
-                                @bind-Value="@BomberoEncargado"
-                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                Placeholder="Seleccione Bombero Encargado"
-                                DefaultActiveFirstOption="false"
-                                EnableSearch>
-
+                                    TItemValue="int"
+                                    DataSource="@BomberoTodos"
+                                    @bind-Value="@BomberoEncargado"
+                                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                    Placeholder="Seleccione Bombero Encargado"
+                                    DefaultActiveFirstOption="false"
+                                    EnableSearch>
                             </Select>
-                         </div>
-                     </div>
+                        </div>
+                    </div>
                 }
             </div>
         </div>
@@ -263,45 +264,67 @@
         await message.Success("Imagen cargada");
         StateHasChanged();
     }
-    
+
     private async void SubirEmbarcacion()
     {
-        Context = DbFactory.CreateDbContext();
-
-        if (embarcacionView is not null)
+        try
         {
-            Embarcacion? comprobante = await Context.Embarcacion.Where(e => e.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
-            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-            if (comprobante is null)
+            if (embarcacionView is not null)
             {
-                Embarcacion embarcacion = new Embarcacion()
-                    {
-                        Marca = embarcacionView.Marca,
-                        Modelo = embarcacionView.Modelo,
-                        Año = embarcacionView.Año,
-                        Patente = embarcacionView.Patente,
-                        Tipo = embarcacionView.Tipo,
-                        ImagenEmbarcacion = new()
+                Embarcacion? comprobante = await Context.Embarcacion.Where(e => e.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
+                Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
+                //Validaciones
+                if (string.IsNullOrEmpty(imagenView.Base64))
+                {
+                    await message.Error("Se debe ingresar una foto de la embarcación");
+                    return;
+                }
+                if (comprobante is null)
+                {
+                    Embarcacion embarcacion = new Embarcacion()
                         {
-                            NombreImagen = imagenView.Nombre,
-                            TipoImagen = imagenView.TipoImagen,
-                            Base64Imagen = imagenView.Base64
-                        },
-                        Encargado = bomberoEncargado,
-                        NumeroMovil = embarcacionView.NumeroMovil,
-                        Estado = embarcacionView.Estado,
-                        Seguro = new()
-                        {
-                            CompañiaAseguradora = seguroView.CompañiaAseguradora,
-                            FechaDeVencimineto = seguroView.FechaDeVencimiento,
-                            NumeroDePoliza = seguroView.NumeroDePoliza
-                        }
-                    };
-                Context.Embarcacion.Add(embarcacion);
-
-                await Context.SaveChangesAsync();
-                await OnClose.InvokeAsync();
+                            Marca = embarcacionView.Marca,
+                            Modelo = embarcacionView.Modelo,
+                            Año = embarcacionView.Año,
+                            Patente = embarcacionView.Patente,
+                            Tipo = embarcacionView.Tipo,
+                            ImagenEmbarcacion = new()
+                            {
+                                NombreImagen = imagenView.Nombre,
+                                TipoImagen = imagenView.TipoImagen,
+                                Base64Imagen = imagenView.Base64
+                            },
+                            Encargado = bomberoEncargado,
+                            NumeroMovil = embarcacionView.NumeroMovil,
+                            Estado = embarcacionView.Estado,
+                            Seguro = new()
+                            {
+                                CompañiaAseguradora = seguroView.CompañiaAseguradora,
+                                FechaDeVencimineto = seguroView.FechaDeVencimiento,
+                                NumeroDePoliza = seguroView.NumeroDePoliza
+                            }
+                        };
+                    await EmbarcacionService.AgregarEmbarcacion(embarcacion);
+                    await Init();
+                    await message.Success("Se agrego la embarcación");
+                    await OnClose.InvokeAsync();
+                }
+                else
+                {
+                    await message.Error("Existe una embarcación con el mismo Nº Embarcación");
+                }
             }
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error("Información de la embarcacion ausente u ocurrio un error inesperado");
+            //await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(("Error inesperado: " + e.Message), 5);
+
         }
         StateHasChanged();
     }

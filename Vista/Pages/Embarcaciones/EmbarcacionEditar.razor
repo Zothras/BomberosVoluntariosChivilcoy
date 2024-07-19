@@ -1,4 +1,6 @@
-﻿@implements IDisposable
+﻿@using Vista.Services
+@inject IEmbarcacionService EmbarcacionService
+@implements IDisposable
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 
@@ -82,6 +84,7 @@
     .ant-modal-footer {
         display: none;
     }
+
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
@@ -153,7 +156,7 @@
                                 DefaultValue="@BomberoEncargado">
                         </Select>
                     </div>
-                </div>      
+                </div>
             }
         </div>
     </div>
@@ -216,6 +219,7 @@
         public string NumeroMovil { get; set; }
         public TipoEstadoMovil Estado { get; set; }
         public Bombero? Encargado { get; set; }
+        public string EncargadoId { get; set; }
     }
     public class ImagenViewModel
     {
@@ -286,29 +290,48 @@
 
     public async void EditarEmbarcacion()
     {
-        Embarcacion? embarcacion = await Context.Embarcacion.Where(e => e.VehiculoId == VehiculoId).SingleOrDefaultAsync();
-        Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-        
-        if (embarcacion is not null)
+        try
         {
-            embarcacion.Marca = embarcacionView.Marca;
-            embarcacion.Modelo = embarcacionView.Modelo;
-            embarcacion.Año = embarcacionView.Año;
-            embarcacion.Patente = embarcacionView.Patente;
-            embarcacion.Tipo = embarcacionView.Tipo;
-            embarcacion.ImagenEmbarcacion = new()
-                {
-                    NombreImagen = imagenView.Nombre,
-                    TipoImagen = imagenView.TipoImagen,
-                    Base64Imagen = imagenView.Base64
-                };
-            embarcacion.NumeroMovil = embarcacionView.NumeroMovil;
-            embarcacion.Estado = embarcacionView.Estado;
-            embarcacion.Encargado = bomberoEncargado;
+            if (embarcacionView.NumeroMovil is not null)
+            {
+                //Embarcacion? embarcacion = await Context.Embarcacion.Where(e => e.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+                Embarcacion? comprobante = await Context.Embarcacion.Where(m => m.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
+                Bombero? EncargadoNew = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == int.Parse(embarcacionView.EncargadoId));
 
-            await Context.SaveChangesAsync();
-            await OnClose.InvokeAsync();
+                if (comprobante is not null)
+                {
+                    Embarcacion embarcacion = new()
+                        {
+                            VehiculoId = comprobante.VehiculoId,
+                            Marca = embarcacionView.Marca,
+                            Modelo = embarcacionView.Modelo,
+                            Año = embarcacionView.Año,
+                            Patente = embarcacionView.Patente,
+                            Tipo = embarcacionView.Tipo,
+                            ImagenEmbarcacion = new()
+                            {
+                                NombreImagen = imagenView.Nombre,
+                                TipoImagen = imagenView.TipoImagen,
+                                Base64Imagen = imagenView.Base64
+                            },
+                            NumeroMovil = embarcacionView.NumeroMovil,
+                            Estado = embarcacionView.Estado,
+                            Encargado = EncargadoNew
+                        };
+                    EmbarcacionService.EditarEmbarcacion(embarcacion);
+                    await OnClose.InvokeAsync();
+                    StateHasChanged();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            await Init();
             StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
         }
     }
 

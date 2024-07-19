@@ -1,16 +1,36 @@
-﻿@inject NavigationManager navigationManager
+﻿@using Vista.Services
+@inject IEmbarcacionService EmbarcacionService
+@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService _message
 @page "/Moviles/Embarcaciones-baja"
 
 <style>
     /*card:hover {
-                box-shadow: 2px 2px 3px #D8D8D8;
-                height: 284px!important;
-                width: 184px!important;
-                position: sticky;
-                transition: .3s ease;
+            box-shadow: 2px 2px 3px #D8D8D8;
+            height: 284px!important;
+            width: 184px!important;
+            position: sticky;
+            transition: .3s ease;
         }*/
+
+    .template {
+        width: 100%;
+        height: 100%;
+        max-width: 97%;
+        min-width: 400px;
+        max-height: 100vh;
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1em;
+        padding: 0;
+        overflow: auto;
+    }
 
     .botonCarta {
         width: 33.3%;
@@ -20,53 +40,66 @@
     }
 
     .grid {
-        height: 100%;
-        width: 1036px;
+        max-width: 1300px;
+        min-width: 320px;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-start;
         gap: 12px;
-        margin: 30px .5em;
+        margin: 30px 0;
+    }
+
+    @@media screen and (max-width: 1048px) {
+        .grid div:first-child {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+    }
+
+    @@media screen and (max-width: 719px) {
+        .grid div:first-child div:last-child {
+            flex-direction: column !important;
+        }
     }
 </style>
 
-<div style="display: flex;flex-direction: column;justify-content:center;align-items:center;height: 100%;width:100%;">
-    <div style="display: flex;justify-content: space-between;margin: 1em 1em;width: 1036px;padding: 0; align-items: center;">
-        <div style="position: relative;">
-            <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;display: contents;">
-                <b>ALTA / BAJA / MODIFICACION DE EMBARCACION</b>
-            </p>
-        </div>
-        <div>
-            <a @onclick="@(() => { navigationManager.NavigateTo($"/Embarcaciones"); })">
-                <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Embarcaciones activas</Button>
-            </a>
-        </div>
-    </div>
+<div class="template">
     <div class="grid">
-        @if (embarcaciones_de_baja is not null)
+        <div style="display: flex;justify-content: space-between;width: 100%;min-width: 320px;align-items: center;">
+            <div style="position: relative;">
+                <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;display: contents;">
+                    <b>ALTA / BAJA / MODIFICACION DE EMBARCACION</b>
+                </p>
+            </div>
+            <div>
+                <a @onclick="@(() => { navigationManager.NavigateTo($"/embarcaciones"); })">
+                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Embarcaciones activas</Button>
+                </a>
+            </div>
+        </div>
+        @if (embarcaciones is not null)
         {
-            @foreach (Embarcacion e in embarcaciones_de_baja)
+            @foreach (Embarcacion m in embarcaciones)
             {
-                if (e.Estado != TipoEstadoMovil.Inactivo) continue;
-                <card class="cartaPropia" style="display: flex; flex-direction: column;height: 345px;width: 250px;border-radius: 3px;box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
+                if (m.Estado == TipoEstadoMovil.Activo) continue;
+                <card class="cartaPropia" style="margin-bottom: 15px;display: flex; flex-direction: column;height: 345px;width: 250px;border-radius: 3px;box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
                     <div style="width: 100%;height: 75%;margin: 0; padding: 0;">
-                        <img src="@CargarImage(e)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;border-radius: 3px 3px 0 0;">
+                        <img src="@CargarImage(m)" style="width: 100%;height:100%;object-fit: cover;overflow: hidden;border-radius: 3px 3px 0 0;">
                     </div>
                     <div style="width: 100%;height:25%;">
                         <div style="height: 50%">
-                            <p style="height: 100%;background: #fff;font-size: 14px;display:flex;justify-content: center;align-items: center;font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';">Embarcacion nº @e.NumeroMovil</p>
+                            <p style="height: 100%;background: #fff;font-size: 14px;display:flex;justify-content: center;align-items: center;font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';">Móvil nº @m.NumeroMovil</p>
                         </div>
                         <div style="display: flex; flex-direction: row;height: 50%;background: transparent;">
-                            <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="()=>DetallesEmbarcacionModal(e.VehiculoId)">
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="()=>DetallesEmbarcacionModal(m.VehiculoId)">
                                 <Icon Type="ellipsis" Theme="outline" />
                             </Button>
-                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>EditarEmbarcacionModal(e.VehiculoId)">
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>EditarEmbarcacionModal(m.VehiculoId)">
                                 <Icon Type="edit" Theme="outline" />
                             </Button>
-                            <Popconfirm Style="width: 33.3%;" Title="¿Estas seguro de dar de alta a este movil?"
-                                        OnConfirm="()=>CambiarEstado(e.VehiculoId,TipoEstadoMovil.Activo)"
+                            <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro de dar de alta a esta embarcación?"
+                                        OnConfirm="()=>CambiarEstado(m.VehiculoId,TipoEstadoMovil.Activo)"
                                         OnCancel="Cancel">
                                 <Button class="botonCarta" Style="width: 100%!important;height: 100%;border-radius: 0 0 3px 0;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;">
                                     <Icon Type="up" Theme="outline" />
@@ -90,6 +123,12 @@
                     <EmbarcacionDetalles VehiculoId="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
+            @if (AgregarVisible)
+            {
+                <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
+                    <EmbarcacionAgregar OnClose="@CerrarAModal" />
+                </Modal>
+            }
         }
         else
         {
@@ -105,9 +144,10 @@
 </div>
 
 @code {
-    public Embarcacion[]? embarcaciones_de_baja;
+    public Embarcacion[]? embarcaciones;
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
+    bool AgregarVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
     BomberosDbContext Context { get; set; }
@@ -121,7 +161,7 @@
     {
         Context = DbFactory.CreateDbContext();
 
-        embarcaciones_de_baja = await Context.Embarcacion.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
+        embarcaciones = await Context.Embarcacion.ToArrayAsync();
     }
 
     public string CargarImage(Embarcacion embarcaciones)
@@ -139,22 +179,6 @@
 
         return src;
     }
-    public async void CambiarEstado(int id, TipoEstadoMovil estado)
-    {
-        Context = DbFactory.CreateDbContext();
-        Embarcacion? movil_a_modificar = await Context.Embarcacion.Where(e => e.VehiculoId == id).SingleOrDefaultAsync();
-        if (movil_a_modificar is not null)
-        {
-            movil_a_modificar.Estado = estado;
-        }
-        embarcaciones_de_baja = await Context.Embarcacion.Where(m => m.Estado == TipoEstadoMovil.Inactivo).ToArrayAsync();
-        await Context.SaveChangesAsync();
-        StateHasChanged();
-    }
-    private void Cancel()
-    {
-        _message.Error("Operacion cancelada");
-    }
 
     public void EditarEmbarcacionModal(int id)
     {
@@ -162,12 +186,28 @@
         EditarVisible = true;
         StateHasChanged();
     }
-
     public void DetallesEmbarcacionModal(int id)
     {
         DetallesPorId = id;
         DetallesVisible = true;
         StateHasChanged();
+    }
+    public void AgregarEmbarcacionModal()
+    {
+        AgregarVisible = true;
+    }
+
+    public async void CambiarEstado(int embarcacionid, TipoEstadoMovil estado)
+    {
+        await EmbarcacionService.CambiarEstado(embarcacionid, estado);
+        embarcaciones = await Context.Embarcacion.ToArrayAsync();
+        StateHasChanged();
+        await _message.Success("Esta embarcación se dio de alta");
+    }
+
+    private void Cancel()
+    {
+        _message.Error("Operación cancelada.");
     }
 
     private void HandleCancel(MouseEventArgs e)
@@ -189,4 +229,22 @@
     {
         DetallesVisible = false;
     }
+
+    private void HandleACancel(MouseEventArgs e)
+    {
+        CerrarAModal();
+    }
+    private async void CerrarAModal()
+    {
+        AgregarVisible = false;
+        await Init();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
 }
+
+

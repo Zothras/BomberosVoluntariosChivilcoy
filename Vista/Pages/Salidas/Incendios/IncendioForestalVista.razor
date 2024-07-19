@@ -3,6 +3,8 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/incendios-forestales"
+@using Vista.Services;
+@inject ISalidaService SalidaService;
 @using System.ComponentModel.DataAnnotations;
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
@@ -195,26 +197,11 @@
                 </Button>
             </FormItem>
         }
+        @if (_visible1 == true)
+        {
+            <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+        }
     </div>
-    @*Despues de la Carga*@
-    <Modal Title="@("Success")"
-           Visible="@_visible1"
-           OnOk="@HandleOk1"
-           OnCancel="@HandleCancel1">
-        <Result Status="success"
-                Title="Se cargo correctamente la salida"
-                SubTitle="">
-        </Result>
-    </Modal>
-
-    <Modal Title="@("Datos de la carga de Incendio")"
-           Visible="@imprimirmodal"
-           OnOk="@HandleOkIMP"
-           OnCancel="@HandleCancelIMP">
-        <p>Imprimir con croquis</p>
-        <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioForestalView.NumeroParte}/{true}", true); })">Si</button>
-        <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioForestalView.NumeroParte}/{false}", true); })">No</button>
-    </Modal>
 </Form>
 
 @code {
@@ -278,7 +265,6 @@
     bool chekM { get; set; }
     bool chekB { get; set; }
     bool _visible1;
-    bool imprimirmodal;
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
@@ -295,27 +281,11 @@
         _visible1 = true;
     }
 
-    private void HandleOk1(MouseEventArgs e)
+    public int ImprimirNumeroParte;
+    void HandleOk1(int _numeroParte)
     {
-        _visible1 = false;
-        imprimirmodal = true;
-        @* navigationManager.NavigateTo($"/legajo"); *@
-    }
-
-    private void HandleCancel1(MouseEventArgs e)
-    {
-        _visible1 = false;
-    }
-
-
-    private void HandleOkIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
-    }
-
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
+        ImprimirNumeroParte = _numeroParte;
+        _visible1 = true;
     }
 
     private void ToggleAnimationI()
@@ -354,15 +324,20 @@
     //Carga de datos
     private async void OnFinish(EditContext editContext)
     {
-        /*try
-        {*/
+        try
+        {
             Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
             Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
             Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
 
             if (salidaIncendioForestalView is not null)
             {
-                //Vista.Data.Models.Salidas.Planillas.IncendioVivienda? numeroParte = await Context.IncendiosViviendas.Where(m => m.NumeroParte == salidaIncendioViviendaVista.NumeroParte).SingleOrDefaultAsync();
+                Vista.Data.Models.Salidas.Planillas.IncendioForestal? numeroParte = await Context.IncendiosForestales.Where(m => m.NumeroParte == salidaIncendioForestalView.NumeroParte).SingleOrDefaultAsync();
+                if (numeroParte != null)
+                {
+                    message.Warning("Numero parte ya existente.");
+                    return;
+                }
                 if (salidaIncendioForestalView is not null)
                 {
                     //Informacion de salida
@@ -375,6 +350,7 @@
                             //KmSalida = salidaIncendioViviendaVista.KmSalida,
                             //KmLlegada = salidaIncendioViviendaVista.KmLlegada,
                             NumeroParte = salidaIncendioForestalView.NumeroParte,
+                            AnioNumeroParte = salidaIncendioForestalView.AnioNumeroParte,
                             CalleORuta = salidaIncendioForestalView.CalleORuta,
                             NumeroOKilometro = salidaIncendioForestalView.NumeroOKilometro,
                             EntreCalles = salidaIncendioForestalView.EntreCalles,
@@ -471,18 +447,13 @@
                             };
                         salidaIncendioForestal.Damnificados.Add(damn);
                     }
-                    await Context.IncendiosForestales.AddAsync(salidaIncendioForestal);
-                    await Context.SaveChangesAsync();
-
+                    await SalidaService.CargarIncendio(salidaIncendioForestal);
+                    HandleOk1(salidaIncendioForestal.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
-                    //ShowModal1(); Arreglar imprimir
-                    _visible1 = true;
-                    imprimirmodal = true;
                 }
             }
-        /*
         }
         catch (Exception e)
         {
@@ -492,7 +463,7 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-        }*/
+        }
     }
 
     private void OnFinishFailed(EditContext editContext)

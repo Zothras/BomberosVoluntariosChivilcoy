@@ -3,6 +3,8 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/incendios-establecimientoEducativo"
+@using Vista.Services;
+@inject ISalidaService SalidaService;
 @using System.ComponentModel.DataAnnotations;
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
@@ -216,26 +218,11 @@
                 </Button>
             </FormItem>
         }
+        @if (_visible1 == true)
+        {
+            <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+        }
     </div>
-    @*Despues de la Carga*@
-    <Modal Title="@("Success")"
-           Visible="@_visible1"
-           OnOk="@HandleOk1"
-           OnCancel="@HandleCancel1">
-        <Result Status="success"
-                Title="Se cargo correctamente la salida"
-                SubTitle="">
-        </Result>
-    </Modal>
-
-    <Modal Title="@("Datos de la carga de Incendio")"
-           Visible="@imprimirmodal"
-           OnOk="@HandleOkIMP"
-           OnCancel="@HandleCancelIMP">
-        <p>Imprimir con croquis</p>
-        <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{incendioEducativoModel.NumeroParte}/{true}", true); })">Si</button>
-        <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{incendioEducativoModel.NumeroParte}/{false}", true); })">No</button>
-    </Modal>
 </Form>
 
 @code {
@@ -300,7 +287,6 @@
     bool chekM { get; set; }
     bool chekB { get; set; }
     bool _visible1;
-    bool imprimirmodal;
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
@@ -310,34 +296,6 @@
     private void ToggleAnimationD()
     {
         animationClass = "slick-contenedor-D";
-    }
-
-    public void ShowModal1()
-    {
-        _visible1 = true;
-    }
-
-    private void HandleOk1(MouseEventArgs e)
-    {
-        _visible1 = false;
-        imprimirmodal = true;
-        @* navigationManager.NavigateTo($"/legajo"); *@
-    }
-
-    private void HandleCancel1(MouseEventArgs e)
-    {
-        _visible1 = false;
-    }
-
-
-    private void HandleOkIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
-    }
-
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
     }
 
     private void ToggleAnimationI()
@@ -355,6 +313,13 @@
     {
         current++;
         ToggleAnimationD();
+    }
+
+    public int ImprimirNumeroParte;
+    void HandleOk1(int _numeroParte)
+    {
+        ImprimirNumeroParte = _numeroParte;
+        _visible1 = true;
     }
 
     protected override async Task OnInitializedAsync()
@@ -384,7 +349,12 @@
 
             if (incendioEducativoModel is not null)
             {
-                //Vista.Data.Models.Salidas.Planillas.IncendioEstablecimientoEducativo? numeroParte = await Context.IncendioEstablecimientoEducativo.Where(m => m.NumeroParte == IncendioEstablecimientoEducativo.NumeroParte).SingleOrDefaultAsync();
+                Vista.Data.Models.Salidas.Planillas.IncendioEstablecimientoEducativo? numeroParte = await Context.IncendiosEstablecimientosEducativos.Where(m => m.NumeroParte == incendioEducativoModel.NumeroParte).SingleOrDefaultAsync();
+                if (numeroParte != null)
+                {
+                    message.Warning("Numero parte ya existente.");
+                    return;
+                }
                 if (incendioEducativoModel is not null)
                 {
                     //Informacion de salida
@@ -397,6 +367,7 @@
                             //KmSalida = incendioEducativoModel.KmSalida,
                             //KmLlegada = incendioEducativoModel.KmLlegada,
                             NumeroParte = incendioEducativoModel.NumeroParte,
+                            AnioNumeroParte = incendioEducativoModel.AnioNumeroParte,
                             CalleORuta = incendioEducativoModel.CalleORuta,
                             NumeroOKilometro = incendioEducativoModel.NumeroOKilometro,
                             EntreCalles = incendioEducativoModel.EntreCalles,
@@ -492,15 +463,11 @@
                             };
                         salidaIncendioEducativo.Damnificados.Add(damn);
                     }
-                    await Context.IncendiosEstablecimientosEducativos.AddAsync(salidaIncendioEducativo);
-                    await Context.SaveChangesAsync();
-
+                    await SalidaService.CargarIncendio(salidaIncendioEducativo);
+                    HandleOk1(salidaIncendioEducativo.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
-                    //ShowModal1(); Arreglar imprimir
-                    _visible1 = true;
-                    imprimirmodal = true;
                 }
             }
         }

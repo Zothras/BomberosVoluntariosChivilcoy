@@ -3,6 +3,8 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/incendios-industriales"
+@using Vista.Services;
+@inject ISalidaService SalidaService;
 @using System.ComponentModel.DataAnnotations;
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
@@ -209,29 +211,13 @@
                     </Button>
                 </FormItem>
             }
+            @if (_visible1 == true)
+            {
+                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+            }
         </div>
     </div>
 </Form>
-
-@*Despues de la Carga*@
-<Modal Title="@("Success")"
-       Visible="@_visible1"
-       OnOk="@HandleOk1"
-       OnCancel="@HandleCancel1">
-    <Result Status="success"
-            Title="Se cargo correctamente la salida"
-            SubTitle="">
-    </Result>
-</Modal>
-
-<Modal Title="@("Datos de la carga de Incendio")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
-    <p>Imprimir con croquis</p>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioIndustrialView.NumeroParte}/{true}", true); })">Si</button>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioIndustrialView.NumeroParte}/{false}", true); })">No</button>
-</Modal>
 
 @code {
 
@@ -253,12 +239,7 @@
     @*Sin Uso*@
     //bool switchValueS { get; set; }
     //bool chek { get; set; }
-
-
-    @*Sucess y Imprimir*@
-    bool _visible1;//Modal Success
-    bool imprimirmodal;//Modal Imprimir Croquis [Si/No]
-
+    bool _visible1;
     bool switchDamificados { get; set; }
     private void HandleSwitchChanged(bool value)
     {
@@ -278,27 +259,11 @@
         StateHasChanged();
     }
 
-    private void HandleOk1(MouseEventArgs e)
+    public int ImprimirNumeroParte;
+    void HandleOk1(int _numeroParte)
     {
-        _visible1 = false;
-        imprimirmodal = true;
-        @* navigationManager.NavigateTo($"/legajo");//Error *@
-    }
-
-    private void HandleCancel1(MouseEventArgs e)
-    {
-        _visible1 = false;
-    }
-
-
-    private void HandleOkIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
-    }
-
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
+        ImprimirNumeroParte = _numeroParte;
+        _visible1 = true;
     }
 
 
@@ -335,18 +300,13 @@
                     NumeroIoma = b.NumeroIoma,
                     LugarNacimiento = b.LugarNacimiento,
                     Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
                     Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
                     Resolucion1 = b.Resolucion1,
                     Resolucion2 = b.Resolucion2,
                     Resolucion3 = b.Resolucion3,
                     Resolucion4 = b.Resolucion4,
                     Resolucion5 = b.Resolucion5,
                     Resolucion6 = b.Resolucion6,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
                     Estado = b.Estado,
                     Chofer = b.Chofer,
                     VencimientoRegistro = b.VencimientoRegistro,
@@ -355,11 +315,6 @@
                     Profesion = b.Profesion,
                     NivelEstudios = b.NivelEstudios,
                     FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
-
                 };
             if (b.Chofer == true)
             {
@@ -443,7 +398,12 @@
             Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
             if (salidaIncendioIndustrialView is not null)
             {
-                IncendioIndustria? numeroParte = await Context.IncendiosIndustrias.Where(m => m.NumeroParte == salidaIncendioIndustrialView.NumeroParte).SingleOrDefaultAsync();
+                Vista.Data.Models.Salidas.Planillas.IncendioIndustria? numeroParte = await Context.IncendiosIndustrias.Where(m => m.NumeroParte == salidaIncendioIndustrialView.NumeroParte).SingleOrDefaultAsync();
+                if (numeroParte != null)
+                {
+                    message.Warning("Numero parte ya existente.");
+                    return;
+                }
                 if (salidaIncendioIndustrialView is not null)
                 {
                     IncendioIndustria salidaIncendioIndustria = new()
@@ -455,6 +415,7 @@
                             //KmSalida = salidaIncendioIndustrialView.KmSalida,
                             //KmLlegada = salidaIncendioIndustrialView.KmLlegada,
                             NumeroParte = salidaIncendioIndustrialView.NumeroParte,
+                            AnioNumeroParte = salidaIncendioIndustrialView.AnioNumeroParte,
                             CalleORuta = salidaIncendioIndustrialView.CalleORuta,
                             NumeroOKilometro = salidaIncendioIndustrialView.NumeroOKilometro,
                             EntreCalles = salidaIncendioIndustrialView.EntreCalles,
@@ -549,14 +510,11 @@
                             };
                         salidaIncendioIndustria.Damnificados.Add(damn);
                     }
-                    await Context.IncendiosIndustrias.AddAsync(salidaIncendioIndustria);
-                    await Context.SaveChangesAsync();
-
-
+                    await SalidaService.CargarIncendio(salidaIncendioIndustria);
+                    HandleOk1(salidaIncendioIndustria.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
-                    imprimirmodal = true;
                 }
             }
         }
@@ -568,7 +526,6 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-            imprimirmodal = true;
         }
     }
 

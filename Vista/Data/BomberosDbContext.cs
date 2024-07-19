@@ -15,6 +15,7 @@ namespace Vista.Data
         public DbSet<Damnificado> Damnificados { get; set; }
         public DbSet<ImagenBombero> ImagenesBomberos { get; set; }
         public DbSet<ImagenMovil> ImagenesMoviles { get; set; }
+        public DbSet<ImagenEmbarcacion> ImagenesEmbarcaciones { get; set; }
         public DbSet<SeguroSalida> SegurosSalidas { get; set; }
         public DbSet<SeguroVehiculo> SeguroVehiculos { get; set; }
         public DbSet<DatosCapacitacion> DatosCapacitaciones { get; set; }
@@ -63,6 +64,10 @@ namespace Vista.Data
 
             modelBuilder.Entity<Movil>()
                 .HasIndex(m => m.NumeroMovil)
+                .IsUnique();
+
+            modelBuilder.Entity<Embarcacion>()
+                .HasIndex(e => e.NumeroMovil)
                 .IsUnique();
 
             modelBuilder.Entity<Bombero>()

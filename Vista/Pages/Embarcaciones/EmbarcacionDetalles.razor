@@ -128,7 +128,7 @@ else if (!existe)
     {
         using var db = DbFactory.CreateDbContext();
 
-        Embarcacion? embarcacion = await db.Embarcacion.Include(e => e.Encargado).Where(e => e.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+        Embarcacion? embarcacion = await db.Embarcacion.Include(e => e.Encargado).Include(i => i.ImagenEmbarcacion).SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
 
         if (embarcacion is not null)
         {

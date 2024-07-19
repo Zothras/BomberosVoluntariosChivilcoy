@@ -3,6 +3,8 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/incendios-vehiculares"
+@using Vista.Services;
+@inject ISalidaService SalidaService;
 @using System.ComponentModel.DataAnnotations;
 @using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
@@ -194,30 +196,13 @@
                     </Button>
                 </FormItem>
             }
+            @if (_visible1 == true)
+            {
+                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+            }
         </div>
     </div>
-
 </Form>
-
-@*Despues de la Carga*@
-<Modal Title="@("Success")"
-       Visible="@_visible1"
-       OnOk="@HandleOk1"
-       OnCancel="@HandleCancel1">
-    <Result Status="success"
-            Title="Se cargo correctamente la salida"
-            SubTitle="">
-    </Result>
-</Modal>
-
-<Modal Title="@("Datos de la carga de Incendio")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
-    <p>Imprimir con croquis</p>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioVehicularView.NumeroParte}/{true}", true); })">Si</button>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{salidaIncendioVehicularView.NumeroParte}/{false}", true); })">No</button>
-</Modal>
 
 @code {
     @*Context y ViewModels*@
@@ -238,7 +223,6 @@
     Movil[] Moviles;
 
     @*Sucess y Imprimir*@
-    bool imprimirmodal;
     bool _visible1;
 
     bool switchDamificados { get; set; }
@@ -266,32 +250,11 @@
         StateHasChanged();
     }
 
-    public void ShowModal1()
+    public int ImprimirNumeroParte;
+    void HandleOk1(int _numeroParte)
     {
+        ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
-    }
-
-    private void HandleOk1(MouseEventArgs e)
-    {
-        _visible1 = false;
-        imprimirmodal = true;
-        @* navigationManager.NavigateTo($"/legajo"); *@
-    }
-
-    private void HandleCancel1(MouseEventArgs e)
-    {
-        _visible1 = false;
-    }
-
-
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
-    }
-
-    private void HandleOkIMP(MouseEventArgs e)
-    {
-        imprimirmodal = false;
     }
 
     @*Damnificados | Bomberos | Moviles y Chofer | Steps *@
@@ -323,18 +286,13 @@
                     NumeroIoma = b.NumeroIoma,
                     LugarNacimiento = b.LugarNacimiento,
                     Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
                     Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
                     Resolucion1 = b.Resolucion1,
                     Resolucion2 = b.Resolucion2,
                     Resolucion3 = b.Resolucion3,
                     Resolucion4 = b.Resolucion4,
                     Resolucion5 = b.Resolucion5,
                     Resolucion6 = b.Resolucion6,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
                     Estado = b.Estado,
                     Chofer = b.Chofer,
                     VencimientoRegistro = b.VencimientoRegistro,
@@ -343,10 +301,6 @@
                     Profesion = b.Profesion,
                     NivelEstudios = b.NivelEstudios,
                     FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
                 };
             if (b.Chofer == true)
             {
@@ -448,6 +402,11 @@
             if (salidaIncendioVehicularView is not null)
             {
                 Vista.Data.Models.Salidas.Planillas.Incendio? numeroParte = await Context.Set<Incendio>().Where(m => m.NumeroParte == salidaIncendioVehicularView.NumeroParte).SingleOrDefaultAsync();
+                if (numeroParte != null)
+                {
+                    message.Warning("Numero parte ya existente.");
+                    return;
+                }
                 if (salidaIncendioVehicularView is not null)
                 {
                     Vista.Data.Models.Salidas.Planillas.Incendio salidaIncendioVehicular = new()
@@ -459,6 +418,7 @@
                             //KmSalida = salidaIncendioVehicularView.KmSalida,
                             //KmLlegada = salidaIncendioVehicularView.KmLlegada,
                             NumeroParte = salidaIncendioVehicularView.NumeroParte,
+                            AnioNumeroParte = salidaIncendioVehicularView.AnioNumeroParte,
                             CalleORuta = salidaIncendioVehicularView.CalleORuta,
                             NumeroOKilometro = salidaIncendioVehicularView.NumeroOKilometro,
                             EntreCalles = salidaIncendioVehicularView.EntreCalles,
@@ -550,12 +510,11 @@
                             };
                         salidaIncendioVehicular.Damnificados.Add(damn);
                     }
-                    await Context.Set<Incendio>().AddAsync(salidaIncendioVehicular);
-                    await Context.SaveChangesAsync();
+                    await SalidaService.CargarIncendio(salidaIncendioVehicular);
+                    HandleOk1(salidaIncendioVehicular.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
-                    imprimirmodal = true;
                 }
             }
         }
@@ -567,7 +526,6 @@
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-            imprimirmodal = true;
         }
     }
 

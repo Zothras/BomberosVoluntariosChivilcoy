@@ -32,6 +32,8 @@ builder.Services.AddScoped<IBomberoService, BomberoService>();
 builder.Services.AddScoped<IBrigadaService, BrigadaService>();
 builder.Services.AddScoped<IDepositoService, DepositoService>();
 builder.Services.AddScoped<IMovilService, MovilService>();
+builder.Services.AddScoped<IEmbarcacionService, EmbarcacionService>();
+builder.Services.AddScoped<ISalidaService, SalidaService>();
 
 //Errores detallados
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
