@@ -8,6 +8,9 @@
 @using Vista.Data.ViewModels.FactorClimatico;
 @using Vista.Data.ViewModels.Personal;
 
+@*Componentes Generales*@
+@using Vista.Pages.Salidas.ComponentesSalida;
+
 <style>
     .boton_p {
         background-color: #732D2D !important;
@@ -106,48 +109,19 @@
 
             @if (current == 0)
             {
-                <div class="slick-contenedor @animationClass">
+                @*General*@
+                <DatosGenerales Model="@modelFactorClimatico"
+                                OnChange="@OnChange"
+                                animationClass="@animationClass" />
+
+                <div class="inpt-cont-inline">
                     <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Descripcion</label>
-                        <Input @bind-Value="@modelFactorClimatico.Descripcion" />
-                    </div>
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Hora salida</label>
-                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelFactorClimatico.HoraSalida" />
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Hora llegada</label>
-                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelFactorClimatico.HoraLLegada" />
-                        </div>
-                    </div>
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Calle/Ruta</label>
-                            <Input @bind-Value="@modelFactorClimatico.CalleORuta" />
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Numero/kilometro</label>
-                            <Input @bind-Value="@modelFactorClimatico.NumeroOKilometro" />
-                        </div>
+                        <label class="inpt-cont--lbl">PisoNumero</label>
+                        <Input @bind-Value="@modelFactorClimatico.PisoNumero" />
                     </div>
                     <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Entre calles</label>
-                        <Input @bind-Value="@modelFactorClimatico.EntreCalles" />
-                    </div>
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">PisoNumero</label>
-                            <Input @bind-Value="@modelFactorClimatico.PisoNumero" />
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Depto</label>
-                            <Input @bind-Value="@modelFactorClimatico.Depto" />
-                        </div>
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo zona</label>
-                        <EnumSelect TEnum="TipoZona" @bind-Value="@modelFactorClimatico.TipoZona" />
+                        <label class="inpt-cont--lbl">Depto</label>
+                        <Input @bind-Value="@modelFactorClimatico.Depto" />
                     </div>
                 </div>
             }

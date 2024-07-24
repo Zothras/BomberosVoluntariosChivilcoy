@@ -5,6 +5,10 @@
 @page "/salidas/accidentes"
 @using Vista.Data.ViewModels.Accidente;
 @using Vista.Pages.PlanillasIntervencion;
+
+@*Componentes Generales*@
+@using Vista.Pages.Salidas.ComponentesSalida;
+
 <style>
     .boton_p {
         background-color: #732D2D !important;
@@ -97,57 +101,18 @@
 
     <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
         <Form Model="@accidenteViewModels"
-            LabelColSpan="8"
-            WrapperColSpan="16"
-            OnFinish="OnFinish"
-            OnFinishFailed="OnFinishFailed"
-            Style="width: 100%;height: 100%;overflow: hidden!important;">
+              LabelColSpan="8"
+              WrapperColSpan="16"
+              OnFinish="OnFinish"
+              OnFinishFailed="OnFinishFailed"
+              Style="width: 100%;height: 100%;overflow: hidden!important;">
             @if (current == 0)
-            {//General
-                <div class="slick-contenedor @animationClass">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Descripcion</label>
-                        <Input @bind-Value="@accidenteViewModels.Descripcion" />
-                    </div>
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Hora salida</label>
-                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.HoraSalida" />
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Hora llegada</label>
-                            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@accidenteViewModels.HoraLLegada" />
-                        </div>
-                    </div>
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Calle/Ruta</label>
-                            <Input @bind-Value="@accidenteViewModels.CalleORuta" />
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Numero/kilometro</label>
-                            <Input @bind-Value="@accidenteViewModels.NumeroOKilometro" />
-                        </div>
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Entre calles</label>
-                        <Input @bind-Value="@accidenteViewModels.EntreCalles" />
-                    </div>
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">PisoNumero</label>
-                            <Input @bind-Value="@accidenteViewModels.PisoNumero" />
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Depto</label>
-                            <Input @bind-Value="@accidenteViewModels.Depto" />
-                        </div>
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo zona</label>
-                        <EnumSelect TEnum="TipoZona" @bind-Value="@accidenteViewModels.TipoZona" />
-                    </div>
-                </div>
+            {
+                @*General*@
+
+                <DatosGenerales Model="@accidenteViewModels"
+                                OnChange="@OnChange"
+                                animationClass="@animationClass" />
             }
             else if (current == 1)
             {// Solicitante - Receptor . Damnificado
@@ -212,20 +177,20 @@
                     </div>
 
                     <Modal Footer="null" Title="@("Damnificados")"
-                            Visible="@visibleVerDamnificados"
-                            OnOk="@HandleOkD"
-                            OnCancel="@HandleCancelVD">
+                           Visible="@visibleVerDamnificados"
+                           OnOk="@HandleOkD"
+                           OnCancel="@HandleCancelVD">
                         <div class="inpt-cont">
                             <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                            <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                            <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                            <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                                <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                                <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                                <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
                                 <ActionColumn Title="Acciones">
                                     <Popconfirm Title="¿Quieres borrar este damnificado?"
-                                            OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                                            OkText="Si"
-                                            CancelText="No"
-                                            Style="display: flex;justify-content: center;align-items: center;">
+                                                OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                                OkText="Si"
+                                                CancelText="No"
+                                                Style="display: flex;justify-content: center;align-items: center;">
                                         <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
                                     </Popconfirm>
                                 </ActionColumn>
@@ -236,44 +201,44 @@
                         @if (switchValue == true)
                         {
                             <Modal Footer="null" Title="@("Datos del damnificado")"
-                                    Visible="@visibleDamnificados"
-                                    OnOk="@HandleOkD"
-                                    OnCancel="@HandleCancelD">
+                                   Visible="@visibleDamnificados"
+                                   OnOk="@HandleOkD"
+                                   OnCancel="@HandleCancelD">
                                 <div class="inpt-cont-inline">
                                     <div class="inpt-cont">
                                         <label class="inpt-cont--lbl">Marca</label>
-                                        <Input @bind-Value="@vehiculo.Marca"/>
+                                        <Input @bind-Value="@vehiculo.Marca" />
                                     </div>
                                     <div class="inpt-cont">
                                         <label class="inpt-cont--lbl">Modelo</label>
-                                        <Input @bind-Value="@vehiculo.Modelo"/>
+                                        <Input @bind-Value="@vehiculo.Modelo" />
                                     </div>
                                 </div>
                                 <div class="inpt-cont">
                                     <label class="inpt-cont--lbl">Año</label>
-                                    <Input @bind-Value="@vehiculo.Año"/>
+                                    <Input @bind-Value="@vehiculo.Año" />
                                 </div>
                                 <div class="inpt-cont">
                                     <label class="inpt-cont--lbl">Patente</label>
-                                    <Input @bind-Value="@vehiculo.Patente"/>
+                                    <Input @bind-Value="@vehiculo.Patente" />
                                 </div>
                                 <div class="inpt-cont-inline">
                                     <div class="inpt-cont">
                                         <label class="inpt-cont--lbl">Tipo</label>
-                                        <Input @bind-Value="@vehiculo.Tipo"/>
+                                        <Input @bind-Value="@vehiculo.Tipo" />
                                     </div>
                                     <div class="inpt-cont">
                                         <label class="inpt-cont--lbl">Color</label>
-                                        <Input @bind-Value="@vehiculo.Color"/>
+                                        <Input @bind-Value="@vehiculo.Color" />
                                     </div>
                                 </div>
                                 <div class="inpt-cont">
                                     <label class="inpt-cont--lbl">Compañía Aseguradora</label>
-                                    <Input @bind-Value="@vehiculo.CompañiaAseguradora"/>
+                                    <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
                                 </div>
                                 <div class="inpt-cont">
                                     <label class="inpt-cont--lbl">Numero de Poliza</label>
-                                    <Input @bind-Value="@vehiculo.NumeroDePoliza"/>
+                                    <Input @bind-Value="@vehiculo.NumeroDePoliza" />
                                 </div>
                                 <div class="inpt-cont">
                                     <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@vehiculo.FechaDeVencimineto" />
@@ -299,31 +264,31 @@
                             <Select TItem="BomberoViweModel"
                                     TItemValue="int"
                                     DataSource="@bomberoChoferes"
-                            @bind-Value="@chofer"
+                                    @bind-Value="@chofer"
                                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                     Placeholder="Selecione a un bombero"
                                     DefaultActiveFirstOption="false"
                                     AllowClear="true"
-                                                    EnableSearch>
-                        </Select>
+                                    EnableSearch>
+                            </Select>
+                        </div>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Numero de movil</label>
+                            <Select TItem="Movil"
+                                    TItemValue="string"
+                                    DataSource="@Moviles"
+                                    @bind-Value="@NumeroMovil"
+                                    LabelName="@nameof(Movil.NumeroMovil)"
+                                    ValueName="@nameof(Movil.NumeroMovil)"
+                                    Placeholder="Selecione el movil"
+                                    DefaultActiveFirstOption="false"
+                                    AllowClear="true"
+                                    EnableSearch>
+                            </Select>
+                        </div>
                     </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Numero de movil</label>
-                        <Select TItem="Movil"
-                                TItemValue="string"
-                                DataSource="@Moviles"
-                            @bind-Value="@NumeroMovil"
-                                LabelName="@nameof(Movil.NumeroMovil)"
-                                ValueName="@nameof(Movil.NumeroMovil)"
-                                Placeholder="Selecione el movil"
-                                DefaultActiveFirstOption="false"
-                                AllowClear="true"
-                                                    EnableSearch>
-                        </Select>
-                    </div>
-                </div>
-                @if (NumeroMovil is not null)
+                    @if (NumeroMovil is not null)
                     {
                         foreach (Movil m in Moviles)
                         {
@@ -356,15 +321,15 @@
                         @if (switchMoviles == true)
                         {
                             <Modal Title="@("Datos de la carga de combustible")"
-                                    Visible="@_visible"
-                                    OnOk="@HandleOk"
-                                    OnCancel="@HandleCancelMovil">
+                                   Visible="@_visible"
+                                   OnOk="@HandleOk"
+                                   OnCancel="@HandleCancelMovil">
                                 <Form Loading="loading" Model="@movilSalidaViewModels"
-                                    LabelColSpan="8"
-                                    WrapperColSpan="16"
-                                    OnFinish="OnFinishModel"
-                                    OnFinishFailed="OnFinishFailed"
-                                @ref="@_form1" Context="modalMoviles">
+                                      LabelColSpan="8"
+                                      WrapperColSpan="16"
+                                      OnFinish="OnFinishModel"
+                                      OnFinishFailed="OnFinishFailed"
+                                      @ref="@_form1" Context="modalMoviles">
                                     <FormItem Label="Numero factura">
                                         <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
                                     </FormItem>
@@ -394,18 +359,18 @@
                     {
                         <div>
                             <Table Size="TableSize.Small" PageSize="4" Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
-                            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-                            <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
-                            <ActionColumn Title="Acciones">
-                                <Popconfirm Title="¿Quieres borrar este movil?"
-                                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                                            OkText="Si"
-                                            CancelText="No">
-                                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                                </Popconfirm>
-                            </ActionColumn>
-                        </Table>
-                    </div>
+                                <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
+                                <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
+                                <ActionColumn Title="Acciones">
+                                    <Popconfirm Title="¿Quieres borrar este movil?"
+                                                OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
+                                                OkText="Si"
+                                                CancelText="No">
+                                        <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                    </Popconfirm>
+                                </ActionColumn>
+                            </Table>
+                        </div>
                     }
                 </div>
             }
@@ -418,116 +383,116 @@
                         <Select TItem="BomberoViweModel"
                                 TItemValue="int"
                                 DataSource="@bomberoTodos"
-                        @bind-Value="@BomberoCuerpo"
+                                @bind-Value="@BomberoCuerpo"
                                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                                 Placeholder="Selecione un bombero"
                                 DefaultActiveFirstOption="false"
                                 AllowClear="true" EnableSearch>
-                    </Select>
-                </div>
-                <div class="inpt-cont">
-                    <Checkbox @bind-Checked="chekB">¿Salió?</Checkbox>
-                </div>
-                <div class="inpt-cont">
-                    <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
-                </div>
-                <div class="inpt-cont">
-                    <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
-                        <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-                        <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-                        <ActionColumn Title="Acciones">
-                            <Popconfirm Title="¿Quieres eliminar este bombero?"
-                                        OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                                        OkText="Si"
-                                        CancelText="No">
-                                <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                            </Popconfirm>
-                        </ActionColumn>
-                    </Table>
-                </div>
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Encargado</label>
-                        <Select TItem="BomberoViweModel"
-                                TItemValue="int"
-                                DataSource="@bomberoTodos"
-                        @bind-Value="@BomberoEncargado"
-                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                Placeholder="Seleccione  a un  bombero"
-                                DefaultActiveFirstOption="true"
-                                AllowClear="true" EnableSearch>
                         </Select>
                     </div>
                     <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Lleno la planilla</label>
-                        <Select TItem="BomberoViweModel"
-                                TItemValue="int"
-                                DataSource="@bomberoTodos"
-                        @bind-Value="@QuienLLenoPlanilla"
-                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                Placeholder="Seleccione un bombero"
-                                DefaultActiveFirstOption="false"
-                                AllowClear="true"
-                                                    EnableSearch>
-                        </Select>
+                        <Checkbox @bind-Checked="chekB">¿Salió?</Checkbox>
                     </div>
-                </div>
-            </div>
-            }
-            @* else if (current == 4)
-            {
-                <div class="slick-contenedor @animationClass">
+                    <div class="inpt-cont">
+                        <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
+                    </div>
+                    <div class="inpt-cont">
+                        <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
+                            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+                            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+                            <ActionColumn Title="Acciones">
+                                <Popconfirm Title="¿Quieres eliminar este bombero?"
+                                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                                            OkText="Si"
+                                            CancelText="No">
+                                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                </Popconfirm>
+                            </ActionColumn>
+                        </Table>
+                    </div>
                     <div class="inpt-cont-inline">
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Tipo de servicio</label>
-                            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@accidenteViewModels.TipoServicio" />
+                            <label class="inpt-cont--lbl">Encargado</label>
+                            <Select TItem="BomberoViweModel"
+                                    TItemValue="int"
+                                    DataSource="@bomberoTodos"
+                                    @bind-Value="@BomberoEncargado"
+                                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                    Placeholder="Seleccione  a un  bombero"
+                                    DefaultActiveFirstOption="true"
+                                    AllowClear="true" EnableSearch>
+                            </Select>
                         </div>
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Acciones sobre materiales</label>
-                        <Select Mode="tags"
-                                Placeholder="Seleccione acciones"
-                        @bind-Values="@_selectedValues"
-                                TItemValue="string"
-                                TItem="string"
-                                OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-                                            EnableSearch>
-                        <SelectOptions>
-                            @foreach (var item in _items)
-                                {
-                                    <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
-                                }
-                            </SelectOptions>
-                        </Select>
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Acciones sobre personas</label>
-                        <div class="inpt-cont" style="flex-direction: row;flex-wrap: wrap;">
-                            <Select Mode="tags"
-                                    Placeholder="Seleccione acciones"
-                            @bind-Values="@_selectedValues2"
-                                    TItemValue="string"
-                                    TItem="string"
-                                    OnSelectedItemsChanged="OnSelectedItemsChangedHandler2"
-                                                    EnableSearch>
-                            <SelectOptions>
-                                @foreach (var item in _items2)
-                                    {
-                                        <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
-                                    }
-                                </SelectOptions>
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Lleno la planilla</label>
+                            <Select TItem="BomberoViweModel"
+                                    TItemValue="int"
+                                    DataSource="@bomberoTodos"
+                                    @bind-Value="@QuienLLenoPlanilla"
+                                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                                    Placeholder="Seleccione un bombero"
+                                    DefaultActiveFirstOption="false"
+                                    AllowClear="true"
+                                    EnableSearch>
                             </Select>
                         </div>
                     </div>
                 </div>
+            }
+            @* else if (current == 4)
+            {
+            <div class="slick-contenedor @animationClass">
+            <div class="inpt-cont-inline">
+            <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Tipo de servicio</label>
+            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@accidenteViewModels.TipoServicio" />
+            </div>
+            </div>
+            <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Acciones sobre materiales</label>
+            <Select Mode="tags"
+            Placeholder="Seleccione acciones"
+            @bind-Values="@_selectedValues"
+            TItemValue="string"
+            TItem="string"
+            OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+            EnableSearch>
+            <SelectOptions>
+            @foreach (var item in _items)
+            {
+            <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+            }
+            </SelectOptions>
+            </Select>
+            </div>
+            <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Acciones sobre personas</label>
+            <div class="inpt-cont" style="flex-direction: row;flex-wrap: wrap;">
+            <Select Mode="tags"
+            Placeholder="Seleccione acciones"
+            @bind-Values="@_selectedValues2"
+            TItemValue="string"
+            TItem="string"
+            OnSelectedItemsChanged="OnSelectedItemsChangedHandler2"
+            EnableSearch>
+            <SelectOptions>
+            @foreach (var item in _items2)
+            {
+            <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+            }
+            </SelectOptions>
+            </Select>
+            </div>
+            </div>
+            </div>
             } *@
         </Form>
     </div>
 </div>
-        @*Cuerpos paraticipantes*@
+@*Cuerpos paraticipantes*@
 @* <b><label>Cuerpo Participante</label></b>
         <FormItem Label="Tipo Escalafon">
             <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
@@ -676,9 +641,9 @@
 
 @*Despues de la Carga*@
 <Modal Title="@("Success")"
-        Visible="@_visible1"
-        OnOk="@HandleOk1"
-        OnCancel="@HandleCancel1">
+       Visible="@_visible1"
+       OnOk="@HandleOk1"
+       OnCancel="@HandleCancel1">
     <Result Status="success"
             Title="Se cargo correctamente la salida"
             SubTitle="">
@@ -808,7 +773,7 @@
     int BomberoReceptor;// Falta info..
 
 
-@*Metodos*@
+    @*Metodos*@
     public async Task CargarBomberosView()
     {
         bomberoTodos = new();
@@ -966,7 +931,7 @@
     }
 
 
-@*Metodo*@
+    @*Metodo*@
 
     public async Task AgregarMovilSalida()
     {
@@ -993,7 +958,7 @@
     }
 
 
-@*Info-Salida*@
+    @*Info-Salida*@
 
     bool chek { get; set; }//Check de airbag
 
@@ -1209,7 +1174,7 @@
 
 
 
-@*Init | OnChange y OnFinish*@
+    @*Init | OnChange y OnFinish*@
 
     protected override async Task OnInitializedAsync()
     {
@@ -1265,35 +1230,35 @@
 
 
 
-            private async void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    private async void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    {
+        if (values != null)
+        {
+            Console.WriteLine($"selected: ${string.Join(",", values)}");
+            foreach (var value in values)
             {
-                if (values != null)
+                var property = _model.GetType().GetProperty(value);
+                if (property != null)
                 {
-                    Console.WriteLine($"selected: ${string.Join(",", values)}");
-                    foreach (var value in values)
-                    {
-                        var property = _model.GetType().GetProperty(value);
-                        if (property != null)
-                        {
-                            property.SetValue(_model, true);
-                        }
-                    }
+                    property.SetValue(_model, true);
                 }
             }
+        }
+    }
 
-            private async void OnSelectedItemsChangedHandler2(IEnumerable<string> values)
+    private async void OnSelectedItemsChangedHandler2(IEnumerable<string> values)
+    {
+        if (values != null)
+        {
+            Console.WriteLine($"selected: ${string.Join(",", values)}");
+            foreach (var value in values)
             {
-                if (values != null)
+                var property = _model.GetType().GetProperty(value);
+                if (property != null)
                 {
-                    Console.WriteLine($"selected: ${string.Join(",", values)}");
-                    foreach (var value in values)
-                    {
-                        var property = _model.GetType().GetProperty(value);
-                        if (property != null)
-                        {
-                            property.SetValue(_model, true);
-                        }
-                    }
+                    property.SetValue(_model, true);
                 }
             }
+        }
+    }
 }
