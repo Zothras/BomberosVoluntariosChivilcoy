@@ -1,0 +1,194 @@
+﻿@using Vista.Data.ViewModels;
+@using Vista.Data.ViewModels.Personal;
+@inject IMessageService message
+
+<div class="slick-contenedor @animationClass">
+    <h6>Datos del solicitante</h6>
+
+    <div class="inpt-cont-inline">
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Nombre</label>
+            <Input @bind-Value="@Model.NombreSolicitante" />
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Apellido</label>
+            <Input @bind-Value="@Model.ApellidoSolicitante" />
+        </div>
+    </div>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Documento</label>
+        <Input @bind-Value="@Model.DniSolicitante" />
+    </div>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Telefono</label>
+        <Input @bind-Value="@Model.TelefonoSolicitante" />
+    </div>
+
+    <div class="slick-contenedor @animationClass">
+        <h6>Datos del recepcionista</h6>
+
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Nombre y apellido</label>
+            <Input @bind-Value="@Model.NombreYApellidoReceptor" />
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Telefono</label>
+            <Input @bind-Value="@Model.TelefonoReceptor" />
+        </div>
+    </div>
+
+    <h6>Datos de damnificados</h6>
+
+    <div class="inpt-cont-inline">
+        <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 80px;">
+            <label class="inpt-cont--lbl">¿Hubo damnificados?</label>
+            <Switch @bind-Checked="@switchValue" ValueChanged="@UpdateSwitchDamificados" Style="width: 10px!important;" />
+        </div>
+        @if (switchValue)
+        {
+            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 90px;">
+                <label class="inpt-cont--lbl">Agregar otro</label>
+                <Button OnClick="()=>visibleDamnificados = true">
+                    <i class="fa-solid fa-user-plus"></i>
+                </Button>
+            </div>
+            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 90px;">
+                <label class="inpt-cont--lbl">Ver damnificados</label>
+                <Button OnClick="()=>visibleVerDamnificados = true">
+                    <i class="fa-solid fa-users-gear"></i>
+                </Button>
+            </div>
+        }
+    </div>
+
+    <Modal Footer="null" Title="@("Damnificados")"
+           Visible="@visibleVerDamnificados"
+           OnOk="@HandleOkD"
+           OnCancel="@HandleCancelVD">
+        <div class="inpt-cont">
+            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
+                <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
+                <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
+                <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+                <ActionColumn Title="Acciones">
+                    <Popconfirm Title="¿Quieres borrar este damnificado?"
+                                OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                OkText="Si"
+                                CancelText="No"
+                                Style="display: flex;justify-content: center;align-items: center;">
+                        <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                    </Popconfirm>
+                </ActionColumn>
+            </Table>
+        </div>
+    </Modal>
+
+    <Modal Footer="null" Title="@("Datos del damnificado")"
+           Visible="@visibleDamnificados"
+           OnOk="@HandleOkD"
+           OnCancel="@HandleCancelD">
+        <div class="inpt-cont-inline">
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Nombre</label>
+                <Input @bind-Value="@damnificado.Nombre" />
+            </div>
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Apellido</label>
+                <Input @bind-Value="@damnificado.Apellido" />
+            </div>
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Documento</label>
+            <Input @bind-Value="@damnificado.Dni" />
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Lugar de nacimiento</label>
+            <Input @bind-Value="@damnificado.LugarDeNacimiento" />
+        </div>
+        <div class="inpt-cont-inline">
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Sexo</label>
+                <Input @bind-Value="@damnificado.Sexo" />
+            </div>
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Edad</label>
+                <Input @bind-Value="@damnificado.Edad" />
+            </div>
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Estado</label>
+            <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
+        </div>
+        <div class="inpt-cont">
+            <Button Class="boton_p" OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+        </div>
+    </Modal>
+</div>
+
+@code {
+    [Parameter] public SalidasViewModels Model { get; set; }
+    [Parameter] public string animationClass { get; set; }
+    [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+
+    private DamnificadoViewModels damnificado = new DamnificadoViewModels();
+    private List<DamnificadoViewModels> DamnificadosSalida = new List<DamnificadoViewModels>();
+    private bool switchValue = false;
+    private bool visibleDamnificados = false;
+    private bool visibleVerDamnificados = false;
+
+    private void UpdateSwitchDamificados(bool value)
+    {
+        switchValue = value;
+        StateHasChanged();
+    }
+
+    private void HandleOkD(MouseEventArgs e)
+    {
+        visibleDamnificados = false;
+    }
+
+    private void HandleCancelD(MouseEventArgs e)
+    {
+        visibleDamnificados = false;
+    }
+
+    private void HandleCancelVD(MouseEventArgs e)
+    {
+        visibleVerDamnificados = false;
+    }
+
+    private void deleteRowDamnificados(string Dni)
+    {
+        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
+    }
+
+    private void AgregarDamnificado()
+    {
+        try
+        {
+            DamnificadoViewModels dp = new()
+            {
+                Nombre = damnificado.Nombre,
+                Apellido = damnificado.Apellido,
+                Dni = damnificado.Dni,
+                Sexo = damnificado.Sexo,
+                LugarDeNacimiento = damnificado.LugarDeNacimiento,
+                Edad = damnificado.Edad,
+                Estado = damnificado.Estado,
+            };
+            DamnificadosSalida.Add(dp);
+            damnificado = new DamnificadoViewModels();
+            visibleDamnificados = false;
+            StateHasChanged();
+            message.Success("Damnificado agregado correctamente");
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+            if (e.InnerException != null)
+                message.Error(e.InnerException.Message, 5);
+            else
+                message.Error(e.Message, 5);
+        }
+    }
+}
