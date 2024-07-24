@@ -3,17 +3,22 @@ using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Vista.Data.ViewModels
 {
-    //fecha
     public abstract class SalidasViewModels
     {
+        public int NumeroParte { get; set; } // Este seria como un ID, pero no lo es.
+        public int AnioNumeroParte { get; set; } //Este seria el Año de las Salidas.
+
+        // Otras propiedades
         public DateTime HoraSalida { get; set; }
         public DateTime HoraLLegada { get; set; }
+
         public int KmLlegada { get; set; }
         public int Kilometraje { get; set; }
-        public int NumeroParte { get; set; }
-        public int AnioNumeroParte { get; set; }
+       
+        
         [Required, StringLength(255)]
         public string Descripcion { get; set; }
         [Required, StringLength(255)]

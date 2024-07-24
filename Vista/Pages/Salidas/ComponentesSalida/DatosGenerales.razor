@@ -1,9 +1,13 @@
-﻿@using Vista.Data.ViewModels;
+﻿@using Vista.Data.ViewModels
+
+@*Servicio Utilizados*@
+@using Vista.Services
+@inject IParteService ParteService
 
 <div class="slick-contenedor @animationClass">
     <div class="inpt-cont">
         <label class="inpt-cont--lbl">Numero de parte</label>
-        <Input @bind-Value="@Model.NumeroParte">
+        <Input @bind-Value="@Model.NumeroParte" ReadOnly="true">
         <Suffix>
             / @anio
         </Suffix>
@@ -53,4 +57,16 @@
     [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
 
     int anio = DateTime.Now.Year;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model.NumeroParte = await GenerarNumeroParteAsync();
+        Model.AnioNumeroParte = anio;
+    }
+
+    private async Task<int> GenerarNumeroParteAsync()
+    {
+       int ultimoNumeroParte = await ParteService.ObtenerUltimoNumeroParteDelAnioAsync(anio);
+       return (ultimoNumeroParte + 1);
+    }
 }

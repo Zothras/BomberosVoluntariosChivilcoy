@@ -52,6 +52,9 @@ namespace Vista.Data
         public DbSet<HorarioBombero> HorariosBomberos { get; set; }
         public DbSet<Sancion> Sanciones { get; set; }
 
+        //propiedad experimental:
+        public DbSet<Salida> Salidas { get; set; }
+
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
             : base(options)
         {
