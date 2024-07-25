@@ -1,0 +1,39 @@
+﻿@using Vista.Data.ViewModels
+@using AntDesign
+
+<h6>Seguro del lugar</h6>
+
+@if (!EsObligatorio)
+{
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">¿El lugar tiene seguro?</label>
+        <Switch @bind-Checked="@TieneSeguro" />
+    </div>
+}
+
+@if (EsObligatorio || TieneSeguro)
+{
+    <div class="slick-contenedor @animationClass">
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Compañía aseguradora del establecimiento</label>
+            <Input @bind-Value="@Model.CompaniaAseguradora" />
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Número de póliza</label>
+            <Input @bind-Value="@Model.NumeroPoliza" />
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Fecha de vencimiento</label>
+            <DatePicker TValue="DateTime?" ShowTime="true" OnChange="OnChange" @bind-Value="@Model.FechaVencimineto" />
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public SalidasViewModels Model { get; set; }
+    [Parameter] public string animationClass { get; set; }
+    [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+    [Parameter] public bool EsObligatorio { get; set; }
+
+    private bool TieneSeguro { get; set; } = false;
+}
