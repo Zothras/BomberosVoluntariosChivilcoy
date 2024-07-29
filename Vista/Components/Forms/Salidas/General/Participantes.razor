@@ -1,5 +1,7 @@
 ﻿@using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Personal;
+@using System.Linq;
+
 @inject IMessageService message
 
 <div class="slick-contenedor @animationClass">
@@ -40,19 +42,19 @@
     <h6>Datos de damnificados</h6>
 
     <div class="inpt-cont-inline">
-        <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 80px;">
+        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
             <label class="inpt-cont--lbl">¿Hubo damnificados?</label>
-            <Switch @bind-Checked="@switchValue" ValueChanged="@UpdateSwitchDamificados" Style="width: 10px!important;" />
+            <Switch Value="@switchValue" ValueChanged="@UpdateSwitchDamificados" Style="width: 10px!important;" />
         </div>
         @if (switchValue)
         {
-            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 90px;">
+            <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
                 <label class="inpt-cont--lbl">Agregar otro</label>
                 <Button OnClick="()=>visibleDamnificados = true">
                     <i class="fa-solid fa-user-plus"></i>
                 </Button>
             </div>
-            <div class="inpt-cont" style="display: flex;flex-direction: column;justify-content: space-around;min-width: 90px;">
+            <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
                 <label class="inpt-cont--lbl">Ver damnificados</label>
                 <Button OnClick="()=>visibleVerDamnificados = true">
                     <i class="fa-solid fa-users-gear"></i>
@@ -66,17 +68,18 @@
            OnOk="@HandleOkD"
            OnCancel="@HandleCancelVD">
         <div class="inpt-cont">
-            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
+            <Table Context="Damnificados" DataSource="Model.Damnificados" Bordered>
+                <PropertyColumn Property="d => d.Nombre"></PropertyColumn>
+                <PropertyColumn Property="d => d.Apellido"></PropertyColumn>
+                <PropertyColumn Property="d => d.Edad"></PropertyColumn>
+                <PropertyColumn Property="d => d.Estado"></PropertyColumn>
                 <ActionColumn Title="Acciones">
                     <Popconfirm Title="¿Quieres borrar este damnificado?"
-                                OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
+                                OnConfirm="@(() => deleteRowDamnificados(Damnificados.Dni))"
                                 OkText="Si"
                                 CancelText="No"
-                                Style="display: flex;justify-content: center;align-items: center;">
-                        <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                                Style="display: flex; justify-content: center; align-items: center;">
+                        <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
                     </Popconfirm>
                 </ActionColumn>
             </Table>
@@ -131,14 +134,29 @@
     [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
 
     private DamnificadoViewModels damnificado = new DamnificadoViewModels();
-    private List<DamnificadoViewModels> DamnificadosSalida = new List<DamnificadoViewModels>();
-    private bool switchValue = false;
+
     private bool visibleDamnificados = false;
     private bool visibleVerDamnificados = false;
+
+    private bool switchValue;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Model.Damnificados == null)
+        {
+            Model.Damnificados = new List<Damnificado>();
+        }
+        switchValue = Model.Damnificados.Any();
+    }
 
     private void UpdateSwitchDamificados(bool value)
     {
         switchValue = value;
+        if (!value && Model.Damnificados != null)
+        {
+            Model.Damnificados.Clear();
+        }
         StateHasChanged();
     }
 
@@ -159,24 +177,24 @@
 
     private void deleteRowDamnificados(string Dni)
     {
-        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
+        Model.Damnificados = Model.Damnificados.Where(m => m.Dni != Dni).ToList();
     }
 
     private void AgregarDamnificado()
     {
         try
         {
-            DamnificadoViewModels dp = new()
-            {
-                Nombre = damnificado.Nombre,
-                Apellido = damnificado.Apellido,
-                Dni = damnificado.Dni,
-                Sexo = damnificado.Sexo,
-                LugarDeNacimiento = damnificado.LugarDeNacimiento,
-                Edad = damnificado.Edad,
-                Estado = damnificado.Estado,
-            };
-            DamnificadosSalida.Add(dp);
+            Damnificado dp = new()
+                {
+                    Nombre = damnificado.Nombre,
+                    Apellido = damnificado.Apellido,
+                    Dni = damnificado.Dni,
+                    Sexo = damnificado.Sexo,
+                    LugarDeNacimiento = damnificado.LugarDeNacimiento,
+                    Edad = damnificado.Edad,
+                    Estado = damnificado.Estado,
+                };
+            Model.Damnificados.Add(dp);
             damnificado = new DamnificadoViewModels();
             visibleDamnificados = false;
             StateHasChanged();
