@@ -33,7 +33,17 @@
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
     [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+
     [Parameter] public bool EsObligatorio { get; set; }
 
-    private bool TieneSeguro { get; set; } = false;
+    private bool TieneSeguro { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // Si cualquiera de los campos de seguro tiene un valor, prende el switch
+        TieneSeguro = !string.IsNullOrEmpty(Model.CompaniaAseguradora) ||
+                      !string.IsNullOrEmpty(Model.NumeroPoliza) ||
+                      Model.FechaVencimineto.HasValue;
+    }
 }
