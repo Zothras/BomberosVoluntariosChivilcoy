@@ -3,6 +3,7 @@
 @inject IJSRuntime JSRuntime
 @using Vista.Services
 @inject IBomberoService BomberoService;
+@inject IMessageService message
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
 @using System.ComponentModel.DataAnnotations;
@@ -331,6 +332,13 @@
     {
         try
         {
+            //Validacion Numero de Legajo
+            Bombero? NumeroLegajo = await DbFactory.CreateDbContext().Bomberos.Where(b => b.NumeroLegajo == bomberoView.NumeroLegajo).SingleOrDefaultAsync();
+            if(NumeroLegajo != null)
+            {
+                message.Warning("Numero de legajo ya existente.");
+                return;
+            }
 
             if (string.IsNullOrEmpty(bomberoView.Base64))
             {
@@ -382,6 +390,7 @@
             }
         };
         await BomberoService.CrearBombero(bombero);
+        message.Success("Se agrego el bombero.");
         bomberoView = new BomberosViewModel();
         StateHasChanged();
         navigationManager.NavigateTo($"/bomberos/agregar", true);
