@@ -115,7 +115,7 @@
                 }
                 else if (current == 1)
                 {
-                    <div style="height: 22em;width: 100%;padding: 10px;">
+                    <div style="height: 30em;width: 100%;padding: 10px;">
                         <div class="inpt-container">
                             <input type="text" @bind="movilView.NumeroMovil" placeholder="Nº Móvil:" />
                         </div>
@@ -128,13 +128,13 @@
                         <div class="inpt-container">
                             <input type="text" @bind="movilView.ModeloBomba" placeholder="Modelo de bomba:" />
                         </div>
+
                         <div class="inpt-container">
                             <select @bind="movilView.Estado" class="select-estadoMovil">
                                 <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del móvil</option>
                                 <option value="@TipoEstadoMovil.Activo">Activo</option>
                                 <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
                                 <option value="@TipoEstadoMovil.Reparacion">Reparación</option>
-                                <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
                             </select>
                         </div>
                  </div>
