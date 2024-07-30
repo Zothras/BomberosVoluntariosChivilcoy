@@ -2,9 +2,7 @@
 @inject IMessageService message
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@inject IToastService toastService
 @page "/salidas/rescates-persona"
-@using Blazored.Toast.Services;
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.ViewModels.Rescates;
 @using System.Text.Json;
@@ -488,7 +486,7 @@
 
         catch (Exception ex)
         {
-            toastService.ShowError($"Error en la carga: {ex.Message}");
+            await message.Warning($"Error en la carga: {ex.Message}");
             imprimirmodal = true;
         }
 

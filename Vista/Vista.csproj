@@ -1,66 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<UserSecretsId>f08ce748-0a84-44c1-8c1e-cca58d1deceb</UserSecretsId>
-	</PropertyGroup>
-
-	<ItemGroup>
-	  <Compile Remove="Areas\**" />
-	  <Compile Remove="Data\ViewModel\**" />
-	  <Content Remove="Areas\**" />
-	  <Content Remove="Data\ViewModel\**" />
-	  <EmbeddedResource Remove="Areas\**" />
-	  <EmbeddedResource Remove="Data\ViewModel\**" />
-	  <None Remove="Areas\**" />
-	  <None Remove="Data\ViewModel\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="wwwroot\Moviles\" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="AntDesign" Version="0.15.5" />
-		<PackageReference Include="Blazored.Toast" Version="4.1.0" />
-		<PackageReference Include="ClosedXML" Version="0.102.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.25" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="6.0.16" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.8" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8">
-		<PrivateAssets>all</PrivateAssets>
-		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.8" />
-		<PackageReference Include="PDFsharp" Version="6.1.0" />
-		<PackageReference Include="PDFsharp-MigraDoc" Version="6.1.0" />
-		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Compile Update="Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Resources.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Content Update="wwwroot\Imagenes\logoPlanilla.png">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <EmbeddedResource Update="Properties\Resources.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	</ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>f08ce748-0a84-44c1-8c1e-cca58d1deceb</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Areas\**" />
+    <Compile Remove="Data\ViewModel\**" />
+    <Content Remove="Areas\**" />
+    <Content Remove="Data\ViewModel\**" />
+    <EmbeddedResource Remove="Areas\**" />
+    <EmbeddedResource Remove="Data\ViewModel\**" />
+    <None Remove="Areas\**" />
+    <None Remove="Data\ViewModel\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\Moviles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AntDesign" Version="0.15.5" />
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="PDFsharp" Version="6.1.0" />    
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\Imagenes\logoPlanilla.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

@@ -2,7 +2,6 @@ using Vista.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
-using Blazored.Toast;
 using Vista.Services;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
@@ -26,7 +25,6 @@ builder.Services.AddDbContextFactory<BomberosDbContext>(
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAntDesign();
-builder.Services.AddBlazoredToast();
 builder.Services.AddHostedService<InitData>();
 builder.Services.AddScoped<IBomberoService, BomberoService>();
 builder.Services.AddScoped<IBrigadaService, BrigadaService>();
