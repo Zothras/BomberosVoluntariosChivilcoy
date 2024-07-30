@@ -18,32 +18,13 @@
         }
     </div>
     <div class="inpt-cont-inline">
-        @if (Model.HoraLLegada.TimeOfDay < Model.HoraSalida.TimeOfDay)
-        {
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Fecha (salida):</label>
-                <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-            </div>
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Fecha (llegada):</label>
-                <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-            </div>
-        }
-        else{
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Fecha:</label>
-                <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-        </div>
-        }
-    </div>
-    <div class="inpt-cont-inline">
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Hora salida</label>
-            <TimePicker @bind-Value="Model.HoraSalida" Format="HH:mm" OnChange="OnChange" />
+            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@Model.HoraSalida" />
         </div>
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Hora llegada</label>
-            <TimePicker @bind-Value="Model.HoraLLegada" Format="HH:mm" OnChange="OnChange" />
+            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@Model.HoraLLegada" />
         </div>
     </div>
     <div class="inpt-cont-inline">
@@ -98,6 +79,14 @@
 
     int anio = DateTime.Now.Year;
     bool esDepartamento;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // Si cualquiera de los campos de departamento tiene un valor, prende el switch
+        esDepartamento = !string.IsNullOrEmpty(Model.PisoNumero) ||
+                      !string.IsNullOrEmpty(Model.Depto);
+    }
 
     protected override async Task OnInitializedAsync()
     {
