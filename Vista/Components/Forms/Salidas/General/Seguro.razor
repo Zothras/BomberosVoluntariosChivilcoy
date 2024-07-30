@@ -5,9 +5,9 @@
 
 @if (!EsObligatorio)
 {
-    <div class="inpt-cont">
+    <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
         <label class="inpt-cont--lbl">¿El lugar tiene seguro?</label>
-        <Switch @bind-Checked="@TieneSeguro" />
+        <Switch @bind-Checked="@TieneSeguro" Style="width: 10px!important;" />
     </div>
 }
 

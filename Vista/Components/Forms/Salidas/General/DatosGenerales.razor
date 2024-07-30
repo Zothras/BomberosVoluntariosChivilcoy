@@ -49,14 +49,36 @@
         <label class="inpt-cont--lbl">Tipo zona</label>
         <EnumSelect TEnum="TipoZona" @bind-Value="@Model.TipoZona" />
     </div>
+    @if (!esSoloDireccion)
+    {
+        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
+            <label class="inpt-cont--lbl">¿Este lugar es un departamento?</label>
+            <Switch @bind-Checked="@esDepartamento" Style="width: 10px!important;" />
+        </div>
+    }
+    @if (esDepartamento)
+    {
+        <div class="inpt-cont-inline">
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">PisoNumero</label>
+                <Input @bind-Value="@Model.PisoNumero" />
+            </div>
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Depto</label>
+                <Input @bind-Value="@Model.Depto" />
+            </div>
+        </div>
+    }
 </div>
 
 @code {
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
     [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+    [Parameter] public bool esSoloDireccion {get;set;} = false;
 
     int anio = DateTime.Now.Year;
+    bool esDepartamento;
 
     protected override async Task OnInitializedAsync()
     {

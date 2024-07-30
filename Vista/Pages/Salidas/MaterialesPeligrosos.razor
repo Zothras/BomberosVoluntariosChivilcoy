@@ -124,17 +124,6 @@
                 <DatosGenerales Model="@modelMateriales"
                                 OnChange="@OnChange"
                                 animationClass="@animationClass" />
-
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">PisoNumero</label>
-                        <Input @bind-Value="@modelMateriales.PisoNumero" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Depto</label>
-                        <Input @bind-Value="@modelMateriales.Depto" />
-                    </div>
-                </div>
             }
             else if (current == 1)
             {
