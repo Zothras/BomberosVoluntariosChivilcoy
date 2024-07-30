@@ -139,38 +139,7 @@
                         </div>
                  </div>
                 }
-                else if (current == 2)
-                {
-                    <div style="height: 22em;width: 100%;padding: 10px;">
-                        <div class="inpt-container">
-                            <input type="text" @bind="seguroView.CompañiaAseguradora" placeholder="Compañia:" />
-                        </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="seguroView.NumeroDePoliza" placeholder="Nº Poliza:" />
-                        </div>
-                        <div>
-                            <div>
-                                <label>Vencimiento: </label>
-                            </div>
-                            <input type="date" @bind="seguroView.FechaDeVencimiento" />
-                        </div>
-                        <div class ="inpt-container">
-                            
-                          <Select TItem="BomberoViewModel"
-                                        TItemValue="int"
-                                        DataSource="@ListaBomberos"
-                                @bind-Value="@movilView.EncargadoId"
-                                        LabelName="@nameof(BomberoViewModel.NombreYApellido)"
-                                        ValueName="@nameof(BomberoViewModel.PersonaId)"
-                                        Placeholder="Selecione el bombero"
-                                        DefaultActiveFirstOption="false"
-                                        AllowClear="true"
-                                        EnableSearch>
-                          </Select>
-                         
-                        </div>
-                    </div>
-                }
+               
             </div>
         </div>
         <div class="steps-action">
@@ -225,7 +194,6 @@
         new StepItem {Title = "Básico"},
         new StepItem {Title = "Datos"},
         //new StepItem {Title = "Third", Content = "Third-content"},
-        new StepItem {Title = "Seguro"}
     };
 
     void OnPreClick()
@@ -263,15 +231,6 @@
 
     }
 
-    public class SeguroViewModel
-    {
-        [Required, StringLength(255)]
-        public string CompañiaAseguradora { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroDePoliza { get; set; }
-        public DateTime FechaDeVencimiento { get; set; }
-    }
-
     public class ImagenViewModel
     {
         public string Base64 { get; set; }
@@ -289,7 +248,6 @@
     }
     public ImagenViewModel imagenView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
-    public SeguroViewModel seguroView { get; set; } = new();
     public List<BomberoViewModel> ListaBomberos = new();
     protected override async Task OnInitializedAsync()
     {
@@ -350,12 +308,6 @@
                             NumeroMotor = movilView.NumeroMotor,
                             NumeroMovil = movilView.NumeroMovil,
                             Estado = movilView.Estado,
-                            Seguro = new()
-                            {
-                                CompañiaAseguradora = seguroView.CompañiaAseguradora,
-                                FechaDeVencimineto = seguroView.FechaDeVencimiento,
-                                NumeroDePoliza = seguroView.NumeroDePoliza
-                            }
                         };
                     await MovilService.AgregarMovil(movil);
                     await Init();

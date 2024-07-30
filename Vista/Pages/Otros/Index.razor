@@ -410,11 +410,14 @@
             </Popover>
         </div>
     </article>
+    <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })" style="border-radius: 10px;">
     <article class="art7">
         <div class="bomberosArt">
             <img class="imgBomberos2" src="imagenes/bomberosGrid.jpg"/>
-            <h1>BOMBEROS</h1>
-            <div class="btnCont">
+            <h1>PERSONAL</h1>
+            @* BOTONES DE MENU BOMBEROS ============ POSIBLE USO? --------------------------------------------------------------------
+
+                <div class="btnCont">
                 <Popover ContentTemplate="@art7a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                     <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })">
                         <i class="fa-solid fa-user-large"></i>
@@ -436,8 +439,11 @@
                     </button>
                 </Popover>
             </div>
+
+              BOTONES DE MENU BOMBEROS ============ POSIBLE USO? -------------------------------------------------------------------- *@ 
         </div>
     </article>
+    </a>
     <a @onclick="@(() => { navigationManager.NavigateTo("/moviles"); })" style="border-radius: 10px;">
         <article class="art8">
             <div class="bomberosArt" style="height: 112px;">
