@@ -147,28 +147,22 @@
                             <option value="@TipoEstadoMovil.Limpieza">Limpieza</option>
                         </select>
                     </div>
-                    <div style="height: 6.8em;">
+                    <div class="inpt-container">
+                    <Select TItem="BomberoViewModel"
+                            TItemValue="string"
+                            DataSource="@ListaBomberos"
+                            Placeholder="Seleccione Bombero Encargado"
+                            @bind-Value="@movilView.EncargadoId"
+                            LabelName="@nameof(BomberoViewModel.NombreYApellido)"
+                            ValueName="@nameof(BomberoViewModel.NumeroLegajo)"
+                            DefaultValue="@movilView.NombreYApellido">
+                    </Select>
+                </div>
+                    <div style="height: 7.8em;">
                     </div>
                 </div>
             }
-            else if (current == 2)
-            {
-                <div style="width: 100%;height: 22em;background: #fff;">
-                    <div style="height: 100%;width: 100%;padding: 10px;">
-                        <div class="inpt-container">
-                            <Select TItem="BomberoViewModel"
-                                    TItemValue="string"
-                                    DataSource="@ListaBomberos"
-                                    Placeholder="Seleccione Bombero Encargado"
-                             @bind-Value="@movilView.EncargadoId"
-                                    LabelName="@nameof(BomberoViewModel.NombreYApellido)"
-                                    ValueName="@nameof(BomberoViewModel.NumeroLegajo)"
-                                    DefaultValue="@movilView.NombreYApellido">
-                            </Select>
-                        </div>
-                    </div>
-                </div>
-            }
+            
         </div>
     </div>
     <div class="steps-action">
@@ -401,7 +395,6 @@
         {
         new StepItem {Title = "Básico"},
         new StepItem {Title = "Datos"},
-        new StepItem {Title = "Seguro"}
     };
 
         void OnPreClick()
