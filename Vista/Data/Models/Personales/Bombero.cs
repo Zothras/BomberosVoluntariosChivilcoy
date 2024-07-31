@@ -15,7 +15,7 @@ namespace Vista.Data.Models.Personales
         public int NumeroLegajo { get; set; }
         public EstadoBombero Estado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
-        public DateTime FechaAceptacion { get; set; }
+        public DateTime? FechaAceptacion { get; set; }
         public EscalafonJerarquico Grado { get; set; }
         [StringLength(255)]
         public string? Resolucion1 { get; set; }
@@ -32,17 +32,15 @@ namespace Vista.Data.Models.Personales
         public bool Chofer { get; set; }
         public DateTime? VencimientoRegistro { get; set; }
 
-        public List<Firma> Firmas { get; set; }
+        public List<Firma>? Firmas { get; set; }
 
         public int? BrigadaId { get; set; }
-        public Brigada Brigada { get; set; }
-        public int ImagenId { get; set; }
+        public Brigada? Brigada { get; set; }
+        public int? ImagenId { get; set; }
         [ForeignKey("ImagenId")]
-        public ImagenBombero Imagen { get; set; }
+        public ImagenBombero? Imagen { get; set; }
 
         public List<VehiculoPersonal> Vehiculos { get; set; } = new();
-
-
 
         public BomberoDependencia? Dependencia { get; set; }
 

@@ -193,7 +193,7 @@
     {
         new StepItem {Title = "Básico"},
         new StepItem {Title = "Datos"},
-        //new StepItem {Title = "Third", Content = "Third-content"},
+    //new StepItem {Title = "Third", Content = "Third-content"},
     };
 
     void OnPreClick()
@@ -227,7 +227,7 @@
         public string ModeloBomba { get; set; }
         [Required, StringLength(255)]
         public TipoEstadoMovil Estado { get; set; }
-        public int EncargadoId { get; set; }
+        public int? EncargadoId { get; set; }
 
     }
 
@@ -311,12 +311,12 @@
                         };
                     await MovilService.AgregarMovil(movil);
                     await Init();
-                    await message.Success("Se agrego el movil");
+                    message.Success("Se agrego el movil");
                     await OnClose.InvokeAsync();
                 }
                 else
                 {
-                    await message.Error("Existe un movil con el mismo Nº Móvil");
+                    message.Error("Existe un movil con el mismo Nº Móvil");
                 }
             }
         }
@@ -324,12 +324,15 @@
         {
             await Init();
             StateHasChanged();
-            if (e.InnerException != null)
+            if (e.InnerException != null){
                 await message.Error("Información de movil ausente u ocurrio un error inesperado");
-                //await message.Error(e.InnerException.Message, 5);
-            else
-                await message.Error(("Error inesperado: " + e.Message), 5);
-
+                //message.Error(e.InnerException.Message, 5);
+                Console.WriteLine(e.InnerException.Message);
+            }
+            else{
+                message.Error(("Error inesperado: " + e.Message), 5);
+                Console.WriteLine(e.Message);
+            }
         }
         
         StateHasChanged();

@@ -209,66 +209,65 @@
 
     private class BomberosViewModel
     {
-        public DateTime FechaNacimiento { get; set; }
-        public DateTime FechaAceptacion { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
+        public DateTime? FechaAceptacion { get; set; }
         [Required, StringLength(255)]
         public string Nombre { get; set; }
         [Required, StringLength(255)]
         public string Apellido { get; set; }
         public EstadoBombero Estado { get; set; }
+        [Required]
         public int NumeroLegajo { get; set; }
         public EscalafonJerarquico Grado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
         public TipoGrupoSanguineo GrupoSanguineo { get; set; }
-        [Required]
-        public int Altura { get; set; }
-        [Required]
-        public int Peso { get; set; }
-        public Brigada Brigada { get; set; }
+        public int? Altura { get; set; }
+        public int? Peso { get; set; }
+        public Brigada? Brigada { get; set; }
         public bool Chofer { get; set; }
         public DateTime? VencimientoRegistro { get; set; }
         public TipoSexo Sexo { get; set; }
-        [Required, StringLength(255)]
-        public string Direccion { get; set; }
-        [Required, StringLength(255)]
-        public string LugarNacimiento { get; set; }
-        [Required, StringLength(255)]
-        public string Documento { get; set; }
-        [Required, StringLength(255)]
-        public string Observaciones { get; set; }
-        [Required, StringLength(255)]
-        public string Profesion { get; set; }
-        [Required, StringLength(255)]
-        public string NivelEstudios { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroIoma { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
+        public string? Direccion { get; set; }
+        [StringLength(255)]
+        public string? LugarNacimiento { get; set; }
+        [StringLength(255)]
+        public string? Documento { get; set; }
+        [StringLength(255)]
+        public string? Observaciones { get; set; }
+        [StringLength(255)]
+        public string? Profesion { get; set; }
+        [StringLength(255)]
+        public string? NivelEstudios { get; set; }
+        [StringLength(255)]
+        public string? NumeroIoma { get; set; }
+        [StringLength(255)]
         public string? Resolucion1 { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? Resolucion2 { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? Resolucion3 { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? Resolucion4 { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? Resolucion5 { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? Resolucion6 { get; set; }
         //Contacto-------------------------------
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? TelefonoCel { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? TelefonoLaboral { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? TelefonoFijo { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? Email { get; set; }
         //Imagen-------------------------------
-        public string Base64 { get; set; }
-        [Required, StringLength(255)]
-        public string TipoImagen { get; set; }
-        [Required, StringLength(255)]
-        public string NombreImagen { get; set; }
+        public string? Base64 { get; set; }
+        [StringLength(255)]
+        public string? TipoImagen { get; set; }
+        [StringLength(255)]
+        public string? NombreImagen { get; set; }
         //Brigada-------------------------------
         public int BrigadaId { get; set; }
     }
@@ -326,7 +325,7 @@
                 await AgregarFotoPorDefecto("wwwroot/imagenes/FotoPorDefecto.png");
             }
 
-        Bombero bombero = new Bombero()
+            Bombero bombero = new Bombero()
         {
             FechaNacimiento = bomberoView.FechaNacimiento,
             Sexo = bomberoView.Sexo,
@@ -370,16 +369,17 @@
                 Email = bomberoView.Email
             }
         };
-        await BomberoService.CrearBombero(bombero);
-        message.Success("Se agrego el bombero.");
-        bomberoView = new BomberosViewModel();
-        StateHasChanged();
-        navigationManager.NavigateTo($"/bomberos/agregar", true);
-    }
-    catch (Exception ex)
-    {
-        // Manejo de excepciones (puedes mostrar un mensaje al usuario o registrar el error)
-        Console.WriteLine($"Error: {ex.Message}");
+            await BomberoService.CrearBombero(bombero);
+            message.Success("Se agrego el bombero.");
+            bomberoView = new BomberosViewModel();
+            StateHasChanged();
+            navigationManager.NavigateTo($"/bomberos/agregar", true);
+        }
+        catch (Exception ex)
+        {
+            // Manejo de excepciones (puedes mostrar un mensaje al usuario o registrar el error)
+            message.Error(ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
     }
 }
 

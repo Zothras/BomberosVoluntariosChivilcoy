@@ -28,8 +28,11 @@ namespace Vista.Services
         }
         public async Task<Movil> AgregarMovil(Movil movil)
         {
-            Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == movil.Encargado.PersonaId);
-            movil.Encargado = Encargado;
+            if (movil.Encargado != null)
+            {
+                Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == movil.Encargado.PersonaId);
+                movil.Encargado = Encargado;
+            }
             _context.Moviles.Add(movil);
             await _context.SaveChangesAsync();
             return movil;

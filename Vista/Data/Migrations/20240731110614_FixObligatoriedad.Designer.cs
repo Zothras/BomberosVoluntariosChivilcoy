@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vista.Data;
 
@@ -11,9 +12,11 @@ using Vista.Data;
 namespace Vista.Data.Migrations
 {
     [DbContext(typeof(BomberosDbContext))]
-    partial class BomberosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240731110614_FixObligatoriedad")]
+    partial class FixObligatoriedad
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1131,7 +1134,7 @@ namespace Vista.Data.Migrations
                 {
                     b.HasBaseType("Vista.Data.Models.Personales.Vehiculo");
 
-                    b.Property<int?>("EncargadoId")
+                    b.Property<int>("EncargadoId")
                         .HasColumnType("int");
 
                     b.Property<string>("Estado")
@@ -2063,7 +2066,9 @@ namespace Vista.Data.Migrations
                 {
                     b.HasOne("Vista.Data.Models.Personales.Bombero", "Encargado")
                         .WithMany()
-                        .HasForeignKey("EncargadoId");
+                        .HasForeignKey("EncargadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Encargado");
                 });
