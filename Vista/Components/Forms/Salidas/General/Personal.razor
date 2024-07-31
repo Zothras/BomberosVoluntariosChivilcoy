@@ -1,0 +1,115 @@
+﻿@using Vista.Data.ViewModels;
+@using Vista.Data.ViewModels.Personal;
+
+@*Servicio Utilizados*@
+@using Vista.Services;
+@inject IBomberoService BomberoService
+
+<div class="slick-contenedor @animationClass">
+    <h6>Cuerpo Participante</h6>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Elija el bombero</label>
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberosTodos"
+                @bind-Value="@BomberoCuerpo"
+                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Selecione un bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true" EnableSearch>
+        </Select>
+    </div>
+    <div class="inpt-cont">
+        <Checkbox @bind-Checked="SalioCheck">¿Salió?</Checkbox>
+    </div>
+    <div class="inpt-cont">
+        <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
+    </div>
+    <div class="inpt-cont">
+        <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
+            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
+            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="¿Quieres eliminar este bombero?"
+                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
+                            OkText="Si"
+                            CancelText="No">
+                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
+    <div class="inpt-cont-inline">
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Encargado</label>
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberosTodos"
+                    Value="BomberoEncargado"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione  a un  bombero"
+                    DefaultActiveFirstOption="true"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </div>
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Lleno la planilla</label>
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberosTodos"
+                    Value="@BomberoPlanilla"
+                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Seleccione un bombero"
+                    DefaultActiveFirstOption="false"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public SalidasViewModels Model { get; set; }
+    [Parameter] public string animationClass { get; set; }
+
+    private List<BomberoViweModel> bomberosTodos = new(); //Lista con todos los bomberos
+    private List<BomberoSalidaViewModels> bomberosSalida = new(); //Lista con los bomberos de la salida
+
+    private bool SalioCheck { get; set; } // Bombero Salio [Si/No]
+
+    int BomberoCuerpo; //ID del Bombero a añadir a la salida
+    int BomberoEncargado;
+    int BomberoPlanilla;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bomberosTodos = await BomberoService.GetAllBomberosAsync();
+    }
+
+    public async Task AgregarCuerpoParticipante()
+    {
+        foreach (var bom in bomberosTodos)
+        {
+            if (bom.NumeroLegajo == BomberoCuerpo)
+            {
+                BomberoSalidaViewModels b = new()
+                    {
+                        Salio = SalioCheck,
+                        Nombre = bom.Nombre,
+                        Apellido = bom.Apellido,
+                        NumeroLegajo = BomberoCuerpo
+                    };
+                bomberosSalida.Add(b);
+
+            }
+        }
+        StateHasChanged();
+    }
+
+    void deleteRow(int numlegajo)
+    {
+        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+}

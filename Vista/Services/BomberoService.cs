@@ -6,6 +6,7 @@ using Vista.Data;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
+using Vista.Data.ViewModels.Personal;
 
 namespace Vista.Services
 {
@@ -16,6 +17,7 @@ namespace Vista.Services
         Task<bool> EditarBombero(Bombero bombero);
         Task<Sancion> SancionarBombero(Sancion sancion);
         Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso);
+        Task<List<BomberoViweModel>> GetAllBomberosAsync();
     }
 
     public class BomberoService : IBomberoService
@@ -176,6 +178,18 @@ namespace Vista.Services
             _context.AscensoBomberos.Add(ascenso);
             await _context.SaveChangesAsync();
             return ascenso;
+        }
+
+        public async Task<List<BomberoViweModel>> GetAllBomberosAsync()
+        {
+            return await _context.Bomberos
+                .Select(b => new BomberoViweModel
+                {
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    NumeroLegajo = b.NumeroLegajo
+                })
+                .ToListAsync();
         }
     }
 }

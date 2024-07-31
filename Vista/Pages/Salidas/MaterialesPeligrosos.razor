@@ -151,71 +151,9 @@
             }
             else if (current == 4)
             {
-                <div class="slick-contenedor @animationClass">
-                    <h6>Cuerpo Participante</h6>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Elija el bombero</label>
-                        <Select TItem="BomberoViweModel"
-                                TItemValue="int"
-                                DataSource="@bomberoTodos"
-                                @bind-Value="@BomberoCuerpo"
-                                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                Placeholder="Selecione un bombero"
-                                DefaultActiveFirstOption="false"
-                                AllowClear="true" EnableSearch>
-                        </Select>
-                    </div>
-                    <div class="inpt-cont">
-                        <Checkbox @bind-Checked="chekB">¿Salió?</Checkbox>
-                    </div>
-                    <div class="inpt-cont">
-                        <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
-                    </div>
-                    <div class="inpt-cont">
-                        <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
-                            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-                            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-                            <ActionColumn Title="Acciones">
-                                <Popconfirm Title="¿Quieres eliminar este bombero?"
-                                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                                            OkText="Si"
-                                            CancelText="No">
-                                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                                </Popconfirm>
-                            </ActionColumn>
-                        </Table>
-                    </div>
-                    <div class="inpt-cont-inline">
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Encargado</label>
-                            <Select TItem="BomberoViweModel"
-                                    TItemValue="int"
-                                    DataSource="@bomberoTodos"
-                                    @bind-Value="@BomberoEncargado"
-                                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                    Placeholder="Seleccione  a un  bombero"
-                                    DefaultActiveFirstOption="true"
-                                    AllowClear="true" EnableSearch>
-                            </Select>
-                        </div>
-                        <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Lleno la planilla</label>
-                            <Select TItem="BomberoViweModel"
-                                    TItemValue="int"
-                                    DataSource="@bomberoTodos"
-                                    @bind-Value="@QuienLLenoPlanilla"
-                                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                    Placeholder="Seleccione un bombero"
-                                    DefaultActiveFirstOption="false"
-                                    AllowClear="true"
-                                    EnableSearch>
-                            </Select>
-                        </div>
-                    </div>
-                </div>
+                @*Bomberos*@
+                <Personal Model="@modelMateriales"
+                          animationClass="@animationClass" />
             }
             else if (current == 5)
             {
