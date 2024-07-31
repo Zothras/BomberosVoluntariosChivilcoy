@@ -137,6 +137,19 @@
                                 <option value="@TipoEstadoMovil.Reparacion">Reparación</option>
                             </select>
                         </div>
+                        <div class="inpt-container">
+                            <Select TItem="BomberoViewModel"
+                                    TItemValue="int"
+                                    DataSource="@ListaBomberos"
+                                    @bind-Value="@movilView.EncargadoId"
+                                    LabelName="@nameof(BomberoViewModel.NombreYApellido)"
+                                    ValueName="@nameof(BomberoViewModel.PersonaId)"
+                                    Placeholder="Selecione el bombero"
+                                    DefaultActiveFirstOption="false"
+                                    AllowClear="true"
+                                    EnableSearch>
+                            </Select>
+                        </div>
                  </div>
                 }
                
@@ -227,7 +240,7 @@
         public string ModeloBomba { get; set; }
         [Required, StringLength(255)]
         public TipoEstadoMovil Estado { get; set; }
-        public int? EncargadoId { get; set; }
+        public int EncargadoId { get; set; }
 
     }
 
@@ -269,7 +282,7 @@
         imagenView.TipoImagen = e.File.ContentType;
         imagenView.Nombre = e.File.Name;
 
-        await message.Success("Imagen cargada");
+        message.Success("Imagen cargada");
         StateHasChanged();
     }
 
@@ -284,8 +297,7 @@
                 //Validaciones
                 if (string.IsNullOrEmpty(imagenView.Base64))
                 {
-                    await message.Error("Se debe ingresar una foto del movil");
-                    return;
+                    message.Warning("No se ingreso una foto del movil");
                 }
                 if (comprobante is null)
                 {
@@ -297,7 +309,7 @@
                             Patente = movilView.Patente,
                             Tipo = movilView.Tipo,
                             Encargado = Encargado,
-                            Imagen = new()
+                            Imagen = string.IsNullOrEmpty(imagenView.Base64) ? null : new()
                             {
                                 NombreImagen = imagenView.Nombre,
                                 TipoImagen = imagenView.TipoImagen,
@@ -325,7 +337,7 @@
             await Init();
             StateHasChanged();
             if (e.InnerException != null){
-                await message.Error("Información de movil ausente u ocurrio un error inesperado");
+                message.Error("Información de movil ausente u ocurrio un error inesperado");
                 //message.Error(e.InnerException.Message, 5);
                 Console.WriteLine(e.InnerException.Message);
             }

@@ -225,17 +225,17 @@
         [Required, StringLength(255)]
         public string NumeroChasis { get; set; }
         public TipoEstadoMovil Estado { get; set; }
-        public string NombreYApellido { get; set; }
-        public string EncargadoId { get; set; }
+        public string? NombreYApellido { get; set; }
+        public string? EncargadoId { get; set; }
     }
 
     public class ImagenViewModel
     {
-        public string Base64 { get; set; }
-        [Required, StringLength(255)]
-        public string TipoImagen { get; set; }
-        [Required, StringLength(255)]
-        public string Nombre { get; set; }
+        public string? Base64 { get; set; }
+        [StringLength(255)]
+        public string? TipoImagen { get; set; }
+        [StringLength(255)]
+        public string? Nombre { get; set; }
     }
 
     public class BomberoViewModel
@@ -285,10 +285,13 @@
             movilView.NumeroMotor = movil.NumeroMotor;
             movilView.NumeroChasis = movil.NumeroChasis;
             movilView.Estado = movil.Estado;
-            imagenView.Nombre = movil.Imagen.NombreImagen;
-            imagenView.TipoImagen = movil.Imagen.TipoImagen;
-            imagenView.Base64 = movil.Imagen.Base64Imagen;
-            movilView.NombreYApellido = movil.Encargado.Nombre + " " + movil.Encargado.Apellido;
+            if (!string.IsNullOrEmpty(imagenView.Base64))
+            {
+                imagenView.Nombre = movil.Imagen.NombreImagen;
+                imagenView.TipoImagen = movil.Imagen.TipoImagen;
+                imagenView.Base64 = movil.Imagen.Base64Imagen;
+            }
+            movilView.NombreYApellido = movil.Encargado != null ? movil.Encargado.Nombre + " " + movil.Encargado.Apellido : "";
             existe = true;
 
             StateHasChanged();
@@ -320,7 +323,7 @@
                             Patente = movilView.Patente,
                             Tipo = movilView.Tipo,
                             Encargado = EncargadoNew,
-                            Imagen = new()
+                            Imagen = string.IsNullOrEmpty(imagenView.Base64) ? null : new()
                             {
                                 NombreImagen = imagenView.Nombre,
                                 TipoImagen = imagenView.TipoImagen,
@@ -340,7 +343,7 @@
                     await message.Success("Se logro editar correctamente");
                 }
             }
-            
+
         }
         catch (Exception e)
         {
@@ -351,11 +354,12 @@
             else
                 await message.Error(e.Message, 5);
         }
-        
+
     }
 
     private async void SubirFoto(InputFileChangeEventArgs e)
     {
+        if (e == null) return;
         string imagenBase64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream());
 
         imagenView.Base64 = imagenBase64;
