@@ -1,0 +1,181 @@
+﻿@using Vista.Services
+@inject IMovilService MovilService
+@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+
+<style>
+    #ImagenMovil {
+        border: 1px solid #f0f5f5;
+        border-radius: 2px;
+        height: 25em;
+        max-height: 25em;
+        min-height: 25em;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+    }
+
+    .ant-table-pagination.ant-pagination {
+        display: none !important;
+    }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
+@if (existe)
+{
+    <div>
+        <Form Model="@LimpiezaMovilVista"
+              OnFinish="@SubirLimpieza"
+              OnFinishFailed="OnFinishFailed"
+              Style="width: 100%;height: 100%; overflow: hidden!important;">
+            <FormItem Label="Movil:">
+                <Input Disabled Value="@movil.NumeroMovil" />
+            </FormItem>
+            <FormItem Label="Fecha:">
+                <DatePicker @bind-Value="LimpiezaMovilVista.Fecha" />
+            </FormItem>
+            <FormItem Label="Descripción:">
+                <Input @bind-Value="LimpiezaMovilVista.Descripcion" />
+            </FormItem>
+            <FormItem Label="Tipo:">
+                <EnumSelect TEnum="TipoIncidente" @bind-Value="@LimpiezaMovilVista.Incidente" />
+            </FormItem>
+
+            <FormItem Label="Responsable:">
+                <Select TItem="BomberoLViewModel"
+                        TItemValue="int"
+                        DataSource="@bomberoslist"
+                        @bind-Value="@LimpiezaMovilVista.ResponsableId"
+                        LabelName="@nameof(BomberoLViewModel.NombreYApellido)"
+                        ValueName="@nameof(BomberoLViewModel.PersonaId)"
+                        Placeholder="Seleccione un bombero"
+                        DefaultActiveFirstOption="false"
+                        AllowClear="true" EnableSearch>
+                </Select>
+            </FormItem>
+
+            <FormItem Label="Observaciones:">
+                <Input @bind-Value="LimpiezaMovilVista.Observaciones" />
+            </FormItem>
+            <FormItem>
+                <Button Type="primary" HtmlType="submit" Class="boton_p">Grabar</Button>
+            </FormItem>
+        </Form>
+    </div>
+}
+else if (!existe)
+{
+    <div style="display: flex; justify-content: center;width: 100%;margin: 1em 1em;">
+        <Spin Delay="500" Indicator=antIcon />
+    </div>
+    //Hay que ver si se puede cambiar el contenido despues del delay
+    @code {
+    RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+    }
+}
+
+@code {
+    [Parameter]
+    public int? VehiculoId { get; set; }
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    BomberosDbContext Context;
+    public bool existe;
+    public Movil? movil { get; set; }
+
+    public List<BomberoLViewModel> bomberoslist = new();
+
+    public class BomberoLViewModel
+    {
+        public int? PersonaId { get; set; }
+        public string? NombreYApellido { get; set; }
+    }
+
+    public class LimpiezaView
+    {
+        public DateTime Fecha { get; set; }
+        public string? Descripcion { get; set; }
+        public TipoIncidente Incidente { get; set; }
+        public int ResponsableId { get; set; }
+        public string? Observaciones { get; set; }
+    }
+
+    public LimpiezaView LimpiezaMovilVista = new();
+
+    private async void SubirLimpieza()
+    {
+        try
+        {
+            Bombero? Responsable = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == LimpiezaMovilVista.ResponsableId);
+            Limpieza limpieza = new()
+            {
+                Movil = movil,
+                Fecha = LimpiezaMovilVista.Fecha,
+                Descripcion = LimpiezaMovilVista.Descripcion,
+                Incidente = LimpiezaMovilVista.Incidente,
+                Responsable = Responsable,
+                Observaciones = LimpiezaMovilVista.Observaciones
+            };
+            await MovilService.AgregarLimpieza(limpieza);
+            message.Success("Se grabo la novedad correctamente");
+            await Init();
+            StateHasChanged();
+            await OnClose.InvokeAsync();
+        }
+        catch (Exception e)
+        {
+            await Init();
+            StateHasChanged();
+            if (e.InnerException != null)
+                await message.Error(e.InnerException.Message, 5);
+            else
+                await message.Error(e.Message, 5);
+        }
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(LimpiezaMovilVista)}");
+        message.Error("Error al cargar, posible información ausente");
+    }
+
+    private async Task CargarMovil()
+    {
+        movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
+        if (movil != null) existe = true;
+    }
+
+    public async Task CargarBomberosView()
+    {
+        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        foreach (Bombero b in bomberos)
+        {
+            BomberoLViewModel bombero = new()
+                {
+                    PersonaId = b.PersonaId,
+                    NombreYApellido = b.Nombre + ", " + b.Apellido
+                };
+            bomberoslist.Add(bombero);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await CargarMovil();
+        await CargarBomberosView();
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

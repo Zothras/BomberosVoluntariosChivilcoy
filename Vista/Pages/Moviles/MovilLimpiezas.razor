@@ -1,0 +1,132 @@
+﻿@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+
+<style>
+    #ImagenMovil {
+        border: 1px solid #f0f5f5;
+        border-radius: 2px;
+        height: 25em;
+        max-height: 25em;
+        min-height: 25em;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+    }
+
+    .ant-table-pagination.ant-pagination {
+        display: none !important;
+    }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+</style>
+@if (existe)
+{
+    <div>
+        @* PENDIENTE: Terminar otras funciones restantes(Ver, Borrar, Cerrar). Ademas agregar filtrado *@
+        <Table TItem="LimpiezaView" DataSource="novedades" Responsive>
+            <PropertyColumn Property="c=>c.Fecha" />
+            <PropertyColumn Property="c=>c.Descripcion" />
+            <PropertyColumn Property="c=>c.Incidente" />
+            <PropertyColumn Property="c=>c.Responsable" />
+        </Table>
+        <Button Class="boton_p">
+            Ver
+        </Button>
+        <Button Class="boton_p" OnClick="()=>NuevaLimpiezaModal()">
+            Nuevo
+        </Button>
+    </div>
+}
+else if (!existe)
+{
+    <div style="display: flex; justify-content: center;width: 100%;margin: 1em 1em;">
+        <Spin Delay="500" Indicator=antIcon />
+    </div>
+    //Hay que ver si se puede cambiar el contenido despues del delay
+    @code {
+    RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+    }
+}
+
+@if (NuevaLimpiezaVisible)
+{
+    <Modal Footer="null" Title="Grabar Novedad" OnCancel="@HandleCancel" Visible="true">
+        <LimpiezaAgregar VehiculoId="@VehiculoId" OnClose="@HandleCancel" />
+    </Modal>
+}
+
+@code {
+    [Parameter]
+    public int? VehiculoId { get; set; }
+
+    List<LimpiezaView> novedades = new();
+
+    bool NuevaLimpiezaVisible { get; set; }
+
+    public class LimpiezaView
+    {
+        public DateTime Fecha { get; set; }
+        public string? Descripcion { get; set; }
+        public TipoIncidente Incidente { get; set; }
+        public string? Responsable { get; set; }
+    }
+
+    BomberosDbContext Context;
+    public bool existe;
+
+    public void NuevaLimpiezaModal()
+    {
+        NuevaLimpiezaVisible = true;
+    }
+    public async void HandleCancel()
+    {
+        NuevaLimpiezaVisible = false;
+        await MostrarDatos();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await MostrarDatos();
+    }
+    public async Task MostrarDatos()
+    {
+        Movil? movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
+        //PENDIENTE: Mejorar la carga de datos
+        if (movil != null)
+        {
+            foreach (Limpieza li in Context.Limpiezas.ToArray())
+            {
+                if (li != null && li.Movil != null)
+                {
+                    if (li.Movil.VehiculoId == movil.VehiculoId){
+                    LimpiezaView novedad = new()
+                        {
+                            Fecha = li.Fecha,
+                            Descripcion = li.Descripcion,
+                            Incidente = li.Incidente,
+                            Responsable = li.Responsable != null ? li.Responsable.Nombre + ", " + li.Responsable.Apellido : ""
+                        };
+                    novedades.Add(novedad);
+                    }
+                }
+            }
+            existe = true;
+        }
+        else if (movil is null)
+        {
+            existe = false;
+        }
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

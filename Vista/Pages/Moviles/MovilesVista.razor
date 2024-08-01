@@ -6,13 +6,6 @@
 @page "/moviles"
 
 <style>
-    /*card:hover {
-        box-shadow: 2px 2px 3px #D8D8D8;
-        height: 284px!important;
-        width: 184px!important;
-        position: sticky;
-        transition: .3s ease;
-    }*/
 
     .template {
         width: 100%;
@@ -83,7 +76,7 @@
         </div>
         @if (moviles is not null)
         {
-            @foreach(Movil m in moviles)
+            @foreach (Movil m in moviles)
             {
                 if (m.Estado != TipoEstadoMovil.Activo) continue;
                 <card class="cartaPropia" style="margin-bottom: 15px;display: flex; flex-direction: column;height: 345px;width: 250px;border-radius: 3px;box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
@@ -102,7 +95,7 @@
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;">
                                 <Icon Type="Tool" Theme="outline" />
                             </Button>
-                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;">
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>LimpiezasMovilModal(m.VehiculoId)">
                                 <Icon Type="Schedule" Theme="outline" />
                             </Button>
                             @*Botones nuevos*@
@@ -113,7 +106,7 @@
                                         OnConfirm="()=>CambiarEstado(m.VehiculoId,TipoEstadoMovil.Inactivo)"
                                         OnCancel="Cancel">
                                 <Button class="botonCarta" Style="width: 100%!important;height: 100%;border-radius: 0 0 3px 0;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;">
-                                    <Icon Type="delete"  Theme="outline" />
+                                    <Icon Type="delete" Theme="outline" />
                                 </Button>
                             </Popconfirm>
                         </div>
@@ -134,6 +127,12 @@
                     <MovilDetalles VehiculoIdDetalle="@DetallesPorId" OnClose="@CerrarDModal" />
                 </Modal>
             }
+            @if (LimpiezasVisible)
+            {
+                <Modal Footer="null" Title="Novedades Movil" OnCancel="@HandleLCancel" Visible="true" Style="width: 35%!important;">
+                    <MovilLimpiezas VehiculoId="@DetallesPorId" />
+                </Modal>
+            }
             @if (AgregarVisible)
             {
                 <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
@@ -148,8 +147,8 @@
             </div>
             //Hay que ver si se puede cambiar el contenido despues del delay
             @code {
-                RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
-            }
+            RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+        }
         }
     </div>
 </div>
@@ -158,6 +157,7 @@
     Movil[]? moviles;
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
+    bool LimpiezasVisible { get; set; }
     bool AgregarVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
@@ -203,6 +203,12 @@
         DetallesVisible = true;
         StateHasChanged();
     }
+    public void LimpiezasMovilModal(int id)
+    {
+        DetallesPorId = id;
+        LimpiezasVisible = true;
+        StateHasChanged();
+    }
     public void AgregarMovilModal()
     {
         AgregarVisible = true;
@@ -236,6 +242,10 @@
     {
         CerrarDModal();
     }
+    private void HandleLCancel(MouseEventArgs e)
+    {
+        LimpiezasVisible = false;
+    }
     private void CerrarDModal()
     {
         DetallesVisible = false;
@@ -257,5 +267,3 @@
         Context?.Dispose();
     }
 }
-
-

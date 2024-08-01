@@ -16,6 +16,7 @@ namespace Vista.Services
         Task<Movil> AgregarMovil(Movil movil);
         Task<Movil> EditarMovil(Movil movil);
         Task<Movil> CambiarEstado(int movilid, TipoEstadoMovil estado);
+        Task<Limpieza> AgregarLimpieza(Limpieza limpieza);
     }
 
     public class MovilService : IMovilService
@@ -78,6 +79,25 @@ namespace Vista.Services
             movil.Estado = estado;
             await _context.SaveChangesAsync();
             return movil;
+        }
+        public async Task<Limpieza> AgregarLimpieza(Limpieza limpieza)
+        {
+            //PENDIENTE: Solucionar carga de datos en las List de las relaciones
+            if (limpieza.Responsable != null)
+            {
+                Bombero? Responsable = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == limpieza.Responsable.PersonaId);
+                limpieza.Responsable = Responsable;
+                Responsable.Limpieza.Add(limpieza);
+            }
+            if(limpieza.Movil != null)
+            {
+                Movil? Movil = await _context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == limpieza.Movil.VehiculoId);
+                limpieza.Movil = Movil;
+                Movil.Limpieza.Add(limpieza);
+            }
+            _context.Limpiezas.Add(limpieza);
+            await _context.SaveChangesAsync();
+            return limpieza;
         }
     }
 }

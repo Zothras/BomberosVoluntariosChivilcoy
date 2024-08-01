@@ -25,6 +25,6 @@ namespace Vista.Data.Models.Personales
         //public List<MovilBombero> Bomberos { get; set; } = new();  
         public int? EquipoId { get; set; }
         public Comunicacion? HandieMovil { get; set; }
-        public List<Bombero> PersonalLimpieza { get; set; }
+        public List<Limpieza> Limpieza { get; set; } = new();
     }
 }

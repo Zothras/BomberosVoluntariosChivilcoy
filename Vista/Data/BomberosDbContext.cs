@@ -170,6 +170,20 @@ namespace Vista.Data
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
+            modelBuilder.Entity<Movil>()
+                .HasMany(mo => mo.Limpieza)
+                .WithOne(li => li.Movil)
+                .HasForeignKey(li => li.MovilId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Bombero>()
+                .HasMany(bo => bo.Limpieza)
+                .WithOne(li => li.Responsable)
+                .HasForeignKey(li => li.ResponsableId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
             modelBuilder.Entity<Comunicacion>()
                 .HasOne(c => c.Movil)
                 .WithOne(b => b.HandieMovil)
