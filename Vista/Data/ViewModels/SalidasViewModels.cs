@@ -8,8 +8,8 @@ namespace Vista.Data.ViewModels
 {
     public abstract class SalidasViewModels
     {
-        public int NumeroParte { get; set; } // Este seria como un ID, pero no lo es.
-        public int AnioNumeroParte { get; set; } //Este seria el Año de las Salidas.
+        public int NumeroParte { get; set; }
+        public int AnioNumeroParte { get; set; }
 
         // Otras propiedades
         public DateTime HoraSalida { get; set; }

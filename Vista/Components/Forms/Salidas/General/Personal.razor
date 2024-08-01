@@ -27,17 +27,22 @@
         <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
     </div>
     <div class="inpt-cont">
-        <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" Bordered>
-            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-            <ActionColumn Title="Acciones">
-                <Popconfirm Title="¿Quieres eliminar este bombero?"
-                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                            OkText="Si"
-                            CancelText="No">
-                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                </Popconfirm>
-            </ActionColumn>
+        <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" @bind-SelectedRows="_selectedRows" Bordered>
+            <ColumnDefinitions Context="row">
+                <Selection />
+                <PropertyColumn Property="c => c.Nombre" Title="Nombre"></PropertyColumn>
+                <PropertyColumn Property="c => c.Apellido" Title="Apellido"></PropertyColumn>
+                <Column TData="BomberoSalida" Title="Salió">
+                    <Template>
+                        <InputCheckbox TValue="bool" @bind-Value="row.Salio" />
+                    </Template>
+                </Column>
+                <ActionColumn Title="Acciones">
+                    <Popconfirm Title="¿Quieres eliminar este bombero?" OnConfirm="() => deleteRow(row.NumeroLegajo)" OkText="Si" CancelText="No">
+                        <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
+                    </Popconfirm>
+                </ActionColumn>
+            </ColumnDefinitions>
         </Table>
     </div>
     <div class="inpt-cont-inline">
@@ -50,7 +55,7 @@
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Seleccione  a un  bombero"
-                    DefaultActiveFirstOption="true"
+                    DefaultActiveFirstOption="false"
                     AllowClear="true" EnableSearch>
             </Select>
         </div>
@@ -74,18 +79,19 @@
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
 
+    private IEnumerable<BomberoSalidaViewModels> _selectedRows = new List<BomberoSalidaViewModels>(); //Bomberos Seleccionados
     private List<BomberoViweModel> bomberosTodos = new(); //Lista con todos los bomberos
     private List<BomberoSalidaViewModels> bomberosSalida = new(); //Lista con los bomberos de la salida
 
     private bool SalioCheck { get; set; } // Bombero Salio [Si/No]
 
     int BomberoCuerpo; //ID del Bombero a añadir a la salida
-    int BomberoEncargado;
-    int BomberoPlanilla;
 
     protected override async Task OnInitializedAsync()
     {
-        bomberosTodos = await BomberoService.GetAllBomberosAsync();
+        bomberosTodos = await BomberoService.GetAllBomberosAsync(); //Obtiene todos los Bomberos.
+
+
     }
 
     public async Task AgregarCuerpoParticipante()
