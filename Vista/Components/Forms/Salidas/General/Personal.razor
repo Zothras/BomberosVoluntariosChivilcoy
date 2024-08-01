@@ -49,11 +49,11 @@
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Encargado</label>
             <Select TItem="BomberoViweModel"
-                    TItemValue="int"
+                    TItemValue="BomberoViweModel"
                     DataSource="@bomberosTodos"
-                    Value="@Model.LegajoEncargado"
+                    Value="@EncargadoSeleccionado"
+                    ValueChanged="@EncargadoSeleccionadoChanged"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Seleccione  a un  bombero"
                     DefaultActiveFirstOption="false"
                     AllowClear="true" EnableSearch>
@@ -62,11 +62,11 @@
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Lleno la planilla</label>
             <Select TItem="BomberoViweModel"
-                    TItemValue="int"
+                    TItemValue="BomberoViweModel"
                     DataSource="@bomberosTodos"
-                    Value="@Model.LegajoLLenoPlanilla"
+                    Value="@PlanillaSeleccionado"
+                    ValueChanged="@PlanillaSeleccionadoChanged"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Seleccione un bombero"
                     DefaultActiveFirstOption="false"
                     AllowClear="true" EnableSearch>
@@ -84,14 +84,24 @@
     private List<BomberoSalidaViewModels> bomberosSalida = new(); //Lista con los bomberos de la salida
 
     private bool SalioCheck { get; set; } // Bombero Salio [Si/No]
+    private int BomberoCuerpo; //ID del Bombero a añadir a la salida
 
-    int BomberoCuerpo; //ID del Bombero a añadir a la salida
+    private BomberoViweModel? EncargadoSeleccionado { get; set; }
+    private BomberoViweModel? PlanillaSeleccionado { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         bomberosTodos = await BomberoService.GetAllBomberosAsync(); //Obtiene todos los Bomberos.
 
+        if (Model.LegajoEncargado != default)
+        {
+            EncargadoSeleccionado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Model.LegajoEncargado);
+        }
 
+        if (Model.LegajoLLenoPlanilla != default)
+        {
+            PlanillaSeleccionado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Model.LegajoLLenoPlanilla);
+        }
     }
 
     public async Task AgregarCuerpoParticipante()
@@ -114,8 +124,26 @@
         StateHasChanged();
     }
 
+    private void UpdateModel()
+    {
+        Model.LegajoEncargado = EncargadoSeleccionado?.NumeroLegajo ?? 0;
+        Model.LegajoLLenoPlanilla = PlanillaSeleccionado?.NumeroLegajo ?? 0;
+    }
+    
     void deleteRow(int numlegajo)
     {
         bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+    }
+
+    private void EncargadoSeleccionadoChanged(BomberoViweModel value)
+    {
+        EncargadoSeleccionado = value;
+        UpdateModel();
+    }
+
+    private void PlanillaSeleccionadoChanged(BomberoViweModel value)
+    {
+        PlanillaSeleccionado = value;
+        UpdateModel();
     }
 }
