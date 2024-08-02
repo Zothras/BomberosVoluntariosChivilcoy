@@ -102,25 +102,71 @@
         {
             PlanillaSeleccionado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Model.LegajoLLenoPlanilla);
         }
-    }
 
-    public async Task AgregarCuerpoParticipante()
-    {
-        foreach (var bom in bomberosTodos)
+        if (Model.CuerpoParticipante != null)
         {
-            if (bom.NumeroLegajo == BomberoCuerpo)
+            foreach (var participante in Model.CuerpoParticipante)
             {
-                BomberoSalidaViewModels b = new()
-                    {
-                        Salio = SalioCheck,
-                        Nombre = bom.Nombre,
-                        Apellido = bom.Apellido,
-                        NumeroLegajo = BomberoCuerpo
-                    };
-                bomberosSalida.Add(b);
+                BomberoViweModel? bombero = bomberosTodos
+                    .FirstOrDefault(b => b.NumeroLegajo == participante.Bombero.NumeroLegajo);
 
+                if (bombero != null)
+                {
+                    BomberoSalidaViewModels bomberoSalidaViewModel = new()
+                        {
+                            NumeroLegajo = bombero.NumeroLegajo,
+                            Nombre = bombero.Nombre,
+                            Apellido = bombero.Apellido,
+                            Salio = participante.Salio
+                        };
+
+                    bomberosSalida.Add(bomberoSalidaViewModel);
+                }
             }
         }
+        else
+        {
+            Model.CuerpoParticipante = new List<BomberoSalida>();
+        }
+    }
+
+    public void AgregarCuerpoParticipante()
+    {
+        BomberoViweModel? bomberoSeleccionado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == BomberoCuerpo);
+
+        if (bomberoSeleccionado != null)
+        {
+            BomberoSalidaViewModels nuevoBomberoSalida = new()
+                {
+                    Salio = SalioCheck,
+                    Nombre = bomberoSeleccionado.Nombre,
+                    Apellido = bomberoSeleccionado.Apellido,
+                    NumeroLegajo = BomberoCuerpo
+                };
+
+            bomberosSalida.Add(nuevoBomberoSalida);
+
+            if (Model.CuerpoParticipante == null)
+            {
+                Model.CuerpoParticipante = new List<BomberoSalida>();
+            }
+
+            Bombero bombero = new Bombero
+                {
+                    Nombre = bomberoSeleccionado.Nombre,
+                    Apellido = bomberoSeleccionado.Apellido,
+                    NumeroLegajo = bomberoSeleccionado.NumeroLegajo,
+                    // Agrega las demás propiedades necesarias
+                };
+
+            BomberoSalida bomSalida = new()
+                {
+                    Salio = nuevoBomberoSalida.Salio,
+                    Bombero = bombero
+                };
+            Model.CuerpoParticipante.Add(bomSalida);
+        }
+
         StateHasChanged();
     }
 
@@ -129,7 +175,7 @@
         Model.LegajoEncargado = EncargadoSeleccionado?.NumeroLegajo ?? 0;
         Model.LegajoLLenoPlanilla = PlanillaSeleccionado?.NumeroLegajo ?? 0;
     }
-    
+
     void deleteRow(int numlegajo)
     {
         bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
