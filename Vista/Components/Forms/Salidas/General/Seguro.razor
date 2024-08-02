@@ -34,7 +34,7 @@
     [Parameter] public string animationClass { get; set; }
     [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
 
-    [Parameter] public bool EsObligatorio { get; set; }
+    [Parameter] public bool EsObligatorio { get; set; } = false;
 
     private bool TieneSeguro { get; set; }
 
