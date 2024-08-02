@@ -1,5 +1,10 @@
-﻿@implements IDisposable
+﻿@implements ﻿IDisposable
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using Vista.Services
+@inject IMovilService MovilService
 
 <style>
     #ImagenMovil {
@@ -21,24 +26,28 @@
         background-color: #732D2D !important;
         color: white !important;
     }
+    .selected-row{
+        background-color: #3363ff;
+    }
 </style>
 @if (existe)
 {
     <div>
-        @* PENDIENTE: Terminar otras funciones restantes(Ver, Borrar). Ademas agregar filtrado *@
-        <Table TItem="LimpiezaView" DataSource="novedades" Responsive>
+        @* PENDIENTE: Agregar filtrado *@
+        <Table TItem="LimpiezaView" DataSource="novedades" Responsive OnRowClick="@OnRowClick"
+            RowClassName="@(c => selectedLimpieza != null && c.Data.LimpiezaId == selectedLimpieza.LimpiezaId ? "selected-row" : "")">
             <PropertyColumn Property="c=>c.Fecha" />
             <PropertyColumn Property="c=>c.Descripcion" />
             <PropertyColumn Property="c=>c.Incidente" />
             <PropertyColumn Property="c=>c.Responsable" />
         </Table>
-        <Button Class="boton_p">
+        <Button Class="boton_p" Disabled="selectedLimpieza == null" OnClick="BorrarLimpieza">
             Borrar
         </Button>
         <Button Class="boton_p" OnClick="()=>NuevaLimpiezaModal()">
             Nuevo
         </Button>
-        <Button Class="boton_p">
+        <Button Class="boton_p" Disabled="selectedLimpieza == null" OnClick="HandleLimpiezaVer">
             Ver
         </Button>
         <Button Class="boton_p" OnClick="OnClose">
@@ -64,27 +73,43 @@ else if (!existe)
     </Modal>
 }
 
+<Modal Title="@("Detalles de bombero")" Visible="VerLimpiezaVisible" OnCancel="@HandleCancelVer" Footer="null">
+    <p>Numero Movil: @movil.NumeroMovil</p>
+    <p>Fecha: @selectedLimpieza.Fecha</p>
+    <p>Responsable: @selectedLimpieza.Responsable</p>
+    <p>Incidente: @selectedLimpieza.Incidente</p>
+    <p>Descripción: @selectedLimpieza.Descripcion</p>
+</Modal>
+
 @code {
     [Parameter]
     public int? VehiculoId { get; set; }
     [Parameter]
     public EventCallback OnClose { get; set; }
 
+    BomberosDbContext Context;
+    Movil? movil { get; set; }
+    public bool existe;
     List<LimpiezaView> novedades = new();
-
     bool NuevaLimpiezaVisible { get; set; }
+    bool VerLimpiezaVisible { get; set; }
 
     public class LimpiezaView
     {
+        public int LimpiezaId { get; set; }
         public DateTime Fecha { get; set; }
         public string? Descripcion { get; set; }
         public TipoIncidente Incidente { get; set; }
         public string? Responsable { get; set; }
     }
 
-    BomberosDbContext Context;
-    public bool existe;
+    LimpiezaView selectedLimpieza;
+    public void OnRowClick(RowData<LimpiezaView> rowData)
+    {
+        selectedLimpieza = rowData.Data;
+    }
 
+    // Funciones de visibilidad de Modals
     public void NuevaLimpiezaModal()
     {
         NuevaLimpiezaVisible = true;
@@ -92,23 +117,36 @@ else if (!existe)
     public async void HandleCancel()
     {
         NuevaLimpiezaVisible = false;
+        await MostrarDatos();
+        StateHasChanged();
+    }
+    public void HandleLimpiezaVer()
+    {
+        VerLimpiezaVisible = true;
+    }
+    public void HandleCancelVer()
+    {
+        VerLimpiezaVisible = false;
     }
 
-    protected override async Task OnInitializedAsync()
+    // Funciones relacionadas con datos
+    public async void BorrarLimpieza()
     {
-        await Init();
-    }
-    private async Task Init()
-    {
-        Context = DbFactory.CreateDbContext();
-        await MostrarDatos();
+        if (selectedLimpieza != null)
+        {
+            Limpieza limpieza = await Context.Limpiezas.SingleOrDefaultAsync(e => e.LimpiezaId == selectedLimpieza.LimpiezaId);
+            await MovilService.BorrarLimpieza(limpieza);
+            selectedLimpieza = null;
+            message.Success("Limpieza borrada con exito");
+        }
     }
     public async Task MostrarDatos()
     {
-        Movil? movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
         //PENDIENTE: Mejorar la carga de datos
+        movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
         if (movil != null)
         {
+            novedades = new();
             foreach (Limpieza li in Context.Limpiezas.ToArray())
             {
                 if (li != null && li.Movil != null)
@@ -117,6 +155,7 @@ else if (!existe)
                         Bombero? ResponsableLi = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == li.ResponsableId);
                         LimpiezaView novedad = new()
                         {
+                            LimpiezaId = li.LimpiezaId,
                             Fecha = li.Fecha,
                             Descripcion = li.Descripcion,
                             Incidente = li.Incidente,
@@ -132,6 +171,17 @@ else if (!existe)
         {
             existe = false;
         }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await MostrarDatos();
     }
     public void Dispose()
     {

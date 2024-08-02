@@ -17,6 +17,7 @@ namespace Vista.Services
         Task<Movil> EditarMovil(Movil movil);
         Task<Movil> CambiarEstado(int movilid, TipoEstadoMovil estado);
         Task<Limpieza> AgregarLimpieza(Limpieza limpieza);
+        Task<Limpieza> BorrarLimpieza(Limpieza limpieza);
     }
 
     public class MovilService : IMovilService
@@ -89,7 +90,7 @@ namespace Vista.Services
                 limpieza.Responsable = Responsable;
                 Responsable.Limpieza.Add(limpieza);
             }
-            if(limpieza.Movil != null)
+            if (limpieza.Movil != null)
             {
                 Movil? Movil = await _context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == limpieza.Movil.VehiculoId);
                 limpieza.Movil = Movil;
@@ -97,6 +98,28 @@ namespace Vista.Services
             }
             _context.Limpiezas.Add(limpieza);
             await _context.SaveChangesAsync();
+            return limpieza;
+        }
+        public async Task<Limpieza> BorrarLimpieza(Limpieza limpieza)
+        {
+            try
+            {
+                if (limpieza != null)
+                {
+                    _context.Limpiezas.Remove(limpieza);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"ERROR: Error al eliminar la novedad. {ex.Message}");
+                return limpieza;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: Ocurrió un error inesperado. {ex.Message}");
+                return limpieza;
+            }
             return limpieza;
         }
     }
