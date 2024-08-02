@@ -129,8 +129,8 @@
             }
             @if (LimpiezasVisible)
             {
-                <Modal Footer="null" Title="Novedades Movil" OnCancel="@HandleLCancel" Visible="true" Style="width: 35%!important;">
-                    <MovilLimpiezas VehiculoId="@DetallesPorId" />
+                <Modal Footer="null" OnCancel="@HandleLCancel" Visible="true" Style="width: 35%!important;">
+                    <MovilLimpiezas VehiculoId="@DetallesPorId" OnClose="@CerrarLModal" />
                 </Modal>
             }
             @if (AgregarVisible)
@@ -249,6 +249,10 @@
     private void CerrarDModal()
     {
         DetallesVisible = false;
+    }
+    private void CerrarLModal()
+    {
+        LimpiezasVisible = false;
     }
 
     private void HandleACancel(MouseEventArgs e)

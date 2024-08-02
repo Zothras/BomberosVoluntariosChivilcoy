@@ -32,20 +32,17 @@
               OnFinish="@SubirLimpieza"
               OnFinishFailed="OnFinishFailed"
               Style="width: 100%;height: 100%; overflow: hidden!important;">
-            <FormItem Label="Movil:">
+            <FormItem Label="Movil">
                 <Input Disabled Value="@movil.NumeroMovil" />
             </FormItem>
-            <FormItem Label="Fecha:">
-                <DatePicker @bind-Value="LimpiezaMovilVista.Fecha" />
-            </FormItem>
-            <FormItem Label="Descripción:">
+            <FormItem Label="Descripción">
                 <Input @bind-Value="LimpiezaMovilVista.Descripcion" />
             </FormItem>
-            <FormItem Label="Tipo:">
+            <FormItem Label="Tipo">
                 <EnumSelect TEnum="TipoIncidente" @bind-Value="@LimpiezaMovilVista.Incidente" />
             </FormItem>
 
-            <FormItem Label="Responsable:">
+            <FormItem Label="Responsable">
                 <Select TItem="BomberoLViewModel"
                         TItemValue="int"
                         DataSource="@bomberoslist"
@@ -58,9 +55,6 @@
                 </Select>
             </FormItem>
 
-            <FormItem Label="Observaciones:">
-                <Input @bind-Value="LimpiezaMovilVista.Observaciones" />
-            </FormItem>
             <FormItem>
                 <Button Type="primary" HtmlType="submit" Class="boton_p">Grabar</Button>
             </FormItem>
@@ -102,7 +96,6 @@ else if (!existe)
         public string? Descripcion { get; set; }
         public TipoIncidente Incidente { get; set; }
         public int ResponsableId { get; set; }
-        public string? Observaciones { get; set; }
     }
 
     public LimpiezaView LimpiezaMovilVista = new();
@@ -115,11 +108,10 @@ else if (!existe)
             Limpieza limpieza = new()
             {
                 Movil = movil,
-                Fecha = LimpiezaMovilVista.Fecha,
+                Fecha = DateTime.Now,
                 Descripcion = LimpiezaMovilVista.Descripcion,
                 Incidente = LimpiezaMovilVista.Incidente,
                 Responsable = Responsable,
-                Observaciones = LimpiezaMovilVista.Observaciones
             };
             await MovilService.AgregarLimpieza(limpieza);
             message.Success("Se grabo la novedad correctamente");

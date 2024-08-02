@@ -3,7 +3,6 @@
     public enum TipoIncidente
     {
         Limpieza,
-        Novedad,
-        Mantenimiento
+        Novedad
     }
 }

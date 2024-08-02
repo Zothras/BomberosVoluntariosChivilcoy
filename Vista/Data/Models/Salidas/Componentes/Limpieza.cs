@@ -14,6 +14,5 @@ namespace Vista.Data.Models.Salidas.Componentes
         public TipoIncidente Incidente { get; set; }
         public int? ResponsableId { get; set; }
         public Bombero Responsable { get; set; }
-        public string? Observaciones { get; set; }
     }
 }

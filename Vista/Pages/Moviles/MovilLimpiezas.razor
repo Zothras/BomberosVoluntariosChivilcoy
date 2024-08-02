@@ -25,7 +25,7 @@
 @if (existe)
 {
     <div>
-        @* PENDIENTE: Terminar otras funciones restantes(Ver, Borrar, Cerrar). Ademas agregar filtrado *@
+        @* PENDIENTE: Terminar otras funciones restantes(Ver, Borrar). Ademas agregar filtrado *@
         <Table TItem="LimpiezaView" DataSource="novedades" Responsive>
             <PropertyColumn Property="c=>c.Fecha" />
             <PropertyColumn Property="c=>c.Descripcion" />
@@ -33,10 +33,16 @@
             <PropertyColumn Property="c=>c.Responsable" />
         </Table>
         <Button Class="boton_p">
-            Ver
+            Borrar
         </Button>
         <Button Class="boton_p" OnClick="()=>NuevaLimpiezaModal()">
             Nuevo
+        </Button>
+        <Button Class="boton_p">
+            Ver
+        </Button>
+        <Button Class="boton_p" OnClick="OnClose">
+            Cerrar
         </Button>
     </div>
 }
@@ -61,6 +67,8 @@ else if (!existe)
 @code {
     [Parameter]
     public int? VehiculoId { get; set; }
+    [Parameter]
+    public EventCallback OnClose { get; set; }
 
     List<LimpiezaView> novedades = new();
 
@@ -84,7 +92,6 @@ else if (!existe)
     public async void HandleCancel()
     {
         NuevaLimpiezaVisible = false;
-        await MostrarDatos();
     }
 
     protected override async Task OnInitializedAsync()
@@ -107,12 +114,13 @@ else if (!existe)
                 if (li != null && li.Movil != null)
                 {
                     if (li.Movil.VehiculoId == movil.VehiculoId){
-                    LimpiezaView novedad = new()
+                        Bombero? ResponsableLi = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == li.ResponsableId);
+                        LimpiezaView novedad = new()
                         {
                             Fecha = li.Fecha,
                             Descripcion = li.Descripcion,
                             Incidente = li.Incidente,
-                            Responsable = li.Responsable != null ? li.Responsable.Nombre + ", " + li.Responsable.Apellido : ""
+                            Responsable = ResponsableLi != null ? li.Responsable.Nombre + ", " + li.Responsable.Apellido : ""
                         };
                     novedades.Add(novedad);
                     }
