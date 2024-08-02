@@ -18,10 +18,10 @@
         border-radius: 10px;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         background: linear-gradient(to top, white 59%, #A63333 41%) !important;
-        /* background-image: url('imagenes/BomberoActivos.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat; */
+        /*background-image: url('imagenes/BomberoActivos.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat; */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -69,7 +69,8 @@
             max-width: 100% !important;
         }
     }
-    .ant-table-thead .ant-table-cell{ /* Color de las columnas. */
+
+    .ant-table-thead .ant-table-cell { /* Color de las columnas. */
         background-color: #A34546 !important;
         color: white !important;
     }
@@ -79,136 +80,141 @@
         color: white !important;
     }
 </style>
-<style> 
-    .colorfondo{
-     background: linear-gradient(to top, white 56%, #A63333 44%) !important;
+<style>
+    .colorfondo {
+        background: linear-gradient(to top, white 56%, #A63333 44%) !important;
     }
-    .color{
-     background-color: #A63333 !important;
+
+    .color {
+        background-color: #A63333 !important;
     }
 </style>
 
 <div class="template">
     <Table Class="colorfondo" @ref="table"
-            TItem="Bombero"
-            DataSource="@bomberos"
-            @bind-SelectedRows="selectedRows"
-            OnChange="OnChange"
-            Total="_total"
-            @bind-PageIndex="_pageIndex"
-            @bind-PageSize="_pageSize"
-            Responsive
-            Style="max-width: 77%;min-width: 600px;">
-        <TitleTemplate>  
+           TItem="Bombero"
+           DataSource="@bomberos"
+           @bind-SelectedRows="selectedRows"
+           OnChange="OnChange"
+           Total="_total"
+           @bind-PageIndex="_pageIndex"
+           @bind-PageSize="_pageSize"
+           Responsive
+           Style="max-width: 77%;min-width: 600px;">
+        <TitleTemplate>
             <div class="color">
-            <GridRow >
-                <GridCol Span="4">
-                </GridCol>
-                <GridCol Span="4" Offset="13">
-                    <Search Placeholder="Buscar Numerario" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Class="ant-table-thead .ant-table-cell" />
-                    @if (String.IsNullOrWhiteSpace(searchString))
-                    {
-                        bomberos = bomberosRespaldo;
-                    }
-                </GridCol>
-                <div style="display: flex;justify-content: flex-end;margin-top: 0em; margin-left: 10px; gap: 10px;">
-                    <Button Class="ant-btn-primary" OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="background-color: #4CAF50">+ Agregar Numerario</Button>
-                </div>
-            </GridRow>
+                <GridRow>
+                    <GridCol Span="4">
+                    </GridCol>
+                    <GridCol Span="4" Offset="13">
+                        <Search Placeholder="Buscar Numerario" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Class="ant-table-thead .ant-table-cell" />
+                        @if (String.IsNullOrWhiteSpace(searchString))
+                        {
+                            bomberos = bomberosRespaldo;
+                        }
+                    </GridCol>
+                    <div style="display: flex;justify-content: flex-end;margin-top: 0em; margin-left: 10px; gap: 10px;">
+                        <Button Class="ant-btn-primary" OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="background-color: #4CAF50">+ Agregar Numerario</Button>
+                    </div>
+                </GridRow>
             </div>
         </TitleTemplate>
         <ColumnDefinitions>
-            <Selection Key="@(context.NumeroLegajo.ToString())"/>
-            <PropertyColumn Title="Foto" Property="c=>c.Imagen"/>
-            <PropertyColumn Property="c=>c.Nombre" Sortable/>
-            <PropertyColumn Property="c=>c.Apellido" Sortable/>
+            <Selection Key="@(context.NumeroLegajo.ToString())" />
+            <Column TData=Bombero Title="Foto">
+                <Template>
+                    <Avatar Size="64" Src="@CargarImage(context)" />
+                </Template>
+            </Column>
+            <PropertyColumn Property="c=>c.Nombre" Sortable />
+            <PropertyColumn Property="c=>c.Apellido" Sortable />
             <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo"
                             DefaultSortOrder="@SortDirection.Descending"
                             SorterCompare="@((a,b)=> a - b)" />
             <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
             <PropertyColumn Title="Jerarquia" Property="c=>c.Grado"
-                                SortDirections="new[] { SortDirection.Descending }"
-                                Filters="EscalafonJerarquicoFilter"
-                                OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+                            SortDirections="new[] { SortDirection.Descending }"
+                            Filters="EscalafonJerarquicoFilter"
+                            OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
             <PropertyColumn Title="Domicilio" Property="c=>c.Direccion" Sortable />
             <PropertyColumn Title="Contacto" Property="c=>c.Contacto" Sortable />
-                <ActionColumn Title="Action">
+            <ActionColumn Title="Action">
 
-                     <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
+                <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
                         <Menu>
                             <MenuItem>
-                               <Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Borrar</Button>
+                                <Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Borrar</Button>
                             </MenuItem>
                             <MenuItem>
-                               <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button>
+                                <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button>
                             </MenuItem>
                             <MenuItem>
-                               <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button>
+                                <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button>
                             </MenuItem>
                         </Menu>;
                     </Overlay>
                     <ChildContent>
-                        <Button class="boton_p">Acciones<Icon Type="down"/></Button>
+                        <Button class="boton_p">Acciones<Icon Type="down" /></Button>
                     </ChildContent>
                 </Dropdown>
-                </ActionColumn>
-            </ColumnDefinitions>
-            @*--------------------------------------------Modal-----------------------------------------------*@
+            </ActionColumn>
+        </ColumnDefinitions>
+        @*--------------------------------------------Modal-----------------------------------------------*@
     </Table>
 </div>
 
 
-           
- <Modal Title="@("Bombero")"
-        Visible="@_visible"
-        OnOk="@HandleOk"
-        OnCancel="@HandleCancel">
-     <Form Loading="loading" Model="@bomberoVM"
-           LabelColSpan="8"
-           WrapperColSpan="16"
-           OnFinish="OnFinish"
-           OnFinishFailed="OnFinishFailed"
-     @ref="@_form">
-         <FormItem Label="Nombre">
-             <Input DefaultValue="@bomberoVM.Nombre" @bind-Value="@bomberoVM.Nombre" />
-         </FormItem>
-         <FormItem Label="Apellido">
-             <Input DefaultValue="@bomberoVM.Apellido" @bind-Value="@bomberoVM.Apellido" />
-         </FormItem>
 
-         <FormItem Label="Fecha de Nacimiento">
-             <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-         </FormItem>
+<Modal Title="@("Bombero")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <Form Loading="loading" Model="@bomberoVM"
+          LabelColSpan="8"
+          WrapperColSpan="16"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed"
+          @ref="@_form">
+        <FormItem Label="Nombre">
+            <Input DefaultValue="@bomberoVM.Nombre" @bind-Value="@bomberoVM.Nombre" />
+        </FormItem>
+        <FormItem Label="Apellido">
+            <Input DefaultValue="@bomberoVM.Apellido" @bind-Value="@bomberoVM.Apellido" />
+        </FormItem>
 
-         <FormItem Label="DNI">
-             <Input DefaultValue="@bomberoVM.Documento" @bind-Value="@bomberoVM.Documento" />
-         </FormItem>
-         <FormItem Label="Direccion">
-             <Input DefaultValue="@bomberoVM.Direccion" @bind-Value="@bomberoVM.Direccion" />
-         </FormItem>
-         <FormItem Label="Dotaciones">
-             <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
-         </FormItem>
+        <FormItem Label="Fecha de Nacimiento">
+            <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+        </FormItem>
 
-         <FormItem Label="Numero Legajo">
-             <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
-         </FormItem>
+        <FormItem Label="DNI">
+            <Input DefaultValue="@bomberoVM.Documento" @bind-Value="@bomberoVM.Documento" />
+        </FormItem>
+        <FormItem Label="Direccion">
+            <Input DefaultValue="@bomberoVM.Direccion" @bind-Value="@bomberoVM.Direccion" />
+        </FormItem>
+        <FormItem Label="Dotaciones">
+            <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
+        </FormItem>
 
-         <FormItem Label="Fecha de Aceptacion">
-             <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-         </FormItem>
+        <FormItem Label="Numero Legajo">
+            <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
+        </FormItem>
 
-         <FormItem Label="Numero IOMA">
-             <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
-         </FormItem>
+        <FormItem Label="Fecha de Aceptacion">
+            <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+        </FormItem>
 
-         <FormItem Label="Lugar de nacimiento">
-             <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
-         </FormItem>
+        <FormItem Label="Numero IOMA">
+            <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
+        </FormItem>
 
-         <FormItem Label="Grupo Sanguineo">
-             <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
+        <FormItem Label="Lugar de nacimiento">
+            <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
+        </FormItem>
+
+        <FormItem Label="Grupo Sanguineo">
+            <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
         </FormItem>
 
         <FormItem Label="Altura (cm)">
@@ -219,41 +225,41 @@
             <AntDesign.InputNumber DefaultValue="@bomberoVM.Peso" @bind-Value="@bomberoVM.Peso" />
         </FormItem>
 
-         <FormItem Label="Observaciones">
-             <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
-         </FormItem>
+        <FormItem Label="Observaciones">
+            <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
+        </FormItem>
 
-         <FormItem Label="Nivel de estuduio">
-             <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
-         </FormItem>
+        <FormItem Label="Nivel de estuduio">
+            <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
+        </FormItem>
 
-         <FormItem Label="Profesion">
-             <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
-         </FormItem>
+        <FormItem Label="Profesion">
+            <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
+        </FormItem>
 
-         <FormItem Label="Resolucion 1">
-             <Input DefaultValue="@bomberoVM.Resolucion1" @bind-Value="@bomberoVM.Resolucion1" />
-         </FormItem>
-         <FormItem Label="Resolucion 2">
-             <Input DefaultValue="@bomberoVM.Resolucion2" @bind-Value="@bomberoVM.Resolucion2" />
-         </FormItem>
-         <FormItem Label="Resolucion 3">
-             <Input DefaultValue="@bomberoVM.Resolucion3" @bind-Value="@bomberoVM.Resolucion3" />
-         </FormItem>
-         <FormItem Label="Resolucion 4">
-             <Input DefaultValue="@bomberoVM.Resolucion4" @bind-Value="@bomberoVM.Resolucion4" />
-         </FormItem>
-         <FormItem Label="Resolucion 5">
-             <Input DefaultValue="@bomberoVM.Resolucion5" @bind-Value="@bomberoVM.Resolucion5" />
-         </FormItem>
-         <FormItem Label="Resolucion 6">
-             <Input DefaultValue="@bomberoVM.Resolucion6" @bind-Value="@bomberoVM.Resolucion6" />
-         </FormItem>
+        <FormItem Label="Resolucion 1">
+            <Input DefaultValue="@bomberoVM.Resolucion1" @bind-Value="@bomberoVM.Resolucion1" />
+        </FormItem>
+        <FormItem Label="Resolucion 2">
+            <Input DefaultValue="@bomberoVM.Resolucion2" @bind-Value="@bomberoVM.Resolucion2" />
+        </FormItem>
+        <FormItem Label="Resolucion 3">
+            <Input DefaultValue="@bomberoVM.Resolucion3" @bind-Value="@bomberoVM.Resolucion3" />
+        </FormItem>
+        <FormItem Label="Resolucion 4">
+            <Input DefaultValue="@bomberoVM.Resolucion4" @bind-Value="@bomberoVM.Resolucion4" />
+        </FormItem>
+        <FormItem Label="Resolucion 5">
+            <Input DefaultValue="@bomberoVM.Resolucion5" @bind-Value="@bomberoVM.Resolucion5" />
+        </FormItem>
+        <FormItem Label="Resolucion 6">
+            <Input DefaultValue="@bomberoVM.Resolucion6" @bind-Value="@bomberoVM.Resolucion6" />
+        </FormItem>
 
-         <FormItem Label="Es chofer">
-             <Checkbox DefaultValue="@bomberoVM.Chofer" @bind-Checked="@bomberoVM.Chofer">
-             </Checkbox>
-             @if (bomberoVM.Chofer)
+        <FormItem Label="Es chofer">
+            <Checkbox DefaultValue="@bomberoVM.Chofer" @bind-Checked="@bomberoVM.Chofer">
+            </Checkbox>
+            @if (bomberoVM.Chofer)
             {
                 <label id="texto">Fecha vencimiento del carnet</label>
                 <br>
@@ -312,7 +318,7 @@
             <Select TItem="Brigada"
                     TItemValue="string"
                     DataSource="@brigadas"
-            @bind-Value="@bomberoVM.NombreBrigada"
+                    @bind-Value="@bomberoVM.NombreBrigada"
                     DefaultValue="@bomberoVM.NombreBrigada"
                     ValueName="@nameof(Brigada.Nombre)"
                     LabelName="@nameof(Brigada.Nombre)"
@@ -354,7 +360,6 @@
        Visible="@_visibleDetalle"
        OnCancel="@HandleCancelDetalle"
        Footer="@footer">
-
     <p>Nombre: @bomberoVM.Nombre</p>
     <p>Apellido: @bomberoVM.Apellido</p>
     <p>Direccion: @bomberoVM.Direccion</p>
@@ -490,7 +495,7 @@
         else
         {
             Console.WriteLine("ERROR: No se pudo eliminar el bombero.");
-        }        
+        }
     }
     #endregion
     //----------------------------------------------------------------------------------------------
@@ -578,7 +583,7 @@
     bool _visibleHorarios = true;
     bool _visibleHorariosAgregar = false;
     int idBombero;
- 
+
     private async void ShowModalEditar(int id)
     {
 
@@ -733,17 +738,17 @@
 
     public string CargarImage(Bombero bombero)
     {
-        using var db = DbFactory.CreateDbContext();
+        var Context = DbFactory.CreateDbContext();
 
         string src = "/";
 
-        ImagenMovil? imagen = db.ImagenesMoviles.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
+        ImagenBombero? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
 
         if (imagen is not null)
         {
             src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
         }
-
+        Console.WriteLine(src);
         return src;
     }
 
