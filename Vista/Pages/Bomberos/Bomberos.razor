@@ -14,19 +14,12 @@
         height: 100%;
         max-width: 97%;
         min-width: 400px;
-        max-height: 100vh;
         border-radius: 10px;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        background: linear-gradient(to top, white 59%, #A63333 41%) !important;
-        /*background-image: url('imagenes/BomberoActivos.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat; */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        margin: 1em;
         padding: 0;
         overflow: auto;
     }
@@ -37,10 +30,43 @@
 
     .ant-table {
         min-width: 200px !important;
+        width: 100% !important; /* Asegura que la tabla use todo el ancho disponible */
     }
 
     .ant-table-thead .ant-table-cell {
-        background-color: white !important;
+        background-color: #A63333 !important;
+        color: #ffffff !important;
+    }
+
+    .ant-table-title {
+        background-color: #A63333; /* Color de fondo del título */
+        width: 100% !important; /* Asegura que el contenedor abarque todo el ancho */
+    }
+
+    .title-template-container {
+        background-color: #A63333; /* Color de fondo del título */
+        padding: 10px; /* Ajusta el padding según sea necesario */
+        width: 100%; /* Asegura que el contenedor abarque todo el ancho */
+        display: flex;
+        justify-content: flex-end; /* Alinea los elementos a la derecha */
+        gap: 10px; /* Espacio entre el campo de búsqueda y el botón */
+    }
+
+    .search-input {
+        width: 150px; /* Ajusta el ancho según sea necesario */
+    }
+
+    .add-button {
+        margin-left: 10px;
+    }
+
+    .ant-table-cell {
+        background-color: #f5f5f5; /* Color de fondo de las celdas */
+    }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
     }
 
     @@media (max-width: 960px) {
@@ -69,29 +95,11 @@
             max-width: 100% !important;
         }
     }
-
-    .ant-table-thead .ant-table-cell { /* Color de las columnas. */
-        background-color: #A34546 !important;
-        color: white !important;
-    }
-
-    .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
-    }
 </style>
-<style>
-    .colorfondo {
-        background: linear-gradient(to top, white 56%, #A63333 44%) !important;
-    }
 
-    .color {
-        background-color: #A63333 !important;
-    }
-</style>
 
 <div class="template">
-    <Table Class="colorfondo" @ref="table"
+    <Table @ref="table"
            TItem="Bombero"
            DataSource="@bomberos"
            @bind-SelectedRows="selectedRows"
@@ -100,28 +108,35 @@
            @bind-PageIndex="_pageIndex"
            @bind-PageSize="_pageSize"
            Responsive
-           Style="max-width: 77%;min-width: 600px;">
+           Class="custom-table">
         <TitleTemplate>
-            <div class="color">
+            <div class="title-template-container">
                 <GridRow>
-                    <GridCol Span="4">
-                    </GridCol>
-                    <GridCol Span="4" Offset="13">
-                        <Search Placeholder="Buscar Numerario" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Class="ant-table-thead .ant-table-cell" />
+                    <GridCol Span="16">
+                        <Search Placeholder="Buscar Numerario"
+                                @bind-Value="@searchString"
+                                OnSearch="()=>search(searchString)"
+                                BindOnInput
+                                Class="ant-table-thead ant-table-cell search-input" />
                         @if (String.IsNullOrWhiteSpace(searchString))
                         {
                             bomberos = bomberosRespaldo;
                         }
                     </GridCol>
-                    <div style="display: flex;justify-content: flex-end;margin-top: 0em; margin-left: 10px; gap: 10px;">
-                        <Button Class="ant-btn-primary" OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="background-color: #4CAF50">+ Agregar Numerario</Button>
-                    </div>
+                    <GridCol Span="8" Style="text-align: right;">
+                        <Button Class="ant-btn-primary add-button"
+                                OnClick="@(() => { navigationManager.NavigateTo("/bomberos/agregar"); })"
+                                Style="background-color: #4CAF50">
+                            + Agregar Numerario
+                        </Button>
+                    </GridCol>
                 </GridRow>
             </div>
+
         </TitleTemplate>
         <ColumnDefinitions>
             <Selection Key="@(context.NumeroLegajo.ToString())" />
-            <Column TData=Bombero Title="Foto">
+            <Column TData="Bombero" Title="Foto">
                 <Template>
                     <Avatar Size="64" Src="@CargarImage(context)" />
                 </Template>
@@ -139,7 +154,6 @@
             <PropertyColumn Title="Domicilio" Property="c=>c.Direccion" Sortable />
             <PropertyColumn Title="Contacto" Property="c=>c.Contacto" Sortable />
             <ActionColumn Title="Action">
-
                 <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
                         <Menu>
@@ -152,7 +166,7 @@
                             <MenuItem>
                                 <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button>
                             </MenuItem>
-                        </Menu>;
+                        </Menu>
                     </Overlay>
                     <ChildContent>
                         <Button class="boton_p">Acciones<Icon Type="down" /></Button>
@@ -160,11 +174,8 @@
                 </Dropdown>
             </ActionColumn>
         </ColumnDefinitions>
-        @*--------------------------------------------Modal-----------------------------------------------*@
     </Table>
 </div>
-
-
 
 <Modal Title="@("Bombero")"
        Visible="@_visible"
