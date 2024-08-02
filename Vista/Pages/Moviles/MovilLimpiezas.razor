@@ -37,7 +37,19 @@
         <Table TItem="LimpiezaView" DataSource="novedades" Responsive OnRowClick="@OnRowClick"
             RowClassName="@(c => selectedLimpieza != null && c.Data.LimpiezaId == selectedLimpieza.LimpiezaId ? "selected-row" : "")">
             <PropertyColumn Property="c=>c.Fecha" />
-            <PropertyColumn Property="c=>c.Descripcion" />
+            <PropertyColumn Property="c=>c.Descripcion">
+                <Template>
+                    @{
+                        // PENDIENTE: terminar la muestra de una segunda linea
+                        var descripcion = context.Descripcion;
+                        if(descripcion.Length > 9)
+                        {
+                            descripcion = descripcion.Substring(0, 7) + "...";
+                        }
+                        <div>@descripcion</div>
+                     }
+                </Template>
+            </PropertyColumn>
             <PropertyColumn Property="c=>c.Incidente" />
             <PropertyColumn Property="c=>c.Responsable" />
         </Table>
@@ -136,13 +148,14 @@ else if (!existe)
         {
             Limpieza limpieza = await Context.Limpiezas.SingleOrDefaultAsync(e => e.LimpiezaId == selectedLimpieza.LimpiezaId);
             await MovilService.BorrarLimpieza(limpieza);
+            await MostrarDatos();
+            StateHasChanged();
             selectedLimpieza = null;
             message.Success("Limpieza borrada con exito");
         }
     }
     public async Task MostrarDatos()
     {
-        //PENDIENTE: Mejorar la carga de datos
         movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
         if (movil != null)
         {

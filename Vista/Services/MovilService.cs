@@ -106,7 +106,8 @@ namespace Vista.Services
             {
                 if (limpieza != null)
                 {
-                    _context.Limpiezas.Remove(limpieza);
+                    Limpieza LimpiezaBorrar = await _context.Limpiezas.SingleOrDefaultAsync(l => l.LimpiezaId == limpieza.LimpiezaId);
+                    _context.Limpiezas.Remove(LimpiezaBorrar);
                     await _context.SaveChangesAsync();
                 }
             }
