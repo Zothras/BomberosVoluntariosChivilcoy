@@ -11,6 +11,9 @@
 @using System.Text.Json;
 @using Vista.Pages.Salidas.Incendios.ComponentesIncendio
 
+@*Componentes Generales*@
+@using Vista.Components.Forms.Salidas.General;
+
 <style>
     .ant-carousel .slick-dots li {
         display: none !important;
@@ -117,20 +120,19 @@
             {@*General*@
                 <DatosGenerales Model="@salidaIncendioVehicularView"
                                 OnChange="@OnChange"
-                                animationClass="@animationClass" />
+                                animationClass="@animationClass" 
+            esSoloDireccion="true"/>
             }
             else if (current == 1)
-            {@*Solicitante y Damnificado*@
+            {
+                @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioVehicularView"
-                               OnChange="@OnChange"
-                               animationClass="@animationClass"
-                               damnificado="@damnificado"
-                               DamnificadosSalida="@DamnificadosSalida"
-                               switchValue="@switchDamificados"
-                               valorswitch="@HandleSwitchChanged" />
+                           OnChange="@OnChange"
+                           animationClass="@animationClass" />
             }
             else if (current == 2)
-            {@*Seguro*@
+            {
+            @*Seguro*@
                 <Seguro Model="@salidaIncendioVehicularView"
                         OnChange="@OnChange"
                         animationClass="@animationClass" />

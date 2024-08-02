@@ -113,112 +113,13 @@
                 <DatosGenerales Model="@modelFactorClimatico"
                                 OnChange="@OnChange"
                                 animationClass="@animationClass" />
-
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">PisoNumero</label>
-                        <Input @bind-Value="@modelFactorClimatico.PisoNumero" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Depto</label>
-                        <Input @bind-Value="@modelFactorClimatico.Depto" />
-                    </div>
-                </div>
             }
             else if (current == 1)
             {
-                @*Solicitante datos*@
-                <b><label>Datos de solicitante</label></b>
-                <FormItem Label="Nombre del solicitante">
-                    <Input @bind-Value="@modelFactorClimatico.NombreSolicitante" />
-                </FormItem>
-                <FormItem Label="Apelldio del solicitante">
-                    <Input @bind-Value="@modelFactorClimatico.ApellidoSolicitante" />
-                </FormItem>
-                <FormItem Label="documneto del solicitante">
-                    <Input @bind-Value="@modelFactorClimatico.DniSolicitante" />
-                </FormItem>
-                <FormItem Label="Telefono  del solicitante">
-                    <Input @bind-Value="@modelFactorClimatico.TelefonoSolicitante" />
-                </FormItem>
-                @*Datos del receptor*@
-                <FormItem Label="Nombre y apellido del receptor">
-                    <Input @bind-Value="@modelFactorClimatico.NombreYApellidoReceptor" />
-                </FormItem>
-                <FormItem Label="Telefono receptor">
-                    <Input @bind-Value="@modelFactorClimatico.TelefonoReceptor" />
-                </FormItem>
-                <div>
-                    <div>
-                        <b>
-                            <FormItem Label="¿Tiene seguro el lugar?">
-                                <Switch @bind-Checked="switchValueS" />
-                            </FormItem>
-                        </b>
-                    </div>
-                    <div>
-                        @if (switchValueS == true)
-                        {
-                            <b><label>Seguro del lugar afectado</label></b>
-                            <FormItem Label="Compania Aseguradora">
-                                <Input @bind-Value="@modelFactorClimatico.CompaniaAseguradora" />
-                            </FormItem>
-                            <FormItem Label="NumeroPoliza">
-                                <Input @bind-Value="@modelFactorClimatico.NumeroPoliza" />
-                            </FormItem>
-                            <FormItem Label="FechaVencimineto">
-                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelFactorClimatico.FechaVencimineto" />
-                            </FormItem>
-                        }
-                    </div>
-                </div>
-
-                @*Datos de damnificados*@
-                <FormItem Label="¿Hubo damnificados?">
-                    <Switch @bind-Checked="switchValue" />
-                </FormItem>
-                @if (switchValue == true)
-                {
-                    @* datos generales *@
-
-                    <FormItem Label="Nombre">
-                        <Input @bind-Value="@damnificado.Nombre" />
-                    </FormItem>
-                    <FormItem Label="Apellido">
-                        <Input @bind-Value="@damnificado.Apellido" />
-                    </FormItem>
-                    <FormItem Label="Documento">
-                        <Input @bind-Value="@damnificado.Dni" />
-                    </FormItem>
-                    <FormItem Label="Tipo sexo">
-                        <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
-                    </FormItem>
-                    <FormItem Label="Lugar De nacimiento">
-                        <Input @bind-Value="@damnificado.LugarDeNacimiento" />
-                    </FormItem>
-                    <FormItem Label="edad">
-                        <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
-                    </FormItem>
-                    <FormItem Label="Tipo material">
-                        <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
-                    </FormItem>
-                    <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
-                    <div>
-                        <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-                         <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-                         <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-                         <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-                         <ActionColumn Title="Acciones">
-                             <Popconfirm Title="Sure to delete?"
-                                         OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                                         OkText="Yes"
-                                         CancelText="No">
-                                 <a>Delete</a>
-                             </Popconfirm>
-                         </ActionColumn>
-                     </Table>
-                 </div>
-                }
+                @*Solicitante | Receptor | Damnificado*@
+                <Participantes Model="@modelFactorClimatico"
+                               OnChange="@OnChange"
+                               animationClass="@animationClass" />
             }
             else if (current == 2)
             {
