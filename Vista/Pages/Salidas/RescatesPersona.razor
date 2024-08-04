@@ -31,10 +31,10 @@
             <Input @bind-Value="@PersonaViewModel.Descripcion" />
         </FormItem>
         <FormItem Label="Dato Hora salida">
-            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@PersonaViewModel.HoraSalida" />
+            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@PersonaViewModel.HoraSalida" />
         </FormItem>
         <FormItem Label="Dato Hora llegada">
-            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@PersonaViewModel.HoraLLegada" />
+            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@PersonaViewModel.HoraLLegada" />
         </FormItem>
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@PersonaViewModel.CalleORuta" />
@@ -278,7 +278,7 @@
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
         <FormItem Label="Fecha factura">
-            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+            <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
         </FormItem>
         <FormItem Label="Tipo Combustible">
             <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
@@ -583,10 +583,7 @@
     {
        
     }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        
-    }
+
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");

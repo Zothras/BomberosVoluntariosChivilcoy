@@ -31,10 +31,10 @@
         <Input @bind-Value="@modelServiciosEspecialesPrevencion.Descripcion" />
     </FormItem>
     <FormItem Label="Dato Hora salida">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesPrevencion.HoraSalida" />
+        <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@modelServiciosEspecialesPrevencion.HoraSalida" />
     </FormItem>
     <FormItem Label="Dato Hora llegada">
-        <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@modelServiciosEspecialesPrevencion.HoraLLegada" />
+        <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@modelServiciosEspecialesPrevencion.HoraLLegada" />
     </FormItem>
     @*Datos Localizacion*@
     <FormItem Label="Calle/Ruta">
@@ -369,7 +369,7 @@
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
         <FormItem Label="Fecha factura">
-            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+            <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
         </FormItem>
         <FormItem Label="Tipo Combustible">
             <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
@@ -681,11 +681,7 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelServiciosEspecialesPrevencion)}");
     }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
+    
     private void OnChangeChofer(bool checkedValue)
     {
         if (checkedValue) ShowModal();

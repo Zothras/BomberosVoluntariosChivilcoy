@@ -119,7 +119,7 @@
             @if (current == 0)
             {@*General*@
                 <DatosGenerales Model="@salidaIncendioVehicularView"
-                                OnChange="@OnChange"
+                                
                                 animationClass="@animationClass" 
             esSoloDireccion="true"/>
             }
@@ -127,20 +127,20 @@
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioVehicularView"
-                           OnChange="@OnChange"
+                           
                            animationClass="@animationClass" />
             }
             else if (current == 2)
             {
             @*Seguro*@
                 <Seguro Model="@salidaIncendioVehicularView"
-                        OnChange="@OnChange"
+                        
                         animationClass="@animationClass" />
             }
             else if (current == 3)
             {@*Chofer y Movil*@
                 <Vehiculos Model="@salidaIncendioVehicularView"
-                           OnChange="@OnChange"
+                           
                            animationClass="@animationClass"
                            bomberoChoferes="@bomberoChoferes"
                            movilSalidaViewModels="@movilSalidaViewModels"
@@ -152,7 +152,7 @@
             else if (current == 4)
             {@*Bombero*@
                 <Personal Model="@salidaIncendioVehicularView"
-                          OnChange="@OnChange"
+                          
                           animationClass="@animationClass"
                           bomberoTodos="@bomberoTodos"
                           bomberoSalidaView="@bomberoSalidaView"
@@ -165,7 +165,7 @@
             else if (current == 5)
             {@*Vehiculo*@
                 <DatosVehiculoDamnificado Model="@salidaIncendioVehicularView"
-                                          OnChange="@OnChange"
+                                          
                                           animationClass="@animationClass"
                                           vehiculo="@vehiculo"
                                           DamnificadosSalida="@DamnificadosSalida"
@@ -177,7 +177,7 @@
                 <div class="slick-contenedor">
                     <DatosSalida Model="@salidaIncendioVehicularView"
                                  animationClass="@animationClass"
-                                 OnChange="@OnChange" />
+                                  />
                 </div>
             }
         </div>
@@ -531,11 +531,7 @@
         }
     }
 
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
+    
 
     //OnFinishFailed
     private void OnFinishFailed(EditContext editContext)

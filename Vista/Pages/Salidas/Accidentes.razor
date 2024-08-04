@@ -110,7 +110,7 @@
             {
                 @*General*@
                 <DatosGenerales Model="@accidenteViewModels"
-                                OnChange="@OnChange"
+                                
                                 animationClass="@animationClass" 
                                 esSoloDireccion="true"/>
             }
@@ -118,7 +118,7 @@
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@accidenteViewModels"
-                               OnChange="@OnChange"
+                               
                                animationClass="@animationClass" />
             }
             else if (current == 2)
@@ -202,7 +202,7 @@
                                         <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
                                     </FormItem>
                                     <FormItem Label="Fecha factura">
-                                        <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+                                        <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
                                     </FormItem>
                                     <FormItem Label="Tipo Combustible">
                                         <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
@@ -471,7 +471,7 @@
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
         <FormItem Label="Fecha factura">
-            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+            <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
         </FormItem>
         <FormItem Label="Tipo Combustible">
             <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
@@ -1056,11 +1056,7 @@
         await CargarBomberosView();
     }
 
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
+    
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");

@@ -24,7 +24,7 @@
         </div>
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Fecha de vencimiento</label>
-            <DatePicker TValue="DateTime?" ShowTime="true" OnChange="OnChange" @bind-Value="@Model.FechaVencimineto" />
+            <DatePicker TValue="DateTime?" ShowTime="true" @bind-Value="@Model.FechaVencimineto" />
         </div>
     </div>
 }
@@ -32,7 +32,7 @@
 @code {
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
-    [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+    
 
     [Parameter] public bool EsObligatorio { get; set; } = false;
 

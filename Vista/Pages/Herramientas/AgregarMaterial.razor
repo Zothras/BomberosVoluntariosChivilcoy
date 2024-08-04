@@ -20,7 +20,7 @@
     </FormItem>
 
     <FormItem Label="Fecha">
-        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="MaterialViewModel.FechaAlta" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="MaterialViewModel.FechaAlta" />
     </FormItem>
 
     <FormItem Label="Stock">
@@ -97,12 +97,6 @@
     {
         MaterialViewModel = new();
         Context = DbFactory.CreateDbContext();
-    }
-
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
     public void Dispose()

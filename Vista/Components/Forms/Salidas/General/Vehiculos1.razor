@@ -70,7 +70,7 @@
                     <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
                 </FormItem>
                 <FormItem Label="Fecha factura">
-                    <DatePicker TValue="DateTime?" ShowTime="true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+                    <DatePicker TValue="DateTime?" ShowTime="true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
                 </FormItem>
                 <FormItem Label="Tipo Combustible">
                     <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
@@ -114,7 +114,7 @@
 @code {
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
-    [Parameter] public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
+    
     [Parameter] public List<BomberoViweModel> bomberoChoferes { get; set; }
     [Parameter] public Movil[] Moviles { get; set; }
 

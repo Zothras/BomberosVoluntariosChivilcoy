@@ -34,10 +34,10 @@
             <Input @bind-Value="@salidasViewModel.Descripcion" />
         </FormItem>
         <FormItem Label="Dato Hora salida">
-            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel.HoraSalida" />
+            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@salidasViewModel.HoraSalida" />
         </FormItem>
         <FormItem Label="Dato Hora llegada">
-            <DatePicker TValue="DateTime" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel.HoraLLegada" />
+            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@salidasViewModel.HoraLLegada" />
         </FormItem>
         @*<FormItem Label="Kilometro salida">
         <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmSalida" />
@@ -113,7 +113,7 @@
                             <Input @bind-Value="@salidasViewModel.NumeroPoliza" />
                         </FormItem>
                         <FormItem Label="FechaVencimineto">
-                            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel.FechaVencimineto" />
+                            <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@salidasViewModel.FechaVencimineto" />
                         </FormItem>
                     }
                 </div>
@@ -349,7 +349,7 @@
                                 <Input @bind-Value="@dam.VehiculoDamnificado.Seguro.CompañiaAseguradora" />
                             </FormItem>
                             <FormItem Label="Fecha De Vencimineto">
-                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@dam.VehiculoDamnificado.Seguro.FechaDeVencimineto" />
+                                <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@dam.VehiculoDamnificado.Seguro.FechaDeVencimineto" />
                             </FormItem>
                             <FormItem Label="">
                                 <Checkbox @bind-Checked="@dam.VehiculoDamnificado.Airbag"> Air bag</Checkbox>
@@ -387,7 +387,7 @@
                                 <Input @bind-Value="@salidasViewModel.NumeroPoliza" />
                             </FormItem>
                             <FormItem Label="FechaVencimineto">
-                                <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@salidasViewModel.FechaVencimineto" />
+                                <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@salidasViewModel.FechaVencimineto" />
                             </FormItem>
                         }
                     </div>
@@ -461,7 +461,7 @@
         </FormItem>*@
                 <b><label>Acciones sobre los materiales</label></b>
 
-                <CheckboxGroup Style="width:100%" ValueChanged="@OnChangeCheckBox">
+                <CheckboxGroup Style="width:100%" @bind-Value="@_value" TValue="string" OnChange="@OnChangeCheckBox">
 
                     <Row>
                         <Checkbox Label="Controlada" @bind-Value="@materialPeligrosoViewModel.Controlada">Controlada</Checkbox>
@@ -475,7 +475,7 @@
 
                 <b><label>Acciones sobre personas</label></b>
                 <div>
-                    <CheckboxGroup Style="width:100%" ValueChanged="@OnChangeCheckBox">
+                    <CheckboxGroup Style="width:100%" @bind-Value="@_value" TValue="string" OnChange="@OnChangeCheckBox">
 
                         <Row>
                             @*No le pude poner los Col, porque me genera interfereincia co las etiquetas de cierre*@
@@ -774,7 +774,7 @@
     public SalidasViewModel1 salidasViewModel { get; set; }
     bool _visible = false;
     BomberosDbContext db { get; set; }
-
+    private string[] _value = new string[] { };
     private AccidenteViewModels accidenteViewModels = new();
     private FactorClimaticoViewModels factorClimaticoViewModel = new();
     private MaterialPeligrosoViewModels materialPeligrosoViewModel = new();
@@ -1563,11 +1563,7 @@
             TipoSalidas = TipoSalidaDiscriminador;
         }
     }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
+    
 
 
     private async void GetSalidasViewModel(Salida salida)

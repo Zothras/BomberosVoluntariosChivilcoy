@@ -47,10 +47,10 @@
         <Input @bind-Value="@LicencasVM.Descripcion" />
     </FormItem>
     <FormItem Label="Fecha inicio">
-        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@LicencasVM.Desde" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@LicencasVM.Desde" />
     </FormItem>
     <FormItem Label="Fecha finalizacion">
-        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@LicencasVM.Hasta" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@LicencasVM.Hasta" />
     </FormItem>
     <FormItem Label="Duración en días">
         <span>@LicencasVM.DuracionEnDias</span>
@@ -161,11 +161,7 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(LicencasVM)}");
     }
 
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
+    
 
     public void Dispose()
     {

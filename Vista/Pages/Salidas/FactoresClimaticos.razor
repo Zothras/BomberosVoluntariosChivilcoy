@@ -111,14 +111,14 @@
             {
                 @*General*@
                 <DatosGenerales Model="@modelFactorClimatico"
-                                OnChange="@OnChange"
+                                
                                 animationClass="@animationClass" />
             }
             else if (current == 1)
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@modelFactorClimatico"
-                               OnChange="@OnChange"
+                               
                                animationClass="@animationClass" />
             }
             else if (current == 2)
@@ -317,7 +317,7 @@
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
         <FormItem Label="Fecha factura">
-            <DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+            <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
         </FormItem>
         <FormItem Label="Tipo Combustible">
             <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
@@ -576,11 +576,7 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelFactorClimatico)}");
     }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
+    
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");

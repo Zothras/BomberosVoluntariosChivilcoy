@@ -171,11 +171,11 @@
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Desde: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarI" />
+                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@FechaBuscarI" />
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Hasta: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" OnChange="OnChange" @bind-Value="@FechaBuscarF" />
+                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@FechaBuscarF" />
                     </div>
                     <div class="buton-cont">
                         <Button OnClick="@LicenciasBuscar" Style="margin-bottom: 5px;">
@@ -388,11 +388,7 @@
         _visibleAgregar = true;
         await Init();
     }
-    private void OnChange(DateTimeChangedEventArgs args)
-    {
-        Console.WriteLine($"Selected Time: {args.Date}");
-        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
-    }
+    
     public void Dispose()
     {
         Context?.Dispose();

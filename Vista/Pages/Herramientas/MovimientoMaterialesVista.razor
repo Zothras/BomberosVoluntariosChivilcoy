@@ -31,17 +31,18 @@
      <FormItem Label="Rubro">
          <EnumSelect TEnum="@TipoMovimiento" @bind-Value="@MovimientoVM.TipoMovimiento" />
      </FormItem>
-     <CheckboxGroup Style="width:100%" ValueChanged="@OnChange">
 
-         <Row>
-             <Col Span="8">
-             <Checkbox Label="Bombero" @bind-Value="@chIsBombero">Bombero</Checkbox>
-             </Col>
-             <Col Span="8">
-             <Checkbox Label="Movil" @bind-Value="@chIsMovil">Movil</Checkbox>
-             </Col>
-         </Row>
-     </CheckboxGroup>
+    <CheckboxGroup Style="width:100%" @bind-Value="@_value" TValue="string" OnChange="OnChange">
+
+        <Row>
+            <Col Span="8">
+            <Checkbox Label="Bombero" @bind-Value="@chIsBombero">Bombero</Checkbox>
+            </Col>
+            <Col Span="8">
+            <Checkbox Label="Movil" @bind-Value="@chIsMovil">Movil</Checkbox>
+            </Col>
+        </Row>
+    </CheckboxGroup>
 
      <FormItem Label="Bombero asignado">
          <Select TItem="BomberoViewModel"
@@ -174,6 +175,7 @@
     List<MovimientoMaterialesViewModel> ListasMoviminetos = new();
     List<TodosMovimientosviewModel> ListasMoviminetosVista = new();
     private TableFilter<TipoMovimiento>[] DiscriminadorFilter;
+    private string[] _value = new string[] { };
     protected override async Task OnInitializedAsync()
     {
         await Init();
@@ -308,10 +310,10 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(MovimientoVM)}");
     }
+
     void OnChange(string[] checkedValues)
     {
-
-
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
 
 
