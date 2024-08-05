@@ -30,8 +30,10 @@
         <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" @bind-SelectedRows="_selectedRows" Bordered>
             <ColumnDefinitions Context="row">
                 <Selection />
+                <PropertyColumn Property="c => c.NumeroLegajo" Title="Num. Legajo" DefaultSortOrder="@SortDirection.Descending"
+                                SorterCompare="@((a,b)=> a - b)"></PropertyColumn>
                 <PropertyColumn Property="c => c.Nombre" Title="Nombre"></PropertyColumn>
-                <PropertyColumn Property="c => c.Apellido" Title="Apellido"></PropertyColumn>
+                <PropertyColumn Property="c => c.Apellido" Title="Apellido" Sortable="true" DefaultSortOrder="@SortDirection.Ascending"></PropertyColumn>
                 <Column TData="BomberoSalida" Title="Salió">
                     <Template>
                         <InputCheckbox TValue="bool" @bind-Value="row.Salio" />
