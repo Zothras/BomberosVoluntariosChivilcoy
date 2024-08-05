@@ -65,14 +65,6 @@
                     <b>ALTA / BAJA / MODIFICACIÓN DE MÓVILES</b>
                 </p>
             </div>
-            <div style="display: flex; gap: 5px;">
-                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Moviles-baja"); })">
-                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Móviles de baja</Button>
-                </a>
-                <a @onclick="AgregarMovilModal">
-                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar móvil</Button>
-                </a>
-            </div>
         </div>
         @if (moviles is not null)
         {
@@ -155,6 +147,16 @@
         }
         }
     </div>
+    <div style="display: flex; gap: 5px;">
+    <a @onclick="AgregarMovilModal">
+        <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Agregar móvil</Button>
+    </a>
+    
+        <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Moviles-baja"); })">
+            <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Móviles de baja</Button>
+        </a>
+    </div>
+
 </div>
 
 @code {
