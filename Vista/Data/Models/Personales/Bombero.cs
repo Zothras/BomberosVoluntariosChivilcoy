@@ -17,18 +17,6 @@ namespace Vista.Data.Models.Personales
         public TipoDotaciones Dotacion { get; set; }
         public DateTime? FechaAceptacion { get; set; }
         public EscalafonJerarquico Grado { get; set; }
-        [StringLength(255)]
-        public string? Resolucion1 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion2 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion3 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion4 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion5 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion6 { get; set; }
         public bool Chofer { get; set; }
         public DateTime? VencimientoRegistro { get; set; }
 

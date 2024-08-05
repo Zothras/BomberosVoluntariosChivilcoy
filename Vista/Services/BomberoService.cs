@@ -64,12 +64,6 @@ namespace Vista.Services
                     existingBombero.LugarNacimiento = bombero.LugarNacimiento;
                     existingBombero.Grado = bombero.Grado;
                     existingBombero.Dotacion = bombero.Dotacion;
-                    existingBombero.Resolucion1 = bombero.Resolucion1;
-                    existingBombero.Resolucion2 = bombero.Resolucion2;
-                    existingBombero.Resolucion3 = bombero.Resolucion3;
-                    existingBombero.Resolucion4 = bombero.Resolucion4;
-                    existingBombero.Resolucion5 = bombero.Resolucion5;
-                    existingBombero.Resolucion6 = bombero.Resolucion6;
                     existingBombero.GrupoSanguineo = bombero.GrupoSanguineo;
                     existingBombero.Altura = bombero.Altura;
                     existingBombero.Peso = bombero.Peso;

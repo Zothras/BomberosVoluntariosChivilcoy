@@ -42,18 +42,6 @@ namespace Vista.Data.ViewModels.Personal
         public string? NivelEstudios { get; set; }
         [StringLength(255)]
         public string? NumeroIoma { get; set; }
-        [StringLength(255)]
-        public string? Resolucion1 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion2 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion3 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion4 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion5 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion6 { get; set; }
         //Contacto-------------------------------
         [StringLength(255)]
         public string? TelefonoCel { get; set; }
