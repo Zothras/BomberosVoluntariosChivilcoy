@@ -292,7 +292,7 @@
         {
             if (movilView is not null)
             {
-                Movil? comprobante = await Context.Moviles.Where(m => m.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
+                VehiculoSalida? comprobante = await Context.Set<VehiculoSalida>().Where(e => e.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
                 Bombero? Encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == movilView.EncargadoId);
                 //Validaciones
                 if (string.IsNullOrEmpty(imagenView.Base64))
@@ -328,7 +328,7 @@
                 }
                 else
                 {
-                    message.Error("Existe un movil con el mismo Nº Móvil");
+                    message.Error("Existe un vehiculo con el mismo Nº Móvil");
                 }
             }
         }

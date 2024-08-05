@@ -95,6 +95,12 @@
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="()=>DetallesMovilModal(m.VehiculoId)">
                                 <Icon Type="ellipsis" Theme="outline" />
                             </Button>
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>FichaMovilModal(m.VehiculoId)">
+                                <Icon Type="Tool" Theme="outline" />
+                            </Button>
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>LimpiezasMovilModal(m.VehiculoId)">
+                                <Icon Type="Schedule" Theme="outline" />
+                            </Button>
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>EditarMovilModal(m.VehiculoId)">
                                 <Icon Type="edit" Theme="outline" />
                             </Button>
@@ -116,7 +122,18 @@
                     <MovilEditar VehiculoIdEditar="@EditarPorId" OnClose="@CerrarModal" />
                 </Modal>
             }
-
+            @if (LimpiezasVisible)
+            {
+                <Modal Footer="null" OnCancel="@HandleLCancel" Visible="true" Style="width: 35%!important;">
+                    <MovilLimpiezas VehiculoId="@DetallesPorId" OnClose="@CerrarLModal" />
+                </Modal>
+            }
+            @if (FichaVisible)
+            {
+                <Modal Footer="null" Title="Ficha técnica" OnCancel="@HandleFCancel" Visible="true" Style="width: 35%!important;">
+                    <MovilFichaTecnica VehiculoId="@DetallesPorId" />
+                </Modal>
+            }
             @if (DetallesVisible)
             {
                 <Modal Footer="null" Title="Detalles" OnCancel="@HandleDCancel" Visible="true" Style="width: 35%!important;">
@@ -147,6 +164,8 @@
     Movil[]? moviles;
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
+    bool LimpiezasVisible { get; set; }
+    bool FichaVisible { get; set; }
     bool AgregarVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
@@ -192,6 +211,18 @@
         DetallesVisible = true;
         StateHasChanged();
     }
+    public void LimpiezasMovilModal(int id)
+    {
+        DetallesPorId = id;
+        LimpiezasVisible = true;
+        StateHasChanged();
+    }
+    public void FichaMovilModal(int id)
+    {
+        DetallesPorId = id;
+        FichaVisible = true;
+        StateHasChanged();
+    }
     public void AgregarMovilModal()
     {
         AgregarVisible = true;
@@ -225,9 +256,21 @@
     {
         CerrarDModal();
     }
+    private void HandleLCancel(MouseEventArgs e)
+    {
+        LimpiezasVisible = false;
+    }
+    private void HandleFCancel(MouseEventArgs e)
+    {
+        FichaVisible = false;
+    }
     private void CerrarDModal()
     {
         DetallesVisible = false;
+    }
+    private void CerrarLModal()
+    {
+        LimpiezasVisible = false;
     }
 
     private void HandleACancel(MouseEventArgs e)

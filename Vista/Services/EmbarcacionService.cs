@@ -28,8 +28,11 @@ namespace Vista.Services
         }
         public async Task<Embarcacion> AgregarEmbarcacion(Embarcacion embarcacion)
         {
-            Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == embarcacion.Encargado.PersonaId);
-            embarcacion.Encargado = Encargado;
+            if (embarcacion.Encargado != null)
+            {
+                Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == embarcacion.Encargado.PersonaId);
+                embarcacion.Encargado = Encargado;
+            }
             _context.Embarcacion.Add(embarcacion);
             await _context.SaveChangesAsync();
             return embarcacion;

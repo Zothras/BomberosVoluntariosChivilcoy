@@ -271,7 +271,7 @@
         {
             if (embarcacionView is not null)
             {
-                Embarcacion? comprobante = await Context.Embarcacion.Where(e => e.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
+                VehiculoSalida? comprobante = await Context.Set<VehiculoSalida>().Where(e => e.NumeroMovil == embarcacionView.NumeroMovil).SingleOrDefaultAsync();
                 Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
                 //Validaciones
                 if (string.IsNullOrEmpty(imagenView.Base64))
@@ -311,7 +311,7 @@
                 }
                 else
                 {
-                    await message.Error("Existe una embarcación con el mismo Nº Embarcación");
+                    await message.Error("Existe un vehiculo con el mismo Nº Embarcación");
                 }
             }
         }

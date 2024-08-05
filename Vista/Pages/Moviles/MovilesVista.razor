@@ -91,14 +91,12 @@
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="()=>DetallesMovilModal(m.VehiculoId)">
                                 <Icon Type="Menu" Theme="outline" />
                             </Button>
-                            @*Botones nuevos*@
-                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;">
+                            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>FichaMovilModal(m.VehiculoId)">
                                 <Icon Type="Tool" Theme="outline" />
                             </Button>
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>LimpiezasMovilModal(m.VehiculoId)">
                                 <Icon Type="Schedule" Theme="outline" />
                             </Button>
-                            @*Botones nuevos*@
                             <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=>EditarMovilModal(m.VehiculoId)">
                                 <Icon Type="edit" Theme="outline" />
                             </Button>
@@ -133,6 +131,12 @@
                     <MovilLimpiezas VehiculoId="@DetallesPorId" OnClose="@CerrarLModal" />
                 </Modal>
             }
+            @if (FichaVisible)
+            {
+                <Modal Footer="null" Title="Ficha técnica" OnCancel="@HandleFCancel" Visible="true" Style="width: 35%!important;">
+                    <MovilFichaTecnica VehiculoId="@DetallesPorId" />
+                </Modal>
+            }
             @if (AgregarVisible)
             {
                 <Modal Footer="null" Title="Agregar" OnCancel="@HandleACancel" Visible="true">
@@ -158,6 +162,7 @@
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
     bool LimpiezasVisible { get; set; }
+    bool FichaVisible { get; set; }
     bool AgregarVisible { get; set; }
     int EditarPorId { get; set; }
     int DetallesPorId { get; set; }
@@ -209,6 +214,12 @@
         LimpiezasVisible = true;
         StateHasChanged();
     }
+    public void FichaMovilModal(int id)
+    {
+        DetallesPorId = id;
+        FichaVisible = true;
+        StateHasChanged();
+    }
     public void AgregarMovilModal()
     {
         AgregarVisible = true;
@@ -245,6 +256,10 @@
     private void HandleLCancel(MouseEventArgs e)
     {
         LimpiezasVisible = false;
+    }
+    private void HandleFCancel(MouseEventArgs e)
+    {
+        FichaVisible = false;
     }
     private void CerrarDModal()
     {
