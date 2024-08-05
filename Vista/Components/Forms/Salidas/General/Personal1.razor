@@ -21,20 +21,21 @@
         </Select>
     </div>
     <div class="inpt-cont">
-        <Checkbox @bind-Checked="SalioCheck">¿Salió?</Checkbox>
-    </div>
-    <div class="inpt-cont">
-        <Button OnClick="@AgregarCuerpoParticipante">Cargar al cuerpo participante</Button>
+        <Button @onclick="AgregarCuerpoParticipante"
+                type="primary"
+                icon="plus"
+                style="background-color: #4CAF50; border-color: #4CAF50;">
+            Cargar al cuerpo participante
+        </Button>
     </div>
     <div class="inpt-cont">
         <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" @bind-SelectedRows="_selectedRows" Bordered>
             <ColumnDefinitions Context="row">
                 <Selection />
-                <PropertyColumn Property="c => c.NumeroLegajo" Title="Num. Legajo" DefaultSortOrder="@SortDirection.Descending"
+                <PropertyColumn Property="c => c.NumeroLegajo" Title="Legajo" DefaultSortOrder="@SortDirection.Descending"
                                 SorterCompare="@((a,b)=> a - b)"></PropertyColumn>
-                <PropertyColumn Property="c => c.Nombre" Title="Nombre"></PropertyColumn>
-                <PropertyColumn Property="c => c.Apellido" Title="Apellido" Sortable="true" DefaultSortOrder="@SortDirection.Ascending"></PropertyColumn>
-                <Column TData="BomberoSalida" Title="Salió">
+                <PropertyColumn Property="c => c.ApellidoYNombre" Title="Apellido y Nombre" Sortable="true" DefaultSortOrder="@SortDirection.Ascending"></PropertyColumn>
+                <Column TData="BomberoSalida" Title="Salió" Sortable="true">
                     <Template>
                         <InputCheckbox TValue="bool" @bind-Value="row.Salio" />
                     </Template>
@@ -55,7 +56,7 @@
                     DataSource="@bomberosTodos"
                     Value="@EncargadoSeleccionado"
                     ValueChanged="@EncargadoSeleccionadoChanged"
-                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
                     Placeholder="Seleccione  a un  bombero"
                     DefaultActiveFirstOption="false"
                     AllowClear="true" EnableSearch>
@@ -68,7 +69,7 @@
                     DataSource="@bomberosTodos"
                     Value="@PlanillaSeleccionado"
                     ValueChanged="@PlanillaSeleccionadoChanged"
-                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
                     Placeholder="Seleccione un bombero"
                     DefaultActiveFirstOption="false"
                     AllowClear="true" EnableSearch>
@@ -84,8 +85,6 @@
     private IEnumerable<BomberoSalidaViewModels> _selectedRows = new List<BomberoSalidaViewModels>(); //Bomberos Seleccionados
     private List<BomberoViweModel> bomberosTodos = new(); //Lista con todos los bomberos
     private List<BomberoSalidaViewModels> bomberosSalida = new(); //Lista con los bomberos de la salida
-
-    private bool SalioCheck { get; set; } // Bombero Salio [Si/No]
     private int BomberoCuerpo; //ID del Bombero a añadir a la salida
 
     private BomberoViweModel? EncargadoSeleccionado { get; set; }
@@ -140,7 +139,7 @@
         {
             BomberoSalidaViewModels nuevoBomberoSalida = new()
                 {
-                    Salio = SalioCheck,
+                    Salio = false,
                     Nombre = bomberoSeleccionado.Nombre,
                     Apellido = bomberoSeleccionado.Apellido,
                     NumeroLegajo = BomberoCuerpo
