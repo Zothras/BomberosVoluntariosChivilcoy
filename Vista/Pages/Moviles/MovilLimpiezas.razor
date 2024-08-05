@@ -42,7 +42,7 @@
                     @{
                         // PENDIENTE: terminar la muestra de una segunda linea
                         var descripcion = context.Descripcion;
-                        if(descripcion.Length > 9)
+                        if( descripcion != null && descripcion.Length > 9)
                         {
                             descripcion = descripcion.Substring(0, 7) + "...";
                         }

@@ -10,12 +10,12 @@ namespace Vista.Data.Models.Personales
     public class Movil : VehiculoSalida
     {
       
-        [Required, StringLength(255)]
-        public string NumeroMotor { get; set; }
-        [Required, StringLength(255)]
-        public string ModeloBomba { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroChasis { get; set; }
+        [StringLength(255)]
+        public string? NumeroMotor { get; set; }
+        [StringLength(255)]
+        public string? ModeloBomba { get; set; }
+        [StringLength(255)]
+        public string? NumeroChasis { get; set; }
        
         public int Kilometraje { get; set; }
         public int? ImagenId { get; set; }

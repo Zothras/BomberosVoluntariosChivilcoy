@@ -7,13 +7,13 @@ namespace Vista.Data.Models.Personales
 {
     public abstract class VehiculoSalida:Vehiculo
     {
-        [Required, StringLength(255)]
-        public string NumeroMovil { get; set; }
+        [StringLength(255)]
+        public string? NumeroMovil { get; set; }
         public int? EncargadoId { get; set; }
         [ForeignKey("EncargadoId")]
         public Bombero? Encargado { get; set; }
         public TipoEstadoMovil Estado { get; set; }
-        public List<Firma> Firmas { get; set; }
+        public List<Firma> Firmas { get; set; } = new();
         public List<Incidente> Incidentes { get; set; } = new();
     }
 }
