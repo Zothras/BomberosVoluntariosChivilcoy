@@ -10,10 +10,9 @@
 
 <style>
     .template {
-        margin-top: 10px;
+        margin-top: 20px;
         width: 100%;
         max-width: 1200px;
-        margin: 0 auto;
         padding: 20px;
         background-color: #f8f8f8;
         border-radius: 8px;
@@ -93,9 +92,17 @@
             margin-top: 10px;
         }
     }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 </style>
 
-<div class="template">
+<Flex Class="flex-container" Justify="center" Align="center">
+    <div class="template">
     <Table @ref="table"
            TItem="Bombero"
            DataSource="@bomberos"
@@ -164,7 +171,8 @@
             </ActionColumn>
         </ColumnDefinitions>
     </Table>
-</div>
+    </div>
+</Flex>
 
 <Modal Title="@("Bombero")"
        Visible="@_visible"
@@ -739,7 +747,6 @@
     public string CargarImage(Bombero bombero)
     {
         var Context = DbFactory.CreateDbContext();
-
         string src = "/";
 
         ImagenBombero? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
@@ -748,7 +755,6 @@
         {
             src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
         }
-        Console.WriteLine(src);
         return src;
     }
 
