@@ -10,159 +10,169 @@
 
 <style>
     .template {
+        margin-top: 20px;
         width: 100%;
-        height: 100%;
-        max-width: 97%;
-        min-width: 400px;
-        max-height: 100vh;
-        border-radius: 10px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        background: linear-gradient(to top, white 59%, #A63333 41%) !important;
-        /*background-image: url('imagenes/BomberoActivos.png');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat; */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin: 1em;
-        padding: 0;
-        overflow: auto;
-    }
-
-    .ant-table-cell {
-        min-width: 200px !important;
+        max-width: 1200px;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .ant-table {
-        min-width: 200px !important;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .ant-table-title {
+        background-color: #A63333
     }
 
     .ant-table-thead .ant-table-cell {
-        background-color: white !important;
-    }
-
-    @@media (max-width: 960px) {
-        .ant-table-row, .ant-table-row-level-0 {
-            display: flex !important;
-            flex-direction: column !important;
-        }
-
-        .ant-row {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 5px !important;
-        }
-
-        .ant-col-4, .ant-col {
-            min-width: 200px;
-            max-width: 100% !important;
-        }
-
-        .ant-col-offset-12 {
-            margin-left: 0 !important;
-        }
-
-        .ant-table {
-            min-width: 200px !important;
-            max-width: 100% !important;
-        }
-    }
-
-    .ant-table-thead .ant-table-cell { /* Color de las columnas. */
-        background-color: #A34546 !important;
+        background-color: #A63333 !important;
         color: white !important;
+        font-weight: bold;
+    }
+
+    .ant-table-cell {
+        padding: 16px !important;
+    }
+
+    .title-template-container {
+        background-color: #A63333;
+        padding: 16px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .search-input {
+        width: 250px;
+    }
+
+        .search-input input {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+        }
+
+            .search-input input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+    .add-button {
+        background-color: #4CAF50 !important;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
-    }
-</style>
-<style>
-    .colorfondo {
-        background: linear-gradient(to top, white 56%, #A63333 44%) !important;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .color {
-        background-color: #A63333 !important;
+    @@media (max-width: 960px) {
+        .template {
+            padding: 10px;
+        }
+
+        .title-template-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-input,
+        .add-button {
+            width: 100%;
+            margin-top: 10px;
+        }
     }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 </style>
 
-<div class="template">
-    <Table Class="colorfondo" @ref="table"
-           TItem="Bombero"
-           DataSource="@bomberos"
-           @bind-SelectedRows="selectedRows"
-           OnChange="OnChange"
-           Total="_total"
-           @bind-PageIndex="_pageIndex"
-           @bind-PageSize="_pageSize"
-           Responsive
-           Style="max-width: 77%;min-width: 600px;">
-        <TitleTemplate>
-            <div class="color">
-                <GridRow>
-                    <GridCol Span="4">
-                    </GridCol>
-                    <GridCol Span="4" Offset="13">
-                        <Search Placeholder="Buscar Numerario" @bind-Value="@searchString" OnSearch="()=>search(searchString)" BindOnInput Class="ant-table-thead .ant-table-cell" />
-                        @if (String.IsNullOrWhiteSpace(searchString))
-                        {
-                            bomberos = bomberosRespaldo;
-                        }
-                    </GridCol>
-                    <div style="display: flex;justify-content: flex-end;margin-top: 0em; margin-left: 10px; gap: 10px;">
-                        <Button Class="ant-btn-primary" OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })" Style="background-color: #4CAF50">+ Agregar Numerario</Button>
-                    </div>
-                </GridRow>
-            </div>
-        </TitleTemplate>
-        <ColumnDefinitions>
-            <Selection Key="@(context.NumeroLegajo.ToString())" />
-            <Column TData=Bombero Title="Foto">
-                <Template>
+<Flex Class="flex-container" Justify="center" Align="center">
+    <div class="template">
+        <Table @ref="table"
+               TItem="Bombero"
+               DataSource="@bomberos"
+               @bind-SelectedRows="selectedRows"
+               OnChange="OnChange"
+               Total="_total"
+               @bind-PageIndex="_pageIndex"
+               @bind-PageSize="_pageSize"
+               Responsive>
+            <TitleTemplate>
+                <Space Size="@("large")" Style="width: 100%; justify-content: flex-end;">
+                    <SpaceItem>
+                        <Search Placeholder="Buscar Numerario"
+                                @bind-Value="@searchString"
+                                OnSearch="()=>search(searchString)"
+                                BindOnInput
+                                Style="width: 200px;" />
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Type="primary"
+                                OnClick="@(() => { navigationManager.NavigateTo("/bomberos/agregar"); })"
+                                Class="add-button">
+                            <Icon Type="plus" /> Agregar Numerario
+                        </Button>
+                    </SpaceItem>
+                </Space>
+            </TitleTemplate>
+            <ColumnDefinitions>
+                <Selection Key="@(context.NumeroLegajo.ToString())" />
+                <Column TData="Bombero" Title="Foto" Width="100">
                     <Avatar Size="64" Src="@CargarImage(context)" />
-                </Template>
-            </Column>
-            <PropertyColumn Property="c=>c.Nombre" Sortable />
-            <PropertyColumn Property="c=>c.Apellido" Sortable />
-            <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo"
-                            DefaultSortOrder="@SortDirection.Descending"
-                            SorterCompare="@((a,b)=> a - b)" />
-            <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-            <PropertyColumn Title="Jerarquia" Property="c=>c.Grado"
-                            SortDirections="new[] { SortDirection.Descending }"
-                            Filters="EscalafonJerarquicoFilter"
-                            OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
-            <PropertyColumn Title="Domicilio" Property="c=>c.Direccion" Sortable />
-            <PropertyColumn Title="Contacto" Property="c=>c.Contacto" Sortable />
-            <ActionColumn Title="Action">
-
-                <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
-                    <Overlay>
-                        <Menu>
-                            <MenuItem>
-                                <Button Danger OnClick="()=>Delete(context.NumeroLegajo)">Borrar</Button>
-                            </MenuItem>
-                            <MenuItem>
-                                <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">Editar</Button>
-                            </MenuItem>
-                            <MenuItem>
-                                <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">Detalles</Button>
-                            </MenuItem>
-                        </Menu>;
-                    </Overlay>
-                    <ChildContent>
-                        <Button class="boton_p">Acciones<Icon Type="down" /></Button>
-                    </ChildContent>
-                </Dropdown>
-            </ActionColumn>
-        </ColumnDefinitions>
-        @*--------------------------------------------Modal-----------------------------------------------*@
-    </Table>
-</div>
+                </Column>
+                <PropertyColumn Property="c=>c.Nombre" Title="Nombre" Sortable />
+                <PropertyColumn Property="c=>c.Apellido" Title="Apellido" Sortable />
+                <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo" Sortable
+                                DefaultSortOrder="@SortDirection.Descending"
+                                SorterCompare="@((a,b)=> a - b)" />
+                <PropertyColumn Title="Jerarquía" Property="c=>c.Grado" Sortable
+                                Filters="EscalafonJerarquicoFilter"
+                                OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+                <PropertyColumn Title="Domicilio" Property="c=>c.Direccion" Sortable />
+                <PropertyColumn Title="Contacto" Property="c=>c.Contacto" Sortable />
+                <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
+                    <Space>
+                        <SpaceItem>
+                            <Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">
+                                <Icon Type="eye" /> Detalles
+                            </Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Type="default" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">
+                                <Icon Type="edit" /> Editar
+                            </Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Popconfirm Title="¿Está seguro de eliminar este registro?"
+                                        OnConfirm="()=>Delete(context.NumeroLegajo)"
+                                        OkText="Sí"
+                                        CancelText="No">
+                                <Button Danger>
+                                    <Icon Type="delete" /> Borrar
+                                </Button>
+                            </Popconfirm>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </ColumnDefinitions>
+        </Table>
+    </div>
+</Flex>
 
 
 
