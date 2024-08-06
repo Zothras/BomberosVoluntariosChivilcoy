@@ -48,6 +48,19 @@
             </ColumnDefinitions>
         </Table>
     </div>
+    
+    @if (MostrarBoton)
+    {
+        <div class="inpt-cont">
+            <Button @onclick="EliminarSeleccionados"
+            type="danger"
+            icon="delete"
+            style="background-color: #e90c0c; border-color: #e90c0c;">
+                Borrar Seleccionados
+            </Button>
+        </div>
+    }
+
     <div class="inpt-cont-inline">
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Encargado</label>
@@ -89,6 +102,8 @@
 
     private BomberoViweModel? EncargadoSeleccionado { get; set; }
     private BomberoViweModel? PlanillaSeleccionado { get; set; }
+
+    private bool MostrarBoton => _selectedRows.Any(); //Any() es un método de LINQ que verifica si una colección tiene al menos un elemento.
 
     protected override async Task OnInitializedAsync()
     {
@@ -137,6 +152,7 @@
 
         if (bomberoSeleccionado != null)
         {
+            bomberosTodos.Remove(bomberoSeleccionado);
             BomberoSalidaViewModels nuevoBomberoSalida = new()
                 {
                     Salio = false,
@@ -177,10 +193,28 @@
         Model.LegajoLLenoPlanilla = PlanillaSeleccionado?.NumeroLegajo ?? 0;
     }
 
-    void deleteRow(int numlegajo)
+    private async Task EliminarSeleccionados()
     {
-        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
+
     }
+
+    private async Task deleteRow(int numlegajo)
+    {
+        // Encuentra el bombero con el número de legajo especificado en la lista del componente
+        var bomberoToRemove = bomberosSalida.FirstOrDefault(b => b.NumeroLegajo == numlegajo);
+        if (bomberoToRemove != null)
+        {
+            // Encuentra el bombero con el número de legajo especificado en la lista del Model
+            var bomberoToRemoveModel = Model.CuerpoParticipante.FirstOrDefault(b => b.Bombero.NumeroLegajo == numlegajo);
+            if (bomberoToRemoveModel != null)
+            {
+                Model.CuerpoParticipante.Remove(bomberoToRemoveModel);
+            }
+            bomberosSalida.Remove(bomberoToRemove);
+            bomberosTodos.Add(await BomberoService.ObtenerBomberoPorLegajoAsync(bomberoToRemove.NumeroLegajo));
+        }
+    }
+
 
     private void EncargadoSeleccionadoChanged(BomberoViweModel value)
     {

@@ -18,6 +18,7 @@ namespace Vista.Services
         Task<Sancion> SancionarBombero(Sancion sancion);
         Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso);
         Task<List<BomberoViweModel>> GetAllBomberosAsync();
+        Task<BomberoViweModel> ObtenerBomberoPorLegajoAsync(int numeroLegajo);
     }
 
     public class BomberoService : IBomberoService
@@ -184,6 +185,27 @@ namespace Vista.Services
                     NumeroLegajo = b.NumeroLegajo
                 })
                 .ToListAsync();
+        }
+
+        public async Task<BomberoViweModel> ObtenerBomberoPorLegajoAsync(int numeroLegajo)
+        {
+            // Consulta el bombero según el número de legajo
+            var bombero = await _context.Bomberos
+                .FirstOrDefaultAsync(b => b.NumeroLegajo == numeroLegajo);
+
+            if (bombero == null)
+            {
+                return null;
+            }
+
+            var bomberoViweModel = new BomberoViweModel
+            {
+                NumeroLegajo = bombero.NumeroLegajo,
+                Nombre = bombero.Nombre,
+                Apellido = bombero.Apellido
+            };
+
+            return bomberoViweModel;
         }
     }
 }
