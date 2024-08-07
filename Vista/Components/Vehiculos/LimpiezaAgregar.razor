@@ -1,5 +1,5 @@
 ﻿@using Vista.Services
-@inject IMovilService MovilService
+@inject IVehiculoService VehiculoService
 @implements IDisposable
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
@@ -25,7 +25,7 @@
         color: white !important;
     }
 </style>
-@if (existe)
+@if (vehiculo != null)
 {
     <div>
         <Form Model="@LimpiezaMovilVista"
@@ -33,7 +33,7 @@
               OnFinishFailed="OnFinishFailed"
               Style="width: 100%;height: 100%; overflow: hidden!important;">
             <FormItem Label="Movil">
-                <Input Disabled Value="@movil.NumeroMovil" />
+                <Input Disabled Value="@vehiculo.NumeroMovil" />
             </FormItem>
             <FormItem Label="Descripción">
                 <Input @bind-Value="LimpiezaMovilVista.Descripcion" />
@@ -61,7 +61,7 @@
         </Form>
     </div>
 }
-else if (!existe)
+else
 {
     <div style="display: flex; justify-content: center;width: 100%;margin: 1em 1em;">
         <Spin Delay="500" Indicator=antIcon />
@@ -73,15 +73,11 @@ else if (!existe)
 }
 
 @code {
-    [Parameter]
-    public int? VehiculoId { get; set; }
-    [Parameter]
-    public EventCallback OnClose { get; set; }
+    [Parameter] public int? VehiculoId { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
 
     BomberosDbContext Context;
-    public bool existe;
-    public Movil? movil { get; set; }
-
+    public VehiculoSalida? vehiculo { get; set; }
     public List<BomberoLViewModel> bomberoslist = new();
 
     public class BomberoLViewModel
@@ -107,13 +103,13 @@ else if (!existe)
             Bombero? Responsable = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == LimpiezaMovilVista.ResponsableId);
             Limpieza limpieza = new()
             {
-                Movil = movil,
+                Vehiculo = vehiculo,
                 Fecha = DateTime.Now,
                 Descripcion = LimpiezaMovilVista.Descripcion,
                 Incidente = LimpiezaMovilVista.Incidente,
                 Responsable = Responsable,
             };
-            await MovilService.AgregarLimpieza(limpieza);
+            await VehiculoService.AgregarLimpieza(limpieza);
             message.Success("Se grabo la novedad correctamente");
             await Init();
             StateHasChanged();
@@ -134,12 +130,6 @@ else if (!existe)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(LimpiezaMovilVista)}");
         message.Error("Error al cargar, posible información ausente");
-    }
-
-    private async Task CargarMovil()
-    {
-        movil = await Context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
-        if (movil != null) existe = true;
     }
 
     public async Task CargarBomberosView()
@@ -163,7 +153,7 @@ else if (!existe)
     private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
-        await CargarMovil();
+        vehiculo = await Context.Set<VehiculoSalida>().SingleOrDefaultAsync(e => e.VehiculoId == VehiculoId);
         await CargarBomberosView();
     }
     public void Dispose()

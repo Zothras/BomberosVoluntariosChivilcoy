@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vista.Data;
 
@@ -11,9 +12,11 @@ using Vista.Data;
 namespace Vista.Data.Migrations
 {
     [DbContext(typeof(BomberosDbContext))]
-    partial class BomberosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240805144527_FixImagenesMovYEmb")]
+    partial class FixImagenesMovYEmb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -735,17 +738,17 @@ namespace Vista.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("ResponsableId")
+                    b.Property<int?>("MovilId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VehiculoId")
+                    b.Property<int?>("ResponsableId")
                         .HasColumnType("int");
 
                     b.HasKey("LimpiezaId");
 
-                    b.HasIndex("ResponsableId");
+                    b.HasIndex("MovilId");
 
-                    b.HasIndex("VehiculoId");
+                    b.HasIndex("ResponsableId");
 
                     b.ToTable("Limpiezas");
                 });
@@ -1099,7 +1102,7 @@ namespace Vista.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("ImagenId")
+                    b.Property<int>("ImagenId")
                         .HasColumnType("int");
 
                     b.Property<string>("NumeroMovil")
@@ -1877,19 +1880,19 @@ namespace Vista.Data.Migrations
 
             modelBuilder.Entity("Vista.Data.Models.Salidas.Componentes.Limpieza", b =>
                 {
+                    b.HasOne("Vista.Data.Models.Personales.Movil", "Movil")
+                        .WithMany("Limpieza")
+                        .HasForeignKey("MovilId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Vista.Data.Models.Personales.Bombero", "Responsable")
                         .WithMany("Limpieza")
                         .HasForeignKey("ResponsableId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Vista.Data.Models.Personales.VehiculoSalida", "Vehiculo")
-                        .WithMany("Limpieza")
-                        .HasForeignKey("VehiculoId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                    b.Navigation("Movil");
 
                     b.Navigation("Responsable");
-
-                    b.Navigation("Vehiculo");
                 });
 
             modelBuilder.Entity("Vista.Data.Models.Salidas.Componentes.MovimientoMaterial", b =>
@@ -2144,8 +2147,6 @@ namespace Vista.Data.Migrations
             modelBuilder.Entity("Vista.Data.Models.Personales.VehiculoSalida", b =>
                 {
                     b.Navigation("Incidentes");
-
-                    b.Navigation("Limpieza");
                 });
 
             modelBuilder.Entity("Vista.Data.Models.Salidas.Componentes.SeguroSalida", b =>
@@ -2178,6 +2179,8 @@ namespace Vista.Data.Migrations
             modelBuilder.Entity("Vista.Data.Models.Personales.Movil", b =>
                 {
                     b.Navigation("Firmas");
+
+                    b.Navigation("Limpieza");
 
                     b.Navigation("Salidas");
                 });

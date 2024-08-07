@@ -2,8 +2,8 @@
 
 namespace Vista.Data.Models.Personales
 {
-    public class ImagenMovil : Imagen
+    public class ImagenVehiculo : Imagen
     {
-        public Movil Movil { get; set; }
+        public VehiculoSalida? Vehiculo { get; set; }
     }
 }

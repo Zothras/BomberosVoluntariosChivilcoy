@@ -1,5 +1,6 @@
 ﻿@using Vista.Services
-@inject IMovilService MovilService
+@using System.Reflection
+@inject IVehiculoService VehiculoService
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 
@@ -92,19 +93,19 @@
                 {
                     <div style="height: 22em;">
                         <div class="inpt-container">
-                            <input type="text" @bind="movilView.Marca" placeholder="Marca: " />
+                            <input type="text" @bind="vehiculoView.Marca" placeholder="Marca: " />
                         </div>
                         <div class="inpt-container">
-                            <input type="text" @bind="movilView.Modelo" placeholder="Modelo:" />
+                            <input type="text" @bind="vehiculoView.Modelo" placeholder="Modelo:" />
                         </div>
                         <div class="inpt-container">
-                            <input type="number" @bind="movilView.Año" placeholder="Año:" />
+                            <input type="number" @bind="vehiculoView.Año" placeholder="Año:" />
                         </div>
                         <div class="inpt-container">
-                            <input type="text" @bind="movilView.Patente" placeholder="Patente:" />
+                            <input type="text" @bind="vehiculoView.Patente" placeholder="Patente:" />
                         </div>
                         <div class="inpt-container">
-                            <input type="text" @bind="movilView.Tipo" placeholder="Tipo:" />
+                            <input type="text" @bind="vehiculoView.Tipo" placeholder="Tipo:" />
                         </div>
                         <div class="inpt-container">
                             <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto del móvil</label>
@@ -117,20 +118,22 @@
                 {
                     <div style="height: 30em;width: 100%;padding: 10px;">
                         <div class="inpt-container">
-                            <input type="text" @bind="movilView.NumeroMovil" placeholder="Nº Móvil:" />
+                            <input type="text" @bind="vehiculoView.NumeroMovil" placeholder="Nº Móvil:" />
                         </div>
+                        @if (EsMovil == true)
+                        {
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.NumeroMotor" placeholder="Nº Motor:" />
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.NumeroChasis" placeholder="Nº Chasis:" />
+                            </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.ModeloBomba" placeholder="Modelo de bomba:" />
+                            </div>
+                        }
                         <div class="inpt-container">
-                            <input type="text" @bind="movilView.NumeroMotor" placeholder="Nº Motor:" />
-                        </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.NumeroChasis" placeholder="Nº Chasis:" />
-                        </div>
-                        <div class="inpt-container">
-                            <input type="text" @bind="movilView.ModeloBomba" placeholder="Modelo de bomba:" />
-                        </div>
-
-                        <div class="inpt-container">
-                            <select @bind="movilView.Estado" class="select-estadoMovil">
+                            <select @bind="vehiculoView.Estado" class="select-estadoMovil">
                                 <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del móvil</option>
                                 <option value="@TipoEstadoMovil.Activo">Activo</option>
                                 <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
@@ -141,7 +144,7 @@
                             <Select TItem="BomberoViewModel"
                                     TItemValue="int"
                                     DataSource="@ListaBomberos"
-                                    @bind-Value="@movilView.EncargadoId"
+                                    @bind-Value="@vehiculoView.EncargadoId"
                                     LabelName="@nameof(BomberoViewModel.NombreYApellido)"
                                     ValueName="@nameof(BomberoViewModel.PersonaId)"
                                     Placeholder="Selecione el bombero"
@@ -150,9 +153,9 @@
                                     EnableSearch>
                             </Select>
                         </div>
-                 </div>
+                    </div>
                 }
-               
+
             </div>
         </div>
         <div class="steps-action">
@@ -166,8 +169,8 @@
             }
             @if (current == steps.Length - 1)
             {
-                <Button Class="boton_p" @onclick="SubirMovil">
-                    Agregar movil
+                <Button Class="boton_p" @onclick="SubirVehiculo">
+                    Agregar vehiculo
                 </Button>
             }
         </div>
@@ -190,164 +193,151 @@
 }
 
 @code {
-    [Parameter]
-    public EventCallback OnClose { get; set; }
+    [Parameter] public bool EsMovil { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
     BomberosDbContext Context { get; set; }
+    public ImagenViewModel imagenView { get; set; } = new();
+    public VehiculoViewModel vehiculoView { get; set; } = new();
+    public MovilViewModel movilView { get; set; } = new();
+    public List<BomberoViewModel> ListaBomberos = new();
 
+    // Funciones Steps
     public class StepItem
     {
         public string Title { get; set; }
         public string Content { get; set; }
     }
-
     public int current { get; set; } = 0;
-
     public StepItem[] steps =
     {
         new StepItem {Title = "Básico"},
         new StepItem {Title = "Datos"},
-    //new StepItem {Title = "Third", Content = "Third-content"},
     };
-
     void OnPreClick()
     {
         current--;
     }
-
     void OnNextClick()
     {
         current++;
     }
 
-    public class MovilViewModel
+    // View Models
+    public class VehiculoViewModel
     {
-        [StringLength(255)]
         public string? Marca { get; set; }
-        [StringLength(255)]
         public string? Modelo { get; set; }
         public int? Año { get; set; }
-        [StringLength(255)]
         public string? Patente { get; set; }
-        [StringLength(255)]
         public string? Tipo { get; set; }
-        [StringLength(255)]
         public string? NumeroMovil { get; set; }
-        [StringLength(255)]
-        public string? NumeroMotor { get; set; }
-        [StringLength(255)]
-        public string? NumeroChasis { get; set; }
-        [StringLength(255)]
-        public string? ModeloBomba { get; set; }
-        [StringLength(255)]
         public TipoEstadoMovil Estado { get; set; }
         public int EncargadoId { get; set; }
-
     }
-
+    public class MovilViewModel
+    {
+        public string? NumeroMotor { get; set; }
+        public string? NumeroChasis { get; set; }
+        public string? ModeloBomba { get; set; }
+    }
     public class ImagenViewModel
     {
-        public string Base64 { get; set; }
-        [Required, StringLength(255)]
-        public string TipoImagen { get; set; }
-        [Required, StringLength(255)]
-        public string Nombre { get; set; }
+        public string? Base64 { get; set; }
+        public string? TipoImagen { get; set; }
+        public string? Nombre { get; set; }
     }
     public class BomberoViewModel
     {
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
+        public string? Nombre { get; set; }
+        public string? Apellido { get; set; }
         public string NombreYApellido { get { return Nombre + " " + Apellido; } }
         public int PersonaId { get; set; }
     }
-    public ImagenViewModel imagenView { get; set; } = new();
-    public MovilViewModel movilView { get; set; } = new();
-    public List<BomberoViewModel> ListaBomberos = new();
-    protected override async Task OnInitializedAsync()
-    {
-        await Init();
-    }
 
-    private async Task Init()
-    {
-        Context = DbFactory.CreateDbContext();
-        await CargarBomberosView();
-
-    }
+    // Carga de datos
 
     private async void SubirFoto(InputFileChangeEventArgs e)
     {
         string imagenBase64 = await Base64Helper.StreamToBase64(e.File.OpenReadStream());
-
         imagenView.Base64 = imagenBase64;
         imagenView.TipoImagen = e.File.ContentType;
         imagenView.Nombre = e.File.Name;
-
         message.Success("Imagen cargada");
         StateHasChanged();
     }
 
-    private async void SubirMovil()
+    private async void SubirVehiculo()
     {
         try
         {
-            if (movilView is not null)
+            if (vehiculoView is not null)
             {
-                VehiculoSalida? comprobante = await Context.Set<VehiculoSalida>().Where(e => e.NumeroMovil == movilView.NumeroMovil).SingleOrDefaultAsync();
-                Bombero? Encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == movilView.EncargadoId);
+                VehiculoSalida? comprobante = await Context.Set<VehiculoSalida>().Where(e => e.NumeroMovil == vehiculoView.NumeroMovil).SingleOrDefaultAsync();
+                Bombero? Encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculoView.EncargadoId);
                 //Validaciones
+                if (comprobante != null)
+                {
+                    message.Error("Existe un vehiculo con el mismo Nº Móvil");
+                    return;
+                }
                 if (string.IsNullOrEmpty(imagenView.Base64))
                 {
-                    message.Warning("No se ingreso una foto del movil");
+                    message.Warning("No se ingreso una foto del vehiculo");
                 }
-                if (comprobante is null)
-                {
-                    Movil movil = new Movil()
+                // Se crea una embarcación ya que VehiculoSalida es abstracta
+                Embarcacion vehiculo = new Embarcacion()
+                    {
+                        Marca = vehiculoView.Marca,
+                        Modelo = vehiculoView.Modelo,
+                        Año = vehiculoView.Año,
+                        Patente = vehiculoView.Patente,
+                        Tipo = vehiculoView.Tipo,
+                        Encargado = Encargado,
+                        Imagen = string.IsNullOrEmpty(imagenView.Base64) ? null : new()
                         {
-                            Marca = movilView.Marca,
-                            Modelo = movilView.Modelo,
-                            Año = movilView.Año,
-                            Patente = movilView.Patente,
-                            Tipo = movilView.Tipo,
-                            Encargado = Encargado,
-                            Imagen = string.IsNullOrEmpty(imagenView.Base64) ? null : new()
-                            {
-                                NombreImagen = imagenView.Nombre,
-                                TipoImagen = imagenView.TipoImagen,
-                                Base64Imagen = imagenView.Base64
-                            },
-                            ModeloBomba = movilView.ModeloBomba,
-                            NumeroChasis = movilView.NumeroChasis,
-                            NumeroMotor = movilView.NumeroMotor,
-                            NumeroMovil = movilView.NumeroMovil,
-                            Estado = movilView.Estado,
-                        };
-                    await MovilService.AgregarMovil(movil);
-                    await Init();
-                    message.Success("Se agrego el movil");
-                    await OnClose.InvokeAsync();
+                            NombreImagen = imagenView.Nombre,
+                            TipoImagen = imagenView.TipoImagen,
+                            Base64Imagen = imagenView.Base64
+                        },
+                        NumeroMovil = vehiculoView.NumeroMovil,
+                        Estado = vehiculoView.Estado,
+                    };
+
+                if (EsMovil == true)
+                {
+                    Movil movil = Convertir<Movil>(vehiculo);
+                    movil.NumeroMotor = movilView.NumeroMotor;
+                    movil.NumeroChasis = movilView.NumeroChasis;
+                    movil.ModeloBomba = movilView.ModeloBomba;
+
+                    await VehiculoService.AgregarVehiculo(movil);
                 }
                 else
                 {
-                    message.Error("Existe un vehiculo con el mismo Nº Móvil");
+                    await VehiculoService.AgregarVehiculo(vehiculo);
                 }
+                message.Success("Se agrego el movil");
+                StateHasChanged();
+                await Init();
+                await OnClose.InvokeAsync();
             }
         }
-            catch (Exception e)
+        catch (Exception e)
+        {
+            StateHasChanged();
+            await Init();
+            if (e.InnerException != null)
             {
-                await Init();
-                StateHasChanged();
-                if (e.InnerException != null){
-                    message.Error("Información de movil ausente u ocurrio un error inesperado");
-                    //message.Error(e.InnerException.Message, 5);
-                    Console.WriteLine(e.InnerException.Message);
-                }
-                else{
-                    message.Error(("Error inesperado: " + e.Message), 5);
-                    Console.WriteLine(e.Message);
-                }
+                message.Error("Información de movil ausente u ocurrio un error inesperado");
+                //message.Error(e.InnerException.Message, 5);
+                Console.WriteLine(e.InnerException.Message);
             }
-        
-        StateHasChanged();
+            else
+            {
+                message.Error(("Error inesperado: " + e.Message), 5);
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 
     private async Task CargarBomberosView()
@@ -366,5 +356,34 @@
                 };
             ListaBomberos.Add(Bvm);
         }
+    }
+
+    // Convertir a Móvil
+    private T Convertir<T>(object source) where T : new()
+    {
+        T movil = new T();
+        PropertyInfo[] Propiedades = typeof(T).GetProperties();
+
+        foreach (PropertyInfo PropModificar in Propiedades)
+        {
+            PropertyInfo PropValor = source.GetType().GetProperty(PropModificar.Name);
+            if (PropValor != null && PropValor.PropertyType == PropModificar.PropertyType)
+            {
+                PropModificar.SetValue(movil, PropValor.GetValue(source));
+            }
+        }
+
+        return movil;
+    }
+
+    // Otros
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await CargarBomberosView();
     }
 }

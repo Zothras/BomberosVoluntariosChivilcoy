@@ -8,23 +8,17 @@ namespace Vista.Data.Models.Personales
 {
     [Index(nameof(NumeroMovil))]
     public class Movil : VehiculoSalida
-    {
-      
+    { 
         [StringLength(255)]
         public string? NumeroMotor { get; set; }
         [StringLength(255)]
         public string? ModeloBomba { get; set; }
         [StringLength(255)]
         public string? NumeroChasis { get; set; }
-       
         public int Kilometraje { get; set; }
-        public int? ImagenId { get; set; }
-        [ForeignKey("ImagenId")]
-        public ImagenMovil? Imagen { get; set; }
         public List<MovilSalida> Salidas { get; set; } = new();
         //public List<MovilBombero> Bomberos { get; set; } = new();  
         public int? EquipoId { get; set; }
         public Comunicacion? HandieMovil { get; set; }
-        public List<Limpieza> Limpieza { get; set; } = new();
     }
 }

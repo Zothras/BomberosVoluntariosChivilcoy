@@ -1,0 +1,117 @@
+﻿@implements IDisposable
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+
+<style>
+    #ImagenMovil {
+        border: 1px solid #f0f5f5;
+        border-radius: 2px;
+        height: 25em;
+        max-height: 25em;
+        min-height: 25em;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
+    }
+
+    .ant-table-pagination.ant-pagination {
+        display: none !important;
+    }
+</style>
+@if (vehiculo != null)
+{
+    <div>
+        <img id="ImagenMovil" src="@CargarImage()" />
+    </div>
+    <br>
+    <div>
+        <Table TItem="VehiculoView" DataSource="@(new[] { vehiculoView })" Responsive>
+            <PropertyColumn Property="c => c.Tipo">@vehiculoView.Tipo</PropertyColumn>
+            <PropertyColumn Property="c => c.Encargado">@vehiculoView.Encargado</PropertyColumn>
+            <PropertyColumn Property="c => c.Marca">@vehiculoView.Marca</PropertyColumn>
+            <PropertyColumn Property="c => c.Modelo">@vehiculoView.Modelo</PropertyColumn>
+            <PropertyColumn Property="c => c.Patente">@vehiculoView.Patente</PropertyColumn>
+        </Table>
+    </div>
+}
+else
+{
+    <div style="display: flex; justify-content: center; width: 100%; margin: 1em 1em;">
+        <Spin Delay="500" Indicator=antIcon />
+    </div>
+}
+
+@code {
+    RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+
+    [Parameter] public int vehiculoId { get; set; }
+    BomberosDbContext Context;
+    public VehiculoSalida vehiculo { get; set; }
+    public VehiculoView vehiculoView { get; set; } = new();
+    public ImagenViewModel imagenView { get; set; } = new();
+
+    // View models
+    public class VehiculoView
+    {
+        public string? Tipo { get; set; }
+        public string? Encargado { get; set; }
+        public string? Marca { get; set; }
+        public string? Modelo { get; set; }
+        public string? Patente { get; set; }
+    }
+
+    public class ImagenViewModel
+    {
+        public string? Base64 { get; set; }
+        public string? TipoImagen { get; set; }
+        public string? Nombre { get; set; }
+    }
+
+    // Funciones - Carga de datos
+    public async Task CargarDatos()
+    {
+        vehiculo = await Context.Set<VehiculoSalida>().SingleOrDefaultAsync(v => v.VehiculoId == vehiculoId);
+        if (vehiculo != null)
+        {
+            vehiculoView = new VehiculoView
+                {
+                    Tipo = vehiculo.Tipo,
+                    Marca = vehiculo.Marca,
+                    Modelo = vehiculo.Modelo,
+                    Patente = vehiculo.Patente
+                };
+
+            if (vehiculo.EncargadoId != null)
+            {
+                Bombero? Encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.EncargadoId);
+                vehiculoView.Encargado = Encargado?.Nombre + " " + Encargado?.Apellido;
+            }
+        }
+    }
+
+    public string CargarImage()
+    {
+        string src = "/";
+        Imagen? imagen = Context.ImagenesVehiculo.Where(i => i.ImagenId == vehiculo.ImagenId).SingleOrDefault();
+        if (imagen is not null)
+        {
+            src = $"data:{imagen.TipoImagen};base64,{imagen.Base64Imagen}";
+        }
+        return src;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await CargarDatos();
+    }
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

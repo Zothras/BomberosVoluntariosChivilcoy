@@ -674,7 +674,7 @@
 
         string src = "/";
 
-        ImagenMovil? imagen = db.ImagenesMoviles.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
+        Imagen? imagen = db.Set<Imagen>().Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
 
         if (imagen is not null)
         {

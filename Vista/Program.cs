@@ -29,8 +29,7 @@ builder.Services.AddHostedService<InitData>();
 builder.Services.AddScoped<IBomberoService, BomberoService>();
 builder.Services.AddScoped<IBrigadaService, BrigadaService>();
 builder.Services.AddScoped<IDepositoService, DepositoService>();
-builder.Services.AddScoped<IMovilService, MovilService>();
-builder.Services.AddScoped<IEmbarcacionService, EmbarcacionService>();
+builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<ISalidaService, SalidaService>();
 builder.Services.AddScoped<IParteService, ParteService>();
 

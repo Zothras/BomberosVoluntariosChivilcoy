@@ -14,8 +14,7 @@ namespace Vista.Data
         public DbSet<Contacto> Contactos { get; set; }
         public DbSet<Damnificado> Damnificados { get; set; }
         public DbSet<ImagenBombero> ImagenesBomberos { get; set; }
-        public DbSet<ImagenMovil> ImagenesMoviles { get; set; }
-        public DbSet<ImagenEmbarcacion> ImagenesEmbarcaciones { get; set; }
+        public DbSet<ImagenVehiculo> ImagenesVehiculo { get; set; }
         public DbSet<SeguroSalida> SegurosSalidas { get; set; }
         public DbSet<SeguroVehiculo> SeguroVehiculos { get; set; }
         public DbSet<DatosCapacitacion> DatosCapacitaciones { get; set; }
@@ -120,8 +119,7 @@ namespace Vista.Data
             modelBuilder.Entity<Imagen>()
                 .HasDiscriminator<int>("TipoImagenDiscriminador")
                 .HasValue<ImagenBombero>(1)
-                .HasValue<ImagenMovil>(2)
-                .HasValue<ImagenEmbarcacion>(3);
+                .HasValue<ImagenVehiculo>(2);
             modelBuilder.Entity<Imagen>()
                 .ToTable("Imagenes");
 
@@ -163,6 +161,13 @@ namespace Vista.Data
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
+            modelBuilder.Entity<ImagenVehiculo>()
+                .HasOne(i => i.Vehiculo)
+                .WithOne(v => v.Imagen)
+                .HasForeignKey<VehiculoSalida>(v => v.ImagenId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
             modelBuilder.Entity<Brigada>()
                 .HasMany(br => br.Bomberos)
                 .WithOne(bo => bo.Brigada)
@@ -170,10 +175,10 @@ namespace Vista.Data
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
-            modelBuilder.Entity<Movil>()
+            modelBuilder.Entity<VehiculoSalida>()
                 .HasMany(mo => mo.Limpieza)
-                .WithOne(li => li.Movil)
-                .HasForeignKey(li => li.MovilId)
+                .WithOne(li => li.Vehiculo)
+                .HasForeignKey(li => li.VehiculoId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 

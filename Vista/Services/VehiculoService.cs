@@ -11,57 +11,65 @@ using Vista.Data.Models.Salidas.Componentes;
 
 namespace Vista.Services
 {
-    public interface IMovilService
+    public interface IVehiculoService
     {
-        Task<Movil> AgregarMovil(Movil movil);
-        Task<Movil> EditarMovil(Movil movil);
-        Task<Movil> CambiarEstado(int movilid, TipoEstadoMovil estado);
+        Task<VehiculoSalida> AgregarVehiculo(VehiculoSalida vehiculo);
+        Task<VehiculoSalida> EditarVehiculo(VehiculoSalida vehiculo);
+        Task<VehiculoSalida> CambiarEstado(int movilid, TipoEstadoMovil estado);
         Task<Limpieza> AgregarLimpieza(Limpieza limpieza);
         Task<Limpieza> BorrarLimpieza(Limpieza limpieza);
     }
 
-    public class MovilService : IMovilService
+    public class VehiculoService : IVehiculoService
     {
         private readonly BomberosDbContext _context;
 
-        public MovilService(BomberosDbContext context)
+        public VehiculoService(BomberosDbContext context)
         {
             _context = context;
         }
-        public async Task<Movil> AgregarMovil(Movil movil)
+        public async Task<VehiculoSalida> AgregarVehiculo(VehiculoSalida vehiculo)
         {
-            if (movil.Encargado != null)
+            if (vehiculo.Encargado != null)
             {
-                Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == movil.Encargado.PersonaId);
-                movil.Encargado = Encargado;
+                Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.Encargado.PersonaId);
+                vehiculo.Encargado = Encargado;
             }
-            _context.Moviles.Add(movil);
+            if(vehiculo is Movil)
+            {
+                _context.Moviles.Add((Movil)vehiculo);
+            }
+            else
+            {
+                _context.Embarcacion.Add((Embarcacion)vehiculo);
+            }
             await _context.SaveChangesAsync();
-            return movil;
+            return vehiculo;
         }
-        public async Task<Movil> EditarMovil(Movil movil)
+        public async Task<VehiculoSalida> EditarVehiculo(VehiculoSalida vehiculo)
         {
             try
             {
-                Movil Editar = await _context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == movil.VehiculoId);
-                Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == movil.Encargado.PersonaId);
-                foreach (var i in movil.GetType().GetProperties())
+                VehiculoSalida Editar = await _context.Set<VehiculoSalida>().SingleOrDefaultAsync(e => e.VehiculoId == vehiculo.VehiculoId);
+                foreach (var i in vehiculo.GetType().GetProperties())
                 {
                     var propNombre = i.Name;
-                    var propValor = i.GetValue(movil);
+                    var propValor = i.GetValue(vehiculo);
                     var editarProp = Editar.GetType().GetProperty(propNombre);
                     //Validaciones.
                     //Encargado, EncargadoId se establecen a parte para evitar errores
-                    //Consultar sobre Seguro, no esta implementado en la edición actualmente
                     if (editarProp != null && editarProp.CanWrite && propValor != null && propNombre != "Encargado" && propNombre != "SeguroId" && propNombre != "EncargadoId")
                     {
                         editarProp.SetValue(Editar, propValor);
                     }
                 }
-                Editar.Encargado = Encargado;
-                Editar.EncargadoId = Encargado.PersonaId;
-                await _context.SaveChangesAsync();
-                return movil;
+                if (vehiculo.Encargado != null) {
+                    Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.Encargado.PersonaId);
+                    Editar.Encargado = Encargado;
+                    Editar.EncargadoId = Encargado.PersonaId;
+                }
+            await _context.SaveChangesAsync();
+                return vehiculo;
             }
             catch (DbUpdateException ex)
             {
@@ -74,12 +82,12 @@ namespace Vista.Services
                 return null;
             }
         }
-        public async Task<Movil> CambiarEstado(int movilid, TipoEstadoMovil estado)
+        public async Task<VehiculoSalida> CambiarEstado(int movilid, TipoEstadoMovil estado)
         {
-            Movil movil = await _context.Moviles.SingleOrDefaultAsync(e => e.VehiculoId == movilid);
-            movil.Estado = estado;
+            VehiculoSalida vehiculo = await _context.Set<VehiculoSalida>().SingleOrDefaultAsync(e => e.VehiculoId == movilid);
+            vehiculo.Estado = estado;
             await _context.SaveChangesAsync();
-            return movil;
+            return vehiculo;
         }
         public async Task<Limpieza> AgregarLimpieza(Limpieza limpieza)
         {
@@ -90,11 +98,11 @@ namespace Vista.Services
                 limpieza.Responsable = Responsable;
                 Responsable.Limpieza.Add(limpieza);
             }
-            if (limpieza.Movil != null)
+            if (limpieza.Vehiculo != null)
             {
-                Movil? Movil = await _context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == limpieza.Movil.VehiculoId);
-                limpieza.Movil = Movil;
-                Movil.Limpieza.Add(limpieza);
+                VehiculoSalida? vehiculo = await _context.Set<VehiculoSalida>().SingleOrDefaultAsync(m => m.VehiculoId == limpieza.Vehiculo.VehiculoId);
+                limpieza.Vehiculo = vehiculo;
+                vehiculo.Limpieza.Add(limpieza);
             }
             _context.Limpiezas.Add(limpieza);
             await _context.SaveChangesAsync();

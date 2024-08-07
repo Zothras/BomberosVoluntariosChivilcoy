@@ -8,10 +8,6 @@ namespace Vista.Data.Models.Salidas.Componentes
 {
     public class Embarcacion : VehiculoSalida
     {
-        public int ImagenId { get; set; }
-        [ForeignKey("ImagenId")]
-        public ImagenEmbarcacion ImagenEmbarcacion { get; set; }
+        //Consultar si eliminar la entidad Embarcacion
     }
-
-
 }
