@@ -404,7 +404,7 @@
             message.Success("Se agrego el bombero.");
             bomberoView = new BomberosViewModel();
             StateHasChanged();
-            navigationManager.NavigateTo($"/bomberos/agregar", true);
+            navigationManager.NavigateTo($"/bomberos", true);
         }
         catch (Exception ex)
         {
