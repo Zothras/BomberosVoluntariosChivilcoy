@@ -74,7 +74,7 @@
     }
 
     .form-container {
-        max-width: 800px; /* Reducir el ancho del contenedor */
+        max-width: 900px; /* Reducir el ancho del contenedor */
         margin: auto;
         max-height: 1600px;
         background-color: #fff;
@@ -93,12 +93,21 @@
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 25px;
     }
 
     .form-row {
         display: flex;
         flex-wrap: wrap;
+    }
+
+    .custom-label .ant-form-item-label > label {
+        color: #FFFFFF;
+        padding: 2px 4px;
+     }
+
+    .ant-form-item-label {
+        background-color: #A63333;
     }
 </style>
 
@@ -111,58 +120,58 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
       <div class="form-grid">
-    <FormItem Label="Foto">
+    <FormItem Label="Foto" class="custom-label">
         <InputFile OnChange="SubirFoto"/>
     </FormItem>
-    <FormItem Label="Nombre" style="background-color:">
+    <FormItem Label="Nombre" class="custom-label">
         <Input @bind-Value="@bomberoView.Nombre" />
     </FormItem>
-    <FormItem Label="Apellido">
+    <FormItem Label="Apellido" Class="custom-label">
         <Input @bind-Value="@bomberoView.Apellido" />
     </FormItem>
-    <FormItem Label="Fecha de Nacimiento">
+    <FormItem Label="Fecha de Nacimiento" Class="custom-label">
         <DatePicker @bind-Value="@bomberoView.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
     </FormItem>
-    <FormItem Label="DNI">
+    <FormItem Label="DNI" Class="custom-label">
         <Input @bind-Value="@bomberoView.Documento" />
     </FormItem>
-    <FormItem Label="Direccion">
+    <FormItem Label="Direccion" Class="custom-label">
         <Input @bind-Value="@bomberoView.Direccion" />
     </FormItem>
-    <FormItem Label="Dotaciones">
+    <FormItem Label="Dotaciones" Class="custom-label">
         <EnumSelect TEnum="TipoDotaciones" @bind-Value="@bomberoView.Dotacion" />
     </FormItem>
-    <FormItem Label="Numero Legajo">
+    <FormItem Label="Numero Legajo" Class="custom-label">
         <AntDesign.InputNumber @bind-Value="@bomberoView.NumeroLegajo" />
     </FormItem>
-    <FormItem Label="Fecha de Aceptacion">
+    <FormItem Label="Fecha de Aceptacion" Class="custom-label">
         <DatePicker @bind-Value="@bomberoView.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
     </FormItem>
-    <FormItem Label="Numero IOMA">
+    <FormItem Label="Numero IOMA" Class="custom-label">
         <Input @bind-Value="@bomberoView.NumeroIoma" />
     </FormItem>
-    <FormItem Label="Lugar de nacimiento">
+    <FormItem Label="Lugar de nacimiento" Class="custom-label">
         <Input @bind-Value="@bomberoView.LugarNacimiento" />
     </FormItem>
-    <FormItem Label="Grupo Sanguineo">
+    <FormItem Label="Grupo Sanguineo" Class="custom-label">
         <EnumSelect TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoView.GrupoSanguineo" />
     </FormItem>
-    <FormItem Label="Altura (cm)">
+    <FormItem Label="Altura (cm)" Class="custom-label">
         <AntDesign.InputNumber @bind-Value="@bomberoView.Altura" />
     </FormItem>
-    <FormItem Label="Peso">
+    <FormItem Label="Peso" Class="custom-label">
         <AntDesign.InputNumber @bind-Value="@bomberoView.Peso" />
     </FormItem>
-    <FormItem Label="Observaciones">
+    <FormItem Label="Observaciones" Class="custom-label">
         <Input @bind-Value="@bomberoView.Observaciones" />
     </FormItem>
-    <FormItem Label="Nivel de estuduio">
+    <FormItem Label="Nivel de estuduio" Class="custom-label">
         <Input @bind-Value="@bomberoView.NivelEstudios" />
     </FormItem>
-    <FormItem Label="Profesion">
+    <FormItem Label="Profesion" Class="custom-label">
         <Input @bind-Value="@bomberoView.Profesion" />
     </FormItem>
-    <FormItem Label="Es chofer">
+    <FormItem Label="Es chofer" Class="custom-label">
         <Checkbox @bind-Checked="@bomberoView.Chofer">
         </Checkbox>
         @if (bomberoView.Chofer)
@@ -176,30 +185,30 @@
             <label id="texto"></label>
         }
     </FormItem>
-    <FormItem Label="Grado">
+    <FormItem Label="Grado" Class="custom-label">
         <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoView.Grado" />
     </FormItem>
-    <FormItem Label="Estado">
+    <FormItem Label="Estado" Class="custom-label">
         <EnumSelect TEnum="EstadoBombero" @bind-Value="@bomberoView.Estado" />
     </FormItem>
-    <FormItem Label="Sexo">
+    <FormItem Label="Sexo" Class="custom-label">
         <EnumSelect TEnum="TipoSexo" @bind-Value="@bomberoView.Sexo" />
     </FormItem>
     @*Carga Contacto-----------------------------------------------------------------------*@
-    <FormItem Label="Telefono Laboral">
+    <FormItem Label="Telefono Laboral" Class="custom-label">
         <Input @bind-Value="@bomberoView.TelefonoLaboral" />
     </FormItem>
-    <FormItem Label="Telefono Celular">
+    <FormItem Label="Telefono Celular" Class="custom-label">
         <Input @bind-Value="@bomberoView.TelefonoCel" />
     </FormItem>
-    <FormItem Label="Telefono Fijo">
+    <FormItem Label="Telefono Fijo" Class="custom-label">
         <Input @bind-Value="@bomberoView.TelefonoFijo" />
        </FormItem>
-    <FormItem Label="Email">
+    <FormItem Label="Email" Class="custom-label">
         <Input @bind-Value="@bomberoView.Email" />
     </FormItem>
     @*Carga Brigada-----------------------------------------------------------------------*@
-    <FormItem Label="Nombre Brigada">
+    <FormItem Label="Nombre Brigada" Class="custom-label">
         <Select TItem="Brigada"
                 TItemValue="int"
                 DataSource="@brigadas"
@@ -210,9 +219,9 @@
                 OnSelectedItemChanged="OnSelectedItemChangedHandler">
         </Select>
     </FormItem>
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+    <FormItem WrapperColOffset="20" WrapperColSpan="16">
         <Button Class="boton_p" HtmlType="submit" OnClick="CrearBombero">
-            Agregar Bombero
+               Agregar Numerario
         </Button>
     </FormItem>
             </div>
