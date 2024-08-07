@@ -5,29 +5,105 @@
 @using Vista.Services;
 @inject IBomberoService BomberoService
 
+<style>
+    .centrado {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #4CAF50;
+        border: 1px solid #4CAF50;
+        padding-right: 0;
+    }
+
+        .button-wrapper .ant-btn {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 0;
+            margin-right: 8px; /* Espacio entre el texto y el botón interno */
+        }
+
+            .button-wrapper .ant-btn:last-child {
+                margin-right: 0; /* Elimina el margen derecho del último botón */
+            }
+
+        .button-wrapper .ant-btn-icon-only {
+            margin-left: 8px; /* Espacio entre el texto y el botón interno */
+        }
+
+</style>
+
 <div class="slick-contenedor @animationClass">
     <h6>Cuerpo Participante</h6>
+    @if (BotonSolo)
+    {
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Elija el bombero</label>
+            <Select TItem="BomberoViweModel"
+                    TItemValue="int"
+                    DataSource="@bomberosSalirTodos"
+                    @bind-Value="@BomberoCuerpo"
+                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                    Placeholder="Selecione un bombero"
+                    DefaultActiveFirstOption="false"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </div>
+    }
+
     <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Elija el bombero</label>
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberosSalirTodos"
-                @bind-Value="@BomberoCuerpo"
-                LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Selecione un bombero"
-                DefaultActiveFirstOption="false"
-                AllowClear="true" EnableSearch>
-        </Select>
+        <div class="centrado">
+            @if (BotonSolo)
+            {
+                <div class="button-wrapper">
+                    <Button @onclick="() => AgregarCuerpoParticipante()"
+                            type="primary"
+                            class="ant-btn"
+                            style="background-color: #4CAF50; border-color: #4CAF50;">
+
+                        Cargar al cuerpo
+                    </Button>
+
+                    <!-- Botón interno a la derecha del texto -->
+                    <Button @onclick="CambiarBotonGrupo"
+                            type="primary"
+                            icon="user-add"
+                            class="ant-btn ant-btn-icon-only"
+                            style="background-color: #4CAF50; border-color: #4CAF50;">
+                    </Button>
+                </div>
+            }
+            else
+            {
+                <div class="button-wrapper">
+                    <Button @onclick="AgregarTodosACuerpoParticipante"
+                            type="primary"
+                            class="ant-btn"
+                            style="background-color: #4CAF50; border-color: #4CAF50;">
+                        Cargar todos al cuerpo
+                    </Button>
+
+                    <!-- Botón interno a la derecha del texto -->
+                    <Button @onclick="CambiarBotonSolo"
+                            type="primary"
+                            icon="usergroup-add"
+                            class="ant-btn ant-btn-icon-only"
+                            style="background-color: #4CAF50; border-color: #4CAF50;">
+                    </Button>
+                </div>
+            }
+        </div>
     </div>
-    <div class="inpt-cont">
-        <Button @onclick="AgregarCuerpoParticipante"
-                type="primary"
-                icon="plus"
-                style="background-color: #4CAF50; border-color: #4CAF50;">
-            Cargar al cuerpo participante
-        </Button>
-    </div>
+
     <div class="inpt-cont">
         <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" @bind-SelectedRows="_selectedRows" Bordered>
             <ColumnDefinitions Context="row">
@@ -104,6 +180,7 @@
     private BomberoViweModel? EncargadoSeleccionado { get; set; }
     private BomberoViweModel? PlanillaSeleccionado { get; set; }
 
+    private bool BotonSolo { get; set; } = true;
     private bool MostrarBoton => _selectedRows.Any(); //Any() es un método de LINQ que verifica si una colección tiene al menos un elemento.
 
     protected override async Task OnInitializedAsync()
@@ -157,14 +234,41 @@
 
     }
 
-    public void AgregarCuerpoParticipante()
+    private void CambiarBotonGrupo()
     {
-        BomberoViweModel? bomberoSeleccionado = bomberosSalirTodos.FirstOrDefault(b => b.NumeroLegajo == BomberoCuerpo);
+        BotonSolo = false;
+        StateHasChanged();
+    }
+
+    private void CambiarBotonSolo()
+    {
+        BotonSolo = true;
+        StateHasChanged();
+    }
+
+    private async Task AgregarTodosACuerpoParticipante()
+    {
+        // Procesa todos los bomberos
+        foreach (var bombero in bomberosSalirTodos.ToList())
+        {
+            await AgregarCuerpoParticipante(bombero.NumeroLegajo);
+        }
+    }
+
+    private async Task AgregarCuerpoParticipante(int? numleg = null)
+    {
+        // Encuentra el bombero seleccionado basado en el número de legajo
+        var bomberoSeleccionado = numleg.HasValue
+            ? bomberosSalirTodos.FirstOrDefault(b => b.NumeroLegajo == numleg)
+            : bomberosSalirTodos.FirstOrDefault(b => b.NumeroLegajo == BomberoCuerpo);
 
         if (bomberoSeleccionado != null)
         {
-            bomberosSalirTodos.Remove(bomberoSeleccionado);
-            BomberoSalidaViewModels nuevoBomberoSalida = new()
+            // Elimina el bombero seleccionado de la lista
+            bomberosSalirTodos.RemoveAll(b => b.NumeroLegajo == bomberoSeleccionado.NumeroLegajo);
+
+            // Crea el nuevo objeto de salida del bombero
+            var nuevoBomberoSalida = new BomberoSalidaViewModels
                 {
                     Salio = false,
                     Nombre = bomberoSeleccionado.Nombre,
@@ -172,14 +276,17 @@
                     NumeroLegajo = BomberoCuerpo
                 };
 
+            // Añade el nuevo bombero a la lista de salidas
             bomberosSalida.Add(nuevoBomberoSalida);
 
+            // Asegúrate de que la lista de CuerpoParticipante está inicializada
             if (Model.CuerpoParticipante == null)
             {
                 Model.CuerpoParticipante = new List<BomberoSalida>();
             }
 
-            Bombero bombero = new Bombero
+            // Crea el nuevo objeto Bombero y BomberoSalida
+            var bombero = new Bombero
                 {
                     Nombre = bomberoSeleccionado.Nombre,
                     Apellido = bomberoSeleccionado.Apellido,
@@ -187,16 +294,20 @@
                     // Agrega las demás propiedades necesarias
                 };
 
-            BomberoSalida bomSalida = new()
+            var bomSalida = new BomberoSalida
                 {
                     Salio = nuevoBomberoSalida.Salio,
                     Bombero = bombero
                 };
-            Model.CuerpoParticipante.Add(bomSalida);
-        }
 
-        StateHasChanged();
+            // Añade el bombero a la lista de CuerpoParticipante
+            Model.CuerpoParticipante.Add(bomSalida);
+
+            // Actualiza el estado del componente si es necesario
+            StateHasChanged();
+        }
     }
+
 
     private void UpdateModel()
     {
@@ -206,7 +317,13 @@
 
     private async Task EliminarSeleccionados()
     {
+        foreach (var Bom in _selectedRows)
+        {
+            await deleteRow(Bom.NumeroLegajo);
+        }
 
+        // Reasignar _selectedRows a una nueva lista vacía
+        _selectedRows = Enumerable.Empty<BomberoSalidaViewModels>(); // Suponiendo que IEnumerable<BomberoSalidaViewModels>
     }
 
     private async Task deleteRow(int numlegajo)
