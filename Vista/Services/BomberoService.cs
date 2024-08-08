@@ -13,12 +13,13 @@ namespace Vista.Services
     public interface IBomberoService
     {
         Task<Bombero> CrearBombero(Bombero bombero);
-        Task <bool>BorrarBombero(Bombero bombero);
+        Task<bool> BorrarBombero(Bombero bombero);
         Task<bool> EditarBombero(Bombero bombero);
         Task<Sancion> SancionarBombero(Sancion sancion);
         Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso);
         Task<List<BomberoViweModel>> GetAllBomberosAsync();
         Task<BomberoViweModel> ObtenerBomberoPorLegajoAsync(int numeroLegajo);
+        Task<List<BomberoViweModel>> ObtenerBomberosChoferes();
     }
 
     public class BomberoService : IBomberoService
@@ -207,5 +208,38 @@ namespace Vista.Services
 
             return bomberoViweModel;
         }
+
+        public async Task<List<BomberoViweModel>> ObtenerBomberosChoferes()
+        {
+            // Traemos los bomberos que son choferes desde la base de datos de forma asincrónica
+            var bomberosChoferes = await _context.Bomberos
+                .Where(c => c.Chofer)
+                .Select(c => new BomberoViweModel
+                {
+                    FechaNacimiento = c.FechaNacimiento,
+                    Sexo = c.Sexo,
+                    Nombre = c.Nombre,
+                    Apellido = c.Apellido,
+                    Documento = c.Documento,
+                    NumeroLegajo = c.NumeroLegajo,
+                    NumeroIoma = c.NumeroIoma,
+                    LugarNacimiento = c.LugarNacimiento,
+                    Grado = c.Grado,
+                    Dotacion = c.Dotacion,
+                    Estado = c.Estado,
+                    Chofer = c.Chofer,
+                    VencimientoRegistro = c.VencimientoRegistro,
+                    Direccion = c.Direccion,
+                    Observaciones = c.Observaciones,
+                    Profesion = c.Profesion,
+                    NivelEstudios = c.NivelEstudios,
+                    FechaAceptacion = c.FechaAceptacion,
+                })
+                .ToListAsync();
+
+            return bomberosChoferes;
+        }
+
+
     }
 }

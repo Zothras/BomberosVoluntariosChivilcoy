@@ -113,7 +113,7 @@
                 <PropertyColumn Property="c => c.ApellidoYNombre" Title="Apellido y Nombre" Sortable="true" DefaultSortOrder="@SortDirection.Ascending"></PropertyColumn>
                 <Column TData="BomberoSalida" Title="Salió" Sortable="true">
                     <Template>
-                        <InputCheckbox TValue="bool" @bind-Value="row.Salio" />
+                        <InputCheckbox TValue="bool" Value="row.Salio" ValueChanged="@(async (value) => await OnCheckboxChanged(row.NumeroLegajo))" ValueExpression="() => row.Salio" />
                     </Template>
                 </Column>
                 <ActionColumn Title="Acciones">
@@ -232,6 +232,31 @@
             Model.CuerpoParticipante = new List<BomberoSalida>();
         }
 
+    }
+
+    private async Task OnCheckboxChanged(int numeroLegajo)
+    {
+        Console.WriteLine("Evento Realizado");
+        // Encuentra el bombero basado en el número de legajo
+        var bombero = bomberosSalida.FirstOrDefault(b => b.NumeroLegajo == numeroLegajo);
+
+        if (bombero != null)
+        {
+            // Cambia el estado de Salio
+            bombero.Salio = !bombero.Salio;
+
+            // Actualiza el estado en Model.CuerpoParticipante si existe
+            if (Model.CuerpoParticipante != null)
+            {
+                foreach (var bomberoExistente in Model.CuerpoParticipante.Where(b => b.Bombero.NumeroLegajo == numeroLegajo))
+                {
+                    bomberoExistente.Salio = bombero.Salio;
+                }
+            }
+
+            // Notifica que el estado ha cambiado
+            StateHasChanged();
+        }
     }
 
     private void CambiarBotonGrupo()
