@@ -175,7 +175,7 @@
 </Flex>
 
 
-
+@* Editar bombero *@
 <Modal Title="@("Bombero")"
        Visible="@_visible"
        OnOk="@HandleOk"
@@ -245,25 +245,6 @@
 
         <FormItem Label="Profesion">
             <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
-        </FormItem>
-
-        <FormItem Label="Resolucion 1">
-            <Input DefaultValue="@bomberoVM.Resolucion1" @bind-Value="@bomberoVM.Resolucion1" />
-        </FormItem>
-        <FormItem Label="Resolucion 2">
-            <Input DefaultValue="@bomberoVM.Resolucion2" @bind-Value="@bomberoVM.Resolucion2" />
-        </FormItem>
-        <FormItem Label="Resolucion 3">
-            <Input DefaultValue="@bomberoVM.Resolucion3" @bind-Value="@bomberoVM.Resolucion3" />
-        </FormItem>
-        <FormItem Label="Resolucion 4">
-            <Input DefaultValue="@bomberoVM.Resolucion4" @bind-Value="@bomberoVM.Resolucion4" />
-        </FormItem>
-        <FormItem Label="Resolucion 5">
-            <Input DefaultValue="@bomberoVM.Resolucion5" @bind-Value="@bomberoVM.Resolucion5" />
-        </FormItem>
-        <FormItem Label="Resolucion 6">
-            <Input DefaultValue="@bomberoVM.Resolucion6" @bind-Value="@bomberoVM.Resolucion6" />
         </FormItem>
 
         <FormItem Label="Es chofer">
@@ -366,6 +347,7 @@
 
 @*NO BORRAR -----------------------------------------------------*@
 
+@* Detalles del Bombero *@
 <Modal Title="@("Detalles de bombero")"
        Visible="@_visibleDetalle"
        OnCancel="@HandleCancelDetalle"
@@ -401,12 +383,6 @@
     <p>Profesion: @bomberoVM.Profesion</p>
     <p>Nivel de Estudios: @bomberoVM.NivelEstudios</p>
     <p>Numero de Ioma: @bomberoVM.NumeroIoma</p>
-    <p>Resolucion 1: @bomberoVM.Resolucion1</p>
-    <p>Resolucion 2: @bomberoVM.Resolucion2</p>
-    <p>Resolucion 3: @bomberoVM.Resolucion3</p>
-    <p>Resolucion 4: @bomberoVM.Resolucion4</p>
-    <p>Resolucion 5: @bomberoVM.Resolucion5</p>
-    <p>Resolucion 6: @bomberoVM.Resolucion6</p>
     <p>Telefono Cel: @bomberoVM.TelefonoCel</p>
     <p>Telefono Laboral: @bomberoVM.TelefonoLaboral</p>
     <p>Telefono Fijo: @bomberoVM.TelefonoFijo</p>
@@ -544,18 +520,6 @@
         public string NivelEstudios { get; set; }
         [StringLength(255)]
         public string NumeroIoma { get; set; }
-        [StringLength(255)]
-        public string? Resolucion1 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion2 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion3 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion4 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion5 { get; set; }
-        [StringLength(255)]
-        public string? Resolucion6 { get; set; }
         //Contacto-------------------------------
         [StringLength(255)]
         public string? TelefonoCel { get; set; }
@@ -596,30 +560,23 @@
 
     private async void ShowModalEditar(int id)
     {
-
         GetBomberoViewModel(id);
-        await Task.Delay(200);
-        _visible = true;
         idBombero = id;
+        _visible = true;
     }//Abre el modal editar
 
     private async void ShowModalDetalle(int id)
     {
         GetBomberoViewModel(id);
-        await Task.Delay(200);
         _visibleDetalle = true;
-
-
     }//Abre modal ver detalles
 
     private void HandleCancel(MouseEventArgs e)
     {
-        Console.WriteLine("e");
         _visible = false;
     }
     private void HandleCancelDetalle(MouseEventArgs e)
     {
-        Console.WriteLine(e);
         _visibleDetalle = false;
     }
 
@@ -629,7 +586,6 @@
     /// <param name="args"></param>
     private void OnFinish(EditContext editContext)
     {
-        Console.WriteLine("e");
         _visible = false;
     }
 
@@ -789,7 +745,6 @@
     }
     public async void HandleCancelAgregarS(MouseEventArgs e)
     {
-        Console.WriteLine(e);
         _visibleAgregarS = false;
     }
     private async void HandleOkAgregarA(MouseEventArgs e)
@@ -798,7 +753,6 @@
     }
     public async void HandleCancelAgregarA(MouseEventArgs e)
     {
-        Console.WriteLine(e);
         _visibleAgregarA = false;
     }
     private void ShowModalAgregarA()
