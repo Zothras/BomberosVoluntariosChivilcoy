@@ -134,7 +134,7 @@
                         }
                         <div class="inpt-container">
                             <select @bind="vehiculoView.Estado" class="select-estadoMovil">
-                                <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del móvil</option>
+                                <option value="@TipoEstadoMovil.Estado" selected disabled hidden>Seleccione estado del vehículo</option>
                                 <option value="@TipoEstadoMovil.Activo">Activo</option>
                                 <option value="@TipoEstadoMovil.Inactivo">Inactivo</option>
                                 <option value="@TipoEstadoMovil.Reparacion">Reparación</option>
@@ -170,7 +170,7 @@
             @if (current == steps.Length - 1)
             {
                 <Button Class="boton_p" @onclick="SubirVehiculo">
-                    Agregar vehiculo
+                    Agregar vehículo
                 </Button>
             }
         </div>

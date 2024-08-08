@@ -17,7 +17,7 @@
             <p>Modelo de bomba: @movil.ModeloBomba</p>
         }
         <p>Estado: @vehiculo.Estado</p>
-        <p>Encargado: @if(vehiculo.Encargado != null){@vehiculo.Encargado.Nombre  @vehiculo.Encargado.Apellido}</p>
+        <p>Encargado: @Encargado()</p>
     </div>
 }
 else if (!existe)
@@ -48,8 +48,20 @@ else if (!existe)
     }
     public async Task MostrarDatos()
     {
-        vehiculo = await Context.Set<VehiculoSalida>().Where(e => e.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+        if (VehiculoId != null)
+        {
+            vehiculo = await Context.Set<VehiculoSalida>().Where(e => e.VehiculoId == VehiculoId).SingleOrDefaultAsync();
+        }
         existe = vehiculo is not null;
+    }
+    public string Encargado()
+    {
+        if (vehiculo.EncargadoId != null && vehiculo.EncargadoId != 0)
+        {
+            Bombero encargado = Context.Bomberos.Where(b => b.PersonaId == vehiculo.EncargadoId).SingleOrDefault();
+            return(encargado.Nombre + " " + encargado.Apellido);
+        }
+        return "";
     }
     public void Dispose()
     {
