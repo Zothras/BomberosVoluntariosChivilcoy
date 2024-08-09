@@ -99,6 +99,43 @@
         align-items: center;
     }
 
+    /* Modal de Editar ------------------------------- */
+    .ant-form-horizontal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+    .ant-form-horizontal .ant-form-item-label > label {
+        color: #FFFFFF;
+        padding: 2px 4px;
+        margin-right: 267.2px;
+        }
+     .ant-form-item {
+        box-sizing: border-box;
+        margin: 0;
+        margin-bottom: 0px;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);          
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        font-feature-settings: 'tnum';
+        margin-bottom: 8px !important;
+        vertical-align: top;
+        font-weight: bold;
+     }
+     /* Modal de Editar ------------------------------- */
+
+    .ant-modal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+
+    .ant-modal .ant-form-item-label > label {
+        color: #FFFFFF;
+        padding: 2px 4px;
+        margin-right: 267.2px;
+    }
 </style>
 
 <Flex Class="flex-container" Justify="center" Align="center">
@@ -520,8 +557,8 @@
         public string NivelEstudios { get; set; }
         [StringLength(255)]
         public string NumeroIoma { get; set; }
-        //Contacto-------------------------------
         [StringLength(255)]
+        //Contacto-------------------------------
         public string? TelefonoCel { get; set; }
         [StringLength(255)]
         public string? TelefonoLaboral { get; set; }
@@ -622,11 +659,8 @@
                 NumeroIoma = bombero.NumeroIoma,
                 LugarNacimiento = bombero.LugarNacimiento,
                 Grado = bombero.Grado,
-
                 Dotacion = bombero.Dotacion,
-
                 NombreBrigada = brigada != null ? brigada.Nombre : "",
-
                 GrupoSanguineo = bombero.GrupoSanguineo,
                 Altura = bombero.Altura,
                 Peso = bombero.Peso,
@@ -638,7 +672,6 @@
                 Profesion = bombero.Profesion,
                 NivelEstudios = bombero.NivelEstudios,
                 FechaAceptacion = bombero.FechaAceptacion,
-
                 TelefonoCel = bombero1.Contacto.TelefonoCel,
                 TelefonoFijo = bombero1.Contacto.TelefonoFijo,
                 TelefonoLaboral = bombero1.Contacto.TelefonoLaboral,
