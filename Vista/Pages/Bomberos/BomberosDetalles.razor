@@ -1,0 +1,59 @@
+﻿@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@using Vista.Services;
+@inject IBomberoService BomberoService;
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using System.Text.Json;
+
+@* Detalles del Bombero *@
+<p>Nombre: @bomberoVM.Nombre</p>
+<p>Apellido: @bomberoVM.Apellido</p>
+<p>Direccion: @bomberoVM.Direccion</p>
+<p>Fecha De Nacimiento: @bomberoVM.FechaNacimiento</p>
+<p>Numero De Legajo: @bomberoVM.NumeroLegajo</p>
+<p>Grado: @bomberoVM.Grado</p>
+<p>Dotacion: @bomberoVM.Dotacion</p>
+<p>Brigada: @bomberoVM.Brigada</p>
+@if (@bomberoVM.Chofer)
+{
+    <p>Chofer: Es Chofer</p>
+    <p>VencimientoRegistro: @bomberoVM.VencimientoRegistro</p>
+}
+else
+{
+    <p>Chofer: No es Chofer</p>
+}
+<p>Vencimiento del Registro: @bomberoVM.VencimientoRegistro</p>
+<p>Sexo: @bomberoVM.Sexo</p>
+<p>Lugar de Nacimiento: @bomberoVM.LugarNacimiento</p>
+<p>Documento: @bomberoVM.Documento</p>
+<p>Lugar de Nacimiento: @bomberoVM.LugarNacimiento</p>
+<p>Grupo Sanguineo: @bomberoVM.GrupoSanguineo</p>
+<p>Altura: @bomberoVM.Altura cm</p>
+<p>Peso: @bomberoVM.Peso kg</p>
+<p>Observaciones: @bomberoVM.Observaciones</p>
+<p>Profesion: @bomberoVM.Profesion</p>
+<p>Nivel de Estudios: @bomberoVM.NivelEstudios</p>
+<p>Numero de Ioma: @bomberoVM.NumeroIoma</p>
+<p>Telefono Cel: @bomberoVM.Contacto?.TelefonoCel</p>
+<p>Telefono Laboral: @bomberoVM.Contacto?.TelefonoLaboral</p>
+<p>Telefono Fijo: @bomberoVM.Contacto?.TelefonoFijo</p>
+<p>Email: @bomberoVM.Contacto?.Email</p>
+<p>Nombre de Brigada: @bomberoVM.Brigada?.Nombre</p>
+
+@code {
+    [Parameter] public int BomberoId { get; set; }
+    BomberosDbContext? Context { get; set; }
+    public Bombero bomberoVM { get; set; } = new();
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        Context = DbFactory.CreateDbContext();
+        bomberoVM = await Context.Bomberos.Where(b => b.PersonaId == BomberoId).SingleOrDefaultAsync();
+        StateHasChanged();
+    }
+
+}

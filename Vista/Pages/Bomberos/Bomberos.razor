@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
 @page "/bomberos"
 @using Vista.Services;
 @inject IBomberoService BomberoService;
@@ -104,17 +105,19 @@
         flex-grow: 1;
         background: #A63333;
     }
-    .ant-form-horizontal .ant-form-item-label > label {
-        color: #FFFFFF;
-        padding: 2px 4px;
-        margin-right: 267.2px;
+
+        .ant-form-horizontal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+            margin-right: 267.2px;
         }
-     .ant-form-item {
+
+    .ant-form-item {
         box-sizing: border-box;
         margin: 0;
         margin-bottom: 0px;
         padding: 0;
-        color: rgba(0, 0, 0, 0.85);          
+        color: rgba(0, 0, 0, 0.85);
         font-size: 14px;
         font-variant: tabular-nums;
         line-height: 1.5715;
@@ -123,19 +126,19 @@
         margin-bottom: 8px !important;
         vertical-align: top;
         font-weight: bold;
-     }
-     /* Modal de Editar ------------------------------- */
+    }
+    /* Modal de Editar ------------------------------- */
 
     .ant-modal .ant-form-item-label {
         flex-grow: 1;
         background: #A63333;
     }
 
-    .ant-modal .ant-form-item-label > label {
-        color: #FFFFFF;
-        padding: 2px 4px;
-        margin-right: 267.2px;
-    }
+        .ant-modal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+            margin-right: 267.2px;
+        }
 </style>
 
 <Flex Class="flex-container" Justify="center" Align="center">
@@ -143,9 +146,7 @@
         <Table @ref="table"
                TItem="Bombero"
                DataSource="@bomberos"
-               @bind-SelectedRows="selectedRows"
                OnChange="OnChange"
-               Total="_total"
                @bind-PageIndex="_pageIndex"
                @bind-PageSize="_pageSize"
                Responsive>
@@ -168,12 +169,10 @@
                 </Space>
             </TitleTemplate>
             <ColumnDefinitions>
-                <Selection Key="@(context.NumeroLegajo.ToString())" />
                 <Column TData="Bombero" Title="Foto" Width="100">
                     <Avatar Size="64" Src="@CargarImage(context)" />
                 </Column>
-                <PropertyColumn Property="c=>c.Nombre" Title="Nombre" Sortable />
-                <PropertyColumn Property="c=>c.Apellido" Title="Apellido" Sortable />
+                <PropertyColumn Property="@(c => $"{c.Nombre}, {c.Apellido}")" Title="Nombre y Apellido" Sortable />
                 <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo" Sortable
                                 DefaultSortOrder="@SortDirection.Descending"
                                 SorterCompare="@((a,b)=> a - b)" />
@@ -185,22 +184,23 @@
                 <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                     <Space>
                         <SpaceItem>
-                            <Button Type="primary" OnClick="()=>ShowModalDetalle(context.NumeroLegajo)">
+                            <Button Type="primary" OnClick="()=>DetalleBombero(context.PersonaId)">
                                 <Icon Type="eye" /> Detalles
                             </Button>
                         </SpaceItem>
                         <SpaceItem>
-                            <Button Type="default" OnClick="()=>ShowModalEditar(context.NumeroLegajo)">
+                            <Button Type="default" OnClick="()=>EditarBombero(context.PersonaId)">
                                 <Icon Type="edit" /> Editar
                             </Button>
                         </SpaceItem>
                         <SpaceItem>
-                            <Popconfirm Title="¿Está seguro de eliminar este registro?"
-                                        OnConfirm="()=>Delete(context.NumeroLegajo)"
+                            @* PENDIENTE: Terminar la funcion de dar de baja. Agrear OnConfirm *@
+                            <Popconfirm Title="¿Está seguro de dar de baja este registro?"
+                                        
                                         OkText="Sí"
                                         CancelText="No">
-                                <Button Danger>
-                                    <Icon Type="delete" /> Borrar
+                                <Button Danger Disabled="true">
+                                    <Icon Type="delete" /> Baja
                                 </Button>
                             </Popconfirm>
                         </SpaceItem>
@@ -211,262 +211,67 @@
     </div>
 </Flex>
 
-
-@* Editar bombero *@
-<Modal Title="@("Bombero")"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
-    <Form Loading="loading" Model="@bomberoVM"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailed"
-          @ref="@_form">
-        <FormItem Label="Nombre">
-            <Input DefaultValue="@bomberoVM.Nombre" @bind-Value="@bomberoVM.Nombre" />
-        </FormItem>
-        <FormItem Label="Apellido">
-            <Input DefaultValue="@bomberoVM.Apellido" @bind-Value="@bomberoVM.Apellido" />
-        </FormItem>
-
-        <FormItem Label="Fecha de Nacimiento">
-            <DatePicker @bind-Value="@bomberoVM.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-        </FormItem>
-
-        <FormItem Label="DNI">
-            <Input DefaultValue="@bomberoVM.Documento" @bind-Value="@bomberoVM.Documento" />
-        </FormItem>
-        <FormItem Label="Direccion">
-            <Input DefaultValue="@bomberoVM.Direccion" @bind-Value="@bomberoVM.Direccion" />
-        </FormItem>
-        <FormItem Label="Dotaciones">
-            <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
-        </FormItem>
-
-        <FormItem Label="Numero Legajo">
-            <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
-        </FormItem>
-
-        <FormItem Label="Fecha de Aceptacion">
-            <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-        </FormItem>
-
-        <FormItem Label="Numero IOMA">
-            <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
-        </FormItem>
-
-        <FormItem Label="Lugar de nacimiento">
-            <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
-        </FormItem>
-
-        <FormItem Label="Grupo Sanguineo">
-            <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
-        </FormItem>
-
-        <FormItem Label="Altura (cm)">
-            <AntDesign.InputNumber DefaultValue="@bomberoVM.Altura" @bind-Value="@bomberoVM.Altura" />
-        </FormItem>
-
-        <FormItem Label="Peso">
-            <AntDesign.InputNumber DefaultValue="@bomberoVM.Peso" @bind-Value="@bomberoVM.Peso" />
-        </FormItem>
-
-        <FormItem Label="Observaciones">
-            <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
-        </FormItem>
-
-        <FormItem Label="Nivel de estuduio">
-            <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
-        </FormItem>
-
-        <FormItem Label="Profesion">
-            <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
-        </FormItem>
-
-        <FormItem Label="Es chofer">
-            <Checkbox DefaultValue="@bomberoVM.Chofer" @bind-Checked="@bomberoVM.Chofer">
-            </Checkbox>
-            @if (bomberoVM.Chofer)
-            {
-                <label id="texto">Fecha vencimiento del carnet</label>
-                <br>
-                <DatePicker DefaultValue="@bomberoVM.VencimientoRegistro" @bind-Value="@bomberoVM.VencimientoRegistro" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-            }
-            @if (!bomberoVM.Chofer)
-            {
-                <label id="texto">No es chofer</label>
-            }
-        </FormItem>
-
-        <FormItem Label="Grado">
-            <EnumSelect DefaultValue="@bomberoVM.Grado" TEnum="EscalafonJerarquico" @bind-Value="@bomberoVM.Grado" />
-        </FormItem>
-        <FormItem Label="Estado">
-            <Select @bind-Value="@bomberoVM.Estado"
-                    DefaultValue="@(bomberoVM.Estado)"
-                    Style="width:200px"
-                    TItemValue="EstadoBombero"
-                    TItem="EstadoBombero"
-                    Bordered="true">
-                <SelectOptions>
-                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.CuerpoActivo)" Label="Cuerpo activo" />
-                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Reserva)" Label="Reserva" />
-                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.ComisionDirectiva)" Label="Comision directiva" />
-                    <SelectOption TItemValue="EstadoBombero" TItem="EstadoBombero" Value="@(EstadoBombero.Inactivo)" Label="Inactivo" />
-                </SelectOptions>
-            </Select>
-        </FormItem>
-
-        <FormItem Label="Sexo">
-            <EnumSelect DefaultValue="@bomberoVM.Sexo" TEnum="TipoSexo" @bind-Value="@bomberoVM.Sexo" />
-        </FormItem>
-
-        @* Carga Contacto-----------------------------------------------------------------------*@
-        <FormItem Label="Telefono Laboral">
-            <Input DefaultValue="@bomberoVM.TelefonoLaboral" @bind-Value="@bomberoVM.TelefonoLaboral" />
-        </FormItem>
-
-        <FormItem Label="Telefono Celular">
-            <Input DefaultValue="@bomberoVM.TelefonoCel" @bind-Value="@bomberoVM.TelefonoCel" />
-        </FormItem>
-
-        <FormItem Label="Telefono Fijo">
-            <Input DefaultValue="@bomberoVM.TelefonoFijo" @bind-Value="@bomberoVM.TelefonoFijo" />
-        </FormItem>
-
-        <FormItem Label="Email">
-            <Input DefaultValue="@bomberoVM.Email" @bind-Value="@bomberoVM.Email" />
-        </FormItem>
-        @*Carga Brigada-----------------------------------------------------------------------*@
-        <FormItem Label="Nombre Brigada">
-            <Input DefaultValue="@bomberoVM.NombreBrigada" @bind-Value="@bomberoVM.NombreBrigada" />
-        </FormItem>
-        <FormItem Label="Nombre Brigada">
-            <Select TItem="Brigada"
-                    TItemValue="string"
-                    DataSource="@brigadas"
-                    @bind-Value="@bomberoVM.NombreBrigada"
-                    DefaultValue="@bomberoVM.NombreBrigada"
-                    ValueName="@nameof(Brigada.Nombre)"
-                    LabelName="@nameof(Brigada.Nombre)"
-                    OnSelectedItemChanged="OnSelectedItemChangedHandler">
-            </Select>
-        </FormItem>
-    </Form>
-
-</Modal>
 @{
     RenderFragment footer = @<Template>
-        <Button OnClick="@HandleCancelDetalle" @key="@( "back" )">Cerrar</Button>
+        <Button OnClick="@CloseModals" @key="@( "back" )">Cerrar</Button>
     </Template>;
 }
-@*NO BORRAR -----------------------------------------------------*@
 
-@* <Modal Footer="null" Title="@("Ascenso")"
-       Visible="@_visibleAgregarA"
-       OnOk="@HandleOkAgregarA"
-       OnCancel="@HandleCancelAgregarA">
-    <AscensoBombero />
-    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregarA">
-        Volver
-    </Button>
-</Modal>
-<Modal Footer="null" Title="@("Sancion")" Style=""
-       Visible="@_visibleAgregarS"
-       OnOk="@HandleOkAgregarS"
-       OnCancel="@HandleCancelAgregarS">
-    <SancionBombero />
-    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregarS">
-        Volver
-    </Button>
-</Modal> *@
-
-@*NO BORRAR -----------------------------------------------------*@
-
-@* Detalles del Bombero *@
-<Modal Title="@("Detalles de bombero")"
-       Visible="@_visibleDetalle"
-       OnCancel="@HandleCancelDetalle"
-       Footer="@footer">
-    <p>Nombre: @bomberoVM.Nombre</p>
-    <p>Apellido: @bomberoVM.Apellido</p>
-    <p>Direccion: @bomberoVM.Direccion</p>
-    <p>Fecha De Nacimiento: @bomberoVM.FechaNacimiento</p>
-    <p>Numero De Legajo: @bomberoVM.NumeroLegajo</p>
-    <p>Grado: @bomberoVM.Grado</p>
-    <p>Dotacion: @bomberoVM.Dotacion</p>
-    <p>Brigada: @bomberoVM.Brigada</p>
-    @if (@bomberoVM.Chofer)
-    {
-        <p>Chofer: Es Chofer</p>
-        <p>VencimientoRegistro: @bomberoVM.VencimientoRegistro</p>
-    }
-    else
-    {
-        <p>Chofer: No es Chofer</p>
-    }
-
-
-    <p>Vencimiento del Registro: @bomberoVM.VencimientoRegistro</p>
-    <p>Sexo: @bomberoVM.Sexo</p>
-    <p>Lugar de Nacimiento: @bomberoVM.LugarNacimiento</p>
-    <p>Documento: @bomberoVM.Documento</p>
-    <p>Lugar de Nacimiento: @bomberoVM.LugarNacimiento</p>
-    <p>Grupo Sanguineo: @bomberoVM.GrupoSanguineo</p>
-    <p>Altura: @bomberoVM.Altura cm</p>
-    <p>Peso: @bomberoVM.Peso kg</p>
-    <p>Observaciones: @bomberoVM.Observaciones</p>
-    <p>Profesion: @bomberoVM.Profesion</p>
-    <p>Nivel de Estudios: @bomberoVM.NivelEstudios</p>
-    <p>Numero de Ioma: @bomberoVM.NumeroIoma</p>
-    <p>Telefono Cel: @bomberoVM.TelefonoCel</p>
-    <p>Telefono Laboral: @bomberoVM.TelefonoLaboral</p>
-    <p>Telefono Fijo: @bomberoVM.TelefonoFijo</p>
-    <p>Email: @bomberoVM.Email</p>
-    <p>Nombre de Brigada: @bomberoVM.NombreBrigada</p>
-</Modal>
-@if (selectedRows != null && selectedRows.Any())
+@if (EditarVisible == true)
 {
-    <Button Danger Size="small" OnClick="@(e => { selectedRows = null; })">Clear</Button>
-
-    @foreach (var selected in selectedRows)
-    {
-        <Tag @key="selected.NumeroLegajo" Closable OnClose="e=>RemoveSelection(selected.NumeroLegajo)">@selected.NumeroLegajo - @selected.NumeroLegajo</Tag>
-    }
+    <Modal Footer="null" Title="Editar" OnCancel="CloseModals" Visible="@EditarVisible">
+        <BomberosEditar BomberoId="@BomberoId" OnClose="CloseModals" />
+    </Modal>
 }
+@if (DetallesVisible == true)
+{
+    <Modal Title="@("Detalles de bombero")" Visible="@DetallesVisible" OnCancel="@CloseModals" Footer="@footer">
+        <BomberosDetalles BomberoId="@BomberoId" />
+    </Modal>
+}
+
 @code {
-    //variables
-
-    private bool busquedaVacia = true;
-
-    #region "tabla"
-
-    private Brigada[]? brigadas;
     string searchString;
-    IEnumerable<Bombero> dataSource;
     IEnumerable<Bombero> selectedRows;
     ITable table;
-    List<Bombero>? bomberos = new List<Bombero>();//lo hago con lista porque no me deja usar el buscador en OnChange por pasar valores nulos
-    List<Bombero>? bomberosRespaldo = new List<Bombero>();
-    List<string>? bomberosFiltro = new List<string>();
-    private List<Bombero> bomberosFiltrados = new List<Bombero>();
-
+    List<Bombero>? bomberos = new List<Bombero>();
+    List<Bombero>? SinFiltrar = new List<Bombero>();
 
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
     int _pageIndex = 1;
     int _pageSize = 6;
-    int _total = 0;
 
+    // Funciones modal
+    public int BomberoId { get; set; }
+    public bool EditarVisible { get; set; }
+    public bool DetallesVisible { get; set; }
+
+    private async void EditarBombero(int ID)
+    {
+        BomberoId = ID;
+        EditarVisible = true;
+    }
+    private async void DetalleBombero(int ID)
+    {
+        BomberoId = ID;
+        DetallesVisible = true;
+    }
+    private async void CloseModals()
+    {
+        await OnInitializedAsync();
+        DetallesVisible = false;
+        EditarVisible = false;
+        StateHasChanged();
+    }
+
+    // Init, OnChange y Carga de datos
     protected override async Task OnInitializedAsync()
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
-        brigadas = await db.Brigadas.ToArrayAsync();
-        bomberos = await db.Bomberos.Where(x => x.Estado != EstadoBombero.Inactivo).ToListAsync();//Se trae a todos los bomberos que no esten en reserva
-
-        bomberosRespaldo = bomberos;
+        bomberos = await db.Bomberos.Where(x => x.Estado != EstadoBombero.Inactivo).ToListAsync();
+        SinFiltrar = bomberos;
 
         EscalafonJerarquicoFilter = new TableFilter<EscalafonJerarquico>[Enum.GetValues(typeof(EscalafonJerarquico)).Length];
         int i = 0;
@@ -479,248 +284,10 @@
         StateHasChanged();
     }
 
-    void OnRowClick(RowData<Bombero> row)
-    {
-        Console.WriteLine($"La fila {row.Data.Brigada.BrigadaId} fue seleccionada"); //Toma el valor del valor de la fila seleccionada
-    }
-
     private async Task OnChange(QueryModel<Bombero> queryModel)
     {
         Console.WriteLine(JsonSerializer.Serialize(queryModel));
         OnInitializedAsync();
-    }
-
-    public void RemoveSelection(int id)
-    {
-        var selected = selectedRows.Where(x => x.NumeroLegajo != id);
-        selectedRows = selected;
-    }
-
-    private async void Delete(int id)
-    {
-        using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == id);
-
-        if (bombero == null)
-        {
-            Console.WriteLine($"ERROR: No se encontró un bombero con el Número Legajo {id}.");
-            return;
-        }
-
-        bool isDeleted = await BomberoService.BorrarBombero(bombero);
-
-        if (isDeleted)
-        {
-            bomberos = bomberos.Where(x => x.NumeroLegajo != id).ToList();
-            _total = bomberos.Count;
-            StateHasChanged();
-        }
-        else
-        {
-            Console.WriteLine("ERROR: No se pudo eliminar el bombero.");
-        }
-    }
-    #endregion
-    //----------------------------------------------------------------------------------------------
-    #region "ViewModel"
-    private class BomberosViewModel
-    {
-        public DateTime? FechaNacimiento { get; set; }
-        public DateTime? FechaAceptacion { get; set; }
-        [Required, StringLength(255)]
-        public string Nombre { get; set; }
-        [Required, StringLength(255)]
-        public string Apellido { get; set; }
-        public EstadoBombero Estado { get; set; }
-        public int NumeroLegajo { get; set; }
-        public EscalafonJerarquico Grado { get; set; }
-        public TipoDotaciones Dotacion { get; set; }
-        public TipoGrupoSanguineo GrupoSanguineo { get; set; }
-        public int? Altura { get; set; }
-        public int? Peso { get; set; }
-        [StringLength(255)]
-        public string? Brigada { get; set; }
-        public bool Chofer { get; set; }
-        public DateTime? VencimientoRegistro { get; set; }
-        public TipoSexo Sexo { get; set; }
-        [StringLength(255)]
-        public string Direccion { get; set; }
-        [StringLength(255)]
-        public string LugarNacimiento { get; set; }
-        [StringLength(255)]
-        public string Documento { get; set; }
-        [StringLength(255)]
-        public string Observaciones { get; set; }
-        [StringLength(255)]
-        public string Profesion { get; set; }
-        [StringLength(255)]
-        public string NivelEstudios { get; set; }
-        [StringLength(255)]
-        public string NumeroIoma { get; set; }
-        [StringLength(255)]
-        //Contacto-------------------------------
-        public string? TelefonoCel { get; set; }
-        [StringLength(255)]
-        public string? TelefonoLaboral { get; set; }
-        [StringLength(255)]
-        public string? TelefonoFijo { get; set; }
-        [StringLength(255)]
-        public string? Email { get; set; }
-        public string? NombreBrigada { get; set; }
-
-    }
-    #endregion
-    #region Primera parte Modal
-
-    private BomberosViewModel bomberoVM = new BomberosViewModel();
-
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(bomberoVM)}");
-    }
-
-    bool loading = false;
-
-    void toggle(bool value) => loading = value;
-
-    #endregion
-
-    #region Acciones Modal
-
-    bool _visible = false;
-    bool _visibleDetalle = false;
-    public bool _visibleAgregarS;
-    public bool _visibleAgregarA;
-    bool _visibleHorarios = true;
-    bool _visibleHorariosAgregar = false;
-    int idBombero;
-
-    private async void ShowModalEditar(int id)
-    {
-        GetBomberoViewModel(id);
-        idBombero = id;
-        _visible = true;
-    }//Abre el modal editar
-
-    private async void ShowModalDetalle(int id)
-    {
-        GetBomberoViewModel(id);
-        _visibleDetalle = true;
-    }//Abre modal ver detalles
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        _visible = false;
-    }
-    private void HandleCancelDetalle(MouseEventArgs e)
-    {
-        _visibleDetalle = false;
-    }
-
-    #endregion
-    private Form<BomberosViewModel> _form;
-
-    /// <param name="args"></param>
-    private void OnFinish(EditContext editContext)
-    {
-        _visible = false;
-    }
-
-    private async void HandleOk(MouseEventArgs e)
-    {
-
-        EditarBombero(idBombero);
-        _visible = false;
-    }
-
-    private void NevigateToYourUrl()
-    {
-        navigationManager.NavigateTo($"/bomberos", true);
-    }
-
-    private async void GetBomberoViewModel(int id)
-    {
-        using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos.Where(b => b.NumeroLegajo == id).SingleOrDefaultAsync();
-        Brigada? brigada = bombero.Brigada != null ? await context.Brigadas.SingleOrDefaultAsync(m => m.BrigadaId == bombero.BrigadaId) : null;
-        Bombero? bombero1 = await context.Bomberos
-            .Include(b => b.Contacto)
-            .Where(b => b.NumeroLegajo == id)
-            .SingleOrDefaultAsync();
-
-        BomberosViewModel BomeroPasajeVM = new()
-            {
-                FechaNacimiento = bombero.FechaNacimiento,
-                Sexo = bombero.Sexo,
-                Nombre = bombero.Nombre,
-                Apellido = bombero.Apellido,
-                Documento = bombero.Documento,
-                NumeroLegajo = bombero.NumeroLegajo,
-                NumeroIoma = bombero.NumeroIoma,
-                LugarNacimiento = bombero.LugarNacimiento,
-                Grado = bombero.Grado,
-                Dotacion = bombero.Dotacion,
-                NombreBrigada = brigada != null ? brigada.Nombre : "",
-                GrupoSanguineo = bombero.GrupoSanguineo,
-                Altura = bombero.Altura,
-                Peso = bombero.Peso,
-                Estado = bombero.Estado,
-                Chofer = bombero.Chofer,
-                VencimientoRegistro = bombero.VencimientoRegistro,
-                Direccion = bombero.Direccion,
-                Observaciones = bombero.Observaciones,
-                Profesion = bombero.Profesion,
-                NivelEstudios = bombero.NivelEstudios,
-                FechaAceptacion = bombero.FechaAceptacion,
-                TelefonoCel = bombero1.Contacto.TelefonoCel,
-                TelefonoFijo = bombero1.Contacto.TelefonoFijo,
-                TelefonoLaboral = bombero1.Contacto.TelefonoLaboral,
-                Email = bombero1.Contacto.Email
-            };
-        bomberoVM = BomeroPasajeVM;
-        StateHasChanged();
-    }//Se obtienen los valores de la base de datos al view model
-
-    private async void EditarBombero(int id)
-    {
-        using var context = DbFactory.CreateDbContext();
-        Bombero? bombero = await context.Bomberos
-        .Where(b => b.NumeroLegajo == id)
-        .Include(c => c.Contacto)
-        .SingleOrDefaultAsync();
-        Brigada? brigada = bombero.Brigada != null ? await context.Brigadas.SingleOrDefaultAsync(m => m.BrigadaId == bombero.BrigadaId) : null;
-        bombero.FechaNacimiento = bomberoVM.FechaNacimiento;
-        bombero.Sexo = bomberoVM.Sexo;
-        bombero.FechaNacimiento = bomberoVM.FechaNacimiento;
-        bombero.Sexo = bomberoVM.Sexo;
-        bombero.Nombre = bomberoVM.Nombre;
-        bombero.Apellido = bomberoVM.Apellido;
-        bombero.Documento = bomberoVM.Documento;
-        bombero.NumeroLegajo = bomberoVM.NumeroLegajo;
-        bombero.NumeroIoma = bomberoVM.NumeroIoma;
-        bombero.LugarNacimiento = bomberoVM.LugarNacimiento;
-        bombero.Grado = bomberoVM.Grado;
-        bombero.Dotacion = bomberoVM.Dotacion;
-        if (brigada != null) brigada.Nombre = bomberoVM.NombreBrigada != null ? bomberoVM.NombreBrigada : "";
-        bombero.GrupoSanguineo = bomberoVM.GrupoSanguineo;
-        bombero.Altura = bomberoVM.Altura;
-        bombero.Peso = bomberoVM.Peso;
-        bombero.Estado = bomberoVM.Estado;
-        bombero.Chofer = bomberoVM.Chofer;
-        bombero.VencimientoRegistro = bomberoVM.VencimientoRegistro;
-        bombero.Direccion = bomberoVM.Direccion;
-        bombero.Observaciones = bomberoVM.Observaciones;
-        bombero.Profesion = bomberoVM.Profesion;
-        bombero.NivelEstudios = bomberoVM.NivelEstudios;
-        bombero.FechaAceptacion = bomberoVM.FechaAceptacion;
-        bombero.Contacto.TelefonoCel = bomberoVM.TelefonoCel;
-        bombero.Contacto.TelefonoFijo = bomberoVM.TelefonoFijo;
-        bombero.Contacto.TelefonoLaboral = bomberoVM.TelefonoLaboral;
-        bombero.Contacto.Email = bomberoVM.Email;
-
-        await BomberoService.EditarBombero(bombero);
-        await OnInitializedAsync();
-        StateHasChanged();
     }
 
     public string CargarImage(Bombero bombero)
@@ -735,61 +302,28 @@
         {
             src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
         }
-        Console.WriteLine(src);
         return src;
-    }
-
-    private void OnSelectedItemChangedHandler(Brigada value)
-    {
-        Console.WriteLine($"selected: ${value?.Nombre}");
     }
 
     private void search(string value)
     {
         int number;
 
-        bomberosFiltrados = bomberos.Where(d =>
+        if (string.IsNullOrEmpty(value))
+        {
+            bomberos = SinFiltrar;
+            return;
+        }
+
+        bomberos = bomberos.Where(d =>
         d.Nombre.Contains(value, StringComparison.OrdinalIgnoreCase) ||
         Enum.GetName(typeof(EscalafonJerarquico), d.Grado).Contains(value, StringComparison.OrdinalIgnoreCase) ||
         d.Apellido.Contains(value, StringComparison.OrdinalIgnoreCase))
         .ToList();
         if (int.TryParse(value, out number))
         {
-            bomberosFiltrados = bomberos.Where(d =>
+            bomberos = bomberos.Where(d =>
             d.NumeroLegajo.Equals(number)).ToList();
         }
-        bomberos = bomberosFiltrados;
-
-    }
-
-    private void UpdateSearchStatus()
-    {
-        busquedaVacia = string.IsNullOrWhiteSpace(searchString);
-        if (busquedaVacia) bomberos = bomberosRespaldo;
-    }
-    private void ShowModalAgregarS()
-    {
-        _visibleAgregarS = true;
-    }
-
-    private async void HandleOkAgregarS(MouseEventArgs e)
-    {
-        _visibleAgregarS = false;
-    }
-    public async void HandleCancelAgregarS(MouseEventArgs e)
-    {
-        _visibleAgregarS = false;
-    }
-    private async void HandleOkAgregarA(MouseEventArgs e)
-    {
-        _visibleAgregarA = false;
-    }
-    public async void HandleCancelAgregarA(MouseEventArgs e)
-    {
-        _visibleAgregarA = false;
-    }
-    private void ShowModalAgregarA()
-    {
-        _visibleAgregarA = true;
     }
 }
