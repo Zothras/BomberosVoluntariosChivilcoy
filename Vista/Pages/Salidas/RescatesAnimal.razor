@@ -29,11 +29,17 @@
         <FormItem Label="Descripcion">
             <Input @bind-Value="@AnimalViewModel.Descripcion" />
         </FormItem>
-        <FormItem Label="Dato Hora salida">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@AnimalViewModel.HoraSalida" />
+        <FormItem Label="Fecha salida">
+            <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@AnimalViewModel.FechaSalida" />
         </FormItem>
-        <FormItem Label="Dato Hora llegada">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@AnimalViewModel.HoraLLegada" />
+        <FormItem Label="Fecha llegada">
+            <DatePicker TValue="DateTime" Disabled="@true" DefaultValue="@AnimalViewModel.FechaLlegada" />
+        </FormItem>
+        <FormItem Label="Hora salida">
+            <TimePicker @bind-Value="AnimalViewModel.TimeSalida" Format="HH:mm" />
+        </FormItem>
+        <FormItem Label="Hora llegada">
+            <TimePicker @bind-Value="AnimalViewModel.TimeLlegada" Format="HH:mm" />
         </FormItem>
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@AnimalViewModel.CalleORuta" />

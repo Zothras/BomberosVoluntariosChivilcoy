@@ -740,8 +740,9 @@
         salidasViewModel = new()
         {
                 SalidaId = salida.SalidaId,
-                HoraSalida = salida.HoraSalida,
-                HoraLLegada = salida.HoraLlegada,
+                FechaSalida = salida.HoraSalida.Date,
+                TimeSalida = TimeOnly.FromDateTime(salida.HoraSalida),
+                TimeLlegada = TimeOnly.FromDateTime(salida.HoraLlegada),
                 //KmSalida= s.KmSalida,
                 //KmLlegada=s.KmLlegada,
                 NumeroParte = salida.NumeroParte,

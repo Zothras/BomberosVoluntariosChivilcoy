@@ -33,11 +33,17 @@
         <FormItem Label="Descripcion">
             <Input @bind-Value="@salidasViewModel.Descripcion" />
         </FormItem>
-        <FormItem Label="Dato Hora salida">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@salidasViewModel.HoraSalida" />
+        <FormItem Label="Fecha salida">
+            <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@salidasViewModel.FechaSalida" />
         </FormItem>
-        <FormItem Label="Dato Hora llegada">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@salidasViewModel.HoraLLegada" />
+        <FormItem Label="Fecha llegada">
+            <DatePicker TValue="DateTime" Disabled="@true" DefaultValue="@salidasViewModel.FechaLlegada" />
+        </FormItem>
+        <FormItem Label="Hora salida">
+            <TimePicker @bind-Value="salidasViewModel.TimeSalida" Format="HH:mm" />
+        </FormItem>
+        <FormItem Label="Hora llegada">
+            <TimePicker @bind-Value="salidasViewModel.TimeLlegada" Format="HH:mm" />
         </FormItem>
         @*<FormItem Label="Kilometro salida">
         <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmSalida" />
@@ -1574,8 +1580,9 @@
         salidasViewModel = new()
             {
                 SalidaId = salida.SalidaId,
-                HoraSalida = salida.HoraSalida,
-                HoraLLegada = salida.HoraLlegada,
+                FechaSalida = salida.HoraSalida.Date,
+                TimeSalida = TimeOnly.FromDateTime(salida.HoraSalida),
+                TimeLlegada = TimeOnly.FromDateTime(salida.HoraLlegada),
                 //KmSalida= s.KmSalida,
                 //KmLlegada=s.KmLlegada,
                 NumeroParte = salida.NumeroParte,
