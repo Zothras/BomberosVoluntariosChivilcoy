@@ -28,11 +28,17 @@
     <FormItem Label="Descripcion">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.Descripcion" />
     </FormItem>
-    <FormItem Label="Dato Hora salida">
-        <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@modelServiciosEspecialesRepresentacion.HoraSalida"/>
+    <FormItem Label="Fecha salida">
+        <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@modelServiciosEspecialesRepresentacion.FechaSalida" />
     </FormItem>
-    <FormItem Label="Dato Hora llegada">
-        <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@modelServiciosEspecialesRepresentacion.HoraLLegada" />
+    <FormItem Label="Fecha llegada">
+        <DatePicker TValue="DateTime" Disabled="@true" DefaultValue="@modelServiciosEspecialesRepresentacion.FechaLlegada" />
+    </FormItem>
+    <FormItem Label="Hora salida">
+        <TimePicker @bind-Value="modelServiciosEspecialesRepresentacion.TimeSalida" Format="HH:mm" />
+    </FormItem>
+    <FormItem Label="Hora llegada">
+        <TimePicker @bind-Value="modelServiciosEspecialesRepresentacion.TimeLlegada" Format="HH:mm" />
     </FormItem>
     @*Datos Localizacion*@
     <FormItem Label="Calle/Ruta">

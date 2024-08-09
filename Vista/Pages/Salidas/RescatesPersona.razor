@@ -30,11 +30,17 @@
         <FormItem Label="Descripcion">
             <Input @bind-Value="@PersonaViewModel.Descripcion" />
         </FormItem>
-        <FormItem Label="Dato Hora salida">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@PersonaViewModel.HoraSalida" />
+        <FormItem Label="Fecha salida">
+            <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@PersonaViewModel.FechaSalida" />
         </FormItem>
-        <FormItem Label="Dato Hora llegada">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@PersonaViewModel.HoraLLegada" />
+        <FormItem Label="Fecha llegada">
+            <DatePicker TValue="DateTime" Disabled="@true" DefaultValue="@PersonaViewModel.FechaLlegada" />
+        </FormItem>
+        <FormItem Label="Hora salida">
+            <TimePicker @bind-Value="PersonaViewModel.TimeSalida" Format="HH:mm" />
+        </FormItem>
+        <FormItem Label="Hora llegada">
+            <TimePicker @bind-Value="PersonaViewModel.TimeLlegada" Format="HH:mm" />
         </FormItem>
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@PersonaViewModel.CalleORuta" />

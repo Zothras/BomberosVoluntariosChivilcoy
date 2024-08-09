@@ -25,7 +25,7 @@
           WrapperColSpan="16"
           OnFinish="OnFinishEditar"
           OnFinishFailed="OnFinishFailedEditar"
-    @ref="@_form">
+          @ref="@_form">
         @*Datos generales de las salidas*@
         <FormItem Label="Numero de parte">
             <AntDesign.InputNumber @bind-Value="salidasViewModel.NumeroParte" Disabled />
@@ -33,16 +33,18 @@
         <FormItem Label="Descripcion">
             <Input @bind-Value="@salidasViewModel.Descripcion" />
         </FormItem>
-        <FormItem Label="Dato Hora salida">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@salidasViewModel.HoraSalida" />
+        <FormItem Label="Fecha salida">
+            <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@salidasViewModel.FechaSalida" />
         </FormItem>
-        <FormItem Label="Dato Hora llegada">
-            <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@salidasViewModel.HoraLLegada" />
+        <FormItem Label="Fecha llegada">
+            <DatePicker TValue="DateTime" Disabled="@true" DefaultValue="@salidasViewModel.FechaLlegada" />
         </FormItem>
-        @*<FormItem Label="Kilometro salida">
-        <AntDesign.InputNumber @bind-Value="salidasViewModel[numeroParteVisualizar].KmSalida" />
-        </FormItem>*@
-
+        <FormItem Label="Hora salida">
+            <TimePicker @bind-Value="salidasViewModel.TimeSalida" Format="HH:mm" />
+        </FormItem>
+        <FormItem Label="Hora llegada">
+            <TimePicker @bind-Value="salidasViewModel.TimeLlegada" Format="HH:mm" />
+        </FormItem>
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@salidasViewModel.CalleORuta" />
         </FormItem>
@@ -170,12 +172,12 @@
                 <Select TItem="BomberoViweModel"
                         TItemValue="int"
                         DataSource="@bomberoChoferes"
-                @bind-Value="@mv.Chofer.NumeroLegajo"
+                        @bind-Value="@mv.Chofer.NumeroLegajo"
                         LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                         ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                         Placeholder=""
                         DefaultActiveFirstOption="false"
-                    EnableSearch
+                        EnableSearch
                         OnBlur="OnBlur"
                         OnFocus="OnFocus"
                         OnSelectedItemChanged="OnSelectedItemChangedHandlerChofer"
@@ -187,13 +189,13 @@
                 <Select TItem="Movil"
                         TItemValue="string"
                         DataSource="@Moviles"
-                @bind-Value="@_selectedValueNumeroMovil"
+                        @bind-Value="@_selectedValueNumeroMovil"
                         LabelName="@nameof(Movil.NumeroMovil)"
                         ValueName="@nameof(Movil.NumeroMovil)"
                         Placeholder="Seleccionar numero movil"
                         DefaultActiveFirstOption="false"
                         DefaultValue="mv.Movil.NumeroMovil"
-                    EnableSearch
+                        EnableSearch
                         OnBlur="OnBlur"
                         OnFocus="OnFocus"
                         OnSelectedItemChanged="OnSelectedItemChangedHandlerNumeroMovil"
@@ -245,13 +247,13 @@
                 <Select TItem="BomberoViweModel"
                         TItemValue="int"
                         DataSource="@bomberoTodos"
-                @bind-Value="@cp.Bombero.NumeroLegajo"
+                        @bind-Value="@cp.Bombero.NumeroLegajo"
                         LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                         ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                         Placeholder="Seleccionar numero movil"
                         DefaultActiveFirstOption="false"
                         DefaultValue="@cp.Bombero.NumeroLegajo"
-                    EnableSearch
+                        EnableSearch
                         OnBlur="OnBlur"
                         OnFocus="OnFocus"
                         OnSelectedItemChanged="OnSelectedItemChangedHandlerCuerpoParticipante"
@@ -272,7 +274,7 @@
             <Select TItem="BomberoViweModel"
                     TItemValue="int"
                     DataSource="@bomberoTodos"
-            @bind-Value="@_selectedValueQuienLlenoPlanilla"
+                    @bind-Value="@_selectedValueQuienLlenoPlanilla"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Elegir Bombero"
@@ -292,7 +294,7 @@
             <Select TItem="BomberoViweModel"
                     TItemValue="int"
                     DataSource="@bomberoTodos"
-            @bind-Value="@_selectedValueEncargado"
+                    @bind-Value="@_selectedValueEncargado"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Elegir Bombero"
@@ -341,7 +343,7 @@
                             </FormItem>
 
                             <p><b>Seguro:</b></p>
-                                        //traer datos de seguroVehiculo
+                            //traer datos de seguroVehiculo
                             <FormItem Label="Numero De Poliza">
                                 <Input @bind-Value="@dam.VehiculoDamnificado.Seguro.NumeroDePoliza" />
                             </FormItem>
@@ -560,10 +562,10 @@
                     <Select TItem="NivelCapacitacion"
                             TItemValue="string"
                             DataSource="@_NivelCapacitacion"
-                    @bind-Value="@servicioEspecialRepresentacionViewModel.NivelCapacitacion"
+                            @bind-Value="@servicioEspecialRepresentacionViewModel.NivelCapacitacion"
                             ValueName="@nameof(NivelCapacitacion.nivelCapacitacion)"
                             LabelName="@nameof(NivelCapacitacion.nivelCapacitacion)"
-                        DefaultActiveFirstOption
+                            DefaultActiveFirstOption
                             Style="width: 200px;"
                             OnSelectedItemChanged="OnSelectedItemChangedHandler">
                         @*<ItemTemplate>
@@ -610,10 +612,10 @@
                     <Select TItem="TipoCapacitacion"
                             TItemValue="string"
                             DataSource="@_TipoCapacitacion"
-                    @bind-Value="@_selectedValueTipoCapacitacion"
+                            @bind-Value="@_selectedValueTipoCapacitacion"
                             ValueName="@nameof(TipoCapacitacion.tipoCapacitacion)"
                             LabelName="@nameof(TipoCapacitacion.tipoCapacitacion)"
-                        DefaultActiveFirstOption
+                            DefaultActiveFirstOption
                             Style="width: 200px;"
                             OnSelectedItemChanged="OnSelectedItemChangedHandler">
                         @*<ItemTemplate>
@@ -1563,7 +1565,7 @@
             TipoSalidas = TipoSalidaDiscriminador;
         }
     }
-    
+
 
 
     private async void GetSalidasViewModel(Salida salida)
@@ -1574,8 +1576,9 @@
         salidasViewModel = new()
             {
                 SalidaId = salida.SalidaId,
-                HoraSalida = salida.HoraSalida,
-                HoraLLegada = salida.HoraLlegada,
+                FechaSalida = salida.HoraSalida.Date,
+                TimeSalida = TimeOnly.FromDateTime(salida.HoraSalida),
+                TimeLlegada = TimeOnly.FromDateTime(salida.HoraLlegada),
                 //KmSalida= s.KmSalida,
                 //KmLlegada=s.KmLlegada,
                 NumeroParte = salida.NumeroParte,
@@ -1691,7 +1694,7 @@
 
 
 }
-@code{
+@code {
     private async Task EditarSaliida()
     {
         switch (salidasViewModel.Discriminador)
@@ -1748,12 +1751,12 @@
     }
     private async Task CargarFactorClimatico()
     {
-        
+
         Bombero? bomberoEncargado = await db.Bomberos.Where(b => b.NumeroLegajo == _selectedValueEncargado).SingleOrDefaultAsync();
         Bombero? BomberoLlenoPlanilla = await db.Bomberos.Where(b => b.NumeroLegajo == _selectedValueQuienLlenoPlanilla).SingleOrDefaultAsync();
         FactorClimatico cargarFactorClimatico = new()
-        {
-                
+            {
+
                 HoraSalida = salidasViewModel.HoraSalida,
                 HoraLlegada = salidasViewModel.HoraLLegada,
                 //KmSalida = modelServiciosEspecialesRepresentacion.KmSalida,
@@ -1788,17 +1791,17 @@
                 Moviles = new(),
                 CuerpoParticipante = new(),
                 //Carga Representacion
-                
-            
+
+
                 Tipo = factorClimaticoViewModel.Tipo,
                 Evacuacion = factorClimaticoViewModel.Evacuacion,
                 Superficie = factorClimaticoViewModel.Superficie,
                 DetalleSuperficieDañada = factorClimaticoViewModel.DetalleSuperficieDañada
 
-            
 
 
-        };
+
+            };
         foreach (BomberoSalida bom in salidasViewModel.CuerpoParticipante)
         {
             BomberoSalida BomSalida = new()
@@ -1930,7 +1933,7 @@
                 Damnificados = new(),
                 Moviles = new(),
                 CuerpoParticipante = new(),
-                //Datos especificos de salida            
+                //Datos especificos de salida
                 Tipo = accidenteViewModels.Tipo,
                 //CantidadVheiculo = accidenteViewModels.CantidadVehiculos,
 
@@ -2072,7 +2075,7 @@
                 Moviles = new(),
                 CuerpoParticipante = new(),
                 //Salida especifica
-                
+
                 Tipo = materialPeligrosoViewModel.Tipo,
                 Sustancias = materialPeligrosoViewModel.Sustancias,
                 Controlada = materialPeligrosoViewModel.Controlada,
@@ -2228,7 +2231,7 @@
                 Moviles = new(),
                 CuerpoParticipante = new(),
                 //Salida especifica
-                
+
 
                 TipoRescatePersona = rescatePersonaViewModel.TipoRescatePersona,
                 Otro = rescatePersonaViewModel.Otro

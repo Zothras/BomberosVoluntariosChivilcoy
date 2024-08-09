@@ -699,7 +699,7 @@
         StateHasChanged();
     }
 
-   
+
 
 
     private void ShowModalDetalle(int numeroParte)
@@ -727,7 +727,7 @@
         StateHasChanged();
     }
 
-   
+
     public void Dispose()
     {
         db?.Dispose();
@@ -738,10 +738,11 @@
         //    .Where(D => D.SalidaId == salida.SalidaId).Include(vd => vd.VehiculoDamnificado).ThenInclude(seg => seg.Seguro)
         //    .ToListAsync();
         salidasViewModel = new()
-        {
+            {
                 SalidaId = salida.SalidaId,
-                HoraSalida = salida.HoraSalida,
-                HoraLLegada = salida.HoraLlegada,
+                FechaSalida = salida.HoraSalida.Date,
+                TimeSalida = TimeOnly.FromDateTime(salida.HoraSalida),
+                TimeLlegada = TimeOnly.FromDateTime(salida.HoraLlegada),
                 //KmSalida= s.KmSalida,
                 //KmLlegada=s.KmLlegada,
                 NumeroParte = salida.NumeroParte,
@@ -770,7 +771,7 @@
                 QuienLlenoId = salida.QuienLlenoId,
                 TipoServicio = salida.TipoServicio,
                 Discriminador = (TipoSalida)int.Parse(discriminador)
-        };
+            };
 
 
         StateHasChanged();
@@ -793,7 +794,7 @@
         StateHasChanged();
     }
 }
-@code{
+@code {
     private async Task GetViewModelFactorClimatico(int Id)
     {
         using var db = await DbFactory.CreateDbContextAsync();
@@ -1280,5 +1281,5 @@
 
     }
 
-    
+
 }

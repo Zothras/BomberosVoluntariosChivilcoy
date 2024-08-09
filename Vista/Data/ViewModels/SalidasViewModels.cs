@@ -12,13 +12,42 @@ namespace Vista.Data.ViewModels
         public int AnioNumeroParte { get; set; }
 
         // Otras propiedades
-        public DateTime HoraSalida { get; set; }
-        public DateTime HoraLLegada { get; set; }
+
+        //Fechas y Tiempo
+        public DateTime FechaSalida { get; set; }
+        public DateTime FechaLlegada
+        {
+            get
+            {
+                return TimeLlegada < TimeSalida ? FechaSalida.AddDays(1) : FechaSalida;
+            }
+        }
+        public TimeOnly TimeSalida { get; set; }
+        public TimeOnly TimeLlegada { get; set; }
+
+        // HoraSalida - HoraLLegada Completas (Fecha y Hora)
+        public DateTime HoraSalida
+        {
+            get
+            {
+                // Combina FechaSalida con TimeSalida
+                return FechaSalida.Date.Add(TimeSalida.ToTimeSpan());
+            }
+        }
+
+        public DateTime HoraLLegada
+        {
+            get
+            {
+                // Combina FechaLlegada con TimeLlegada
+                return FechaLlegada.Date.Add(TimeLlegada.ToTimeSpan());
+            }
+        }
 
         public int KmLlegada { get; set; }
         public int Kilometraje { get; set; }
-       
-        
+
+
         [Required, StringLength(255)]
         public string Descripcion { get; set; }
         [Required, StringLength(255)]
@@ -55,7 +84,7 @@ namespace Vista.Data.ViewModels
         //Bombero encargado
         public string NombreEncargado { get; set; }
         public string ApellidoEncargado { get; set; }
-        public int LegajoEncargado{ get; set; }
+        public int LegajoEncargado { get; set; }
         //bombero que lleno la planilla
         public string NombreLLenoPlanilla { get; set; }
         public string ApllidoLLenoPlanilla { get; set; }

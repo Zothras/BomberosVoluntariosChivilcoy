@@ -236,8 +236,9 @@
             SalidasViewModel1 NuevaSalidaVM = new SalidasViewModel1()
             {
                     SalidaId = s.SalidaId,
-                    HoraSalida= s.HoraSalida,
-                    HoraLLegada = s.HoraLlegada,
+                    FechaSalida = s.HoraSalida.Date,
+                    TimeSalida = TimeOnly.FromDateTime(s.HoraSalida),
+                    TimeLlegada = TimeOnly.FromDateTime(s.HoraLlegada),
                     //KmSalida= s.KmSalida,
                     //KmLlegada=s.KmLlegada,
                     NumeroParte= s.NumeroParte,
