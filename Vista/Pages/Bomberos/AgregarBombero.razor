@@ -250,7 +250,7 @@
         <Input @bind-Value="@bomberoView.LugarNacimiento" />
     </FormItem>
     <FormItem Label="Grupo Sanguineo" Class="custom-label">
-        <EnumSelect TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoView.GrupoSanguineo" />
+        <EnumSelect TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoView.GrupoSanguineo" AllowClear/>
     </FormItem>
     <FormItem Label="Altura (cm)" Class="custom-label">
         <AntDesign.InputNumber @bind-Value="@bomberoView.Altura" />
