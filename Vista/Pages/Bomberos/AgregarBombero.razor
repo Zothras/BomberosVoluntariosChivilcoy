@@ -282,10 +282,10 @@
         }
     </FormItem>
     <FormItem Label="Grado" Class="custom-label">
-        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoView.Grado" />
+        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoView.Grado" AllowClear/>
     </FormItem>
     <FormItem Label="Estado" Class="custom-label">
-        <EnumSelect TEnum="EstadoBombero" @bind-Value="@bomberoView.Estado" />
+        <EnumSelect TEnum="EstadoBombero" @bind-Value="@bomberoView.Estado" AllowClear/>
     </FormItem>
     <FormItem Label="Sexo" Class="custom-label">
         <EnumSelect TEnum="TipoSexo" @bind-Value="@bomberoView.Sexo" />
