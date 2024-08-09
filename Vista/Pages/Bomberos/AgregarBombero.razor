@@ -121,6 +121,85 @@
         font-feature-settings: 'tnum';
         margin-bottom: -4px !important;
     }
+
+    .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        position: relative;
+        background-color: #fff;
+        border: 1px solid !important;
+        border-radius: 2px;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        border-color: red;
+    }
+
+    a, area, button, [role="button"], input:not([type="range"]), label, select, summary, textarea {
+        touch-action: manipulation;
+        border-color: red !important; 
+    }
+
+    .ant-picker {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        font-feature-settings: 'tnum';
+        padding: 4px 11px 4px;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        background: #fff;
+        border: 1px solid !important;
+        border-radius: 2px;
+        transition: border 0.3s, box-shadow 0.3s;
+        border-color: red !important;
+    }
+
+    .ant-layout, .ant-layout * {
+        box-sizing: border-box;
+        border-color: red !important;
+    }
+
+    .ant-input-number-input {
+        width: 100%;
+        height: 30px;
+        padding: 0 11px;
+        text-align: left;
+        background-color: transparent;
+        border: 1px solid !important;
+        border-radius: 2px;
+        outline: 0;
+        transition: all 0.3s linear;
+        appearance: textfield !important;
+        border-color: red !important;
+    }
+
+    .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        position: relative;
+        background-color: #fff;
+        border: 1px solid red !important;
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-top-color: red;
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-right-color: red;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: red;
+        border-left-width: 1px;
+        border-left-style: solid;
+        border-left-color: red;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-image-slice: 100%;
+        border-image-source: none;
+        border-image-width: 1;
+        border-radius: 2px;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
 </style>
 
 <div class="container">
