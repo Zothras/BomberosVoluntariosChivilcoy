@@ -125,7 +125,7 @@
                         <Button Type="primary"
                                 OnClick="@(() => { navigationManager.NavigateTo("/bomberos/agregar"); })"
                                 Class="add-button">
-                            <Icon Type="plus" /> Agregar Numerario
+                            <Icon Type="plus" /> Agregar
                         </Button>
                     </SpaceItem>
                 </Space>
@@ -685,7 +685,7 @@
         bombero.Contacto.TelefonoLaboral = bomberoVM.TelefonoLaboral;
         bombero.Contacto.Email = bomberoVM.Email;
 
-        await context.SaveChangesAsync();
+        await BomberoService.EditarBombero(bombero);
         await OnInitializedAsync();
         StateHasChanged();
     }

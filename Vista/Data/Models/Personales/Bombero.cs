@@ -30,6 +30,8 @@ namespace Vista.Data.Models.Personales
 
         public List<VehiculoPersonal> Vehiculos { get; set; } = new();
 
+        public List<VehiculoSalida>? VehiculosEncargado { get; set; }
+
         public BomberoDependencia? Dependencia { get; set; }
 
         public List<Incidente> Incidentes { get; set; } = new();

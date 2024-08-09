@@ -34,6 +34,8 @@ namespace Vista.Services
             {
                 Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.Encargado.PersonaId);
                 vehiculo.Encargado = Encargado;
+                if (Encargado.VehiculosEncargado == null) Encargado.VehiculosEncargado = new();
+                Encargado.VehiculosEncargado.Add(vehiculo);
             }
             if(vehiculo is Movil)
             {

@@ -14,7 +14,7 @@ namespace Vista.Services
     {
         Task<Bombero> CrearBombero(Bombero bombero);
         Task <bool>BorrarBombero(Bombero bombero);
-        Task<bool> EditarBombero(Bombero bombero);
+        Task<Bombero> EditarBombero(Bombero bombero);
         Task<Sancion> SancionarBombero(Sancion sancion);
         Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso);
         Task<List<BomberoViweModel>> GetAllBomberosAsync();
@@ -43,75 +43,39 @@ namespace Vista.Services
             return bombero;
         }
 
-        public async Task<bool> EditarBombero(Bombero bombero)
+        public async Task<Bombero> EditarBombero(Bombero bombero)
         {
             try
             {
-                var existingBombero = await _context.Bomberos
-                    .Include(b => b.Contacto)
-                    .Include(b => b.Imagen)
-                    .FirstOrDefaultAsync(b => b.PersonaId == bombero.PersonaId);
-
-                if (existingBombero is not null)
+                Bombero Editar = await _context.Bomberos.SingleOrDefaultAsync(e => e.PersonaId == bombero.PersonaId);
+                foreach (var i in bombero.GetType().GetProperties())
                 {
-                    // Actualizar propiedades del bombero
-                    existingBombero.FechaNacimiento = bombero.FechaNacimiento;
-                    existingBombero.Sexo = bombero.Sexo;
-                    existingBombero.Nombre = bombero.Nombre;
-                    existingBombero.Apellido = bombero.Apellido;
-                    existingBombero.Documento = bombero.Documento;
-                    existingBombero.NumeroLegajo = bombero.NumeroLegajo;
-                    existingBombero.NumeroIoma = bombero.NumeroIoma;
-                    existingBombero.LugarNacimiento = bombero.LugarNacimiento;
-                    existingBombero.Grado = bombero.Grado;
-                    existingBombero.Dotacion = bombero.Dotacion;
-                    existingBombero.GrupoSanguineo = bombero.GrupoSanguineo;
-                    existingBombero.Altura = bombero.Altura;
-                    existingBombero.Peso = bombero.Peso;
-                    existingBombero.Estado = bombero.Estado;
-                    existingBombero.Chofer = bombero.Chofer;
-                    existingBombero.VencimientoRegistro = bombero.VencimientoRegistro;
-                    existingBombero.Direccion = bombero.Direccion;
-                    existingBombero.Observaciones = bombero.Observaciones;
-                    existingBombero.Profesion = bombero.Profesion;
-                    existingBombero.NivelEstudios = bombero.NivelEstudios;
-                    existingBombero.FechaAceptacion = bombero.FechaAceptacion;
-
-                    /* Actualizar imagen si se ha subido una nueva
-                    if (bombero.Imagen != null && !string.IsNullOrEmpty(bombero.Imagen.Base64Imagen))
+                    var propNombre = i.Name;
+                    var propValor = i.GetValue(bombero);
+                    var editarProp = Editar.GetType().GetProperty(propNombre);
+                    if (editarProp != null && editarProp.CanWrite && propValor != null && propNombre != "Brigada" && propNombre != "BrigadaId")
                     {
-                        if (existingBombero.Imagen == null)
-                        {
-                            existingBombero.Imagen = new Imagen();
-                        }
-                        existingBombero.Imagen.NombreImagen = bombero.Imagen.NombreImagen;
-                        existingBombero.Imagen.TipoImagen = bombero.Imagen.TipoImagen;
-                        existingBombero.Imagen.Base64Imagen = bombero.Imagen.Base64Imagen;
-                    }*/
-
-                    // Actualizar o crear contacto
-                    if (existingBombero.Contacto == null)
-                    {
-                        existingBombero.Contacto = new Contacto();
+                        editarProp.SetValue(Editar, propValor);
                     }
-                    existingBombero.Contacto.TelefonoCel = bombero.Contacto.TelefonoCel;
-                    existingBombero.Contacto.TelefonoFijo = bombero.Contacto.TelefonoFijo;
-                    existingBombero.Contacto.TelefonoLaboral = bombero.Contacto.TelefonoLaboral;
-                    existingBombero.Contacto.Email = bombero.Contacto.Email;
-
-                    await _context.SaveChangesAsync();
-                    return true;
                 }
-                else
+                if (bombero.Brigada != null)
                 {
-                    Console.WriteLine($"No se encontró el bombero con PersonaId {bombero.PersonaId}");
-                    return false;
+                    Brigada? Brigada = await _context.Brigadas.SingleOrDefaultAsync(b => b.BrigadaId == bombero.Brigada.BrigadaId);
+                    Editar.Brigada = Brigada;
+                    Editar.BrigadaId = Brigada.BrigadaId;
                 }
+                await _context.SaveChangesAsync();
+                return bombero;
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Error al editar el bombero {ex.Message}");
+                return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al editar el bombero: {ex.Message}");
-                return false;
+                Console.WriteLine($"Error inesperado {ex.Message}");
+                return null;
             }
         }
 
