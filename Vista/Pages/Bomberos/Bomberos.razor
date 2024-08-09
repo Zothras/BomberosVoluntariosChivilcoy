@@ -153,9 +153,12 @@
             <TitleTemplate>
                 <Space Size="@("large")" Style="width: 100%; justify-content: flex-end;">
                     <SpaceItem>
+                        <EnumSelect DefaultValue="EstadoBombero.CuerpoActivo" ValueChanged="(EstadoBombero estado) => search(searchString, estado)" TEnum="EstadoBombero" />
+                    </SpaceItem>
+                    <SpaceItem>
                         <Search Placeholder="Buscar Numerario"
                                 @bind-Value="@searchString"
-                                OnSearch="()=>search(searchString)"
+                                OnSearch="()=>search(searchString, Estado)"
                                 BindOnInput
                                 Style="width: 200px;" />
                     </SpaceItem>
@@ -194,15 +197,28 @@
                             </Button>
                         </SpaceItem>
                         <SpaceItem>
-                            @* PENDIENTE: Terminar la funcion de dar de baja. Agrear OnConfirm *@
-                            <Popconfirm Title="¿Está seguro de dar de baja este registro?"
-                                        
-                                        OkText="Sí"
-                                        CancelText="No">
-                                <Button Danger Disabled="true">
-                                    <Icon Type="delete" /> Baja
-                                </Button>
-                            </Popconfirm>
+                            @if (context.Estado != EstadoBombero.Inactivo)
+                            {
+                                <Popconfirm Title="¿Está seguro de dar de baja este registro?"
+                                            OnConfirm="()=>CambiarEstado(context.PersonaId, EstadoBombero.Inactivo)"
+                                            OkText="Sí"
+                                            CancelText="No">
+                                    <Button Danger>
+                                        <Icon Type="down" /> Baja
+                                    </Button>
+                                </Popconfirm>
+                            }
+                            else
+                            {
+                                <Popconfirm Title="¿Está seguro de dar de alta este registro?"
+                                            OnConfirm="()=>CambiarEstado(context.PersonaId, EstadoBombero.CuerpoActivo)"
+                                            OkText="Sí"
+                                            CancelText="No">
+                                    <Button Color="Color.Green2">
+                                        <Icon Type="up" /> Alta
+                                    </Button>
+                                </Popconfirm>
+                            }
                         </SpaceItem>
                     </Space>
                 </ActionColumn>
@@ -232,10 +248,10 @@
 
 @code {
     string searchString;
-    IEnumerable<Bombero> selectedRows;
     ITable table;
     List<Bombero>? bomberos = new List<Bombero>();
     List<Bombero>? SinFiltrar = new List<Bombero>();
+    public EstadoBombero Estado = EstadoBombero.CuerpoActivo;
 
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
@@ -246,6 +262,15 @@
     public int BomberoId { get; set; }
     public bool EditarVisible { get; set; }
     public bool DetallesVisible { get; set; }
+
+    private async Task CambiarEstado(int BomberoId, EstadoBombero estado)
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        Bombero bombero = await db.Bomberos.Where(b => b.PersonaId == BomberoId).SingleOrDefaultAsync();
+        bombero.Estado = estado;
+        await BomberoService.CambiarEstado(bombero);
+        await RefreshData();
+    }
 
     private async void EditarBombero(int ID)
     {
@@ -259,10 +284,9 @@
     }
     private async void CloseModals()
     {
-        await OnInitializedAsync();
         DetallesVisible = false;
         EditarVisible = false;
-        StateHasChanged();
+        await RefreshData();
     }
 
     // Init, OnChange y Carga de datos
@@ -270,8 +294,8 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
-        bomberos = await db.Bomberos.Where(x => x.Estado != EstadoBombero.Inactivo).ToListAsync();
-        SinFiltrar = bomberos;
+        search(searchString, Estado);
+        SinFiltrar = await db.Bomberos.ToListAsync();
 
         EscalafonJerarquicoFilter = new TableFilter<EscalafonJerarquico>[Enum.GetValues(typeof(EscalafonJerarquico)).Length];
         int i = 0;
@@ -282,6 +306,14 @@
         }
 
         StateHasChanged();
+    }
+
+    private async Task RefreshData()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        SinFiltrar = await db.Bomberos.ToListAsync();
+        search(searchString, Estado);
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task OnChange(QueryModel<Bombero> queryModel)
@@ -305,13 +337,17 @@
         return src;
     }
 
-    private void search(string value)
+    private void search(string value, EstadoBombero estado)
     {
         int number;
 
+        Estado = estado;
+
+        bomberos = SinFiltrar.Where(d => d.Estado == Estado).ToList();
+
         if (string.IsNullOrEmpty(value))
         {
-            bomberos = SinFiltrar;
+            StateHasChanged();
             return;
         }
 
@@ -325,5 +361,6 @@
             bomberos = bomberos.Where(d =>
             d.NumeroLegajo.Equals(number)).ToList();
         }
+        StateHasChanged();
     }
 }

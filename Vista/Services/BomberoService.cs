@@ -16,6 +16,7 @@ namespace Vista.Services
         Task<bool> BorrarBombero(Bombero bombero);
         Task<Bombero> EditarBombero(Bombero bombero);
         Task<Sancion> SancionarBombero(Sancion sancion);
+        Task<Bombero> CambiarEstado(Bombero bombero);
         Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso);
         Task<List<BomberoViweModel>> GetAllBomberosAsync();
         Task<BomberoViweModel> ObtenerBomberoPorLegajoAsync(int numeroLegajo);
@@ -78,6 +79,14 @@ namespace Vista.Services
                 Console.WriteLine($"Error inesperado {ex.Message}");
                 return null;
             }
+        }
+
+        public async Task<Bombero> CambiarEstado(Bombero bombero)
+        {
+            Bombero BomberoBaja = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == bombero.PersonaId);
+            BomberoBaja.Estado = bombero.Estado;
+            await _context.SaveChangesAsync();
+            return bombero;
         }
 
         public async Task<bool> BorrarBombero(Bombero bombero)
