@@ -2,12 +2,12 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 @page "/bomberos"
-@using Vista.Services;
-@inject IBomberoService BomberoService;
+@using Vista.Services
+@inject IBomberoService BomberoService
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
-@using System.Text.Json;
+@using System.Text.Json
 
 <style>
     .template {
@@ -251,7 +251,7 @@
 }
 @if (DetallesVisible == true)
 {
-    <Modal Title="@("Detalles de bombero")" Visible="@DetallesVisible" OnCancel="@CloseModals" Footer="@footer">
+    <Modal Visible="@DetallesVisible" OnCancel="@CloseModals" Footer="@footer">
         <BomberosDetalles BomberoId="@BomberoId" />
     </Modal>
 }
