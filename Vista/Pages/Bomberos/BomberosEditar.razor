@@ -117,21 +117,21 @@
 
     @* Carga Contacto-----------------------------------------------------------------------*@
     <FormItem Label="Telefono Laboral">
-        <Input DefaultValue="@bomberoVM.TelefonoLaboral" @bind-Value="@bomberoVM.TelefonoLaboral" />
+        <Input DefaultValue="@contactoVM.TelefonoLaboral" @bind-Value="@contactoVM.TelefonoLaboral" />
     </FormItem>
 
     <FormItem Label="Telefono Celular">
-        <Input DefaultValue="@bomberoVM.TelefonoCel" @bind-Value="@bomberoVM.TelefonoCel" />
+        <Input DefaultValue="@contactoVM.TelefonoCel" @bind-Value="@contactoVM.TelefonoCel" />
     </FormItem>
 
     <FormItem Label="Telefono Fijo">
-        <Input DefaultValue="@bomberoVM.TelefonoFijo" @bind-Value="@bomberoVM.TelefonoFijo" />
+        <Input DefaultValue="@contactoVM.TelefonoFijo" @bind-Value="@contactoVM.TelefonoFijo" />
     </FormItem>
 
     <FormItem Label="Email">
-        <Input DefaultValue="@bomberoVM.Email" @bind-Value="@bomberoVM.Email" />
+        <Input DefaultValue="@contactoVM.Email" @bind-Value="@contactoVM.Email" />
     </FormItem>
-    @*Carga Brigada-----------------------------------------------------------------------*@
+
     <FormItem Label="Nombre Brigada">
         <Select TItem="Brigada"
                 TItemValue="int"
@@ -158,6 +158,7 @@
     public Bombero bomberoData { get; set; }
     public BomberosViewModel bomberoVM { get; set; } = new();
     public BrigadaViewModel brigadaVM { get; set; } = new();
+    public ContactoViewModel contactoVM {get; set;} = new();
     public ImagenViewModel imagenVM { get; set; } = new();
 
     //Cargar ViewModel
@@ -173,6 +174,16 @@
             {
                 editarProp.SetValue(bomberoVM, propValor);
             }
+        }
+        Contacto? contacto = await Context.Contactos.Where(c=>c.PersonaId == BomberoId).SingleOrDefaultAsync();
+        if (contacto != null)
+        {
+            contactoVM = new(){
+                TelefonoCel = contacto.TelefonoCel,
+                TelefonoLaboral = contacto.TelefonoLaboral,
+                TelefonoFijo = contacto.TelefonoFijo,
+                Email = contacto.Email
+            };
         }
         if (bomberoData.BrigadaId != null && bomberoData.BrigadaId != 0)
         {
@@ -222,10 +233,14 @@
         bombero.Profesion = bomberoVM.Profesion;
         bombero.NivelEstudios = bomberoVM.NivelEstudios;
         bombero.FechaAceptacion = bomberoVM.FechaAceptacion;
-        bombero.Contacto.TelefonoCel = bomberoVM.TelefonoCel;
-        bombero.Contacto.TelefonoFijo = bomberoVM.TelefonoFijo;
-        bombero.Contacto.TelefonoLaboral = bomberoVM.TelefonoLaboral;
-        bombero.Contacto.Email = bomberoVM.Email;
+        // Informacion Contacto
+        bombero.Contacto = new(){
+            TelefonoCel = contactoVM.TelefonoCel,
+            TelefonoFijo = contactoVM.TelefonoFijo,
+            TelefonoLaboral = contactoVM.TelefonoLaboral,
+            Email = contactoVM.Email
+        };
+        // ----------------------
         if (brigada != null)
         {
             bombero.BrigadaId = brigada.BrigadaId;
@@ -292,6 +307,13 @@
     {
         public int BrigadaId { get; set; }
         public string? Nombre { get; set; }
+    }
+    public class ContactoViewModel()
+    {
+        public string? TelefonoCel { get; set; }
+        public string? TelefonoLaboral { get; set; }
+        public string? TelefonoFijo { get; set; }
+        public string? Email { get; set; }
     }
     public class ImagenViewModel
     {

@@ -40,6 +40,12 @@ namespace Vista.Services
                 throw new InvalidOperationException("Ya existe un bombero con este ID.");
             }
 
+            Brigada? brigada = _context.Brigadas.Where(b=>b.BrigadaId == bombero.BrigadaId).SingleOrDefault();
+            if (brigada != null){
+                bombero.Brigada = brigada;
+                bombero.BrigadaId = brigada.BrigadaId;
+            }
+
             _context.Bomberos.Add(bombero);
             await _context.SaveChangesAsync();
             return bombero;
@@ -50,6 +56,10 @@ namespace Vista.Services
             try
             {
                 Bombero Editar = await _context.Bomberos.SingleOrDefaultAsync(e => e.PersonaId == bombero.PersonaId);
+                Contacto? contacto = await _context.Contactos.SingleOrDefaultAsync(c=>c.PersonaId == bombero.PersonaId);
+                if (contacto != null){
+                    _context.Contactos.Remove(contacto);
+                }
                 foreach (var i in bombero.GetType().GetProperties())
                 {
                     var propNombre = i.Name;
