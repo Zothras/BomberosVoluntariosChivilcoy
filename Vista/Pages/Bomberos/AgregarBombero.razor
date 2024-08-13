@@ -97,7 +97,7 @@
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 25px;
+        gap: 20px !important;
     }
 
     .form-row {
@@ -205,6 +205,16 @@
         border-radius: 2px;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
+    /* SWITCH */
+    [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled), button:not(:disabled) {
+        cursor: pointer;
+        margin-left: 4px !important;
+    }
+
+    .ant-switch-checked {
+        background-color: #A63333 !important;
+    }
+    /* SWITCH */
 </style>
 
 <div class="container">
