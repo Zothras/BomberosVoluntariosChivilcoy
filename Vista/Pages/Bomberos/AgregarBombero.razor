@@ -62,7 +62,7 @@
     }
 
     #textoLabel {
-         color: black;
+        color: black;
     }
 
     .container {
@@ -109,7 +109,7 @@
         color: #FFFFFF;
         padding: 2px 4px;
         margin-right: 267.2px;
-     }
+    }
 
     .ant-form-item-label {
         background-color: #A63333;
@@ -138,7 +138,7 @@
 
     a, area, button, [role="button"], input:not([type="range"]), label, select, summary, textarea {
         touch-action: manipulation;
-        border-color: red !important; 
+        border-color: red !important;
     }
 
     .ant-picker {
@@ -210,128 +210,127 @@
 <div class="container">
     <div class="form-container">
         <div class="form-title">
-<Form Model="@bomberoView"
-      LabelColSpan="8"
-      WrapperColSpan="16"
-      OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed">
-      <div class="form-grid">
-    <FormItem Label="Foto" class="custom-label">
-        <InputFile OnChange="SubirFoto"/>
-    </FormItem>
-    <FormItem Label="Nombre" class="custom-label">
-        <Input @bind-Value="@bomberoView.Nombre" />
-    </FormItem>
-    <FormItem Label="Apellido" Class="custom-label">
-        <Input @bind-Value="@bomberoView.Apellido" />
-    </FormItem>
-    <FormItem Label="Fecha de Nacimiento" Class="custom-label">
-        <DatePicker @bind-Value="@bomberoView.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-    </FormItem>
-    <FormItem Label="DNI" Class="custom-label">
-        <Input @bind-Value="@bomberoView.Documento" />
-    </FormItem>
-    <FormItem Label="Direccion" Class="custom-label">
-        <Input @bind-Value="@bomberoView.Direccion" />
-    </FormItem>
-    <FormItem Label="Dotaciones" Class="custom-label">
-        <EnumSelect TEnum="TipoDotaciones" @bind-Value="@bomberoView.Dotacion" />
-    </FormItem>
-    <FormItem Label="Numero Legajo" Class="custom-label">
-        <Input @bind-Value="@bomberoView.NumeroLegajo" />
-    </FormItem>
-    <FormItem Label="Fecha de Aceptacion" Class="custom-label">
-        <DatePicker @bind-Value="@bomberoView.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-    </FormItem>
-    <FormItem Label="Numero IOMA" Class="custom-label">
-        <Input @bind-Value="@bomberoView.NumeroIoma" />
-    </FormItem>
-    <FormItem Label="Lugar de nacimiento" Class="custom-label">
-        <Input @bind-Value="@bomberoView.LugarNacimiento" />
-    </FormItem>
-    <FormItem Label="Grupo Sanguineo" Class="custom-label">
-        <EnumSelect TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoView.GrupoSanguineo" AllowClear/>
-    </FormItem>
-    <FormItem Label="Altura (cm)" Class="custom-label">
-        <AntDesign.InputNumber @bind-Value="@bomberoView.Altura" />
-    </FormItem>
-    <FormItem Label="Peso" Class="custom-label">
-        <AntDesign.InputNumber @bind-Value="@bomberoView.Peso" />
-    </FormItem>
-    <FormItem Label="Observaciones" Class="custom-label">
-        <Input @bind-Value="@bomberoView.Observaciones" />
-    </FormItem>
-    <FormItem Label="Nivel de estuduio" Class="custom-label">
-        <Input @bind-Value="@bomberoView.NivelEstudios" />
-    </FormItem>
-    <FormItem Label="Profesion" Class="custom-label">
-        <Input @bind-Value="@bomberoView.Profesion" />
-    </FormItem>
-    <FormItem Label="Es chofer" Class="custom-label">
-        <Checkbox @bind-Checked="@bomberoView.Chofer">
-        </Checkbox>
-        @if (bomberoView.Chofer)
-        {
-            <label id="texto">Fecha vencimiento del carnet</label>
-            <br>
-            <DatePicker @bind-Value="@bomberoView.VencimientoRegistro" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
-        }
-        @if (!bomberoView.Chofer)
-        {
-            <label id="texto"></label>
-        }
-    </FormItem>
-    <FormItem Label="Grado" Class="custom-label">
-        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoView.Grado" AllowClear/>
-    </FormItem>
-    <FormItem Label="Estado" Class="custom-label">
-        <EnumSelect TEnum="EstadoBombero" @bind-Value="@bomberoView.Estado" AllowClear/>
-    </FormItem>
-    <FormItem Label="Sexo" Class="custom-label">
-        <EnumSelect TEnum="TipoSexo" @bind-Value="@bomberoView.Sexo" />
-    </FormItem>
-    @*Carga Contacto-----------------------------------------------------------------------*@
-    <FormItem Label="Telefono Laboral" Class="custom-label">
-        <Input @bind-Value="@bomberoView.TelefonoLaboral" />
-    </FormItem>
-    <FormItem Label="Telefono Celular" Class="custom-label">
-        <Input @bind-Value="@bomberoView.TelefonoCel" />
-    </FormItem>
-    <FormItem Label="Telefono Fijo" Class="custom-label">
-        <Input @bind-Value="@bomberoView.TelefonoFijo" />
-       </FormItem>
-    <FormItem Label="Email" Class="custom-label">
-        <Input @bind-Value="@bomberoView.Email" />
-    </FormItem>
-    @*Carga Brigada-----------------------------------------------------------------------*@
-    <FormItem Label="Nombre Brigada" Class="custom-label">
-        <Select TItem="Brigada"
-                TItemValue="int"
-                DataSource="@brigadas"
-                @bind-Value="@bomberoView.BrigadaId"
-                Placeholder="Elegir Brigada"
-                LabelName="@nameof(Brigada.Nombre)"
-                ValueName="@nameof(Brigada.BrigadaId)"
-                OnSelectedItemChanged="OnSelectedItemChangedHandler">
-        </Select>
-    </FormItem>
-    <FormItem WrapperColOffset="20" WrapperColSpan="16">
-        <Button Class="boton_p" HtmlType="submit" OnClick="CrearBombero">
-               Agregar Numerario
-        </Button>
-    </FormItem>
-    <FormItem WrapperColOffset="18" WrapperColSpan="16">
-        <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos"); })" style="border-radius: 10px;">
-        <Button Class="boton_p">
-         Volver
-        </Button>
-        </a>
-    </FormItem>
-            </div>
-    </Form>
+            <Form Model="@bomberoView"
+                  LabelColSpan="8"
+                  WrapperColSpan="16"
+                  OnFinish="OnFinish"
+                  OnFinishFailed="OnFinishFailed">
+                <div class="form-grid">
+                    <FormItem Label="Foto" class="custom-label">
+                        <InputFile OnChange="SubirFoto" />
+                    </FormItem>
+                    <FormItem Label="Nombre" class="custom-label">
+                        <Input @bind-Value="@bomberoView.Nombre" />
+                    </FormItem>
+                    <FormItem Label="Apellido" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.Apellido" />
+                    </FormItem>
+                    <FormItem Label="Fecha de Nacimiento" Class="custom-label">
+                        <DatePicker @bind-Value="@bomberoView.FechaNacimiento" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+                    </FormItem>
+                    <FormItem Label="DNI" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.Documento" />
+                    </FormItem>
+                    <FormItem Label="Direccion" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.Direccion" />
+                    </FormItem>
+                    <FormItem Label="Dotaciones" Class="custom-label">
+                        <EnumSelect TEnum="TipoDotaciones" @bind-Value="@bomberoView.Dotacion" />
+                    </FormItem>
+                    <FormItem Label="Numero Legajo" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.NumeroLegajo" />
+                    </FormItem>
+                    <FormItem Label="Fecha de Aceptacion" Class="custom-label">
+                        <DatePicker @bind-Value="@bomberoView.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+                    </FormItem>
+                    <FormItem Label="Numero IOMA" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.NumeroIoma" />
+                    </FormItem>
+                    <FormItem Label="Lugar de nacimiento" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.LugarNacimiento" />
+                    </FormItem>
+                    <FormItem Label="Grupo Sanguineo" Class="custom-label">
+                        <EnumSelect TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoView.GrupoSanguineo" AllowClear />
+                    </FormItem>
+                    <FormItem Label="Altura (cm)" Class="custom-label">
+                        <AntDesign.InputNumber @bind-Value="@bomberoView.Altura" />
+                    </FormItem>
+                    <FormItem Label="Peso" Class="custom-label">
+                        <AntDesign.InputNumber @bind-Value="@bomberoView.Peso" />
+                    </FormItem>
+                    <FormItem Label="Observaciones" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.Observaciones" />
+                    </FormItem>
+                    <FormItem Label="Nivel de estuduio" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.NivelEstudios" />
+                    </FormItem>
+                    <FormItem Label="Profesion" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.Profesion" />
+                    </FormItem>
+                    <FormItem Label="Es chofer" Class="custom-label">
+                        <Switch @bind-Checked="@bomberoView.Chofer" />
+                        @if (bomberoView.Chofer)
+                        {
+                            <label id="texto">Fecha vencimiento del carnet</label>
+                            <br>
+                            <DatePicker @bind-Value="@bomberoView.VencimientoRegistro" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+                        }
+                        @if (!bomberoView.Chofer)
+                        {
+                            <label id="texto"></label>
+                        }
+                    </FormItem>
+                    <FormItem Label="Grado" Class="custom-label">
+                        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoView.Grado" AllowClear />
+                    </FormItem>
+                    <FormItem Label="Estado" Class="custom-label">
+                        <EnumSelect TEnum="EstadoBombero" @bind-Value="@bomberoView.Estado" AllowClear />
+                    </FormItem>
+                    <FormItem Label="Sexo" Class="custom-label">
+                        <EnumSelect TEnum="TipoSexo" @bind-Value="@bomberoView.Sexo" />
+                    </FormItem>
+                    @*Carga Contacto-----------------------------------------------------------------------*@
+                    <FormItem Label="Telefono Laboral" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.TelefonoLaboral" />
+                    </FormItem>
+                    <FormItem Label="Telefono Celular" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.TelefonoCel" />
+                    </FormItem>
+                    <FormItem Label="Telefono Fijo" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.TelefonoFijo" />
+                    </FormItem>
+                    <FormItem Label="Email" Class="custom-label">
+                        <Input @bind-Value="@bomberoView.Email" />
+                    </FormItem>
+                    @*Carga Brigada-----------------------------------------------------------------------*@
+                    <FormItem Label="Nombre Brigada" Class="custom-label">
+                        <Select TItem="Brigada"
+                                TItemValue="int"
+                                DataSource="@brigadas"
+                                @bind-Value="@bomberoView.BrigadaId"
+                                Placeholder="Elegir Brigada"
+                                LabelName="@nameof(Brigada.Nombre)"
+                                ValueName="@nameof(Brigada.BrigadaId)"
+                                OnSelectedItemChanged="OnSelectedItemChangedHandler">
+                        </Select>
+                    </FormItem>
+                    <FormItem WrapperColOffset="20" WrapperColSpan="16">
+                        <Button Class="boton_p" HtmlType="submit" OnClick="CrearBombero">
+                            Agregar Numerario
+                        </Button>
+                    </FormItem>
+                    <FormItem WrapperColOffset="18" WrapperColSpan="16">
+                        <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos"); })" style="border-radius: 10px;">
+                            <Button Class="boton_p">
+                                Volver
+                            </Button>
+                        </a>
+                    </FormItem>
+                </div>
+            </Form>
         </div>
     </div>
- </div>
+</div>
 
 
 
@@ -434,7 +433,7 @@
         {
             //Validacion Numero de Legajo
             Bombero? NumeroLegajo = await DbFactory.CreateDbContext().Bomberos.Where(b => b.NumeroLegajo == bomberoView.NumeroLegajo).SingleOrDefaultAsync();
-            if(NumeroLegajo != null)
+            if (NumeroLegajo != null)
             {
                 message.Warning("Numero de legajo ya existente.");
                 return;
@@ -446,43 +445,43 @@
             }
 
             Bombero bombero = new Bombero()
-        {
-            FechaNacimiento = bomberoView.FechaNacimiento,
-            Sexo = bomberoView.Sexo,
-            Nombre = bomberoView.Nombre,
-            Apellido = bomberoView.Apellido,
-            Documento = bomberoView.Documento,
-            NumeroLegajo = bomberoView.NumeroLegajo,
-            NumeroIoma = bomberoView.NumeroIoma,
-            LugarNacimiento = bomberoView.LugarNacimiento,
-            Grado = bomberoView.Grado,
-            Imagen = new()
-            {
-                NombreImagen = bomberoView.NombreImagen,
-                TipoImagen = bomberoView.TipoImagen,
-                Base64Imagen = bomberoView.Base64
-            },
-            Dotacion = bomberoView.Dotacion,
-            GrupoSanguineo = bomberoView.GrupoSanguineo,
-            BrigadaId = bomberoView.BrigadaId != 0 ? bomberoView.BrigadaId : null,
-            Altura = bomberoView.Altura,
-            Peso = bomberoView.Peso,
-            Estado = bomberoView.Estado,
-            Chofer = bomberoView.Chofer,
-            VencimientoRegistro = bomberoView.VencimientoRegistro,
-            Direccion = bomberoView.Direccion,
-            Observaciones = bomberoView.Observaciones,
-            Profesion = bomberoView.Profesion,
-            NivelEstudios = bomberoView.NivelEstudios,
-            FechaAceptacion = bomberoView.FechaAceptacion,
-            Contacto = new Contacto
-            {
-                TelefonoCel = bomberoView.TelefonoCel,
-                TelefonoFijo = bomberoView.TelefonoFijo,
-                TelefonoLaboral = bomberoView.TelefonoLaboral,
-                Email = bomberoView.Email
-            }
-        };
+                {
+                    FechaNacimiento = bomberoView.FechaNacimiento,
+                    Sexo = bomberoView.Sexo,
+                    Nombre = bomberoView.Nombre,
+                    Apellido = bomberoView.Apellido,
+                    Documento = bomberoView.Documento,
+                    NumeroLegajo = bomberoView.NumeroLegajo,
+                    NumeroIoma = bomberoView.NumeroIoma,
+                    LugarNacimiento = bomberoView.LugarNacimiento,
+                    Grado = bomberoView.Grado,
+                    Imagen = new()
+                    {
+                        NombreImagen = bomberoView.NombreImagen,
+                        TipoImagen = bomberoView.TipoImagen,
+                        Base64Imagen = bomberoView.Base64
+                    },
+                    Dotacion = bomberoView.Dotacion,
+                    GrupoSanguineo = bomberoView.GrupoSanguineo,
+                    BrigadaId = bomberoView.BrigadaId != 0 ? bomberoView.BrigadaId : null,
+                    Altura = bomberoView.Altura,
+                    Peso = bomberoView.Peso,
+                    Estado = bomberoView.Estado,
+                    Chofer = bomberoView.Chofer,
+                    VencimientoRegistro = bomberoView.VencimientoRegistro,
+                    Direccion = bomberoView.Direccion,
+                    Observaciones = bomberoView.Observaciones,
+                    Profesion = bomberoView.Profesion,
+                    NivelEstudios = bomberoView.NivelEstudios,
+                    FechaAceptacion = bomberoView.FechaAceptacion,
+                    Contacto = new Contacto
+                    {
+                        TelefonoCel = bomberoView.TelefonoCel,
+                        TelefonoFijo = bomberoView.TelefonoFijo,
+                        TelefonoLaboral = bomberoView.TelefonoLaboral,
+                        Email = bomberoView.Email
+                    }
+                };
             await BomberoService.CrearBombero(bombero);
             message.Success("Se agrego el bombero.");
             bomberoView = new BomberosViewModel();
@@ -494,8 +493,8 @@
             // Manejo de excepciones (puedes mostrar un mensaje al usuario o registrar el error)
             message.Error(ex.Message);
             Console.WriteLine($"Error: {ex.Message}");
+        }
     }
-}
 
 
     private void OnFinish(EditContext editContext)

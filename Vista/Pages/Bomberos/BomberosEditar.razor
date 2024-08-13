@@ -78,8 +78,7 @@
     </FormItem>
 
     <FormItem Label="Es chofer">
-        <Checkbox DefaultValue="@bomberoVM.Chofer" @bind-Checked="@bomberoVM.Chofer">
-        </Checkbox>
+        <Switch @bind-Checked="@bomberoVM.Chofer" />
         @if (bomberoVM.Chofer)
         {
             <label id="texto">Fecha vencimiento del carnet</label>
@@ -158,7 +157,7 @@
     public Bombero bomberoData { get; set; }
     public BomberosViewModel bomberoVM { get; set; } = new();
     public BrigadaViewModel brigadaVM { get; set; } = new();
-    public ContactoViewModel contactoVM {get; set;} = new();
+    public ContactoViewModel contactoVM { get; set; } = new();
     public ImagenViewModel imagenVM { get; set; } = new();
 
     //Cargar ViewModel
@@ -175,15 +174,16 @@
                 editarProp.SetValue(bomberoVM, propValor);
             }
         }
-        Contacto? contacto = await Context.Contactos.Where(c=>c.PersonaId == BomberoId).SingleOrDefaultAsync();
+        Contacto? contacto = await Context.Contactos.Where(c => c.PersonaId == BomberoId).SingleOrDefaultAsync();
         if (contacto != null)
         {
-            contactoVM = new(){
-                TelefonoCel = contacto.TelefonoCel,
-                TelefonoLaboral = contacto.TelefonoLaboral,
-                TelefonoFijo = contacto.TelefonoFijo,
-                Email = contacto.Email
-            };
+            contactoVM = new()
+                {
+                    TelefonoCel = contacto.TelefonoCel,
+                    TelefonoLaboral = contacto.TelefonoLaboral,
+                    TelefonoFijo = contacto.TelefonoFijo,
+                    Email = contacto.Email
+                };
         }
         if (bomberoData.BrigadaId != null && bomberoData.BrigadaId != 0)
         {
@@ -234,12 +234,13 @@
         bombero.NivelEstudios = bomberoVM.NivelEstudios;
         bombero.FechaAceptacion = bomberoVM.FechaAceptacion;
         // Informacion Contacto
-        bombero.Contacto = new(){
-            TelefonoCel = contactoVM.TelefonoCel,
-            TelefonoFijo = contactoVM.TelefonoFijo,
-            TelefonoLaboral = contactoVM.TelefonoLaboral,
-            Email = contactoVM.Email
-        };
+        bombero.Contacto = new()
+            {
+                TelefonoCel = contactoVM.TelefonoCel,
+                TelefonoFijo = contactoVM.TelefonoFijo,
+                TelefonoLaboral = contactoVM.TelefonoLaboral,
+                Email = contactoVM.Email
+            };
         // ----------------------
         if (brigada != null)
         {
