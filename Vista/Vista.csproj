@@ -19,7 +19,7 @@
     <Folder Include="wwwroot\Moviles\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.20.0" />
+    <PackageReference Include="AntDesign" Version="0.20.0.2" />
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />    
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
