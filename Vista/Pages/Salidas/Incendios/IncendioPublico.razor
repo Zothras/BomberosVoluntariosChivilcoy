@@ -124,26 +124,22 @@
         @if (current == 0)
         {
             <DatosGenerales Model="@IncendioPublicoModel"
-                            
                             animationClass="@animationClass" />
         }
         else if (current == 1)
         {
             @*Solicitante | Receptor | Damnificado*@
             <Participantes Model="@IncendioPublicoModel"
-                           
                            animationClass="@animationClass" />
         }
         else if (current == 2)
         {
             <Seguro Model="@IncendioPublicoModel"
-                    
                     animationClass="@animationClass" />
         }
         else if (current == 3)
         {
             <Vehiculos Model="@IncendioPublicoModel"
-                       
                        animationClass="@animationClass"
                        bomberoChoferes="@bomberoChoferes"
                        movilSalidaViewModels="@movilSalidaViewModels"
@@ -171,15 +167,13 @@
                 }
             </div>
             <Establecimiento Model="@IncendioPublicoModel"
-                             
                              animationClass="@animationClass" />
         }
         else if (current == 6)
         {
             <div class="slick-contenedor">
                 <DatosSalida Model="@IncendioPublicoModel"
-                             animationClass="@animationClass"
-                              />
+                             animationClass="@animationClass" />
             </div>
         }
     </div>
@@ -239,25 +233,6 @@
         new StepItem {Title = " ", Content = ""}  /* Salida */
     };
 
-    bool switchDamificados { get; set; }
-    private void HandleSwitchChanged(bool value)
-    {
-        switchDamificados = value;
-        StateHasChanged();
-    }
-
-    private void HandleBomberoEncargadoChanged(int value)
-    {
-        BomberoEncargado = value;
-        StateHasChanged();
-    }
-
-    private void HandleQuienLLenoPlanillaChanged(int value)
-    {
-        QuienLLenoPlanilla = value;
-        StateHasChanged();
-    }
-
     Bombero[] TodosBomberos;
     Movil[] Moviles;
 
@@ -272,8 +247,6 @@
     int BomberoReceptor;
     string NumeroMovil;
     int chofer;
-    int BomberoEncargado;
-    int QuienLLenoPlanilla;
 
     private void ToggleAnimationD()
     {
@@ -326,8 +299,8 @@
         try
         {
             Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
-            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == IncendioPublicoModel.LegajoEncargado).SingleOrDefaultAsync();
+            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == IncendioPublicoModel.LegajoLLenoPlanilla).SingleOrDefaultAsync();
 
             if (IncendioPublicoModel is not null)
             {

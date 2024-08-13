@@ -120,21 +120,18 @@
             {
                 @*General*@
                 <DatosGenerales Model="@salidaIncendioComercioView"
-                                
                                 animationClass="@animationClass"/>
             }
             else if (current == 1)
             {
             @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioComercioView"
-                           
                            animationClass="@animationClass" />
             }
             else if (current == 2)
             {
                 @*Seguro*@
                 <Seguro Model="@salidaIncendioComercioView"
-                        
                         animationClass="@animationClass" />
             }
             else if (current == 3)
@@ -228,18 +225,6 @@
         StateHasChanged();
     }
 
-    private void HandleBomberoEncargadoChanged(int value)
-    {
-        BomberoEncargado = value;
-        StateHasChanged();
-    }
-
-    private void HandleQuienLLenoPlanillaChanged(int value)
-    {
-        QuienLLenoPlanilla = value;
-        StateHasChanged();
-    }
-
     public int ImprimirNumeroParte;
     void HandleOk1(int _numeroParte)
     {
@@ -248,13 +233,6 @@
     }
 
     @*Damnificados | Bomberos | Moviles y Chofer | Steps *@
-
-    @*Damnificados*@
-    bool switchValue { get; set; } // Cargar Damnificado [Si/No]
-
-    @*Bomberos*@
-    int BomberoEncargado;
-    int QuienLLenoPlanilla;
 
     public async Task CargarBomberosView()
     {
@@ -376,8 +354,8 @@
     {
         try
         {
-            Bombero? bomberoEncargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == BomberoEncargado);
-            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == QuienLLenoPlanilla);
+            Bombero? bomberoEncargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoEncargado);
+            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == salidaIncendioComercioView.LegajoLLenoPlanilla);
             Vista.Data.Models.Salidas.Planillas.IncendioComercio? numeroParte = await Context.IncendiosComercios.Where(m => m.NumeroParte == salidaIncendioComercioView.NumeroParte).SingleOrDefaultAsync();
             if (numeroParte != null)
             {

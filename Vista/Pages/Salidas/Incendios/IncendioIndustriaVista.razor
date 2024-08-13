@@ -119,29 +119,27 @@
 
 
             @if (current == 0)
-            {@*General*@
+            {
+                @*General*@
                 <DatosGenerales Model="@salidaIncendioIndustrialView"
-                                
-            animationClass="@animationClass" />
+                    animationClass="@animationClass" />
             }
             else if (current == 1)
             {
-            @*Solicitante | Receptor | Damnificado*@
+                @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioIndustrialView"
-                           
                            animationClass="@animationClass" />
             }
             else if (current == 2)
             {
-            @*Seguro*@
+                @*Seguro*@
                 <Seguro Model="@salidaIncendioIndustrialView"
-                        
                         animationClass="@animationClass" />
             }
             else if (current == 3)
-            {@*Chofer y Movil*@
+            {
+                @*Chofer y Movil*@
                 <Vehiculos Model="@salidaIncendioIndustrialView"
-                           
                            animationClass="@animationClass"
                            bomberoChoferes="@bomberoChoferes"
                            movilSalidaViewModels="@movilSalidaViewModels"
@@ -157,7 +155,8 @@
                           animationClass="@animationClass" />
             }
             else if (current == 5)
-            {@*Info-Salida*@
+            {
+                @*Info-Salida*@
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Lugar</label>
@@ -165,15 +164,13 @@
                     </div>
                 </div>
                 <Establecimiento Model="@salidaIncendioIndustrialView"
-                                 
-                animationClass="@animationClass" />
+                    animationClass="@animationClass" />
             }
             else if(current == 6)
             {
                 <div class="slick-contenedor">
                     <DatosSalida Model="@salidaIncendioIndustrialView"
-                                 animationClass="@animationClass"
-                                  />
+                                 animationClass="@animationClass" />
                 </div>
             }
         </div>
@@ -223,24 +220,6 @@
     //bool switchValueS { get; set; }
     //bool chek { get; set; }
     bool _visible1;
-    bool switchDamificados { get; set; }
-    private void HandleSwitchChanged(bool value)
-    {
-        switchDamificados = value;
-        StateHasChanged();
-    }
-
-    private void HandleBomberoEncargadoChanged(int value)
-    {
-        BomberoEncargado = value;
-        StateHasChanged();
-    }
-
-    private void HandleQuienLLenoPlanillaChanged(int value)
-    {
-        QuienLLenoPlanilla = value;
-        StateHasChanged();
-    }
 
     public int ImprimirNumeroParte;
     void HandleOk1(int _numeroParte)
@@ -259,8 +238,6 @@
 
 
     @*Bomberos*@
-    int BomberoEncargado;
-    int QuienLLenoPlanilla;
     int BomberoReceptor;// Falta info..
 
     @*Carga*@
@@ -371,8 +348,8 @@
         try
         {
             Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
-            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioIndustrialView.LegajoEncargado).SingleOrDefaultAsync();
+            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioIndustrialView.LegajoLLenoPlanilla).SingleOrDefaultAsync();
             if (salidaIncendioIndustrialView is not null)
             {
                 Vista.Data.Models.Salidas.Planillas.IncendioIndustria? numeroParte = await Context.IncendiosIndustrias.Where(m => m.NumeroParte == salidaIncendioIndustrialView.NumeroParte).SingleOrDefaultAsync();

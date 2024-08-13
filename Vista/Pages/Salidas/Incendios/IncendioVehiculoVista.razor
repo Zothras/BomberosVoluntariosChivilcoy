@@ -117,30 +117,28 @@
         </Steps>
         <div class="steps-content" style="max-height: 620px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
             @if (current == 0)
-            {@*General*@
+            {
+                @*General*@
                 <DatosGenerales Model="@salidaIncendioVehicularView"
-                                
-                                animationClass="@animationClass" 
-            esSoloDireccion="true"/>
+                                animationClass="@animationClass"
+                                esSoloDireccion="true"/>
             }
             else if (current == 1)
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioVehicularView"
-                           
                            animationClass="@animationClass" />
             }
             else if (current == 2)
             {
-            @*Seguro*@
+                @*Seguro*@
                 <Seguro Model="@salidaIncendioVehicularView"
-                        
                         animationClass="@animationClass" />
             }
             else if (current == 3)
-            {@*Chofer y Movil*@
+            {
+                @*Chofer y Movil*@
                 <Vehiculos Model="@salidaIncendioVehicularView"
-                           
                            animationClass="@animationClass"
                            bomberoChoferes="@bomberoChoferes"
                            movilSalidaViewModels="@movilSalidaViewModels"
@@ -158,7 +156,6 @@
             else if (current == 5)
             {@*Vehiculo*@
                 <DatosVehiculoDamnificado Model="@salidaIncendioVehicularView"
-                                          
                                           animationClass="@animationClass"
                                           vehiculo="@vehiculo"
                                           DamnificadosSalida="@DamnificadosSalida"
@@ -169,8 +166,7 @@
             {@*Info-Salida*@
                 <div class="slick-contenedor">
                     <DatosSalida Model="@salidaIncendioVehicularView"
-                                 animationClass="@animationClass"
-                                  />
+                                 animationClass="@animationClass" />
                 </div>
             }
         </div>
@@ -220,25 +216,6 @@
     @*Sucess y Imprimir*@
     bool _visible1;
 
-    bool switchDamificados { get; set; }
-    private void HandleSwitchChanged(bool value)
-    {
-        switchDamificados = value;
-        StateHasChanged();
-    }
-
-    private void HandleBomberoEncargadoChanged(int value)
-    {
-        BomberoEncargado = value;
-        StateHasChanged();
-    }
-
-    private void HandleQuienLLenoPlanillaChanged(int value)
-    {
-        QuienLLenoPlanilla = value;
-        StateHasChanged();
-    }
-
     private void HandleDamnificadoVehiculo(string value)
     {
         damnificadoVehiculoId = value;
@@ -259,8 +236,6 @@
 
     @*Bomberos*@
     int BomberoCuerpo;
-    int BomberoEncargado;
-    int QuienLLenoPlanilla;
     int BomberoReceptor;// Falta info..
 
     public async Task CargarBomberosView()
@@ -385,8 +360,8 @@
         {
 
             Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
-            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioVehicularView.LegajoEncargado).SingleOrDefaultAsync();
+            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == salidaIncendioVehicularView.LegajoLLenoPlanilla).SingleOrDefaultAsync();
 
             if (salidaIncendioVehicularView is not null)
             {
