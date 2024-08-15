@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
         CuerpoActivo,
         [Display(Name = "Reserva")]
         Reserva,
-        [Display(Name = "Comision Directiva")]
+        [Display(Name = "Comisión Directiva")]
         ComisionDirectiva,
         [Display(Name = "Inactivo")]
         Inactivo,

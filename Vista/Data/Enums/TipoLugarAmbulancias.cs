@@ -1,12 +1,19 @@
-﻿namespace Vista.Data.Enums
+﻿using System.ComponentModel.DataAnnotations;
+namespace Vista.Data.Enums
 {
     public enum TipoLugarAmbulancias
     {
+        [Display(Name = "Bar")]
         Bar,
-        RestaurantLocalComida,
+        [Display(Name = "Restaurante (Local de Comida)")]
+        RestauranteLocalDeComida,
+        [Display(Name = "Shopping")]
         Shopping,
+        [Display(Name = "Teatro")]
         Teatro,
+        [Display(Name = "Cine")]
         Cine,
-        otro
+        [Display(Name = "Otro")]
+        Otro
     }
 }
