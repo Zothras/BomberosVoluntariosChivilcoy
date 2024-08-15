@@ -36,6 +36,41 @@
         background-color: #732D2D !important;
         color: white !important;
     }
+
+    /* .ant-form-item-label > label {
+        position: relative;
+        display: grid;
+        align-items: center;
+        max-width: 100%;
+        height: 32px;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        background-color: #A63333 !important;
+        color: white !important;
+    }
+
+    .ant-form {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        font-feature-settings: 'tnum';
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px !important;
+        width: 30px !important;
+    } */
+
+    .ant-modal-body {
+        padding: 4px;
+        font-size: 14px;
+        line-height: 1.5715;
+        word-wrap: break-word;
+    }
 </style>
 
 <div class="template">
@@ -46,7 +81,7 @@
                     <Title Level="3">Registro Salidas</Title>
                 </GridCol>
                 <GridCol Span="8" Offset="12">
-                    <Search Placeholder="Search Name" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+                    <Search Placeholder="Buscar bomberoe el " @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
                 </GridCol>
             </GridRow>
         </TitleTemplate>
@@ -68,9 +103,6 @@
                 <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
                         <Menu>
-                            <MenuItem>
-                                <Button Danger OnClick="()=>Delete(context.NumeroParte)">Delete</Button>
-                            </MenuItem>
                             <MenuItem>
                                 <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button>
                             </MenuItem>
