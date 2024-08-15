@@ -19,7 +19,7 @@
                     TItemValue="int"
                     DataSource="@bomberoChoferesSalir"
                     @bind-Value="@chofer"
-                    LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                     Placeholder="Selecione a un bombero"
                     DefaultActiveFirstOption="false"
@@ -72,23 +72,30 @@
                   OnFinish="OnFinishModel"
                   OnFinishFailed="OnFinishFailed"
                   @ref="@_form1">
-                <FormItem Label="Numero factura">
+                <FormItem Label="Numero de Remito">
                     <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
                 </FormItem>
-                <FormItem Label="Fecha factura">
-                    <DatePicker TValue="DateTime?" ShowTime="true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
+                <FormItem Label="Fecha de la Factura">
+                    <DatePicker TValue="DateTime?" @bind-Value="@movilSalidaViewModels.FechaFactura" />
                 </FormItem>
-                <FormItem Label="Tipo Combustible">
+                <FormItem Label="Tipo de Combustible">
                     <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
                 </FormItem>
                 <FormItem Label="Cantidad de Litros">
                     <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
                 </FormItem>
                 <FormItem Label="Quien lleno">
-                    <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
-                </FormItem>
-                <FormItem Label="TelefonoQuienLleno">
-                    <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
+                    <Select TItem="BomberoViweModel"
+                            TItemValue="string"
+                            DataSource="@bomberoChoferes"
+                            @bind-Value="@movilSalidaViewModels.QuienLleno"
+                            LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                            ValueName="@nameof(BomberoViweModel.Nombre)"
+                            Placeholder="Seleccione a un bombero"
+                            DefaultActiveFirstOption="false"
+                            AllowClear="true"
+                            EnableSearch>
+                    </Select>
                 </FormItem>
             </Form>
         </Modal>
@@ -101,7 +108,7 @@
     {
         <div>
             <Table Size="TableSize.Small" PageSize="4" Context="MovilesSalidasL1" DataSource="Model.Moviles" Bordered>
-                <PropertyColumn Property="c=>c.Movil.NumeroMovil"></PropertyColumn>
+                <PropertyColumn Property="c=>c.Movil.NumeroMovil" Title="Número de Móvil"></PropertyColumn>
                 <PropertyColumn Property="c=>c.Chofer.Nombre"></PropertyColumn>
                 <PropertyColumn Property="c=>c.Chofer.Apellido"></PropertyColumn>
                 <ActionColumn Title="Acciones">
@@ -121,7 +128,7 @@
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
 
-    private List<BomberoViweModel> bomberoChoferes { get; set; }
+    public List<BomberoViweModel> bomberoChoferes { get; set; }
     private List<BomberoViweModel> bomberoChoferesSalir { get; set; }
 
     private List<Movil> Moviles { get; set; }
