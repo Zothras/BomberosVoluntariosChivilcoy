@@ -9,10 +9,7 @@
 @* Detalles del Bombero *@
 <Form Model="@bomberoVM" LabelColSpan="8" WrapperColSpan="16">
     <h2 class="modal-title">Detalles del Bombero</h2>
-    <div class="info-section">
-        <FormItem Label="Foto">
-            <img src="@CargarImage" style="padding-left: 10px; max-width: 100px; max-height: 100px;" />
-        </FormItem>
+    <div class="info-section">       
         <FormItem Label="Nombre">@bomberoVM.Nombre</FormItem>
         <FormItem Label="Apellido">@bomberoVM.Apellido</FormItem>
         <FormItem Label="Dirección">@bomberoVM.Direccion</FormItem>
