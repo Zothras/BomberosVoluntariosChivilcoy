@@ -161,7 +161,7 @@
                 <EnumSelect TEnum="TipoIncendioHospitalesYClinicas" @bind-Value="@HospitalClinicaViewModel.TipoLugar" />
                 @if (HospitalClinicaViewModel.TipoLugar == TipoIncendioHospitalesYClinicas.Otro)
                 {
-                    <FormItem Label="OtroLugar">
+                    <FormItem Label="Otro Lugar">
                         <Input @bind-Value="@HospitalClinicaViewModel.OtroLugar" />
                     </FormItem>
                 }
