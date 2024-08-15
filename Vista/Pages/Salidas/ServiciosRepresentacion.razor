@@ -13,6 +13,8 @@
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
+        margin-right: 80px !important; 
+        border-radius: 5px 5px !important;
     }
 </style>
 
@@ -25,7 +27,7 @@
       OnFinishFailed="OnFinishFailed">
     @*Datos generales de las salidas*@
 
-    <FormItem Label="Descripcion">
+    <FormItem Label="Descripción">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.Descripcion" />
     </FormItem>
     <FormItem Label="Fecha salida">
@@ -44,13 +46,13 @@
     <FormItem Label="Calle/Ruta">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.CalleORuta" />
     </FormItem>
-    <FormItem Label="Numero/kilometro">
+    <FormItem Label="Número/kilometro">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NumeroOKilometro" />
     </FormItem>
     <FormItem Label="Entre calles">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.EntreCalles" />
     </FormItem>
-    <FormItem Label="PisoNumero">
+    <FormItem Label="Piso Número">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.PisoNumero" />
     </FormItem>
     <FormItem Label="Depto">
@@ -81,7 +83,7 @@
         <FormItem Label="Lugar De nacimiento">
             <Input @bind-Value="@damnificado.LugarDeNacimiento" />
         </FormItem>
-        <FormItem Label="edad">
+        <FormItem Label="Edad">
             <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
         </FormItem>
         <FormItem Label="Tipo material">
@@ -93,11 +95,11 @@
             <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
             <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
             <ActionColumn Title="Acciones">
-                <Popconfirm Title="Sure to delete?"
+                <Popconfirm Title="Seguro que quiere borrar??"
                             OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                            OkText="Yes"
+                            OkText="Si"
                             CancelText="No">
-                    <a>Delete</a>
+                    <a>Borrar</a>
                 </Popconfirm>
             </ActionColumn>
         </Table>
@@ -109,13 +111,13 @@
     <FormItem Label="Nombre del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NombreSolicitante" />
     </FormItem>
-    <FormItem Label="Apelldio del solicitante">
+    <FormItem Label="Apellidoo del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.ApellidoSolicitante" />
     </FormItem>
-    <FormItem Label="documneto del solicitante">
+    <FormItem Label="Documento del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.DniSolicitante" />
     </FormItem>
-    <FormItem Label="Telefono  del solicitante">
+    <FormItem Label="Teléfono  del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.TelefonoSolicitante" />
     </FormItem>
     @*Datos bomberos receptor*@
@@ -123,40 +125,40 @@
     <FormItem Label="Nombre y apellido del receptor">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NombreYApellidoReceptor" />
     </FormItem>
-    <FormItem Label="Telefono receptor">
+    <FormItem Label="Teléfono receptor">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.TelefonoReceptor" />
     </FormItem>
 
     @*Moviles de salidas*@
     @*a la hora de pedir el chofer y movil,
     pedir dato unico para no cargar todo y buscarlo en la base de datos*@
-    <b><label>Datos de chofer</label></b>
+    <b><label>Datos de chófer</label></b>
     <br />
-    <FormItem Label="¿Cargo Combustible?" style="display: grid;place-items: center;">
+    <FormItem Label="¿Cargó Combustible?" style="display: grid;place-items: center;">
 
-        <Switch DefaultChecked="false" @bind-Checked="@chekM" CheckedChildren="Cargo" UnCheckedChildren="No Cargo" OnChange="OnChangeChofer" />
+        <Switch DefaultChecked="false" @bind-Checked="@chekM" CheckedChildren="Cargó" UnCheckedChildren="No Cargó" OnChange="OnChangeChofer" />
     </FormItem>
     
-    <FormItem Label="Elija el chofer">
+    <FormItem Label="Elija el chófer">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@bomberoChoferes"
         @bind-Value="@chofer"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Selecione a un bombero"
+                Placeholder="Seleccione a un bombero"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
     </FormItem>
-    <FormItem Label="Numero de movil">
+    <FormItem Label="Número de movil">
         <Select TItem="Movil"
                 TItemValue="string"
                 DataSource="@Moviles"
                 @bind-Value="@NumeroMovil"
                 LabelName="@nameof(Movil.NumeroMovil)"
                 ValueName="@nameof(Movil.NumeroMovil)"
-                Placeholder="Selecione el movil"
+                Placeholder="Seleccione el móvil"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
@@ -188,12 +190,12 @@
         <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
             <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
             <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
-            <ActionColumn Title="Action">
-                <Popconfirm Title="Sure to delete?"
+            <ActionColumn Title="Acción">
+                <Popconfirm Title="Seguro que quieres borrar?"
                             OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                            OkText="Yes"
+                            OkText="Si"
                             CancelText="No">
-                    <a>Delete</a>
+                    <a>Borrar</a>
                 </Popconfirm>
             </ActionColumn>
         </Table>
@@ -201,7 +203,7 @@
 
     @*Cuerpos paraticipantes*@
     <b><label>Cuerpo Participante</label></b>
-    <FormItem Label="Tipo Escalafon">
+    <FormItem Label="Tipo Escalafón">
         <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
     </FormItem>
     <FormItem Label="Elija el bombero">
@@ -216,7 +218,7 @@
                 EnableSearch>
         </Select>
     </FormItem>
-    <Checkbox @bind-Checked="chekB"> Salio</Checkbox>
+    <Checkbox @bind-Checked="chekB"> Salió</Checkbox>
     <br />
     <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
     <br />
@@ -225,11 +227,11 @@
             <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
             <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
             <ActionColumn Title="Acciones">
-                <Popconfirm Title="Sure to delete?"
+                <Popconfirm Title="Seguro que quieres borrar?"
                             OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                            OkText="Yes"
+                            OkText="Si"
                             CancelText="No">
-                    <a>Delete</a>
+                    <a>Borrar</a>
                 </Popconfirm>
             </ActionColumn>
         </Table>
@@ -247,8 +249,8 @@
                 EnableSearch>
         </Select>
     </FormItem>
-    <b><label>Quien lleno planilla</label></b>
-    <FormItem Label="Bombero que lleno la planilla">
+    <b><label>Quién llenó la planilla</label></b>
+    <FormItem Label="Bombero que llenó la planilla">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@bomberoTodos"
@@ -262,7 +264,7 @@
     </FormItem>
     @*Tipo servicio*@
     <br />
-    <b><label>Servisio salida</label></b>
+    <b><label>Servicio salida</label></b>
     <br />
     <FormItem Label="Tipo Servicio salida">
         <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoServicio" />
@@ -271,17 +273,17 @@
     @*propio de la salida de Servicio representacion*@
 
      <br />
-    <b><label>Servisio Representacion</label></b>
+    <b><label>Servicio Representación</label></b>
     <br />
 
-    <FormItem Label="Tipo Organizacion Beneficiada">
+    <FormItem Label="Tipo Organización Beneficiada">
         <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoOrganizacion" />
     </FormItem>
-    <FormItem Label="Tipo Representacion">
+    <FormItem Label="Tipo Representación">
         <EnumSelect TEnum="TipoServicioRepresentacion" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoRepresentacion" />
     </FormItem>
     
-     <FormItem Label="Datos Capacitacion">
+     <FormItem Label="Datos Capacitación">
         <Select @bind-Value="@modelServiciosEspecialesRepresentacion.NivelCapacitacion"
             DefaultValue="@("Cuartel")"
 		    TItemValue="string"
@@ -306,7 +308,7 @@
          </FormItem>
     }
 
-    <FormItem Label="Tipo Capacitacion">
+    <FormItem Label="Tipo Capacitación">
         <Select @bind-Value="@modelServiciosEspecialesRepresentacion.TipoCapacitacion"
                 DefaultValue="@("Cuartel")"
                 TItemValue="string"
@@ -339,10 +341,10 @@
             <Input @bind-Value="modelServiciosEspecialesRepresentacion.CapacitacionOtra" />
         </FormItem>
     }
-    <FormItem Label="Dias capacitacion">
+    <FormItem Label="Dias capacitación">
          <Input @bind-Value="modelServiciosEspecialesRepresentacion.DiasCapacitacion" />
     </FormItem>
-    <FormItem Label="Horarios capacitacion">
+    <FormItem Label="Horarios capacitación">
          <Input @bind-Value="modelServiciosEspecialesRepresentacion.HorariosCapacitacion" />
     </FormItem>
 
@@ -363,7 +365,7 @@
           OnFinish="OnFinishModel"
           OnFinishFailed="OnFinishFailed"
     @ref="@_form1">
-        <FormItem Label="Numero factura">
+        <FormItem Label="Número factura">
             <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
         </FormItem>
         <FormItem Label="Fecha factura">
@@ -375,10 +377,10 @@
         <FormItem Label="Cantidad de Litros">
             <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
         </FormItem>
-        <FormItem Label="Quien lleno">
+        <FormItem Label="Quién llenó">
             <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
         </FormItem>
-        <FormItem Label="TelefonoQuienLleno">
+        <FormItem Label="Teléfono Quién Lléno">
             <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
         </FormItem>
     </Form>

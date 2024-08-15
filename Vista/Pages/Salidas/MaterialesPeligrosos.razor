@@ -99,6 +99,8 @@
 .boton_p {
     background-color: #732D2D !important;
     color: white !important;
+        margin-right: 80px !important; 
+        border-radius: 5px 5px !important;
 }
 
 </style>
@@ -168,7 +170,7 @@
                             <Input @bind-Value="modelMateriales.Sustancias" />
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Tipo evacuacion</label>
+                            <label class="inpt-cont--lbl">Tipo evacuación</label>
                             <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
                         </div>
                     </div>
@@ -218,7 +220,7 @@
                             <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Tipo de evacuacion</label>
+                            <label class="inpt-cont--lbl">Tipo de evacuación</label>
                             <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
                         </div>
                     </div>

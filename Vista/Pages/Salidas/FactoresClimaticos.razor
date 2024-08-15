@@ -14,7 +14,8 @@
 <style>
     .boton_p {
         background-color: #732D2D !important;
-        color: white !important;
+        margin-right: 80px !important; 
+        border-radius: 5px 5px !important;
     }
 
     .ant-carousel .slick-dots li {
@@ -126,18 +127,18 @@
                 @*Moviles de salidas*@
                 @*a la hora de pedir el chofer y movil,
             pedir dato unico para no cargar todo y buscarlo en la base de datos*@
-                <b><label>Datos de chofer</label></b>
+                <b><label>Datos de chófer</label></b>
                 <br />
                 <FormItem Label="">
-                    <Checkbox @bind-Checked="chekM"> Cargo combustible</Checkbox>
+                    <Checkbox @bind-Checked="chekM"> Cargó combustible</Checkbox>
                     <br />
                     <Button Class="boton_p" OnClick="@ShowModal">
-                        Cargo Combustible
+                        Cargó Combustible
                     </Button>
                 </FormItem>
 
 
-                <FormItem Label="Elija el chofer">
+                <FormItem Label="Elija el chófer">
                     <Select TItem="BomberoViweModel"
                             TItemValue="int"
                             DataSource="@bomberoChoferes"
@@ -151,14 +152,14 @@
              </FormItem>
 
 
-                <FormItem Label="Numero de movil">
+                <FormItem Label="Número de móvil">
                     <Select TItem="Movil"
                             TItemValue="string"
                             DataSource="@Moviles"
                     @bind-Value="@NumeroMovil"
                             LabelName="@nameof(Movil.NumeroMovil)"
                             ValueName="@nameof(Movil.NumeroMovil)"
-                            Placeholder="Seleccione el movil"
+                            Placeholder="Seleccione el móvil"
                             DefaultActiveFirstOption="false"
                                 EnableSearch>
                  </Select>
@@ -176,10 +177,10 @@
                         }
                     }
                 }
-                <FormItem Label="Kilometro salida">
+                <FormItem Label="Kilómetro salida">
                     <AntDesign.InputNumber @bind-Value="modelFactorClimatico.Kilometraje" Disabled />
                  </FormItem>
-                <FormItem Label="Kilometro llegada">
+                <FormItem Label="Kilómetro llegada">
                     <AntDesign.InputNumber @bind-Value="modelFactorClimatico.KmLlegada" />
                 </FormItem>
                 <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
@@ -189,11 +190,11 @@
                      <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
                      <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
                      <ActionColumn Title="Acciones">
-                         <Popconfirm Title="Sure to delete?"
+                         <Popconfirm Title="Seguro que quieres borrar?"
                                      OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                                     OkText="Yes"
+                                     OkText="Si"
                                      CancelText="No">
-                             <a>Delete</a>
+                             <a>Borrar</a>
                          </Popconfirm>
                      </ActionColumn>
                  </Table>
@@ -215,7 +216,7 @@
                                 EnableSearch>
                  </Select>
              </FormItem>
-                <Checkbox @bind-Checked="@chekB"> Salio</Checkbox>
+                <Checkbox @bind-Checked="@chekB"> Salió</Checkbox>
                 <br />
                 <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
                 <br />
@@ -224,11 +225,11 @@
                      <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
                      <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
                      <ActionColumn Title="Acciones">
-                         <Popconfirm Title="Sure to delete?"
+                         <Popconfirm Title="Seguro que quieres borrar?"
                                      OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                                     OkText="Yes"
+                                     OkText="Si"
                                      CancelText="No">
-                             <a>Delete</a>
+                             <a>Borrar</a>
                          </Popconfirm>
                      </ActionColumn>
                  </Table>
@@ -241,20 +242,20 @@
                     @bind-Value="@BomberoEncargado"
                             LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                             ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione un encargado"
+                            Placeholder="Seleccione el encargado"
                             DefaultActiveFirstOption="false"
                                 EnableSearch>
                  </Select>
              </FormItem>
-                <b><label>Quien lleno planilla</label></b>
-                <FormItem Label="Bombero que lleno la planilla">
+                <b><label>Quién llenó planilla</label></b>
+                <FormItem Label="Bombero que llenó la planilla">
                     <Select TItem="BomberoViweModel"
                             TItemValue="int"
                             DataSource="@bomberoTodos"
                     @bind-Value="@QuienLLenoPlanilla"
                             LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                             ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione un encargado"
+                            Placeholder="Seleccione el encargado"
                             DefaultActiveFirstOption="false"
                                 EnableSearch>
                  </Select>
@@ -269,13 +270,13 @@
 
                 @*propio de la salida de Factor Climatico*@
 
-                <FormItem Label="Tipo Factores Climaticos">
+                <FormItem Label="Tipo Factores Climáticos">
                     <EnumSelect TEnum="TipoFactoresClimaticos" @bind-Value="@modelFactorClimatico.Tipo" />
                 </FormItem>
                 <FormItem Label="Tipo Superficie">
                     <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelFactorClimatico.Superficie" />
                 </FormItem>
-                <FormItem Label="Tipo Evacuacion">
+                <FormItem Label="Tipo Evacuación">
                     <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelFactorClimatico.Evacuacion" />
                 </FormItem>
                 <FormItem Label="Detalles">
