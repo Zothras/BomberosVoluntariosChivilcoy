@@ -23,7 +23,7 @@ namespace Vista.Data.Enums
         IncendioEstablecimientoPublico,
         [Display(Name = "Incendio Forestal")]
         IncendioForestal,
-        [Display(Name = "Incendio Hospitales y Clinicas")]
+        [Display(Name = "Incendio Hospitales y Clínicas")]
         IncendioHospitalesYClinicas,
         [Display(Name = "Incendio Industria")]
         IncendioIndustria,

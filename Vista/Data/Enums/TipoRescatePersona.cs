@@ -9,7 +9,7 @@ namespace Vista.Data.Enums
         Edificio,
         [Display(Name = "Centro Comercial")]
         CentroComercial,
-        [Display(Name = "Rio")]
+        [Display(Name = "Río")]
         Rio,
         [Display(Name = "Bosque")]
         Bosque,
