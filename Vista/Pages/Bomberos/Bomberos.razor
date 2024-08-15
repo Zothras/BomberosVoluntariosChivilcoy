@@ -154,6 +154,13 @@
         min-width: 0;
         padding-left: 5px;
     }
+    .ant-form-item-control-input {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 32px;
+        border: black 1px solid !important;
+    }
     /* Modal de Detalles ------------------------------- */
     
     /* Ambos Modales ------------------------------- */
@@ -204,7 +211,7 @@
                     </SpaceItem>
                     <SpaceItem>
                         <Button Type="primary"
-                                OnClick="@(() => { navigationManager.NavigateTo("/bomberos/agregar"); })"
+                                OnClick="@(() => { navigationManager.NavigateTo("/bomberos/agregar"); })">
                             <Icon Type="plus" /> Agregar
                         </Button>
                     </SpaceItem>
