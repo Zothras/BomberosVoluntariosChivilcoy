@@ -81,13 +81,13 @@
         <Switch @bind-Checked="@bomberoVM.Chofer" />
         @if (bomberoVM.Chofer)
         {
-            <label id="texto">Fecha vencimiento del carnet</label>
+            <label id="texto"> Vencimiento del carnet</label>
             <br>
             <DatePicker DefaultValue="@bomberoVM.VencimientoRegistro" @bind-Value="@bomberoVM.VencimientoRegistro" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
         }
         @if (!bomberoVM.Chofer)
         {
-            <label id="texto">No es chofer</label>
+            <label id="texto"></label>
         }
     </FormItem>
 
