@@ -1,8 +1,6 @@
 ﻿@using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Personal;
-@inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
-@using Microsoft.EntityFrameworkCore;
 
 @*Servicio Utilizados*@
 @using Vista.Services;
@@ -113,7 +111,7 @@
                 <PropertyColumn Property="c=>c.Chofer.Apellido"></PropertyColumn>
                 <ActionColumn Title="Acciones">
                     <Popconfirm Title="¿Quieres borrar este movil?"
-                                OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.Movil.NumeroMovil)"
+                                OnConfirm="()=> DeleteRowMovil(MovilesSalidasL1.Movil.NumeroMovil)"
                                 OkText="Si"
                                 CancelText="No">
                         <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
@@ -128,7 +126,7 @@
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
 
-    public List<BomberoViweModel> bomberoChoferes { get; set; }
+    private List<BomberoViweModel> bomberoChoferes { get; set; }
     private List<BomberoViweModel> bomberoChoferesSalir { get; set; }
 
     private List<Movil> Moviles { get; set; }
@@ -145,15 +143,49 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Inicializar la lista de moviles si es null
         if (Model.Moviles == null)
         {
             Model.Moviles = new List<MovilSalida>();
         }
 
+        // Obtener las listas de bomberos choferes y móviles
         bomberoChoferes = await BomberoService.ObtenerBomberosChoferes();
         bomberoChoferesSalir = bomberoChoferes.ToList();
 
         Moviles = await VehiculoService.ObtenerTodosLosMoviles();
+
+        // Verificar si hay móviles en el modelo
+        if (Model.Moviles.Any())
+        {
+            var bomberosToRemove = new List<BomberoViweModel>();
+            var movilesToRemove = new List<Movil>();
+
+            // Recorrer los móviles en el modelo
+            foreach (var movil in Model.Moviles)
+            {
+                // Buscar el móvil correspondiente en la lista de todos los móviles
+                Movil? movilRem = Moviles.FirstOrDefault(m => m.NumeroMovil == movil.Movil.NumeroMovil);
+                // Buscar el chofer correspondiente en la lista de bomberos choferes
+                BomberoViweModel? bombero = bomberoChoferes.FirstOrDefault(b => b.NumeroLegajo == movil.Chofer.NumeroLegajo);
+
+                if (movilRem != null)
+                {
+                    movilesToRemove.Add(movilRem);
+                }
+
+                if (bombero != null)
+                {
+                    bomberosToRemove.Add(bombero);
+                }
+            }
+
+            // Eliminar los móviles que están en la lista de removibles
+            Moviles.RemoveAll(m => movilesToRemove.Contains(m));
+
+            // Eliminar los bomberos que están en la lista de removibles
+            bomberoChoferesSalir.RemoveAll(b => bomberosToRemove.Contains(b));
+        }
     }
 
     private void toggle(bool value) => loading = value;
@@ -189,11 +221,40 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
     }
 
-    private void deleteRowMovil(string NumMovil)
+    private async void DeleteRowMovil(string numeroMovil)
     {
-        Model.Moviles.RemoveAll(m => m.Movil.NumeroMovil == NumMovil);
-        StateHasChanged();
+        var movilToDelete = Model.Moviles.FirstOrDefault(m => m.Movil.NumeroMovil == numeroMovil);
+
+        if (movilToDelete != null)
+        {
+            // Obtener el chofer y el móvil antes de eliminarlos de la lista
+            var chofer = movilToDelete.Chofer;
+            var movil = movilToDelete.Movil;
+
+            var choferview = await BomberoService.ObtenerBomberoPorLegajoAsync(chofer.NumeroLegajo);
+
+            // Eliminar el móvil de la lista
+            Model.Moviles.Remove(movilToDelete);
+
+            // Añadir el chofer nuevamente a la lista de choferes disponibles
+            if (chofer != null)
+            {
+                bomberoChoferesSalir.Add(choferview);
+            }
+
+            // Añadir el móvil a la lista de móviles disponibles
+            Moviles.Add(movil);
+
+            // Notificar que el estado ha cambiado
+            StateHasChanged();
+        }
+        else
+        {
+            // Manejar el caso en que no se encuentra el móvil
+            Console.WriteLine($"El móvil con número {numeroMovil} no fue encontrado.");
+        }
     }
+
 
     private async Task AgregarMovilSalida()
     {
@@ -208,6 +269,11 @@
                 return;
             }
 
+            // Elimina el bombero y movil seleccionado de la lista
+            bomberoChoferesSalir.RemoveAll(b => b.NumeroLegajo == bomberoChofer.NumeroLegajo);
+            Moviles.RemoveAll(m => m.NumeroMovil == Movilsalida.NumeroMovil);
+
+            // Crea el Objeto Movil Salida
             MovilSalida m = new()
                 {
                     Movil = Movilsalida,
@@ -222,8 +288,20 @@
                     Chofer = bomberoChofer
                 };
 
+            // Añade el MovilSalida a la Salida
             Model.Moviles.Add(m);
-            StateHasChanged();
+
+            //Limpia las casillas
+            Model.Kilometraje = 0;
+            Model.KmLlegada = 0;
+            switchMoviles = false;
+            movilSalidaViewModels.NumeroFactura = null;
+            movilSalidaViewModels.FechaFactura = null;
+            movilSalidaViewModels.TipoConbustible = null;
+            movilSalidaViewModels.CantidadLitros = null;
+            movilSalidaViewModels.QuienLleno = null;
+
+            StateHasChanged(); // Notifica el Cambio y Actualiza
             message.Success("Chofer agregado correctamente");
         }
         catch (Exception e)
