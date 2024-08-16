@@ -107,8 +107,7 @@
     private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
-
-        moviles = await Context.Moviles.ToArrayAsync();
+        moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
     }
     public void Dispose()
     {

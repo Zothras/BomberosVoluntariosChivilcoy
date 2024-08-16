@@ -28,25 +28,25 @@
 @if (vehiculo != null)
 {
     <div>
-        <Form Model="@LimpiezaMovilVista"
-              OnFinish="@SubirLimpieza"
+        <Form Model="@IncidenteView"
+              OnFinish="@SubirIncidente"
               OnFinishFailed="OnFinishFailed"
               Style="width: 100%;height: 100%; overflow: hidden!important;">
             <FormItem Label="Movil">
                 <Input Disabled Value="@vehiculo.NumeroMovil" />
             </FormItem>
             <FormItem Label="Descripción">
-                <Input @bind-Value="LimpiezaMovilVista.Descripcion" />
+                <Input @bind-Value="IncidenteView.Observacion" />
             </FormItem>
             <FormItem Label="Tipo">
-                <EnumSelect TEnum="TipoIncidente" @bind-Value="@LimpiezaMovilVista.Incidente" />
+                <EnumSelect TEnum="TipoIncidente" @bind-Value="@IncidenteView.Tipo" />
             </FormItem>
 
             <FormItem Label="Responsable">
                 <Select TItem="BomberoLViewModel"
                         TItemValue="int"
                         DataSource="@bomberoslist"
-                        @bind-Value="@LimpiezaMovilVista.ResponsableId"
+                        @bind-Value="@IncidenteView.ResponsableId"
                         LabelName="@nameof(BomberoLViewModel.NombreYApellido)"
                         ValueName="@nameof(BomberoLViewModel.PersonaId)"
                         Placeholder="Seleccione un bombero"
@@ -86,34 +86,34 @@ else
         public string? NombreYApellido { get; set; }
     }
 
-    public class LimpiezaView
+    public class IncidenteViewModel
     {
         public DateTime Fecha { get; set; }
-        public string? Descripcion { get; set; }
-        public TipoIncidente Incidente { get; set; }
+        public string? Observacion { get; set; }
+        public TipoIncidente Tipo { get; set; }
         public int ResponsableId { get; set; }
     }
 
-    public LimpiezaView LimpiezaMovilVista = new();
+    public IncidenteViewModel IncidenteView = new();
 
-    private async void SubirLimpieza()
+    private async void SubirIncidente()
     {
         try
         {
-            Bombero? Responsable = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == LimpiezaMovilVista.ResponsableId);
-            Limpieza limpieza = new()
+            Bombero? Encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == IncidenteView.ResponsableId);
+            Incidente incidente = new()
             {
                 Vehiculo = vehiculo,
                 Fecha = DateTime.Now,
-                Descripcion = LimpiezaMovilVista.Descripcion,
-                Incidente = LimpiezaMovilVista.Incidente,
-                Responsable = Responsable,
+                Observacion = IncidenteView.Observacion,
+                Tipo = IncidenteView.Tipo,
+                Encargado = Encargado,
             };
-            await VehiculoService.AgregarLimpieza(limpieza);
+            await VehiculoService.AgregarIncidente(incidente);
             message.Success("Se grabo la novedad correctamente");
             await Init();
-            StateHasChanged();
             await OnClose.InvokeAsync();
+            StateHasChanged();
         }
         catch (Exception e)
         {
@@ -128,13 +128,14 @@ else
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(LimpiezaMovilVista)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(IncidenteView)}");
         message.Error("Error al cargar, posible información ausente");
     }
 
     public async Task CargarBomberosView()
     {
         var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+        bomberoslist = new();
         foreach (Bombero b in bomberos)
         {
             BomberoLViewModel bombero = new()

@@ -1,0 +1,271 @@
+﻿@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/incidentes-vehiculos"
+@using Vista.Services
+@using Vista.Components.Vehiculos
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using System.Text.Json
+
+<style>
+    .template {
+        margin-top: 20px;
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-table {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .ant-table-title {
+        background-color: #A63333
+    }
+
+    .ant-table-thead .ant-table-cell {
+        background-color: #A63333 !important;
+        color: white !important;
+        font-weight: bold;
+    }
+
+    .ant-table-cell {
+        padding: 16px !important;
+    }
+
+    .title-template-container {
+        background-color: #A63333;
+        padding: 16px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .search-input {
+        width: 250px;
+    }
+
+        .search-input input {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+        }
+
+            .search-input input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+    .add-button {
+        background-color: #4CAF50 !important;
+        border-color: #438E46 !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    @@media (max-width: 960px) {
+        .template {
+            padding: 10px;
+        }
+
+        .title-template-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-input,
+        .add-button {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Modal de Editar ------------------------------- */
+    .ant-form-horizontal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+
+        .ant-form-horizontal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+            margin-right: 267.2px;
+        }
+
+    .ant-form-item {
+        box-sizing: border-box;
+        margin: 0;
+        margin-bottom: 0px;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        font-feature-settings: 'tnum';
+        margin-bottom: 8px !important;
+        vertical-align: top;
+        font-weight: bold;
+    }
+    .ant-modal-title {
+        margin: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 16px;
+        line-height: 22px;
+        word-wrap: break-word;
+        font-weight: bold !important;
+    }
+    /* Modal de Editar ------------------------------- */
+
+    .ant-modal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+
+        .ant-modal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+            margin-right: 267.2px;
+        }
+
+    /* Modal de Detalles ------------------------------- */
+    .ant-form-horizontal .ant-form-item-control {
+        flex: 1 1 0;
+        min-width: 0;
+        padding-left: 5px;
+    }
+    /* Modal de Detalles ------------------------------- */
+    
+    /* Ambos Modales ------------------------------- */
+    .ant-modal-content {
+        position: relative;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 0;
+        border-radius: 2px;
+        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        pointer-events: auto;
+        border: 1px solid red !important;
+    }
+    /* Ambos Modales ------------------------------- */
+
+
+</style>
+
+<Flex Class="flex-container" Justify="center" Align="center">
+    <div class="template">
+        <Table TItem="VehiculoSalida"
+               DataSource="@vehiculos"
+               OnChange="OnChange"
+               @bind-PageIndex="_pageIndex"
+               @bind-PageSize="_pageSize"
+               Responsive>
+            <ColumnDefinitions>
+                <Column TData="VehiculoSalida" Title="Foto" Width="100">
+                    <Image Src="@CargarImage(context)" />
+                </Column>
+                <PropertyColumn Title="Número Movil" Property="m=>m.NumeroMovil" Sortable />
+                <PropertyColumn Title="Encargado" Property="@(c => CargarEncargado(context))" Sortable />
+                <PropertyColumn Title="Patente" Property="c=>c.Patente" Sortable />
+                <ActionColumn Title="Firmas" Align=ColumnAlign.Center>
+                    <Space>
+                        <SpaceItem>
+                            <Button Danger OnClick="()=>IncidentesVista(context.VehiculoId)">
+                                <Icon Type="Schedule" /> Incidentes
+                            </Button>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </ColumnDefinitions>
+        </Table>
+    </div>
+</Flex>
+
+@if(IncidentesVisible == true){
+    <Modal Footer="null" OnCancel="()=> IncidentesVisible = false" Visible="@IncidentesVisible" Style="width: 35%!important;">
+        <VehiculoIncidentes VehiculoId="@VehiculoId" OnClose="()=> IncidentesVisible = false" />
+    </Modal>
+}
+
+@code {
+    List<VehiculoSalida>? vehiculos = new List<VehiculoSalida>();
+
+    // Variables
+    public int VehiculoId { get; set; }
+    public bool IncidentesVisible { get; set; }
+    int _pageIndex = 1;
+    int _pageSize = 6;
+
+    //Funciones modal
+
+    public async void IncidentesVista(int ID)
+    {
+        VehiculoId = ID;
+        IncidentesVisible = true;
+    }
+
+    // Init, OnChange y Carga de datos
+    protected override async Task OnInitializedAsync()
+    {
+        using var db = await DbFactory.CreateDbContextAsync();
+        vehiculos = await db.Set<VehiculoSalida>().OrderBy(m => m.NumeroMovil).ToListAsync();
+
+        StateHasChanged();
+    }
+
+    private async Task OnChange(QueryModel<VehiculoSalida> queryModel)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(queryModel));
+        OnInitializedAsync();
+    }
+
+    public string CargarEncargado(VehiculoSalida vehiculo)
+    {
+        var Context = DbFactory.CreateDbContext();
+
+        int? EncargadoId = vehiculo.EncargadoId;
+        if (EncargadoId != null && EncargadoId != 0)
+        {
+            Bombero Encargado = Context.Bomberos.Where(b => b.PersonaId == EncargadoId).SingleOrDefault();
+            return (Encargado.Apellido + ", " + Encargado.Nombre);
+        }
+        return "";
+    }
+
+
+    public string CargarImage(VehiculoSalida vehiculo)
+    {
+        var Context = DbFactory.CreateDbContext();
+
+        string src = "/";
+
+        Imagen? imagen = Context.ImagenesVehiculo.Where(i => i.ImagenId == vehiculo.ImagenId).SingleOrDefault();
+
+        if (imagen is not null)
+        {
+            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
+        }
+
+        return src;
+    }
+}

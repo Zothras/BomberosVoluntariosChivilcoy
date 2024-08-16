@@ -218,7 +218,7 @@
                 <Column TData="Bombero" Title="Foto" Width="100">
                     <Avatar Size="64" Src="@CargarImage(context)" />
                 </Column>
-                <PropertyColumn Property="@(c => $"{c.Nombre}, {c.Apellido}")" Title="Nombre y Apellido" Sortable />
+                <PropertyColumn Property="@(c => $"{c.Apellido}, {c.Nombre}")" Title="Apellido y Nombre" Sortable />
                 <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo" Sortable
                                 DefaultSortOrder="@SortDirection.Descending"
                                 SorterCompare="@((a,b)=> a - b)" />

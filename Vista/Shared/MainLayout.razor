@@ -305,7 +305,8 @@
                      <ChildContent>
                          <li class="nav-item"><a class="nav-link" href="moviles">Moviles</a></li>
                      </ChildContent>
-                 </MenuItem>
+                </MenuItem>
+                @* Boton para acceder a la pagina de embarcaciones, decidi comentarlo en caso de rehacer
                  <MenuItem Key="4" Icon="container">
                      <IconTemplate>
                          <i class="fa-sharp fa-solid fa-ship" style="color:#263040;"></i>
@@ -313,7 +314,8 @@
                      <ChildContent>
                          <li class="nav-item"><a class="nav-link" href="/embarcaciones">Embarcaciones</a></li>
                      </ChildContent>
-                 </MenuItem>
+                </MenuItem>
+                *@
 
                  <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title Id="salidas">
                      <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">

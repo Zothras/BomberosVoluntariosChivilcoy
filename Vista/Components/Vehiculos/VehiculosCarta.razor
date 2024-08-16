@@ -28,9 +28,6 @@
             <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=> FichaVisible = true">
                 <Icon Type="Tool" Theme="outline" />
             </Button>
-            <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=> LimpiezasVisible = true">
-                <Icon Type="Schedule" Theme="outline" />
-            </Button>
             <Button Disabled="false" class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=> EditarVisible = true">
                 <Icon Type="edit" Theme="outline" />
             </Button>
@@ -65,10 +62,6 @@
     <VehiculoDetalles vehiculoId="@VehiculoId" />
 </Modal>
 
-<Modal Footer="null" OnCancel="()=> LimpiezasVisible = false" Visible="@LimpiezasVisible" Style="width: 35%!important;">
-    <MovilLimpiezas VehiculoId="@VehiculoId" OnClose="()=> LimpiezasVisible = false" />
-</Modal>
-
 <Modal Footer="null" Title="Ficha técnica" OnCancel="()=> FichaVisible = false" Visible="@FichaVisible" Style="width: 35%!important;">
     <FichaTecnica VehiculoId="@VehiculoId" />
 </Modal>
@@ -80,7 +73,6 @@
     int VehiculoId { get; set; }
     bool EditarVisible { get; set; }
     bool DetallesVisible { get; set; }
-    bool LimpiezasVisible { get; set; }
     bool FichaVisible { get; set; }
     bool AgregarVisible { get; set; }
 

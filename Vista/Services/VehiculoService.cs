@@ -16,8 +16,8 @@ namespace Vista.Services
         Task<VehiculoSalida> AgregarVehiculo(VehiculoSalida vehiculo);
         Task<VehiculoSalida> EditarVehiculo(VehiculoSalida vehiculo);
         Task<VehiculoSalida> CambiarEstado(int movilid, TipoEstadoMovil estado);
-        Task<Limpieza> AgregarLimpieza(Limpieza limpieza);
-        Task<Limpieza> BorrarLimpieza(Limpieza limpieza);
+        Task<Incidente> AgregarIncidente(Incidente incidente);
+        Task<Incidente> BorrarIncidente(Incidente incidente);
     }
 
     public class VehiculoService : IVehiculoService
@@ -91,47 +91,47 @@ namespace Vista.Services
             await _context.SaveChangesAsync();
             return vehiculo;
         }
-        public async Task<Limpieza> AgregarLimpieza(Limpieza limpieza)
+        public async Task<Incidente> AgregarIncidente(Incidente incidente)
         {
             //PENDIENTE: Solucionar carga de datos en las List de las relaciones
-            if (limpieza.Responsable != null)
+            if (incidente.Encargado != null)
             {
-                Bombero? Responsable = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == limpieza.Responsable.PersonaId);
-                limpieza.Responsable = Responsable;
-                Responsable.Limpieza.Add(limpieza);
+                Bombero? Responsable = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == incidente.Encargado.PersonaId);
+                incidente.Encargado = Responsable;
+                Responsable.Incidentes.Add(incidente);
             }
-            if (limpieza.Vehiculo != null)
+            if (incidente.Vehiculo != null)
             {
-                VehiculoSalida? vehiculo = await _context.Set<VehiculoSalida>().SingleOrDefaultAsync(m => m.VehiculoId == limpieza.Vehiculo.VehiculoId);
-                limpieza.Vehiculo = vehiculo;
-                vehiculo.Limpieza.Add(limpieza);
+                VehiculoSalida? vehiculo = await _context.Set<VehiculoSalida>().SingleOrDefaultAsync(m => m.VehiculoId == incidente.Vehiculo.VehiculoId);
+                incidente.Vehiculo = vehiculo;
+                vehiculo.Incidentes.Add(incidente);
             }
-            _context.Limpiezas.Add(limpieza);
+            _context.Incidentes.Add(incidente);
             await _context.SaveChangesAsync();
-            return limpieza;
+            return incidente;
         }
-        public async Task<Limpieza> BorrarLimpieza(Limpieza limpieza)
+        public async Task<Incidente> BorrarIncidente(Incidente incidente)
         {
             try
             {
-                if (limpieza != null)
+                if (incidente != null)
                 {
-                    Limpieza LimpiezaBorrar = await _context.Limpiezas.SingleOrDefaultAsync(l => l.LimpiezaId == limpieza.LimpiezaId);
-                    _context.Limpiezas.Remove(LimpiezaBorrar);
+                    Incidente IncidenteBorrar = await _context.Incidentes.Where(inci => inci.IncidenteId == incidente.IncidenteId).SingleOrDefaultAsync();
+                    _context.Incidentes.Remove(IncidenteBorrar);
                     await _context.SaveChangesAsync();
                 }
             }
             catch (DbUpdateException ex)
             {
-                Console.WriteLine($"ERROR: Error al eliminar la novedad. {ex.Message}");
-                return limpieza;
+                Console.WriteLine($"ERROR: Error al eliminar el incidente. {ex.Message}");
+                return incidente;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"ERROR: Ocurrió un error inesperado. {ex.Message}");
-                return limpieza;
+                return incidente;
             }
-            return limpieza;
+            return incidente;
         }
     }
 }
