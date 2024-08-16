@@ -18,8 +18,6 @@ namespace Vista.Services
         Task<VehiculoSalida> CambiarEstado(int movilid, TipoEstadoMovil estado);
         Task<Incidente> AgregarIncidente(Incidente incidente);
         Task<Incidente> BorrarIncidente(Incidente incidente);
-        Task<Limpieza> AgregarLimpieza(Limpieza limpieza);
-        Task<Limpieza> BorrarLimpieza(Limpieza limpieza);
         Task<Movil> ObtenerMovilPorNumero(string NumeroMovil);
         Task<List<Movil>> ObtenerTodosLosMoviles();
     }
