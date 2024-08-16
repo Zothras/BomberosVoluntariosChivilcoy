@@ -21,6 +21,7 @@ namespace Vista.Services
         Task<List<BomberoViweModel>> GetAllBomberosAsync();
         Task<BomberoViweModel> ObtenerBomberoPorLegajoAsync(int numeroLegajo);
         Task<List<BomberoViweModel>> ObtenerBomberosChoferes();
+        Task<Bombero> ObtenerBomberoObjetoPorLegajoAsync(int numeroLegajo);
     }
 
     public class BomberoService : IBomberoService
@@ -40,8 +41,9 @@ namespace Vista.Services
                 throw new InvalidOperationException("Ya existe un bombero con este ID.");
             }
 
-            Brigada? brigada = _context.Brigadas.Where(b=>b.BrigadaId == bombero.BrigadaId).SingleOrDefault();
-            if (brigada != null){
+            Brigada? brigada = _context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefault();
+            if (brigada != null)
+            {
                 bombero.Brigada = brigada;
                 bombero.BrigadaId = brigada.BrigadaId;
             }
@@ -56,8 +58,9 @@ namespace Vista.Services
             try
             {
                 Bombero Editar = await _context.Bomberos.SingleOrDefaultAsync(e => e.PersonaId == bombero.PersonaId);
-                Contacto? contacto = await _context.Contactos.SingleOrDefaultAsync(c=>c.PersonaId == bombero.PersonaId);
-                if (contacto != null){
+                Contacto? contacto = await _context.Contactos.SingleOrDefaultAsync(c => c.PersonaId == bombero.PersonaId);
+                if (contacto != null)
+                {
                     _context.Contactos.Remove(contacto);
                 }
                 foreach (var i in bombero.GetType().GetProperties())
@@ -223,6 +226,12 @@ namespace Vista.Services
             return bomberosChoferes;
         }
 
+        public async Task<Bombero> ObtenerBomberoObjetoPorLegajoAsync(int numeroLegajo)
+        {
+            var bombero = await _context.Bomberos
+                .FirstOrDefaultAsync(b => b.NumeroLegajo == numeroLegajo);
 
+            return bombero;
+        }
     }
 }

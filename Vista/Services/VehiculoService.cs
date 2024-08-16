@@ -18,6 +18,10 @@ namespace Vista.Services
         Task<VehiculoSalida> CambiarEstado(int movilid, TipoEstadoMovil estado);
         Task<Incidente> AgregarIncidente(Incidente incidente);
         Task<Incidente> BorrarIncidente(Incidente incidente);
+        Task<Limpieza> AgregarLimpieza(Limpieza limpieza);
+        Task<Limpieza> BorrarLimpieza(Limpieza limpieza);
+        Task<Movil> ObtenerMovilPorNumero(string NumeroMovil);
+        Task<List<Movil>> ObtenerTodosLosMoviles();
     }
 
     public class VehiculoService : IVehiculoService
@@ -37,7 +41,7 @@ namespace Vista.Services
                 if (Encargado.VehiculosEncargado == null) Encargado.VehiculosEncargado = new();
                 Encargado.VehiculosEncargado.Add(vehiculo);
             }
-            if(vehiculo is Movil)
+            if (vehiculo is Movil)
             {
                 _context.Moviles.Add((Movil)vehiculo);
             }
@@ -65,12 +69,13 @@ namespace Vista.Services
                         editarProp.SetValue(Editar, propValor);
                     }
                 }
-                if (vehiculo.Encargado != null) {
+                if (vehiculo.Encargado != null)
+                {
                     Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.Encargado.PersonaId);
                     Editar.Encargado = Encargado;
                     Editar.EncargadoId = Encargado.PersonaId;
                 }
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return vehiculo;
             }
             catch (DbUpdateException ex)
@@ -132,6 +137,20 @@ namespace Vista.Services
                 return incidente;
             }
             return incidente;
+        }
+
+        public async Task<Movil> ObtenerMovilPorNumero(string NumeroMovil)
+        {
+            var movil = await _context.Moviles
+                                      .FirstOrDefaultAsync(m => m.NumeroMovil == NumeroMovil);
+
+            return movil;
+        }
+
+        public async Task<List<Movil>> ObtenerTodosLosMoviles()
+        {
+            var moviles = await _context.Moviles.ToListAsync();
+            return moviles;
         }
     }
 }

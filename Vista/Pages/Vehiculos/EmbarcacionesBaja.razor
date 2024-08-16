@@ -1,8 +1,9 @@
-﻿﻿@using Vista.Services
+﻿@using Vista.Services
 @using Vista.Components.Vehiculos
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/moviles"
+@inject IMessageService _messag
+@page "/Moviles/Embarcaciones-baja"
 
 <style>
     .template {
@@ -24,7 +25,7 @@
     }
 
     .grid {
-        max-width: 1100px !important;
+        max-width: 1300px;
         min-width: 320px;
         display: flex;
         flex-direction: row;
@@ -54,24 +55,21 @@
     <div class="grid">
         <div style="display: flex;justify-content: space-between;width: 100%;min-width: 320px;align-items: center;">
             <div style="position: relative;">
-                <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 30px !important;display: contents;">
-                    <b>UNIDADES</b>
+                <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;display: contents;">
+                    <b>EMBARCACION</b>
                 </p>
             </div>
-            <div style="display: flex; gap: 5px;">
-                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Moviles-baja"); })">
-                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Unidades de baja</Button>
-                </a>
-                <a @onclick="() => AgregarVisible = true">
-                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none; margin-right: 49px;font-size: 14px !important;">Agregar unidad</Button>
+            <div>
+                <a @onclick="@(() => { navigationManager.NavigateTo($"/embarcaciones"); })">
+                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Embarcaciones activas</Button>
                 </a>
             </div>
         </div>
-        @if (moviles is not null)
+        @if (embarcaciones is not null)
         {
-            @foreach (Movil m in moviles)
+            @foreach (Embarcacion m in embarcaciones)
             {
-                if (m.Estado != TipoEstadoMovil.Activo) continue;
+                if (m.Estado == TipoEstadoMovil.Activo) continue;
                 <VehiculosCarta Vehiculo="m" OnChange="Init" />
             }
         }
@@ -84,33 +82,27 @@
     </div>
 </div>
 
-<Modal Footer="null" Title="Agregar" OnCancel="()=> AgregarVisible = false" Visible="@AgregarVisible">
-    <VehiculoAgregar OnClose="CloseVehiculo" EsMovil="true" />
-</Modal>
-
 @code {
     RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
-    Movil[]? moviles;
-    bool AgregarVisible { get; set; }
+    public Embarcacion[]? embarcaciones;
     BomberosDbContext Context { get; set; }
 
-    private async void CloseVehiculo()
-    {
-        AgregarVisible = false;
-        await Init();
-        StateHasChanged();
-    }
     protected override async Task OnInitializedAsync()
     {
         await Init();
     }
+
     private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
-        moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
+
+        embarcaciones = await Context.Embarcacion.ToArrayAsync();
     }
+
     public void Dispose()
     {
         Context?.Dispose();
     }
 }
+
+

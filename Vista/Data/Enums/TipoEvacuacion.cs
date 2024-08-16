@@ -1,9 +1,13 @@
-﻿namespace Vista.Data.Enums
+﻿namespace Vista.Data.Enums;
+using System.ComponentModel.DataAnnotations;
+
+public enum TipoEvacuacion
 {
-    public enum TipoEvacuacion
-    {
-        NoEvacuo,
-        EvacuacionParcial,
-        EvacuacionTotal
-    }
+    [Display(Name = "No evacuó")]
+    NoEvacuo,
+    [Display(Name = "Evacuación Parcial")]
+    EvacuacionParcial,
+    [Display(Name = "Evacuación Total")]
+    EvacuacionTotal
 }
+

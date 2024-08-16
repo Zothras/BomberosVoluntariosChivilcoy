@@ -1,11 +1,16 @@
-﻿namespace Vista.Data.Enums
-{
+﻿namespace Vista.Data.Enums;
+using System.ComponentModel.DataAnnotations;
+
+
     public enum TipoServicioSalida
     {
-        AsistenciaObligatoria,
-        AsistenciaAccidental,
-        ServicioGuardia,
-        DedicacionOrdenInterno,
+    [Display(Name = "Asistencia Obligatoria")]
+    AsistenciaObligatoria,
+    [Display(Name = "Asistencia Accidental")]
+    AsistenciaAccidental,
+    [Display(Name = "Servicio Guardia")]
+    ServicioGuardia,
+    [Display(Name = "Dedicación Orden Interno")]
+    DedicacionOrdenInterno,
         Especial
     }
-}

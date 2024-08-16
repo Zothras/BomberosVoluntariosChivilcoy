@@ -105,6 +105,11 @@
         min-height: 250pxpx !important;
         width: 100% !important;
     }
+
+    .ant-checkbox-input:checked + .ant-checkbox-inner {
+        background-color: #4CAF50 !important;
+        border-color: #4CAF50 !important;
+    }
 </style>
 
 <Form Model="@salidaIncendioViviendaVista"
@@ -161,7 +166,7 @@
                 <EnumSelect TEnum="TipoIncendioVivienda" @bind-Value="@salidaIncendioViviendaVista.TipoLugar" />
                 @if (salidaIncendioViviendaVista.TipoLugar == TipoIncendioVivienda.Otro)
                 {
-                    <FormItem Label="OtroLugar">
+                    <FormItem Label="Otro Lugar">
                         <Input @bind-Value="@salidaIncendioViviendaVista.OtroLugar" />
                     </FormItem>
                 }
@@ -190,7 +195,7 @@
         {
             <FormItem WrapperColSpan="16">
                 <Button Class="boton_p" HtmlType="submit">
-                    Cargar salida
+                    Imprimir salida
                 </Button>
             </FormItem>
         }

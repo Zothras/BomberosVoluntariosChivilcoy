@@ -4,7 +4,7 @@
 @inject IMessageService message
 
 <div class="slick-contenedor @animationClass">
-    <h6>Datos del chofer</h6>
+    <h6>Datos del chófer</h6>
 
     <div class="inpt-cont-inline">
         <div class="inpt-cont">
@@ -15,21 +15,21 @@
                     @bind-Value="@chofer"
                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                    Placeholder="Selecione a un bombero"
+                    Placeholder="Seleccione a un chófer"
                     DefaultActiveFirstOption="false"
                     AllowClear="true"
                     EnableSearch>
             </Select>
         </div>
         <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Numero de movil</label>
+            <label class="inpt-cont--lbl">Numero de móvil</label>
             <Select TItem="Movil"
                     TItemValue="string"
                     DataSource="@Moviles"
                     @bind-Value="@NumeroMovil"
                     LabelName="@nameof(Movil.NumeroMovil)"
                     ValueName="@nameof(Movil.NumeroMovil)"
-                    Placeholder="Selecione el movil"
+                    Placeholder="Seleccione el móvil"
                     DefaultActiveFirstOption="false"
                     AllowClear="true"
                     EnableSearch>
@@ -54,17 +54,17 @@
     }
     <div class="inpt-cont-inline">
         <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Kilometro de salida</label>
+            <label class="inpt-cont--lbl">Kilómetro de salida</label>
             <AntDesign.InputNumber @bind-Value="Model.Kilometraje" Disabled />
         </div>
         <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Kilometro de llegada</label>
+            <label class="inpt-cont--lbl">Kilómetro de llegada</label>
             <AntDesign.InputNumber @bind-Value="Model.KmLlegada" />
         </div>
     </div>
     <!-- Cargar combustible actualmente no funciona -->
     <div class="inpt-cont">
-        <label class="inpt-cont--lbl">¿Cargo combustible?</label>
+        <label class="inpt-cont--lbl">¿Cargó combustible?</label>
         <Switch @bind-Checked="switchMoviles" Style="width: 10px!important;" OnChange="@OnChangeSwitch" />
         <Modal Title="@("Datos de la carga de combustible")"
                Visible="@_visible"
@@ -76,7 +76,7 @@
                   OnFinish="OnFinishModel"
                   OnFinishFailed="OnFinishFailed"
                   @ref="@_form1" Context="modalMoviles">
-                <FormItem Label="Numero factura">
+                <FormItem Label="Número factura">
                     <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
                 </FormItem>
                 <FormItem Label="Fecha factura">
@@ -88,10 +88,10 @@
                 <FormItem Label="Cantidad de Litros">
                     <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
                 </FormItem>
-                <FormItem Label="Quien lleno">
+                <FormItem Label="Quién llenó">
                     <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
                 </FormItem>
-                <FormItem Label="TelefonoQuienLleno">
+                <FormItem Label="Teléfono Quién Llenó">
                     <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
                 </FormItem>
             </Form>

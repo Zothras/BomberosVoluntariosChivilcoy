@@ -359,7 +359,7 @@
         @*<img src="imagenes/bombero-removebg.png" /> " <-- Cambiar esta foto más adelante*@
     </article>
     <article class="art5">
-        <h1 class="art5-Title" style="padding: 10px 0 0 8px;">HERRAMIENTAS</h1>
+        <h1 class="art5-Title" style="padding: 10px 0 0 8px;">DEPARTAMENTOS</h1>
         <div class="btnContA5">
             <Popover OverlayClassName="myPopover" ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
@@ -451,19 +451,18 @@
         <article class="art8">
             <div class="bomberosArt" style="height: 112px;">
                 <img class="imgBomberos2" style="filter: brightness(0.6);" src="imagenes/moviles.jpg" />
-                <h1 style="font-size: 33px;margin-top: 0;">MOVILES</h1>
+                <h1 style="font-size: 33px;margin-top: 0;">UNIDADES</h1>
                 <i style="position: absolute;left: 17px;top: 53px;color: white;" class="fa-solid fa-truck-droplet icoSelected"></i>
-                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver moviles</p>
+                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver unidades</p>
             </div>
         </article>
     </a>
-    <a @onclick="@(() => { navigationManager.NavigateTo("/embarcaciones"); })" style="border-radius: 10px;">
-        <article class="art9">
+    <a @onclick="@(() => { navigationManager.NavigateTo("/"); })" style="border-radius: 10px;">
+        <article class="art9" style="background-color:darkgrey">
             <div class="bomberosArt" style="height: 112px;">
-                <img class="imgBomberos2" style="filter: brightness(0.5);" src="imagenes/embarcacion.jpg" />
-                <h1 style="font-size: 33px;margin-top: 0;">EMBARCACIONES</h1>
+                <h1 style="font-size: 33px;margin-top: 0;">FIRMAS</h1>
                 <i style="position: absolute;left: 17px;top: 53px;color: white;" class="fa-sharp fa-solid fa-ship"></i>
-                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver embarcaciones</p>
+                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver firmas</p>
             </div>
         </article>
     </a>

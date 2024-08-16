@@ -99,7 +99,14 @@
 .boton_p {
     background-color: #732D2D !important;
     color: white !important;
+        margin-right: 80px !important; 
+        border-radius: 5px 5px !important;
 }
+
+    .ant-checkbox-input:checked + .ant-checkbox-inner {
+        background-color: #4CAF50 !important;
+        border-color: #4CAF50 !important;
+    }
 
 </style>
 
@@ -122,32 +129,26 @@
             {
                 @*General*@
                 <DatosGenerales Model="@modelMateriales"
-                                
                                 animationClass="@animationClass" />
             }
             else if (current == 1)
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@modelMateriales"
-                               
                                animationClass="@animationClass" />
             }
             else if (current == 2)
             {
                 @*Seguro*@
                 <Seguro Model="@modelMateriales"
-                        
                         animationClass="@animationClass"
                         EsObligatorio="false" />
             }
             else if (current == 3)
             {
                 @*Chofer y Moviles*@
-                <Vehiculos1 Model="@modelMateriales"
-                           
-                           animationClass="@animationClass"
-                           bomberoChoferes="@bomberoChoferes"
-                           Moviles="@Moviles" />
+                <Vehiculos1 Model="@modelMateriales" 
+                           animationClass="@animationClass" />
             }
             else if (current == 4)
             {
@@ -174,7 +175,7 @@
                             <Input @bind-Value="modelMateriales.Sustancias" />
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Tipo evacuacion</label>
+                            <label class="inpt-cont--lbl">Tipo evacuación</label>
                             <EnumSelect TEnum="TipoEvacuacion" @bind-Value="@modelMateriales.Evacuacion" />
                         </div>
                     </div>
@@ -224,7 +225,7 @@
                             <EnumSelect TEnum="TipoSuperficie" @bind-Value="@modelMateriales.TipoSuperficie" />
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Tipo de evacuacion</label>
+                            <label class="inpt-cont--lbl">Tipo de evacuación</label>
                             <EnumSelect TEnum="TipoSituacionExplosion" @bind-Value="@modelMateriales.TipoSituacion" />
                         </div>
                     </div>
@@ -248,7 +249,7 @@
         @if (current == steps.Length - 1)
         {
             <Button Class="boton_p" HtmlType="submit">
-                Cargar salida
+                Imprimir salida
             </Button>
         }
     </div>
@@ -382,11 +383,6 @@
         Context = DbFactory.CreateDbContext();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
         await CargarBomberosView();
-    }
-
-    public async Task Cargarmaterial()
-    {
-
     }
 
     private async void OnFinish(EditContext editContext)

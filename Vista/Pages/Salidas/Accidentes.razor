@@ -13,6 +13,7 @@
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
+        margin-right: 80px;
     }
 
     .ant-carousel .slick-dots li {
@@ -89,6 +90,12 @@
             overflox: auto !imporant;
         }
     }
+
+    .ant-checkbox-input:checked + .ant-checkbox-inner {
+        background-color: #4CAF50 !important;
+        border-color: #4CAF50 !important;
+    }
+
 </style>
 
 <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
@@ -124,7 +131,7 @@
             else if (current == 2)
             {//Chofer y Movil
                 <div class="slick-contenedor @animationClass">
-                    <h6>Datos del chofer</h6>
+                    <h6>Datos del chófer</h6>
 
                     <div class="inpt-cont-inline">
                         <div class="inpt-cont">
@@ -135,21 +142,21 @@
                                     @bind-Value="@chofer"
                                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                    Placeholder="Selecione a un bombero"
+                                    Placeholder="Seleccione el bombero"
                                     DefaultActiveFirstOption="false"
                                     AllowClear="true"
                                     EnableSearch>
                             </Select>
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Numero de movil</label>
+                            <label class="inpt-cont--lbl">Número de móvil</label>
                             <Select TItem="Movil"
                                     TItemValue="string"
                                     DataSource="@Moviles"
                                     @bind-Value="@NumeroMovil"
                                     LabelName="@nameof(Movil.NumeroMovil)"
                                     ValueName="@nameof(Movil.NumeroMovil)"
-                                    Placeholder="Selecione el movil"
+                                    Placeholder="Seleccione el móvil"
                                     DefaultActiveFirstOption="false"
                                     AllowClear="true"
                                     EnableSearch>
@@ -175,16 +182,16 @@
                     }
                     <div class="inpt-cont-inline">
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Kilometro de salida</label>
+                            <label class="inpt-cont--lbl">Kilómetro de salida</label>
                             <AntDesign.InputNumber @bind-Value="accidenteViewModels.Kilometraje" Disabled />
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Kilometro de llegada</label>
+                            <label class="inpt-cont--lbl">Kilómetro de llegada</label>
                             <AntDesign.InputNumber @bind-Value="accidenteViewModels.KmLlegada" />
                         </div>
                     </div>
                     <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">¿Cargo combustible?</label>
+                        <label class="inpt-cont--lbl">¿Cargó combustible?</label>
                         <Switch @bind-Checked="switchMoviles" Disabled="@desactivarSwitch" Style="width: 10px!important;" />
                         @if (switchMoviles == true)
                         {
@@ -198,7 +205,7 @@
                                       OnFinish="OnFinishModel"
                                       OnFinishFailed="OnFinishFailed"
                                       @ref="@_form1" Context="modalMoviles">
-                                    <FormItem Label="Numero factura">
+                                    <FormItem Label="Número factura">
                                         <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
                                     </FormItem>
                                     <FormItem Label="Fecha factura">
@@ -210,10 +217,10 @@
                                     <FormItem Label="Cantidad de Litros">
                                         <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
                                     </FormItem>
-                                    <FormItem Label="Quien lleno">
+                                    <FormItem Label="Quién llenó">
                                         <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
                                     </FormItem>
-                                    <FormItem Label="TelefonoQuienLleno">
+                                    <FormItem Label="Teléfono Quién Llenó">
                                         <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
                                     </FormItem>
                                 </Form>
@@ -221,7 +228,7 @@
                         }
                     </div>
                     <div class="inpt-cont">
-                        <Button OnClick="@AgregarMovilSalida">Cargar movil</Button>
+                        <Button OnClick="@AgregarMovilSalida">Cargar móvil</Button>
                     </div>
                     @if (MovilesSalidasL is not null)
                     {
@@ -230,7 +237,7 @@
                                 <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
                                 <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
                                 <ActionColumn Title="Acciones">
-                                    <Popconfirm Title="¿Quieres borrar este movil?"
+                                    <Popconfirm Title="Seguro que quieres borrar?"
                                                 OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
                                                 OkText="Si"
                                                 CancelText="No">
@@ -254,7 +261,7 @@
                                 @bind-Value="@BomberoCuerpo"
                                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                Placeholder="Selecione un bombero"
+                                Placeholder="Seleccione el bombero"
                                 DefaultActiveFirstOption="false"
                                 AllowClear="true" EnableSearch>
                         </Select>
@@ -270,7 +277,7 @@
                             <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
                             <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
                             <ActionColumn Title="Acciones">
-                                <Popconfirm Title="¿Quieres eliminar este bombero?"
+                                <Popconfirm Title="Seguro que quieres borrar?"
                                             OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
                                             OkText="Si"
                                             CancelText="No">
@@ -288,20 +295,20 @@
                                     @bind-Value="@BomberoEncargado"
                                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                    Placeholder="Seleccione  a un  bombero"
+                                    Placeholder="Seleccione el bombero"
                                     DefaultActiveFirstOption="true"
                                     AllowClear="true" EnableSearch>
                             </Select>
                         </div>
                         <div class="inpt-cont">
-                            <label class="inpt-cont--lbl">Lleno la planilla</label>
+                            <label class="inpt-cont--lbl">Llenó la planilla</label>
                             <Select TItem="BomberoViweModel"
                                     TItemValue="int"
                                     DataSource="@bomberoTodos"
                                     @bind-Value="@QuienLLenoPlanilla"
                                     LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                                     ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                                    Placeholder="Seleccione un bombero"
+                                    Placeholder="Seleccione el bombero"
                                     DefaultActiveFirstOption="false"
                                     AllowClear="true"
                                     EnableSearch>
@@ -502,7 +509,7 @@
     @if (current == steps.Length - 1)
     {
         <Button Class="boton_p" HtmlType="submit" OnClick="ShowModal1">
-            Cargar salida
+            Imprimir salida
         </Button>
     }
 </div>
