@@ -109,7 +109,7 @@ namespace Vista.Services
                 incidente.Vehiculo = vehiculo;
                 vehiculo.Incidentes.Add(incidente);
             }
-            _context.Incidentes.Add(incidente);
+            _context.Set<Incidente>().Add(incidente);
             await _context.SaveChangesAsync();
             return incidente;
         }
@@ -119,8 +119,8 @@ namespace Vista.Services
             {
                 if (incidente != null)
                 {
-                    Incidente IncidenteBorrar = await _context.Incidentes.Where(inci => inci.IncidenteId == incidente.IncidenteId).SingleOrDefaultAsync();
-                    _context.Incidentes.Remove(IncidenteBorrar);
+                    Incidente IncidenteBorrar = await _context.Set<Incidente>().Where(inci => inci.IncidenteId == incidente.IncidenteId).SingleOrDefaultAsync();
+                    _context.Set<Incidente>().Remove(IncidenteBorrar);
                     await _context.SaveChangesAsync();
                 }
             }

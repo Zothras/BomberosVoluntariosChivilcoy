@@ -40,9 +40,6 @@ namespace Vista.Data
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<MovilSalida> MovilesSalida { get; set; }
         public DbSet<BomberoSalida> BomberosSalida { get; set; }
-        public DbSet<Incidente> Incidentes { get; set; }
-        public DbSet<Dependencia> Dependencias { get; set; }
-        public DbSet<BomberoDependencia> BomberosDependencias { get; set; }
         public DbSet<Limpieza> Limpiezas { get; set; }
         public DbSet<Material> Materiales { get; set; }
 
@@ -81,6 +78,15 @@ namespace Vista.Data
 
             modelBuilder.Entity<Licencia>()
              .HasKey(l => l.LicenciaId);
+
+            modelBuilder.Entity<Incidente>()
+                .ToTable("Incidente");
+
+            modelBuilder.Entity<Dependencia>()
+                .ToTable("Dependencia");
+
+            modelBuilder.Entity<BomberoDependencia>()
+                .ToTable("BomberoDependencia");
 
             modelBuilder.Entity<Licencia>()
                 .ToTable("Licencias");
@@ -189,20 +195,6 @@ namespace Vista.Data
                 .HasMany(bo => bo.Incidentes)
                 .WithOne(li => li.Encargado)
                 .HasForeignKey(li => li.PersonaId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-
-            modelBuilder.Entity<Dependencia>()
-                .HasMany(de => de.Bomberos)
-                .WithOne(li => li.Dependencia)
-                .HasForeignKey(li => li.DependenciaId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-
-            modelBuilder.Entity<Dependencia>()
-                .HasMany(de => de.Incidentes)
-                .WithOne(li => li.Dependencia)
-                .HasForeignKey(li => li.DependenciaId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 

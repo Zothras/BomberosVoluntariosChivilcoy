@@ -18,8 +18,5 @@ namespace Vista.Data.Models.Salidas.Componentes
         public int? VehiculoId { get; set; }
         [ForeignKey(nameof(VehiculoId))]
         public VehiculoSalida? Vehiculo { get; set; }
-        public int? DependenciaId { get; set; }
-        [ForeignKey(nameof(DependenciaId))]
-        public IncidenteDependencia? Dependencia { get; set; }
     }
 }

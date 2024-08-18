@@ -12,8 +12,8 @@ using Vista.Data;
 namespace Vista.Data.Migrations
 {
     [DbContext(typeof(BomberosDbContext))]
-    [Migration("20240815133514_FixIncidentes")]
-    partial class FixIncidentes
+    [Migration("20240818055624_FixIncidentes2")]
+    partial class FixIncidentes2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,7 +46,7 @@ namespace Vista.Data.Migrations
                     b.HasIndex("PersonaId")
                         .IsUnique();
 
-                    b.ToTable("BomberosDependencias");
+                    b.ToTable("BomberoDependencia", (string)null);
                 });
 
             modelBuilder.Entity("Vista.Data.Models.Personales.BomberoSalida", b =>
@@ -184,7 +184,7 @@ namespace Vista.Data.Migrations
 
                     b.HasKey("DependenciaId");
 
-                    b.ToTable("Dependencias");
+                    b.ToTable("Dependencia", (string)null);
                 });
 
             modelBuilder.Entity("Vista.Data.Models.Personales.HorarioBombero", b =>
@@ -649,9 +649,6 @@ namespace Vista.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IncidenteId"));
 
-                    b.Property<int?>("DependenciaId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(21)
@@ -682,7 +679,7 @@ namespace Vista.Data.Migrations
 
                     b.HasIndex("VehiculoId");
 
-                    b.ToTable("Incidentes");
+                    b.ToTable("Incidente", (string)null);
 
                     b.HasDiscriminator().HasValue("Incidente");
 
@@ -1165,6 +1162,9 @@ namespace Vista.Data.Migrations
             modelBuilder.Entity("Vista.Data.Models.Salidas.Componentes.IncidenteDependencia", b =>
                 {
                     b.HasBaseType("Vista.Data.Models.Salidas.Componentes.Incidente");
+
+                    b.Property<int>("DependenciaId")
+                        .HasColumnType("int");
 
                     b.HasIndex("DependenciaId");
 
@@ -1708,8 +1708,7 @@ namespace Vista.Data.Migrations
                 {
                     b.HasOne("Vista.Data.Models.Personales.Dependencia", "Dependencia")
                         .WithMany("Bomberos")
-                        .HasForeignKey("DependenciaId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("DependenciaId");
 
                     b.HasOne("Vista.Data.Models.Personales.Bombero", "Bombero")
                         .WithOne("Dependencia")
@@ -2033,7 +2032,8 @@ namespace Vista.Data.Migrations
                     b.HasOne("Vista.Data.Models.Personales.Dependencia", "Dependencia")
                         .WithMany("Incidentes")
                         .HasForeignKey("DependenciaId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Dependencia");
                 });

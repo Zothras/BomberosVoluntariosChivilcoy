@@ -180,7 +180,7 @@ else if (!existe)
     {
         if (selectedIncidente != null)
         {
-            Incidente incidente = await Context.Incidentes.SingleOrDefaultAsync(e => e.IncidenteId == selectedIncidente.IncidenteId);
+            Incidente incidente = await Context.Set<Incidente>().SingleOrDefaultAsync(e => e.IncidenteId == selectedIncidente.IncidenteId);
             await VehiculoService.BorrarIncidente(incidente);
             await MostrarDatos();
             StateHasChanged();
@@ -196,7 +196,7 @@ else if (!existe)
         if (vehiculo != null)
         {
             incidentes = new();
-            foreach (Incidente inci in Context.Incidentes.Where(inci=>inci.Fecha >= FechaDesde && inci.Fecha <= FechaHasta).ToArray())
+            foreach (Incidente inci in Context.Set<Incidente>().Where(inci=>inci.Fecha >= FechaDesde && inci.Fecha <= FechaHasta).ToArray())
             {
                 if (inci != null && inci.Vehiculo != null)
                 {

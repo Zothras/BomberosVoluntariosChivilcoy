@@ -5,7 +5,7 @@
 namespace Vista.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class FixIncidentes : Migration
+    public partial class FixIncidentes2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,10 +17,6 @@ namespace Vista.Data.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_BomberoDependencia_Personas_PersonaId",
                 table: "BomberoDependencia");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Incidente_Dependencia_DependenciaId",
-                table: "Incidente");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Incidente_Personas_PersonaId",
@@ -37,30 +33,6 @@ namespace Vista.Data.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Limpiezas_Vehiculo_VehiculoId",
                 table: "Limpiezas");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Incidente",
-                table: "Incidente");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Dependencia",
-                table: "Dependencia");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_BomberoDependencia",
-                table: "BomberoDependencia");
-
-            migrationBuilder.RenameTable(
-                name: "Incidente",
-                newName: "Incidentes");
-
-            migrationBuilder.RenameTable(
-                name: "Dependencia",
-                newName: "Dependencias");
-
-            migrationBuilder.RenameTable(
-                name: "BomberoDependencia",
-                newName: "BomberosDependencias");
 
             migrationBuilder.RenameColumn(
                 name: "VehiculoId",
@@ -84,37 +56,17 @@ namespace Vista.Data.Migrations
 
             migrationBuilder.RenameColumn(
                 name: "VehiculoSalidaVehiculoId",
-                table: "Incidentes",
+                table: "Incidente",
                 newName: "VehiculoId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Incidente_VehiculoSalidaVehiculoId",
-                table: "Incidentes",
-                newName: "IX_Incidentes_VehiculoId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Incidente_PersonaId",
-                table: "Incidentes",
-                newName: "IX_Incidentes_PersonaId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Incidente_DependenciaId",
-                table: "Incidentes",
-                newName: "IX_Incidentes_DependenciaId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BomberoDependencia_PersonaId",
-                table: "BomberosDependencias",
-                newName: "IX_BomberosDependencias_PersonaId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BomberoDependencia_DependenciaId",
-                table: "BomberosDependencias",
-                newName: "IX_BomberosDependencias_DependenciaId");
+                table: "Incidente",
+                newName: "IX_Incidente_VehiculoId");
 
             migrationBuilder.AlterColumn<int>(
                 name: "PersonaId",
-                table: "Incidentes",
+                table: "Incidente",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -122,7 +74,7 @@ namespace Vista.Data.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "Tipo",
-                table: "Incidentes",
+                table: "Incidente",
                 type: "varchar(255)",
                 maxLength: 255,
                 nullable: false,
@@ -131,7 +83,7 @@ namespace Vista.Data.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "PersonaId",
-                table: "BomberosDependencias",
+                table: "BomberoDependencia",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -139,61 +91,37 @@ namespace Vista.Data.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "DependenciaId",
-                table: "BomberosDependencias",
+                table: "BomberoDependencia",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
                 oldType: "int");
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Incidentes",
-                table: "Incidentes",
-                column: "IncidenteId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Dependencias",
-                table: "Dependencias",
-                column: "DependenciaId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_BomberosDependencias",
-                table: "BomberosDependencias",
-                column: "BomberoDependenciaId");
-
             migrationBuilder.AddForeignKey(
-                name: "FK_BomberosDependencias_Dependencias_DependenciaId",
-                table: "BomberosDependencias",
+                name: "FK_BomberoDependencia_Dependencia_DependenciaId",
+                table: "BomberoDependencia",
                 column: "DependenciaId",
-                principalTable: "Dependencias",
-                principalColumn: "DependenciaId",
-                onDelete: ReferentialAction.SetNull);
+                principalTable: "Dependencia",
+                principalColumn: "DependenciaId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_BomberosDependencias_Personas_PersonaId",
-                table: "BomberosDependencias",
+                name: "FK_BomberoDependencia_Personas_PersonaId",
+                table: "BomberoDependencia",
                 column: "PersonaId",
                 principalTable: "Personas",
                 principalColumn: "PersonaId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Incidentes_Dependencias_DependenciaId",
-                table: "Incidentes",
-                column: "DependenciaId",
-                principalTable: "Dependencias",
-                principalColumn: "DependenciaId",
-                onDelete: ReferentialAction.SetNull);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Incidentes_Personas_PersonaId",
-                table: "Incidentes",
+                name: "FK_Incidente_Personas_PersonaId",
+                table: "Incidente",
                 column: "PersonaId",
                 principalTable: "Personas",
                 principalColumn: "PersonaId",
                 onDelete: ReferentialAction.SetNull);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Incidentes_Vehiculo_VehiculoId",
-                table: "Incidentes",
+                name: "FK_Incidente_Vehiculo_VehiculoId",
+                table: "Incidente",
                 column: "VehiculoId",
                 principalTable: "Vehiculo",
                 principalColumn: "VehiculoId",
@@ -218,24 +146,20 @@ namespace Vista.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_BomberosDependencias_Dependencias_DependenciaId",
-                table: "BomberosDependencias");
+                name: "FK_BomberoDependencia_Dependencia_DependenciaId",
+                table: "BomberoDependencia");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_BomberosDependencias_Personas_PersonaId",
-                table: "BomberosDependencias");
+                name: "FK_BomberoDependencia_Personas_PersonaId",
+                table: "BomberoDependencia");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Incidentes_Dependencias_DependenciaId",
-                table: "Incidentes");
+                name: "FK_Incidente_Personas_PersonaId",
+                table: "Incidente");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Incidentes_Personas_PersonaId",
-                table: "Incidentes");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Incidentes_Vehiculo_VehiculoId",
-                table: "Incidentes");
+                name: "FK_Incidente_Vehiculo_VehiculoId",
+                table: "Incidente");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Limpiezas_Personas_BomberosPersonaId",
@@ -245,33 +169,9 @@ namespace Vista.Data.Migrations
                 name: "FK_Limpiezas_Vehiculo_MovilId",
                 table: "Limpiezas");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Incidentes",
-                table: "Incidentes");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Dependencias",
-                table: "Dependencias");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_BomberosDependencias",
-                table: "BomberosDependencias");
-
             migrationBuilder.DropColumn(
                 name: "Tipo",
-                table: "Incidentes");
-
-            migrationBuilder.RenameTable(
-                name: "Incidentes",
-                newName: "Incidente");
-
-            migrationBuilder.RenameTable(
-                name: "Dependencias",
-                newName: "Dependencia");
-
-            migrationBuilder.RenameTable(
-                name: "BomberosDependencias",
-                newName: "BomberoDependencia");
+                table: "Incidente");
 
             migrationBuilder.RenameColumn(
                 name: "MovilId",
@@ -299,29 +199,9 @@ namespace Vista.Data.Migrations
                 newName: "VehiculoSalidaVehiculoId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Incidentes_VehiculoId",
+                name: "IX_Incidente_VehiculoId",
                 table: "Incidente",
                 newName: "IX_Incidente_VehiculoSalidaVehiculoId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Incidentes_PersonaId",
-                table: "Incidente",
-                newName: "IX_Incidente_PersonaId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Incidentes_DependenciaId",
-                table: "Incidente",
-                newName: "IX_Incidente_DependenciaId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BomberosDependencias_PersonaId",
-                table: "BomberoDependencia",
-                newName: "IX_BomberoDependencia_PersonaId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BomberosDependencias_DependenciaId",
-                table: "BomberoDependencia",
-                newName: "IX_BomberoDependencia_DependenciaId");
 
             migrationBuilder.AlterColumn<int>(
                 name: "PersonaId",
@@ -353,21 +233,6 @@ namespace Vista.Data.Migrations
                 oldType: "int",
                 oldNullable: true);
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Incidente",
-                table: "Incidente",
-                column: "IncidenteId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Dependencia",
-                table: "Dependencia",
-                column: "DependenciaId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_BomberoDependencia",
-                table: "BomberoDependencia",
-                column: "BomberoDependenciaId");
-
             migrationBuilder.AddForeignKey(
                 name: "FK_BomberoDependencia_Dependencia_DependenciaId",
                 table: "BomberoDependencia",
@@ -382,14 +247,6 @@ namespace Vista.Data.Migrations
                 column: "PersonaId",
                 principalTable: "Personas",
                 principalColumn: "PersonaId",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Incidente_Dependencia_DependenciaId",
-                table: "Incidente",
-                column: "DependenciaId",
-                principalTable: "Dependencia",
-                principalColumn: "DependenciaId",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
