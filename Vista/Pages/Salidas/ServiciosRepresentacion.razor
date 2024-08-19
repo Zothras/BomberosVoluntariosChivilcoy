@@ -125,13 +125,9 @@
     <FormItem Label="Teléfono  del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.TelefonoSolicitante" />
     </FormItem>
-    @*Datos bomberos receptor*@
     @*Datos del receptor*@
     <FormItem Label="Nombre y apellido del receptor">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NombreYApellidoReceptor" />
-    </FormItem>
-    <FormItem Label="Teléfono receptor">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.TelefonoReceptor" />
     </FormItem>
 
     @*Moviles de salidas*@
@@ -492,7 +488,6 @@
                     DniSolicitante = modelServiciosEspecialesRepresentacion.DniSolicitante,
                     TelefonoSolicitante = modelServiciosEspecialesRepresentacion.TelefonoSolicitante,
                     NombreYApellidoReceptor = modelServiciosEspecialesRepresentacion.NombreYApellidoReceptor,
-                    TelefonoReceptor = modelServiciosEspecialesRepresentacion.TelefonoReceptor,
                     TipoServicio = modelServiciosEspecialesRepresentacion.TipoServicio,
                     //Organizacion beneficiada
                     TipoOrganizacion = modelServiciosEspecialesRepresentacion.TipoOrganizacion,
