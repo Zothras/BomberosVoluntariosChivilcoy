@@ -118,154 +118,25 @@
             {
                 @*General*@
                 <DatosGenerales Model="@modelFactorClimatico"
-                                
                                 animationClass="@animationClass" />
             }
             else if (current == 1)
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@modelFactorClimatico"
-                               
-                               animationClass="@animationClass" />
+                animationClass="@animationClass" />
             }
             else if (current == 2)
             {
-                @*Moviles de salidas*@
-                @*a la hora de pedir el chofer y movil,
-            pedir dato unico para no cargar todo y buscarlo en la base de datos*@
-                <b><label>Datos de chófer</label></b>
-                <br />
-                <FormItem Label="">
-                    <Checkbox @bind-Checked="chekM"> Cargó combustible</Checkbox>
-                    <br />
-                    <Button Class="boton_p" OnClick="@ShowModal">
-                        Cargó Combustible
-                    </Button>
-                </FormItem>
-
-
-                <FormItem Label="Elija el chófer">
-                    <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoChoferes"
-                    @bind-Value="@chofer"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione el bombero"
-                            DefaultActiveFirstOption="false"
-                                EnableSearch>
-                 </Select>
-             </FormItem>
-
-
-                <FormItem Label="Número de móvil">
-                    <Select TItem="Movil"
-                            TItemValue="string"
-                            DataSource="@Moviles"
-                    @bind-Value="@NumeroMovil"
-                            LabelName="@nameof(Movil.NumeroMovil)"
-                            ValueName="@nameof(Movil.NumeroMovil)"
-                            Placeholder="Seleccione el móvil"
-                            DefaultActiveFirstOption="false"
-                                EnableSearch>
-                 </Select>
-
-             </FormItem>
-                <br />
-                @if (NumeroMovil is not null)
-                {
-                    foreach (Movil m in Moviles)
-                    {
-                        if (m.NumeroMovil == NumeroMovil)
-                        {
-                            modelFactorClimatico.Kilometraje = m.Kilometraje;
-                            break;
-                        }
-                    }
-                }
-                <FormItem Label="Kilómetro salida">
-                    <AntDesign.InputNumber @bind-Value="modelFactorClimatico.Kilometraje" Disabled />
-                 </FormItem>
-                <FormItem Label="Kilómetro llegada">
-                    <AntDesign.InputNumber @bind-Value="modelFactorClimatico.KmLlegada" />
-                </FormItem>
-                <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
-                <br />
-                <div>
-                    <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
-                     <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-                     <PropertyColumn Property="c=>c.ChoferNombreCompleto"></PropertyColumn>
-                     <ActionColumn Title="Acciones">
-                         <Popconfirm Title="Seguro que quieres borrar?"
-                                     OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                                     OkText="Si"
-                                     CancelText="No">
-                             <a>Borrar</a>
-                         </Popconfirm>
-                     </ActionColumn>
-                 </Table>
-             </div>
+                @*Chofer y Moviles*@
+                <Vehiculos Model="@modelFactorClimatico"
+                           animationClass="@animationClass" />
             }
             else if (current == 3)
             {
-                @*Cuerpos paraticipantes*@
-                <b><label>Cuerpo Participante</label></b>
-                <FormItem Label="Elija el bombero">
-                    <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoTodos"
-                    @bind-Value="@BomberoCuerpo"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione el bombero"
-                            DefaultActiveFirstOption="false"
-                                EnableSearch>
-                 </Select>
-             </FormItem>
-                <Checkbox @bind-Checked="@chekB"> Salió</Checkbox>
-                <br />
-                <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
-                <br />
-                <div>
-                    <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
-                     <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-                     <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-                     <ActionColumn Title="Acciones">
-                         <Popconfirm Title="Seguro que quieres borrar?"
-                                     OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                                     OkText="Si"
-                                     CancelText="No">
-                             <a>Borrar</a>
-                         </Popconfirm>
-                     </ActionColumn>
-                 </Table>
-             </div>
-                <b><label>Elija al encargado</label></b>
-                <FormItem Label="Encargado">
-                    <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoTodos"
-                    @bind-Value="@BomberoEncargado"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione el encargado"
-                            DefaultActiveFirstOption="false"
-                                EnableSearch>
-                 </Select>
-             </FormItem>
-                <b><label>Quién llenó planilla</label></b>
-                <FormItem Label="Bombero que llenó la planilla">
-                    <Select TItem="BomberoViweModel"
-                            TItemValue="int"
-                            DataSource="@bomberoTodos"
-                    @bind-Value="@QuienLLenoPlanilla"
-                            LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                            Placeholder="Seleccione el encargado"
-                            DefaultActiveFirstOption="false"
-                                EnableSearch>
-                 </Select>
-             </FormItem>
+                @*Bomberos*@
+                <Personal Model="@modelFactorClimatico"
+                          animationClass="@animationClass" />
             }
             else if (current == 4)
             {
