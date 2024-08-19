@@ -2,7 +2,7 @@
 @using Vista.Components.Vehiculos
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/Moviles/Moviles-baja"
+@page "/unidades/unidades-baja"
 
 <style>
     .template {
@@ -55,18 +55,18 @@
         <div style="display: flex;justify-content: space-between;width: 100%;min-width: 320px;align-items: center;">
             <div style="position: relative;">
                 <p style="font-family:'Agency FB';width: 15em;position: absolute; transform: translate(0%, -50%);font-size: 1.5em;display: contents;">
-                    <b>MÓVILES</b>
+                    <b>UNIDADES</b>
                 </p>
             </div>
             <div>
-                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles"); })">
-                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Moviles activos</Button>
+                <a @onclick="@(() => { navigationManager.NavigateTo($"/unidades"); })">
+                    <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Unidads activas</Button>
                 </a>
             </div>
         </div>
-        @if (moviles is not null)
+        @if (vehiculos is not null)
         {
-            @foreach (Movil m in moviles)
+            @foreach (VehiculoSalida m in vehiculos)
             {
                 if (m.Estado == TipoEstadoMovil.Activo) continue;
                 <VehiculosCarta Vehiculo="m" OnChange="Init"/>
@@ -83,7 +83,7 @@
 
 @code {
     RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
-    Movil[]? moviles;
+    VehiculoSalida[]? vehiculos;
     BomberosDbContext Context { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -95,7 +95,7 @@
     {
         Context = DbFactory.CreateDbContext();
 
-        moviles = await Context.Moviles.ToArrayAsync();
+        vehiculos = await Context.Set<VehiculoSalida>().ToArrayAsync();
     }
 
     public void Dispose()

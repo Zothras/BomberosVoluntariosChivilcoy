@@ -54,17 +54,23 @@
     </div>
 </card>
 
-<Modal Footer="null" Title="Editar" OnCancel="()=> EditarVisible = false" Visible="@EditarVisible">
-    <VehiculoEditar VehiculoId="@VehiculoId" OnClose="HandleCancelEditar" />
-</Modal>
+@if (EditarVisible == true){
+    <Modal Footer="null" Title="Editar" OnCancel="()=> EditarVisible = false" Visible="@EditarVisible">
+        <VehiculoEditar VehiculoId="@VehiculoId" OnClose="HandleCancelEditar" />
+    </Modal>
+}
 
-<Modal Footer="null" Title="Detalles" OnCancel="()=> DetallesVisible = false" Visible="@DetallesVisible" Style="width: 35%!important;">
-    <VehiculoDetalles vehiculoId="@VehiculoId" />
-</Modal>
+@if (DetallesVisible == true){
+    <Modal Footer="null" Title="Detalles" OnCancel="()=> DetallesVisible = false" Visible="@DetallesVisible" Style="width: 35%!important;">
+        <VehiculoDetalles vehiculoId="@VehiculoId" />
+    </Modal>
+}
 
-<Modal Footer="null" Title="Ficha técnica" OnCancel="()=> FichaVisible = false" Visible="@FichaVisible" Style="width: 35%!important;">
-    <FichaTecnica VehiculoId="@VehiculoId" />
-</Modal>
+@if (FichaVisible == true){
+    <Modal Footer="null" Title="Ficha técnica" OnCancel="()=> FichaVisible = false" Visible="@FichaVisible" Style="width: 35%!important;">
+        <FichaTecnica VehiculoId="@VehiculoId" />
+    </Modal>
+}
 
 @code {
     [Parameter] public VehiculoSalida Vehiculo { get; set; }

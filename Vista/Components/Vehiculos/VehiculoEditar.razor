@@ -278,7 +278,7 @@
                 VehiculoSalida? comprobante = await Context.Set<VehiculoSalida>().SingleOrDefaultAsync(v => v.NumeroMovil == vehiculoView.NumeroMovil);
                 Bombero? EncargadoNew = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculoView.EncargadoId);
 
-                if (comprobante != null)
+                if (comprobante != null && vehiculoView.NumeroMovil != vehiculo.NumeroMovil)
                 {
                     message.Error("Existe un vehiculo con el mismo Nº Móvil");
                     return;
