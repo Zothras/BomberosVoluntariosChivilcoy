@@ -69,7 +69,6 @@ namespace Vista.Data.ViewModels
 
         //Datos del bombero receptor
         public string? NombreYApellidoReceptor { get; set; }
-        public string? TelefonoReceptor { get; set; }
         public int LegajoReceptor { get; set; }
 
         public List<Damnificado>? Damnificados { get; set; }

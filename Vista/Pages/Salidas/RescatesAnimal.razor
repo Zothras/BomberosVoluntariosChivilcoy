@@ -85,9 +85,6 @@
         <FormItem Label="Nombre y apellido del receptor">
             <Input @bind-Value="@AnimalViewModel.NombreYApellidoReceptor" />
         </FormItem>
-        <FormItem Label="Teléfono receptor">
-            <Input @bind-Value="@AnimalViewModel.TelefonoReceptor" />
-        </FormItem>
 
         @*Datos de damnificados*@
         <FormItem Label="¿Hubo damnificados?">
@@ -366,7 +363,6 @@
                     PisoNumero = AnimalViewModel.PisoNumero,
                     Depto = AnimalViewModel.Depto,
                     NombreYApellidoReceptor = AnimalViewModel.NombreYApellidoReceptor,
-                    TelefonoReceptor = AnimalViewModel.TelefonoReceptor,
                     TipoZona = AnimalViewModel.TipoZona,
                     NombreSolicitante = AnimalViewModel.NombreSolicitante,
                     ApellidoSolicitante = AnimalViewModel.ApellidoSolicitante,

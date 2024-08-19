@@ -86,9 +86,6 @@
         <FormItem Label="Nombre y apellido del receptor">
             <Input @bind-Value="@PersonaViewModel.NombreYApellidoReceptor" />
         </FormItem>
-        <FormItem Label="Teléfono receptor">
-            <Input @bind-Value="@PersonaViewModel.TelefonoReceptor" />
-        </FormItem>
 
         @*Datos de damnificados*@
         <FormItem Label="¿Hubo damnificados?">
@@ -384,7 +381,6 @@
                     PisoNumero = PersonaViewModel.PisoNumero,
                     Depto = PersonaViewModel.Depto,
                     NombreYApellidoReceptor = PersonaViewModel.NombreYApellidoReceptor,
-                    TelefonoReceptor = PersonaViewModel.TelefonoReceptor,
                     TipoZona = PersonaViewModel.TipoZona,
                     NombreSolicitante = PersonaViewModel.NombreSolicitante,
                     ApellidoSolicitante = PersonaViewModel.ApellidoSolicitante,
