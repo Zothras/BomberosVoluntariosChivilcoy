@@ -228,9 +228,8 @@
                 <PropertyColumn Title="Jerarquía" Property="c=>c.Grado" Sortable
                                 Filters="EscalafonJerarquicoFilter"
                                 OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
-                <PropertyColumn Title="Domicilio" Property="c=>c.Direccion" Sortable />
-                <PropertyColumn Title="Contacto" Property="c=>c.Contacto" Sortable />
-                <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
+                <PropertyColumn Title="Estado" Property="c=>c.Estado" Sortable />
+                    <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                     <Space>
                         <SpaceItem>
                             <Button Type="primary" OnClick="()=>DetalleBombero(context.PersonaId)">
@@ -298,7 +297,7 @@
     List<Bombero>? bomberos = new List<Bombero>();
     List<Bombero>? SinFiltrar = new List<Bombero>();
     public EstadoBombero Estado = EstadoBombero.CuerpoActivo;
-
+  
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
     int _pageIndex = 1;

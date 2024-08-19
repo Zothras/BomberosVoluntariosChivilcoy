@@ -59,8 +59,28 @@
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
+        border-radius: 4px 4px !important;
+        border-color: #732D2D !important;
     }
 
+    .boton_guardar {
+        background-color: #1890ff !important;
+        color: white !important;
+        border-radius: 4px 4px !important;
+        border-color: #1890ff !important;
+    }
+    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+        text-decoration: none;
+        background: #40a9ff !important;
+    }
+
+    .ant-btn:hover, .ant-btn:focus {
+        color: white !important;
+        border-color: #40a9ff !important;
+        background: #40a9ff !important;
+    }
+
+    
     
 
     #textoLabel {
@@ -161,11 +181,6 @@
         border: 1px solid !important;
         border-radius: 2px;
         transition: border 0.3s, box-shadow 0.3s;
-        border-color: red !important;
-    }
-
-    .ant-layout, .ant-layout * {
-        box-sizing: border-box;
         border-color: red !important;
     }
 
@@ -324,7 +339,7 @@
                         </Select>
                     </FormItem>
                     <FormItem WrapperColOffset="20" WrapperColSpan="16">
-                        <Button Class="boton_p" HtmlType="submit" OnClick="CrearBombero">
+                        <Button Class="boton_guardar" HtmlType="submit" OnClick="CrearBombero">
                             Agregar
                         </Button>
                     </FormItem>

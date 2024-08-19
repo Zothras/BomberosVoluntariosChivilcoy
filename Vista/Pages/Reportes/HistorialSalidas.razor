@@ -48,7 +48,7 @@
         background-color: #A63333 !important;
         color: white !important;
     }
-
+    
     .ant-form {
         box-sizing: border-box;
         margin: 0;
@@ -77,11 +77,9 @@
     <Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1" Responsive PageSize="6">
         <TitleTemplate>
             <GridRow>
-                <GridCol Span="4">
-                    <Title Level="3">Registro Salidas</Title>
-                </GridCol>
                 <GridCol Span="8" Offset="12">
-                    <Search Placeholder="Buscar bomberoe el " @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+                    <Search Placeholder="Buscar el bombero " @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+                    <Title Level="2">Registro Salidas</Title>
                 </GridCol>
             </GridRow>
         </TitleTemplate>

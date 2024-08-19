@@ -78,6 +78,28 @@
     .raro {
         padding: 6em 0;
     }
+
+    .boton_p{
+        background-color: #732D2D;
+        color: white;
+        border-radius: 4px 4px;
+    }
+    .boton_guardar{
+        background-color: #1890ff;
+        color: white;
+        border-radius: 4px 4px;
+    }
+
+    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+        text-decoration: none;
+        background: #40a9ff;
+    }
+
+    .ant-btn:hover, .ant-btn:focus {
+        color: white;
+        border-color: #40a9ff;
+        background: #40a9ff;
+    }
 </style>
 
 <div style="width: 100%;padding: 1em;">
@@ -170,8 +192,8 @@
         }
         @if (current == steps.Length - 1)
         {
-            <Button Class="boton_p" @onclick="EditarMovil">
-                Editar vehículo
+            <Button Class="boton_guardar" @onclick="EditarMovil">
+                Guardar
             </Button>
         }
     </div>

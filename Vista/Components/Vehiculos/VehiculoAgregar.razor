@@ -74,6 +74,29 @@
         text-align: center;
     }
 
+    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+        text-decoration: none;
+        background: #40a9ff;
+    }
+
+    .ant-btn:hover, .ant-btn:focus {
+        color: white;
+        border-color: #40a9ff;
+        background: #40a9ff;
+    }
+
+    .boton_p {
+        background-color: #732D2D;
+        color: white;
+        border-radius: 4px 4px;
+    }
+
+    .boton_guardar {
+        background-color: #1890ff;
+        color: white;
+        border-radius: 4px 4px;
+    }
+
     .raro {
         padding: 6em 0;
     }
@@ -169,8 +192,8 @@
             }
             @if (current == steps.Length - 1)
             {
-                <Button Class="boton_p" @onclick="SubirVehiculo">
-                    Agregar vehículo
+                <Button Class="boton_guardar" @onclick="SubirVehiculo">
+                    Agregar unidad
                 </Button>
             }
         </div>
