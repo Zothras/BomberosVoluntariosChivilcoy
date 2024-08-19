@@ -2,7 +2,7 @@
 @using Vista.Components.Vehiculos
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@page "/moviles"
+@page "/unidades"
 
 <style>
     .template {
@@ -59,7 +59,7 @@
                 </p>
             </div>
             <div style="display: flex; gap: 5px;">
-                <a @onclick="@(() => { navigationManager.NavigateTo($"/moviles/Moviles-baja"); })">
+                <a @onclick="@(() => { navigationManager.NavigateTo($"/unidades/unidades-baja"); })">
                     <Button Style="background: rgb(62, 24, 24);color: #fff;border: none;">Unidades de baja</Button>
                 </a>
                 <a @onclick="() => AgregarVisible = true">
@@ -67,9 +67,9 @@
                 </a>
             </div>
         </div>
-        @if (moviles is not null)
+        @if (vehiculos is not null)
         {
-            @foreach (Movil m in moviles)
+            @foreach (VehiculoSalida m in vehiculos)
             {
                 if (m.Estado != TipoEstadoMovil.Activo) continue;
                 <VehiculosCarta Vehiculo="m" OnChange="Init" />
@@ -84,13 +84,15 @@
     </div>
 </div>
 
-<Modal Footer="null" Title="Agregar" OnCancel="()=> AgregarVisible = false" Visible="@AgregarVisible">
-    <VehiculoAgregar OnClose="CloseVehiculo" EsMovil="true" />
-</Modal>
+@if (AgregarVisible == true){
+    <Modal Footer="null" Title="Agregar" OnCancel="()=> AgregarVisible = false" Visible="@AgregarVisible">
+        <VehiculoAgregar OnClose="CloseVehiculo" />
+    </Modal>
+}
 
 @code {
     RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
-    Movil[]? moviles;
+    VehiculoSalida[]? vehiculos;
     bool AgregarVisible { get; set; }
     BomberosDbContext Context { get; set; }
 
@@ -107,7 +109,7 @@
     private async Task Init()
     {
         Context = DbFactory.CreateDbContext();
-        moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
+        vehiculos = await Context.Set<VehiculoSalida>().OrderBy(m => m.NumeroMovil).ToArrayAsync();
     }
     public void Dispose()
     {

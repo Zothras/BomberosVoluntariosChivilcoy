@@ -143,6 +143,10 @@
                         <div class="inpt-container">
                             <input type="text" @bind="vehiculoView.NumeroMovil" placeholder="Nº Móvil:" />
                         </div>
+
+                        <div class="inpt-container">
+                            Es un movil: <Switch @bind-Checked="@EsMovil" />
+                        </div>
                         @if (EsMovil == true)
                         {
                             <div class="inpt-container">
@@ -216,13 +220,13 @@
 }
 
 @code {
-    [Parameter] public bool EsMovil { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
     BomberosDbContext Context { get; set; }
     public ImagenViewModel imagenView { get; set; } = new();
     public VehiculoViewModel vehiculoView { get; set; } = new();
     public MovilViewModel movilView { get; set; } = new();
     public List<BomberoViewModel> ListaBomberos = new();
+    public bool EsMovil = false;
 
     // Funciones Steps
     public class StepItem
@@ -323,7 +327,7 @@
                             Base64Imagen = imagenView.Base64
                         },
                         NumeroMovil = vehiculoView.NumeroMovil,
-                        Estado = vehiculoView.Estado,
+                        Estado = vehiculoView.Estado == TipoEstadoMovil.Estado ? TipoEstadoMovil.Activo : vehiculoView.Estado,
                     };
 
                 if (EsMovil == true)
