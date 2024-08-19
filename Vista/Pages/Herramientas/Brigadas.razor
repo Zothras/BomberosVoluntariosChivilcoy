@@ -61,9 +61,10 @@
     }
 
         .lista.brigada {
-            background-color: #D99534;
+            background-color: #A63336;
             cursor: pointer;
             color: white;
+            font-weight: bold;
         }
 
         .lista.bombero{
@@ -134,8 +135,8 @@
 
             <!-- Botón para mostrar modal de agregar brigada -->
             <div>
-                <Button Type="@ButtonType.Dashed" OnClick="@ShowModalEliminar" Style="border-color: red; color:red;">Eliminar Brigada</Button>
-                <Button Type="@ButtonType.Primary" OnClick="@ShowModalAgregar" Style="background-color: #D99534; border-color: #D99534;">Agregar Brigada</Button>
+                <Button Type="@ButtonType.Primary" OnClick="@ShowModalEliminar" Style="background-color: #732D2D; color:white;">Eliminar Brigada</Button>
+                <Button Type="@ButtonType.Primary" OnClick="@ShowModalAgregar" Style="background-color: #1890ff; border-color: #1890ff;">Agregar Brigada</Button>
             </div>
         </div>
     </div>
@@ -183,7 +184,7 @@
                 }
                 else
                 {
-                    <p>No hay bomberos en esta brigada.</p>
+                    <p style="font-size: 20px">No hay bomberos en esta brigada.</p>
                 }
             }
         </div>
@@ -194,7 +195,7 @@
             else
             {
                 <Pagination Total="@totalBomberosEnBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChange" />
-                <Button Type="@ButtonType.Link" OnClick="@ClearSelectedBrigada">Volver a Bomberos sin Brigada</Button>
+                <Button Type="@ButtonType.Link" OnClick="@ClearSelectedBrigada" Style="color:white; font-weight:bold;">Volver a Bomberos sin Brigada</Button>
             }
             
             
