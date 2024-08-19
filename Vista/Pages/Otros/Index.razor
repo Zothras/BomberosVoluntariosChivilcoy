@@ -267,53 +267,72 @@
         <div class="art4-cont">
             <div>
                 <div>
-                    @* incendios *@
+                    @* Incendios en comercio *@
                     <Popover OverlayClassName="myPopover" ContentTemplate="@art4d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-store"></i>
                         </button>
                     </Popover>
+
+                    @* Incendios forestales *@
                     <Popover ContentTemplate="@art4e" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-tree"></i>
                         </button>
                     </Popover>
+
+                    @* Incendios industriales *@
                     <Popover OverlayClassName="myPopover" ContentTemplate="@art4f" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-industry"></i>
                         </button>
                     </Popover>
+
+                    @* Incendios vehiculares *@
                     <Popover ContentTemplate="@art4g" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-car"></i>
                         </button>
                     </Popover>
+
+                    @* Materiales peligrosos *@
                     <Popover OverlayClassName="myPopover" ContentTemplate="@art4a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
                             <i class="fa-solid fa-circle-radiation"></i>
                         </button>
                     </Popover>
+
                     <br />
+
+                    @* Incendios en establecimientos educativos *@
                     <Popover ContentTemplate="@art4h" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-school"></i>
                         </button>
                     </Popover>
+
+                    @* Incendios en hospitales y clínicas *@
                     <Popover OverlayClassName="myPopover" ContentTemplate="@art4i" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-hospital"></i>
                         </button>
                     </Popover>
+
+                    @* Incendios en establecimientos públicos *@
                     <Popover ContentTemplate="@art4j" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-building"></i>
                         </button>
                     </Popover>
+
+                    @* Incendios en viviendas *@
                     <Popover OverlayClassName="myPopover" ContentTemplate="@art4k" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
-                            <i class="fa-sharp fa-solid fa-fire"></i>
+                            <i class="fa-sharp fa-solid fa-house"></i>
                         </button>
                     </Popover>
+
+                    @* Factores climáticos *@
                     <Popover ContentTemplate="@art4b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
                             <i class="fa-sharp fa-solid fa-cloud-bolt"></i>
@@ -321,26 +340,27 @@
                     </Popover>
                 </div>
                 <div>
-                    @* rescates *@
+                    @* Rescates *@
                     <Popover OverlayClassName="myPopover" ContentTemplate="@art4n" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
-                            <i class="fa-solid fa-fire-extinguisher"></i>
+                            <i class="fa-sharp fa-solid fa-person"></i>
                         </button>
                     </Popover>
                     <Popover ContentTemplate="@art4o" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
-                            <i class="fa-solid fa-fire-extinguisher"></i>
+                            <i class="fa-sharp fa-solid fa-paw"></i>
                         </button>
                     </Popover>
-                    @* servicios *@
+
+                    @* Servicios *@
                     <Popover ContentTemplate="@art4l" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
-                            <i class="fa-solid fa-helmet-safety"></i>
+                            <i class="fa-sharp fa-solid fa-people-group"></i>
                         </button>
                     </Popover>
                     <Popover ContentTemplate="@art4m" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
-                            <i class="fa-solid fa-helmet-safety"></i>
+                            <i class="fa-sharp fa-solid fa-shield-alt"></i>
                         </button>
                     </Popover>
                     <Popover ContentTemplate="@art4c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
