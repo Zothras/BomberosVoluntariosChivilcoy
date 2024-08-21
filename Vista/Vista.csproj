@@ -8,16 +8,19 @@
   <ItemGroup>
     <Compile Remove="Areas\**" />
     <Compile Remove="Data\ViewModel\**" />
+    <Compile Remove="wwwroot\Moviles\**" />
     <Content Remove="Areas\**" />
     <Content Remove="Data\ViewModel\**" />
+    <Content Remove="wwwroot\Moviles\**" />
     <EmbeddedResource Remove="Areas\**" />
     <EmbeddedResource Remove="Data\ViewModel\**" />
+    <EmbeddedResource Remove="wwwroot\Moviles\**" />
     <None Remove="Areas\**" />
     <None Remove="Data\ViewModel\**" />
+    <None Remove="wwwroot\Moviles\**" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\Imagenes\Icons\" />
-    <Folder Include="wwwroot\Moviles\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="0.20.2" />
