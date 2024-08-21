@@ -35,7 +35,6 @@ namespace Vista.Data.Models.Salidas.Planillas
         public string TelefonoSolicitante { get; set; }
         
         public string? NombreYApellidoReceptor { get; set; }
-        public string? TelefonoReceptor { get; set; }
 
         public int? ReceptorId { get; set; }
 

@@ -199,7 +199,6 @@
                 <ul>
                     <li>HORA DE SALIDA: @IntervencionVM.HoraSalida</li>
                     <li>HORA DE REGRESO: @IntervencionVM.HoraLlegada</li>
-                    <li>TEL. NUMERO: +@IntervencionVM.TelNumero</li>
                     <li style="margin-left: 3em;">CAUSA: @IntervencionVM.Causa</li>
                     <li style="margin-left: 3em;">ZONA: @IntervencionVM.Zona</li>
                     <li style="margin-left: 3em;">LUGAR: @IntervencionVM.Lugar</li>
@@ -356,8 +355,6 @@
 
         public string Recepcionista{ get; set; }
 
-        public string TelNumero { get; set; }
-
         public TipoCausaIncendio Causa { get; set; }
 
         public TipoZona Zona { get; set; }
@@ -404,7 +401,6 @@
             IntervencionVM.NumeroParte = salida.NumeroParte;
             IntervencionVM.Recepcionista = salida.ReceptorBombero != null ? salida.ReceptorBombero.Nombre + salida.ReceptorBombero.Apellido : "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
-            IntervencionVM.TelNumero = salida.TelefonoReceptor;
             IntervencionVM.Causa = (salida as Incendio).SuperficieAfectadaCausa;
             IntervencionVM.Zona = salida.TipoZona;
             IntervencionVM.Lugar = "" + (salida as dynamic).TipoLugar;
