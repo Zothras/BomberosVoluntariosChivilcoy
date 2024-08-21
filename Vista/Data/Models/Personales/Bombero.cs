@@ -53,6 +53,7 @@ namespace Vista.Data.Models.Personales
 
         public List<HorarioBombero> Horarios { get; set; } = new();
         public List<Limpieza> Limpieza { get; set; } = new();
+        public List<NovedadBase>? Novedades { get; set; } = new();
 
     }
 }

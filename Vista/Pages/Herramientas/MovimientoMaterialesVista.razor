@@ -221,11 +221,15 @@
                     FechaIngreso = DateTime.Now,
                     Materiales = MaterialAsignado
                 };
+            if(MovimientoVM.TipoMovimiento != TipoMovimiento.Entrada && MaterialAsignado.Stock - MovimientoVM.Cantidad <= 0)
+            {
+                message.Error("Stock insuficiente");
+                return;
+            }
             await DepositoService.CargarMovimiento(movimiento);
             await Init();
             StateHasChanged();
             await message.Success("Movimiento cargado");
-            await DepositoService.ActualizarStock(movimiento, MaterialAsignado);
         }
         catch (Exception e)
         {
@@ -268,7 +272,7 @@
     private async Task CargarMaterial()
     {
         MaterialesVM.Clear();
-        var Materiales = await Context.Materiales.Where(m=>m.Stock > 0).ToArrayAsync();
+        var Materiales = await Context.Materiales.ToArrayAsync();
         foreach (var m in Materiales)
         {
             MaterialVM materialVM = new()

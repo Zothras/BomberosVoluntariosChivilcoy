@@ -50,6 +50,8 @@ namespace Vista.Data
         public DbSet<Licencia> Licencias { get; set; }
         public DbSet<HorarioBombero> HorariosBomberos { get; set; }
         public DbSet<Sancion> Sanciones { get; set; }
+        public DbSet<Novedad> Novedades { get; set; }
+        public DbSet<NovedadVehiculo> NovedadesVehiculos { get; set; }
 
         //propiedad experimental:
         public DbSet<Salida> Salidas { get; set; }
@@ -78,6 +80,9 @@ namespace Vista.Data
 
             modelBuilder.Entity<Licencia>()
              .HasKey(l => l.LicenciaId);
+
+            modelBuilder.Entity<NovedadBase>()
+             .HasKey(n => n.NovedadId);
 
             modelBuilder.Entity<Incidente>()
                 .ToTable("Incidente");
@@ -188,6 +193,20 @@ namespace Vista.Data
                 .HasMany(mo => mo.Incidentes)
                 .WithOne(li => li.Vehiculo)
                 .HasForeignKey(li => li.VehiculoId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
+            modelBuilder.Entity<NovedadBase>()
+                .HasOne(n => n.Personal)
+                .WithMany(b => b.Novedades)
+                .HasForeignKey(n => n.PersonalId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
+            modelBuilder.Entity<NovedadVehiculo>()
+                .HasOne(n => n.Vehiculo)
+                .WithMany(b => b.Novedades)
+                .HasForeignKey(n => n.VehiculoId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
