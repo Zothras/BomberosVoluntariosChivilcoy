@@ -173,7 +173,6 @@
                     </div>
                 </div>
                 <Establecimiento Model="@salidaIncendioComercioView"
-                                 
                                  animationClass="@animationClass" />
             }
             else if (current == 6)
@@ -228,13 +227,6 @@
 
     bool _visible1;
 
-    bool switchDamificados { get; set; }
-    private void HandleSwitchChanged(bool value)
-    {
-        switchDamificados = value;
-        StateHasChanged();
-    }
-
     public int ImprimirNumeroParte;
     void HandleOk1(int _numeroParte)
     {
@@ -242,64 +234,9 @@
         _visible1 = true;
     }
 
-    @*Damnificados | Bomberos | Moviles y Chofer | Steps *@
-
-    public async Task CargarBomberosView()
-    {
-        bomberoTodos = new();
-        bomberoChoferes = new();
-        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
-        foreach (Bombero b in bomberos)
-        {
-            BomberoViweModel bombero = new()
-                {
-                    FechaNacimiento = b.FechaNacimiento,
-                    Sexo = b.Sexo,
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    Documento = b.Documento,
-                    NumeroLegajo = b.NumeroLegajo,
-                    NumeroIoma = b.NumeroIoma,
-                    LugarNacimiento = b.LugarNacimiento,
-                    Grado = b.Grado,
-                    Dotacion = b.Dotacion,
-                    Estado = b.Estado,
-                    Chofer = b.Chofer,
-                    VencimientoRegistro = b.VencimientoRegistro,
-                    Direccion = b.Direccion,
-                    Observaciones = b.Observaciones,
-                    Profesion = b.Profesion,
-                    NivelEstudios = b.NivelEstudios,
-                    FechaAceptacion = b.FechaAceptacion,
-                };
-            if (b.Chofer == true)
-            {
-                bomberoChoferes.Add(bombero);
-            }
-            bomberoTodos.Add(bombero);
-        }
-    }
-
-
-    @*Moviles | Chofer*@
-    int chofer;
-    string NumeroMovil;
-    bool _visible = false; //Modal de Carga de Combustible
-    bool chekM { get; set; }// Datos sobre Carga de Combustible [Si/No]
-
     bool loading = false;
     void toggle(bool value) => loading = value;
 
-    //Modals
-    private void ShowModal()
-    {
-        _visible = true;
-    }
-
-    private void HandleCancel(MouseEventArgs e)
-    {
-        _visible = false;
-    }
     
     @*Steps*@
     public int current { get; set; } = 0;//Ubicacion del Step
@@ -353,9 +290,7 @@
     {
         salidaIncendioComercioView = new();
         Context = DbFactory.CreateDbContext();
-        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
-        Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
-        await CargarBomberosView();
+        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado  
     }
 
     

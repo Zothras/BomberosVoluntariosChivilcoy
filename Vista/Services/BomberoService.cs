@@ -167,9 +167,24 @@ namespace Vista.Services
             return await _context.Bomberos
                 .Select(b => new BomberoViweModel
                 {
+                    FechaNacimiento = b.FechaNacimiento,
+                    Sexo = b.Sexo,
                     Nombre = b.Nombre,
                     Apellido = b.Apellido,
-                    NumeroLegajo = b.NumeroLegajo
+                    Documento = b.Documento,
+                    NumeroLegajo = b.NumeroLegajo,
+                    NumeroIoma = b.NumeroIoma,
+                    LugarNacimiento = b.LugarNacimiento,
+                    Grado = b.Grado,
+                    Dotacion = b.Dotacion,
+                    Estado = b.Estado,
+                    Chofer = b.Chofer,
+                    VencimientoRegistro = b.VencimientoRegistro,
+                    Direccion = b.Direccion,
+                    Observaciones = b.Observaciones,
+                    Profesion = b.Profesion,
+                    NivelEstudios = b.NivelEstudios,
+                    FechaAceptacion = b.FechaAceptacion
                 })
                 .ToListAsync();
         }

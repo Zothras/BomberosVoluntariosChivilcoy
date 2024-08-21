@@ -5,97 +5,102 @@
 @page "/salidas/materiales-peligrosos"
 @using Vista.Data.ViewModels.MaterialesPeligrosos;
 
+@*Servicio Utilizados*@
+@using Vista.Services;
+@inject IBomberoService BomberoService
+@inject ISalidaService SalidaService;
+
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
 
 <style>
-/* Oculta los puntos de navegación del carrusel */
-.ant-carousel .slick-dots li {
-    display: none !important;
-}
-
-/* Elimina el padding en los elementos del formulario */
-.ant-form-item-control-input-content, .ant-form-item-label {
-    padding: 0 !important;
-}
-
-/* Establece un diseño de flex para el segundo elemento de la fila del formulario */
-.ant-form-item-row:nth-child(2) {
-    display: flex !important;
-}
-
-/* Ajusta el ancho del input number */
-.ant-input-number {
-    width: auto !important;
-}
-
-/* Estilo para el contenedor de pasos */
-.steps-content {
-    margin-top: 16px;
-    border: 1px dashed #e9e9e9;
-    border-radius: 6px;
-    background-color: #fafafa;
-    min-height: 200px;
-    text-align: center;
-    padding-top: 80px;
-}
-
-/* Estilo para la acción de pasos */
-.steps-action {
-    margin-top: 24px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 5px;
-}
-
-/* Estilo para el contenedor de entrada */
-.inpt-cont {
-    min-width: 100px;
-    display: flex;
-    flex-direction: column;
-    padding: .3em 0;
-    width: 100%;
-    overflow: hidden !important;
-}
-
-/* Estilo para el contenedor de entrada en línea */
-.inpt-cont-inline {
-    min-width: 170px;
-    display: flex;
-    gap: 1em;
-    padding: .3em 0;
-    overflow: hidden !important;
-}
-
-/* Estilo para la etiqueta de entrada */
-.inpt-cont--lbl {
-    min-width: 170px;
-    text-align: start;
-    font-weight: bold;
-    overflow: hidden !important;
-}
-
-/* Alinea el texto en el centro de las celdas de la tabla */
-.ant-table-cell {
-    text-align: center !important;
-}
-
-/* Estilos responsivos para pantallas pequeñas */
-@@media screen and (max-width: 450px) {
-    .contenedor {
-        padding: 0 21px !important;
+    /* Oculta los puntos de navegación del carrusel */
+    .ant-carousel .slick-dots li {
+        display: none !important;
     }
 
-    .ant-picker-datetime-panel {
+    /* Elimina el padding en los elementos del formulario */
+    .ant-form-item-control-input-content, .ant-form-item-label {
+        padding: 0 !important;
+    }
+
+    /* Establece un diseño de flex para el segundo elemento de la fila del formulario */
+    .ant-form-item-row:nth-child(2) {
+        display: flex !important;
+    }
+
+    /* Ajusta el ancho del input number */
+    .ant-input-number {
+        width: auto !important;
+    }
+
+    /* Estilo para el contenedor de pasos */
+    .steps-content {
+        margin-top: 16px;
+        border: 1px dashed #e9e9e9;
+        border-radius: 6px;
+        background-color: #fafafa;
+        min-height: 200px;
+        text-align: center;
+        padding-top: 80px;
+    }
+
+    /* Estilo para la acción de pasos */
+    .steps-action {
+        margin-top: 24px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+    }
+
+    /* Estilo para el contenedor de entrada */
+    .inpt-cont {
+        min-width: 100px;
+        display: flex;
         flex-direction: column;
+        padding: .3em 0;
+        width: 100%;
+        overflow: hidden !important;
     }
 
-    .ant-picker-panel-container {
-        overflow: auto !important;
+    /* Estilo para el contenedor de entrada en línea */
+    .inpt-cont-inline {
+        min-width: 170px;
+        display: flex;
+        gap: 1em;
+        padding: .3em 0;
+        overflow: hidden !important;
     }
-}
 
-/* Estilo para el botón */
+    /* Estilo para la etiqueta de entrada */
+    .inpt-cont--lbl {
+        min-width: 170px;
+        text-align: start;
+        font-weight: bold;
+        overflow: hidden !important;
+    }
+
+    /* Alinea el texto en el centro de las celdas de la tabla */
+    .ant-table-cell {
+        text-align: center !important;
+    }
+
+    /* Estilos responsivos para pantallas pequeñas */
+    @@media screen and (max-width: 450px) {
+        .contenedor {
+            padding: 0 21px !important;
+        }
+
+        .ant-picker-datetime-panel {
+            flex-direction: column;
+        }
+
+        .ant-picker-panel-container {
+            overflow: auto !important;
+        }
+    }
+
+    /* Estilo para el botón */
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
@@ -112,6 +117,7 @@
         border-color: #40a9ff !important;
         background: #40a9ff !important;
     }
+
     .ant-checkbox-input:checked + .ant-checkbox-inner {
         background-color: #4CAF50 !important;
         border-color: #4CAF50 !important;
@@ -119,20 +125,21 @@
 
 </style>
 
-<div class="contenedor" style="max-width: 100%;margin-top: 2em;">
-    <Steps Current="current">
-        @foreach (var item in steps)
-        {
-            <Step Title="@item.Title" Subtitle="@item.Content" />
-        }
-    </Steps>
-    <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
-        <Form Model="@modelMateriales"
-              LabelColSpan="8"
-              WrapperColSpan="16"
-              OnFinish="OnFinish"
-              OnFinishFailed="OnFinishFailed"
-              Style="width: 100%;height: 100%;overflow: hidden!important;">
+<Form Model="@modelMateriales"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;overflow: hidden!important;">
+    <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
+        <Steps Current="current">
+            @foreach (var item in steps)
+            {
+                <Step Title="@item.Title" Subtitle="@item.Content" />
+            }
+        </Steps>
+        <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+
 
             @if (current == 0)
             {
@@ -156,7 +163,7 @@
             else if (current == 3)
             {
                 @*Chofer y Moviles*@
-                <Vehiculos Model="@modelMateriales" 
+                <Vehiculos Model="@modelMateriales"
                            animationClass="@animationClass" />
             }
             else if (current == 4)
@@ -246,31 +253,42 @@
                     </div>
                 </div>
             }
-        </Form>
+        </div>
+        <div class="steps-action">
+            @if (current > 0)
+            {
+                <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+            }
+            @if (current < steps.Length - 1)
+            {
+                <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+            }
+            @if (current == steps.Length - 1)
+            {
+                <FormItem WrapperColSpan="16">
+                    <Button Class="boton_p" HtmlType="submit">
+                        Imprimir salida
+                    </Button>
+                </FormItem>
+            }
+            @if (_visible1 == true)
+            {
+                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+            }
+        </div>
     </div>
-    <div class="steps-action">
-        @if (current > 0)
-        {
-            <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
-        }
-        @if (current < steps.Length - 1)
-        {
-            <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
-        }
-        @if (current == steps.Length - 1)
-        {
-            <Button Class="boton_p" HtmlType="submit">
-                Imprimir salida
-            </Button>
-        }
-    </div>
-</div>
+</Form>
 
 @code
 {
+    //Variables de la Impresion
+    private bool _visible1;
+    private int ImprimirNumeroParte;
+
+
     public int current { get; set; } = 0;
     bool loading = false;
-    bool _visible { get; set; } = true;
+
     bool desactivarSwitch { get; set; }
     bool visibleDamnificados = true;
     bool visibleVerDamnificados;
@@ -300,68 +318,7 @@
     string NumeroMovil;
     int chofer;
     int BomberoCuerpo;
-    int BomberoEncargado;
-    int QuienLLenoPlanilla;
 
-    public async Task AgregarDamnificado()
-    {
-        visibleDamnificados = false;
-        DamnificadoViewModels dp = new()
-            {
-                Nombre = damnificado.Nombre,
-                Apellido = damnificado.Apellido,
-                Dni = damnificado.Dni,
-                Sexo = damnificado.Sexo,
-                LugarDeNacimiento = damnificado.LugarDeNacimiento,
-                Edad = damnificado.Edad,
-                Estado = damnificado.Estado,
-            };
-        DamnificadosSalida.Add(dp);
-        StateHasChanged();
-    }
-
-    public async Task AgregarMovilSalida()
-    {
-        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).SingleOrDefaultAsync();
-        MovilSalidaViewModels m = new()
-            {
-                CargoCombustible = chekM,
-                NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                FechaFactura = movilSalidaViewModels.FechaFactura,
-                TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                QuienLleno = movilSalidaViewModels.QuienLleno,
-                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                KmLlegada = modelMateriales.KmLlegada,
-                Chofer = bomberoChofer,
-                MovilesSalida = Movilsalida,
-            };
-        MovilesSalidasL.Add(m);
-        desactivarSwitch = false;
-        switchMoviles = false;
-        StateHasChanged();
-    }
-
-    public async Task AgregarCuerpoParticipante()
-    {
-        var boberos = await Context.Bomberos.ToArrayAsync();
-        foreach (var bom in boberos)
-        {
-            if (bom.NumeroLegajo == BomberoCuerpo)
-            {
-                BomberoSalidaViewModels b = new()
-                    {
-                        Salio = bomberoSalidaView.Salio,
-                        Nombre = bom.Nombre,
-                        Apellido = bom.Apellido,
-                        NumeroLegajo = BomberoCuerpo
-                    };
-                bomberosSalida.Add(b);
-            }
-        }
-        StateHasChanged();
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -393,19 +350,31 @@
         modelMateriales = new();
         Context = DbFactory.CreateDbContext();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
-        await CargarBomberosView();
+    }
+
+    //Metodos Nuevos Relacionados a la Impresion:
+    void HandleOk1(int _numeroParte)
+    {
+        ImprimirNumeroParte = _numeroParte;
+        _visible1 = true;
     }
 
     private async void OnFinish(EditContext editContext)
     {
         try
         {
-            Bombero? bomberoReceptor = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == BomberoReceptor);
-            Bombero? bomberoEncargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == BomberoEncargado);
-            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == QuienLLenoPlanilla);
+            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(modelMateriales.LegajoEncargado);
+            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(modelMateriales.LegajoLLenoPlanilla);
+            Vista.Data.Models.Salidas.Planillas.MaterialPeligroso? numeroParte = await Context.MaterialesPeligrosos.Where(m => m.NumeroParte == modelMateriales.NumeroParte).SingleOrDefaultAsync();
+            if (numeroParte != null)
+            {
+                message.Warning("Numero parte ya existente.");
+                return;
+            }
 
             MaterialPeligroso materiales = new()
                 {
+                    //Datos generales de las Salidas
                     NumeroParte = modelMateriales.NumeroParte,
                     HoraSalida = modelMateriales.HoraSalida,
                     HoraLlegada = modelMateriales.HoraLLegada,
@@ -422,7 +391,7 @@
                     DniSolicitante = modelMateriales.DniSolicitante,
                     TelefonoSolicitante = modelMateriales.TelefonoSolicitante,
                     TipoServicio = modelMateriales.TipoServicio,
-                    //carga propio de materiales peligrosos
+                    //Carga de datos propios de la salida materiales peligrosos
                     Tipo = modelMateriales.Tipo,
                     Sustancias = modelMateriales.Sustancias,
                     Controlada = modelMateriales.Controlada,
@@ -441,7 +410,6 @@
                     DetalleSuperficieAfectada = modelMateriales.DetalleSuperficieAfectada,
                     TipoSituacion = modelMateriales.TipoSituacion,
                     QuienLleno = BomberoLlenoPlanilla,
-                    ReceptorBombero = bomberoReceptor,
                     Encargado = bomberoEncargado,
                     Seguro = new()
                     {
@@ -554,11 +522,10 @@
                 materiales.Damnificados.Add(damn);
             }
 
-            Context.MaterialesPeligrosos.Add(materiales);
-            await Context.SaveChangesAsync();
+            await SalidaService.CargarMaterialesPeligrosos(materiales);
+            HandleOk1(materiales.NumeroParte);
             await Init();
             StateHasChanged();
-            await message.Success("Salida agregada correctamente");
         }
         catch (Exception e)
         {
@@ -569,81 +536,34 @@
             else
                 await message.Error(e.Message, 5);
         }
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(modelMateriales)}");
     }
+
+
+    // OnFinishFailed
+
+    private void OnFinishFailedModel(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
+    }
+
 
     private void OnFinishFailed(EditContext editContext)
     {
+        message.Error("Error al cargar, posible información ausente");
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelMateriales)}");
     }
 
-    
+    @*"Delete" y Dispose*@
+
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
 
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
-    }
-
-    // array de las opciones posibles, buscar la opcion y agregarla en la planilla
-    public async Task CargarBomberosView()
-    {
-        bomberoTodos = new();
-        bomberoChoferes = new();
-        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
-
-        foreach (Bombero b in bomberos)
-        {
-            BomberoViweModel bombero = new()
-                {
-                    FechaNacimiento = b.FechaNacimiento,
-                    Sexo = b.Sexo,
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    Documento = b.Documento,
-                    NumeroLegajo = b.NumeroLegajo,
-                    NumeroIoma = b.NumeroIoma,
-                    LugarNacimiento = b.LugarNacimiento,
-                    Grado = b.Grado,
-                    Dotacion = b.Dotacion,
-                    Estado = b.Estado,
-                    Chofer = b.Chofer,
-                    VencimientoRegistro = b.VencimientoRegistro,
-                    Direccion = b.Direccion,
-                    Observaciones = b.Observaciones,
-                    Profesion = b.Profesion,
-                    NivelEstudios = b.NivelEstudios,
-                    FechaAceptacion = b.FechaAceptacion,
-                };
-            bomberoTodos.Add(bombero);
-        }
-
-        foreach (Bombero c in bomberos)
-        {
-            if (c.Chofer == true)
-            {
-                BomberoViweModel bomberoChofer = new()
-                    {
-                        FechaNacimiento = c.FechaNacimiento,
-                        Sexo = c.Sexo,
-                        Nombre = c.Nombre,
-                        Apellido = c.Apellido,
-                        Documento = c.Documento,
-                        NumeroLegajo = c.NumeroLegajo,
-                        NumeroIoma = c.NumeroIoma,
-                        LugarNacimiento = c.LugarNacimiento,
-                        Grado = c.Grado,
-                        Dotacion = c.Dotacion,
-                        Estado = c.Estado,
-                        Chofer = c.Chofer,
-                        VencimientoRegistro = c.VencimientoRegistro,
-                        Direccion = c.Direccion,
-                        Observaciones = c.Observaciones,
-                        Profesion = c.Profesion,
-                        NivelEstudios = c.NivelEstudios,
-                        FechaAceptacion = c.FechaAceptacion,
-                    };
-                bomberoChoferes.Add(bomberoChofer);
-            }
-        }
     }
 
     //Steps
@@ -686,71 +606,7 @@
         ToggleAnimationD();
     }
 
-    //Modal
 
-    private void OnFinishFailedModel(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
-    }
-
-    void toggle(bool value) => loading = value;
-
-    // private void ShowModal()
-    // {
-    //     _visible = true;
-    // }
-    private void HandleCancelMovil(MouseEventArgs e)
-    {
-        switchMoviles = false;
-        desactivarSwitch = false;
-    }
-
-    private void HandleOk(MouseEventArgs e)
-    {
-        _visible = false;
-        desactivarSwitch = true;
-    }
-    private void OnFinishModel(EditContext editContext)
-    {
-        _visible = false;
-        desactivarSwitch = true;
-    }
-
-    private void HandleOkD(MouseEventArgs e)
-    {
-        visibleDamnificados = false;
-    }
-    private void HandleCancelD(MouseEventArgs e)
-    {
-        visibleDamnificados = false;
-    }
-
-    private void HandleCancelVD(MouseEventArgs e)
-    {
-        visibleVerDamnificados = false;
-    }
-
-    void deleteRow(int numlegajo)
-    {
-        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
-    }
-
-    void deleteRowMovil(string NumMovil)
-    {
-        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
-    }
-
-    void deleteRowDamnificados(string Dni)
-    {
-        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
-    }
-
-    public void Dispose()
-    {
-        Context?.Dispose();
-    }
-
-    //probando selects multiples para reemplazar los checkboxs
     MaterialPeligrosoViewModels _model;
 
     List<string> _items;
