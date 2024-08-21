@@ -16,6 +16,7 @@
     <None Remove="Data\ViewModel\**" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\Imagenes\Icons\" />
     <Folder Include="wwwroot\Moviles\" />
   </ItemGroup>
   <ItemGroup>
