@@ -1,10 +1,13 @@
 ﻿@using Vista.Data.ViewModels.Incendios;
 @using Vista.Data.ViewModels.Personal;
 
-<div class="inpt-cont">
-    <label class="inpt-cont--lbl">Nombre del establecimiento:</label>
-    <Input @bind-Value="Model.NombreEstablecimiento" />
-</div>
+@if (RequiereNombre)
+{
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Nombre del establecimiento:</label>
+        <Input @bind-Value="Model.NombreEstablecimiento" />
+    </div>
+}
 <div class="inpt-cont">
     <label class="inpt-cont--lbl">Cantidad pisos:</label>
     <AntDesign.InputNumber @bind-Value="Model.CantidadPisos" />
@@ -40,5 +43,5 @@
 @code {
     [Parameter] public IncendioViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
-    
+    [Parameter] public bool RequiereNombre { get; set; } = true;
 }
