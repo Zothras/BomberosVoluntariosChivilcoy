@@ -19,7 +19,7 @@
     <Folder Include="wwwroot\Moviles\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.20.1" />
+    <PackageReference Include="AntDesign" Version="0.20.2" />
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />    
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
@@ -33,7 +33,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
