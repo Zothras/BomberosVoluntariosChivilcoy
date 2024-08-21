@@ -239,6 +239,19 @@
         padding: 15px;
         justify-content: space-between;
     }
+
+    .custom-icon {
+        font-size: 15.75px; /* Ajusta el tamaño del ícono */
+        line-height: 14px; /* Asegura que el ícono esté centrado verticalmente */
+        display: inline-block; /* Permite especificar dimensiones */
+        width: 15.75px; /* Ajusta el ancho del contenedor del ícono */
+        height: 14px; /* Ajusta la altura del contenedor del ícono */
+        text-align: center; /* Centra el ícono horizontalmente */
+        color: white; /* Cambia el color del ícono según tus necesidades */
+        position: absolute; /* Mantiene la posición */
+        left: 17px; /* Ajusta la posición horizontal */
+        top: 53px; /* Ajusta la posición vertical */
+    }
 </style>
 
 <div class="gridContainer">
@@ -383,7 +396,7 @@
         <div class="btnContA5">
             <Popover OverlayClassName="myPopover" ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
-                    <i class="fa-solid fa-users-gear"></i>
+                    <i class="fa-solid fa-users"></i>
                 </button>
             </Popover>
             <Popover ContentTemplate="@art5b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
@@ -393,7 +406,7 @@
             </Popover>
             <Popover ContentTemplate="@art5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
-                    <i class="fa-solid fa-file-signature"></i>
+                    <i class="fa-solid fa-warehouse"></i>
                 </button>
             </Popover>
         </div>
@@ -416,7 +429,7 @@
             </Popover>
             <Popover ContentTemplate="@art6b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
-                    <i class="fa-solid fa-users-gear"></i>
+                    <i class="fa-solid fa-user-clock"></i>
                 </button>
             </Popover>
             <Popover ContentTemplate="@art6c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
@@ -426,7 +439,9 @@
             </Popover>
             <Popover ContentTemplate="@art6d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
-                    <i class="fa-solid fa-truck-droplet icoSelected"></i>
+                    <span class="material-symbols-outlined" style="font-size: 1.5em; line-height: 1.5em;">
+                        fire_truck
+                    </span>
                 </button>
             </Popover>
         </div>
@@ -472,7 +487,10 @@
             <div class="bomberosArt" style="height: 112px;">
                 <img class="imgBomberos2" style="filter: brightness(0.6);" src="imagenes/moviles.jpg" />
                 <h1 style="font-size: 33px;margin-top: 0;">UNIDADES</h1>
-                <i style="position: absolute;left: 17px;top: 53px;color: white;" class="fa-solid fa-truck-droplet icoSelected"></i>
+                <span class="material-symbols-outlined"
+                      style="font-size: 15.75px; width: 15.75px; height: 14px; line-height: 14px; display: inline-block; text-align: center; color: white; position: absolute; left: 17px; top: 53px;">
+                      fire_truck
+                </span>
                 <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver unidades</p>
             </div>
         </article>
