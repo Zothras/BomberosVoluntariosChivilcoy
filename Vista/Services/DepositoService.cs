@@ -13,7 +13,6 @@ namespace Vista.Services
     {
         Task<Material> AgregarMaterial(Material material);
         Task<MovimientoMaterial> CargarMovimiento(MovimientoMaterial material);
-        Task<bool> ActualizarStock(MovimientoMaterial movimiento, Material material);
     }
 
     public class DepositoService : IDepositoService
@@ -43,20 +42,25 @@ namespace Vista.Services
                 throw;
             }
         }
-        public async Task<MovimientoMaterial> CargarMovimiento(MovimientoMaterial material)
+        public async Task<MovimientoMaterial> CargarMovimiento(MovimientoMaterial movimiento)
         {
             try
             {
-                var BomberoDestino = material.DestinoBombero != null ? await _context.Bomberos.SingleOrDefaultAsync(m => m.NumeroLegajo == material.DestinoBombero.NumeroLegajo) : null;
-                var MovilDestino = material.DestinoMovil != null ? await _context.Moviles.SingleOrDefaultAsync(m => m.NumeroMovil == material.DestinoMovil.NumeroMovil) : null;
-                var MaterialAsignado = await _context.Materiales.SingleOrDefaultAsync(ma => ma.MaterialId == material.Materiales.MaterialId);
-                material.DestinoBombero = BomberoDestino;
-                material.DestinoMovil = MovilDestino;
-                material.Materiales = MaterialAsignado;
+                var BomberoDestino = movimiento.DestinoBombero != null ? await _context.Bomberos.SingleOrDefaultAsync(m => m.NumeroLegajo == movimiento.DestinoBombero.NumeroLegajo) : null;
+                var MovilDestino = movimiento.DestinoMovil != null ? await _context.Moviles.SingleOrDefaultAsync(m => m.NumeroMovil == movimiento.DestinoMovil.NumeroMovil) : null;
+                var MaterialAsignado = await _context.Materiales.SingleOrDefaultAsync(ma => ma.MaterialId == movimiento.Materiales.MaterialId);
+                if (MaterialAsignado == null)
+                {
+                    throw new Exception("Material no encontrado");
+                }
+                movimiento.DestinoBombero = BomberoDestino;
+                movimiento.DestinoMovil = MovilDestino;
+                movimiento.Materiales = MaterialAsignado;
 
-                _context.Movimientos.Add(material);
+                _context.Movimientos.Add(movimiento);
+                ActualizarStock(movimiento, MaterialAsignado);
                 await _context.SaveChangesAsync();
-                return material;
+                return movimiento;
             }
             catch (Exception ex)
             {
@@ -65,33 +69,31 @@ namespace Vista.Services
                 throw;
             }
         }
-        public async Task<bool> ActualizarStock(MovimientoMaterial movimiento, Material material)
+        void ActualizarStock(MovimientoMaterial movimiento, Material material)
         {
             try
             {
-                var MaterialActulizar = await _context.Materiales.SingleOrDefaultAsync(m => m.MaterialId == material.MaterialId);
-
-                if (MaterialActulizar == null)
-                {
-                    throw new Exception("Material no encontrado");
-                }
 
                 if(movimiento.TipoMovimiento == TipoMovimiento.Entrada)
                 {
-                    MaterialActulizar.Stock = MaterialActulizar.Stock + movimiento.Cantidad;
+                    material.Stock = material.Stock + movimiento.Cantidad;
                 }
-                else //Consultar que se debe realizar en el caso de que ocurra los otros tipos de movimiento: Salida, Baja, Entrada_Salida
+                else if (movimiento.TipoMovimiento == TipoMovimiento.Entrada_Salida)
                 {
-                    MaterialActulizar.Stock = MaterialActulizar.Stock - movimiento.Cantidad;
+                    return;
+                }
+                else
+                {
+                    material.Stock = material.Stock - movimiento.Cantidad;
                 }
 
-                if (MaterialActulizar.Stock < 0)
+                if (material.Stock < 0)
                 {
                     throw new Exception("Stock insuficiente");
                 }
                 
-                await _context.SaveChangesAsync();
-                return true;
+                _context.SaveChanges();
+                return;
             }
             catch (Exception ex)
             {

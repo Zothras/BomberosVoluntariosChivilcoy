@@ -110,7 +110,7 @@ else
                 Encargado = Encargado,
             };
             await VehiculoService.AgregarIncidente(incidente);
-            message.Success("Se grabo la novedad correctamente");
+            message.Success("Se grabo el incidente correctamente");
             await Init();
             await OnClose.InvokeAsync();
             StateHasChanged();

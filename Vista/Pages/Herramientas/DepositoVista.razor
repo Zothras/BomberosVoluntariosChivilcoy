@@ -56,10 +56,13 @@
 </div>
 
 <div>
-     <Drawer Closable="true" Visible="visibleDrawer" Width="720" Placement="right" Title='("Movimientos")' OnClose="close">
-         <MovimientoMaterialesVista />
-     </Drawer>
+    @if(visibleDrawer == true){
+        <Drawer Closable="true" Visible="visibleDrawer" Width="720" Placement="right" Title='("Movimientos")' OnClose="close">
+             <MovimientoMaterialesVista />
+        </Drawer>
+    }
 </div>
+
 <Modal Footer="null" Title="@("Agregar Material")"
         Visible="@_visibleAgregar"
         OnOk="@HandleOkAgregar"
@@ -142,6 +145,8 @@
     void close()
     {
         this.visibleDrawer = false;
+        InvokeAsync(Init);
+        StateHasChanged();
     }
     public async void HandleCancelAgregar(MouseEventArgs e)
     {
