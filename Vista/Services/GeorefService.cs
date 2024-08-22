@@ -23,6 +23,11 @@ namespace Vista.Services
             try
             {
                 var response = await _httpClient.GetAsync("https://apis.datos.gob.ar/georef/api/");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMsg = $"API connection failed with status code: {response.StatusCode}";
+                    await LogErrorToConsoleAsync(errorMsg);
+                }
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
