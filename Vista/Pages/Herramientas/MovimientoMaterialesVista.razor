@@ -6,6 +6,50 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 
+<div>
+    Tipo de destino:
+    <Select @bind-value="@FiltrarDestino" TItemValue="string" TItem="string" Style="width:120px"
+    Placeholder="Seleccione el tipo de destino">
+        <SelectOptions>
+            <SelectOption Value="@("Sin asignar")" Label="Sin asignar" />
+            <SelectOption Value="@("Bombero")" Label="Bombero" />
+            <SelectOption Value="@("Movil")" Label="Movil" />
+        </SelectOptions>
+    </Select>
+    @if (FiltrarDestino == "Bombero")
+    {
+        <Select TItem="BomberoViewModel"
+                TItemValue="int"
+                DataSource="@bomberoTodos"
+                @bind-Value="@FiltrarBombero"
+                LabelName="@nameof(BomberoViewModel.NombreYApellido)"
+                ValueName="@nameof(BomberoViewModel.PersonaId)"
+                Placeholder="Selecione el bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                Style="width:120px"
+                EnableSearch>
+        </Select>
+    }
+    else if (FiltrarDestino == "Movil")
+    {
+        <Select TItem="MovilViewModel"
+                TItemValue="int"
+                DataSource="@MovilTodos"
+                @bind-Value="@FiltrarMovil"
+                LabelName="@nameof(MovilViewModel.NumeroMovil)"
+                ValueName="@nameof(MovilViewModel.VehiculoId)"
+                Placeholder="Selecione el movil"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                Style="width:120px"
+                EnableSearch>
+        </Select>
+    }
+    <Button OnClick="CargarMovimientos" Style="width:120px">
+        <Icon Type="search" Theme="outline" /> Filtrar
+    </Button>
+</div>
 <Table DataSource="ListasMoviminetosVista" Bordered Responsive Style="min-width: 320px!important;" PageSize="5" Size="TableSize.Small">
          <ColumnDefinitions Context="muestra">
              <PropertyColumn Property="c=>c.FechaIngreso" Format="dd/MM/yyyy" Sortable></PropertyColumn>
@@ -108,13 +152,16 @@
     BomberosDbContext Context { get; set; }
     bool chIsBombero;
     bool chIsMovil;
+
     public class MovilViewModel
     {
+        public int VehiculoId { get; set; }
         public string NumeroMovil { get; set; }
     }
 
     public class BomberoViewModel
     {
+        public int PersonaId { get; set; }
         public string NombreYApellido { get; set; }
         public int NumeroLegajo { get; set; }
     }
@@ -221,7 +268,7 @@
                     FechaIngreso = DateTime.Now,
                     Materiales = MaterialAsignado
                 };
-            if(MovimientoVM.TipoMovimiento != TipoMovimiento.Entrada && MaterialAsignado.Stock - MovimientoVM.Cantidad <= 0)
+            if (MovimientoVM.TipoMovimiento != TipoMovimiento.Entrada && MaterialAsignado.Stock - MovimientoVM.Cantidad < 0)
             {
                 message.Error("Stock insuficiente");
                 return;
@@ -250,6 +297,7 @@
         {
             BomberoViewModel b = new()
                 {
+                    PersonaId = item.PersonaId,
                     NombreYApellido = item.Nombre + ' ' + item.Apellido,
                     NumeroLegajo = item.NumeroLegajo
                 };
@@ -264,6 +312,7 @@
         {
             MovilViewModel m = new()
                 {
+                    VehiculoId = item.VehiculoId,
                     NumeroMovil = item.NumeroMovil
                 };
             MovilTodos.Add(m);
@@ -289,12 +338,28 @@
             StateHasChanged();
         }
     }
+
+    string FiltrarDestino = "Sin asignar";
+    int FiltrarBombero = 0;
+    int FiltrarMovil = 0;
     private async Task CargarMovimientos()
     {
         ListasMoviminetosVista = new();
 
-        var Movimientos = await Context.Movimientos.Include(b=>b.DestinoBombero).Include(ma=>ma.Materiales).Include(m=>m.DestinoMovil)
-        .ToListAsync();
+        List<MovimientoMaterial> Movimientos = Context.Movimientos.Include(b => b.DestinoBombero).Include(ma => ma.Materiales).Include(m => m.DestinoMovil).ToList();
+
+        if (FiltrarDestino != "Sin asignar")
+        {
+            if(FiltrarDestino == "Bombero")
+            {
+                Movimientos = Movimientos.Where(b=>b.DestinoBombero?.PersonaId == FiltrarBombero).ToList();
+            }
+            else
+            {
+                Movimientos = Movimientos.Where(b => b.DestinoMovil?.VehiculoId == FiltrarMovil).ToList();
+            }
+        }
+
         foreach (var m in Movimientos)
         {
             TodosMovimientosviewModel mov = new()

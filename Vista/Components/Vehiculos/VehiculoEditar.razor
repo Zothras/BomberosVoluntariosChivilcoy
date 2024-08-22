@@ -142,7 +142,10 @@
                     <div class="inpt-container">
                         <input type="text" @bind="vehiculoView.NumeroMovil" placeholder="Nº del Móvil:" />
                     </div>
-                    @if (vehiculo is Movil)
+                    <div class="inpt-container">
+                        Es un movil: <Switch @bind-Checked="@EsMovil" Value="@EsMovil" />
+                    </div>
+                    @if (EsMovil == true)
                     {
                         <div class="inpt-container">
                             <input type="text" @bind="movilView.NumeroMotor" placeholder="Nº Motor:" />
@@ -223,6 +226,7 @@
     public MovilViewModel movilView { get; set; } = new();
     public ImagenViewModel imagenView { get; set; } = new();
     public List<BomberoViewModel> ListaBomberos = new();
+    bool EsMovil { get; set; }
 
     // View Models
     public class VehiculoViewModel
@@ -274,6 +278,7 @@
             vehiculoView.NumeroMovil = vehiculo.NumeroMovil;
             if (vehiculo is Movil)
             {
+                EsMovil = true;
                 var movil = (Movil)vehiculo;
                 movilView.NumeroMotor = movil.NumeroMotor;
                 movilView.NumeroChasis = movil.NumeroChasis;
@@ -327,7 +332,7 @@
                         NumeroMovil = vehiculoView.NumeroMovil,
                         Estado = vehiculoView.Estado,
                     };
-                if (vehiculo is Movil)
+                if (EsMovil == true)
                 {
                     Movil movil = Convertir<Movil>(vehiculoNew);
                     movil.NumeroMotor = movilView.NumeroMotor;
@@ -448,5 +453,3 @@
         Context?.Dispose();
     }
 }
-
-

@@ -92,7 +92,7 @@
 
 @code {
     RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
-    VehiculoSalida[]? vehiculos;
+    List<VehiculoSalida> vehiculos;
     bool AgregarVisible { get; set; }
     BomberosDbContext Context { get; set; }
 
@@ -108,8 +108,9 @@
     }
     private async Task Init()
     {
+        vehiculos = new();
         Context = DbFactory.CreateDbContext();
-        vehiculos = await Context.Set<VehiculoSalida>().OrderBy(m => m.NumeroMovil).ToArrayAsync();
+        vehiculos = await Context.Set<VehiculoSalida>().OrderBy(m => m.NumeroMovil).ToListAsync();
     }
     public void Dispose()
     {

@@ -53,27 +53,64 @@ namespace Vista.Services
         public async Task<VehiculoSalida> EditarVehiculo(VehiculoSalida vehiculo)
         {
             try
-            {
+            { //PENDIENTE: Terminar de pulir
                 VehiculoSalida Editar = await _context.Set<VehiculoSalida>().SingleOrDefaultAsync(e => e.VehiculoId == vehiculo.VehiculoId);
-                foreach (var i in vehiculo.GetType().GetProperties())
+                if( (Editar is Embarcacion && vehiculo is Movil) || (Editar is Movil && vehiculo is Embarcacion) )
                 {
-                    var propNombre = i.Name;
-                    var propValor = i.GetValue(vehiculo);
-                    var editarProp = Editar.GetType().GetProperty(propNombre);
-                    //Validaciones.
-                    //Encargado, EncargadoId se establecen a parte para evitar errores
-                    if (editarProp != null && editarProp.CanWrite && propValor != null && propNombre != "Encargado" && propNombre != "SeguroId" && propNombre != "EncargadoId")
+                    int? ImagenId = 0;
+                    if (vehiculo.Imagen == null && Editar.Imagen != null)
                     {
-                        editarProp.SetValue(Editar, propValor);
+                        ImagenId = Editar.ImagenId;
                     }
+                    _context.Set<VehiculoSalida>().Remove(Editar);
+                    await _context.SaveChangesAsync();
+                    if (vehiculo.Encargado != null)
+                    {
+                        Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.Encargado.PersonaId);
+                        vehiculo.Encargado = Encargado;
+                        if (Encargado.VehiculosEncargado == null) Encargado.VehiculosEncargado = new();
+                        Encargado.VehiculosEncargado.Add(vehiculo);
+                    }
+                    if(ImagenId != null && ImagenId != 0)
+                    {
+                        ImagenVehiculo EditarImagen = await _context.ImagenesVehiculo.SingleOrDefaultAsync(i=>i.ImagenId == ImagenId);
+                        vehiculo.Imagen = EditarImagen;
+                        vehiculo.ImagenId = EditarImagen.ImagenId;
+                    }
+                    if (vehiculo is Movil)
+                    {
+                        _context.Moviles.Add((Movil)vehiculo);
+                    }
+                    else
+                    {
+                        _context.Embarcacion.Add((Embarcacion)vehiculo);
+                    }
+                    await _context.SaveChangesAsync();
+                    return vehiculo;
                 }
-                if (vehiculo.Encargado != null)
+                else
                 {
-                    Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.Encargado.PersonaId);
-                    Editar.Encargado = Encargado;
-                    Editar.EncargadoId = Encargado.PersonaId;
+                    foreach (var i in vehiculo.GetType().GetProperties())
+                    {
+                        var propNombre = i.Name;
+                        var propValor = i.GetValue(vehiculo);
+                        var editarProp = Editar.GetType().GetProperty(propNombre);
+                        //Validaciones.
+                        //Encargado, EncargadoId se establecen a parte para evitar errores
+                        if (editarProp != null && editarProp.CanWrite && propValor != null && propNombre != "Encargado" && propNombre != "SeguroId" && propNombre != "EncargadoId")
+                        {
+                            editarProp.SetValue(Editar, propValor);
+                        }
+                    }
+                    if (vehiculo.Encargado != null)
+                    {
+                        Bombero? Encargado = await _context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == vehiculo.Encargado.PersonaId);
+                        Editar.Encargado = Encargado;
+                        Editar.EncargadoId = Encargado.PersonaId;
+                    }
+
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
                 return vehiculo;
             }
             catch (DbUpdateException ex)
