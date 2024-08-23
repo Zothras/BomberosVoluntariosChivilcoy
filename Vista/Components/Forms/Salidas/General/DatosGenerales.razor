@@ -39,15 +39,22 @@
     <div class="inpt-cont-inline">
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Calle/Ruta</label>
-            <Select TItem="string"
-                    TItemValue="string"
-                    DataSource="@streetSuggestions"
-                    @bind-Value="@Model.CalleORuta"
-                    Placeholder="Seleccione una calle"
-                    OnSearch="OnSearch"
-                    EnableSearch
-                    OnSelectedItemChanged="OnStreetSelected">
-            </Select>
+            @if (isApiAvailable)
+            {
+                <Select TItem="string"
+                        TItemValue="string"
+                        DataSource="@streetSuggestions"
+                        @bind-Value="@Model.CalleORuta"
+                        Placeholder="Seleccione una calle"
+                        OnSearch="OnSearch"
+                        EnableSearch
+                        OnSelectedItemChanged="OnStreetSelected">
+                </Select>
+            }
+            else
+            {
+                <Input @bind-Value="@Model.CalleORuta" />                
+            }
         </div>
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Número/Kilómetro</label>
@@ -93,6 +100,7 @@
     [Parameter] public string animationClass { get; set; }
     [Parameter] public bool esSoloDireccion { get; set; } = false;
 
+    private bool isApiAvailable;
     private int anio = DateTime.Now.Year;
     private bool esDepartamento;
 
@@ -103,10 +111,15 @@
         Model.NumeroParte = await GenerarNumeroParteAsync();
         Model.AnioNumeroParte = anio;
 
-        if (!string.IsNullOrWhiteSpace(Model.CalleORuta))
+        isApiAvailable = await GeorefService.CheckApiConnectionAsync();
+
+        if (isApiAvailable)
         {
-            streetSuggestions = await GeorefService.GetStreetSuggestionsAsync(Model.CalleORuta);
-            StateHasChanged();
+            if (!string.IsNullOrWhiteSpace(Model.CalleORuta))
+            {
+                streetSuggestions = await GeorefService.GetStreetSuggestionsAsync(Model.CalleORuta);
+                StateHasChanged();
+            }
         }
 
     }

@@ -22,13 +22,18 @@ namespace Vista.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync("https://apis.datos.gob.ar/georef/api/");
-                if (!response.IsSuccessStatusCode)
+                var response = await _httpClient.GetAsync("https://apis.datos.gob.ar/georef/api/provincias");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
                 {
                     var errorMsg = $"API connection failed with status code: {response.StatusCode}";
                     await LogErrorToConsoleAsync(errorMsg);
+                    return false;
                 }
-                return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
