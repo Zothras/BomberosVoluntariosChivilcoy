@@ -308,6 +308,14 @@
                         <li class="nav-item"><a class="nav-link" href="unidades">Moviles</a></li>
                      </ChildContent>
                 </MenuItem>
+                <MenuItem Key="9" Icon="container">
+                    <IconTemplate>
+                        <i class="fa-solid fa-user icoSelected" style="color:#263040;"></i>
+                    </IconTemplate>
+                    <ChildContent>
+                        <li class="nav-item"><a class="nav-link" href="/bomberos">Personal</a></li>
+                    </ChildContent>
+                </MenuItem>
                  <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title Id="salidas">
                      <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
                          <MenuItem Key="02" Title=@("Materiales peligrosos")>
@@ -372,36 +380,6 @@
                              <MenuItem Key="15">Persona</MenuItem>
                          </a>
                      </SubMenu>
-                 </SubMenu>
-                 <SubMenu class="xd" Key="001" Title="Bomberos" TitleTemplate=@sub1Title>
-                     <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })">
-                         <MenuItem Key="002" Title=@("Activos")>
-                             <IconTemplate>
-                                 <i class="fa-solid fa-user-large" style="color: #263040;"></i>
-                             </IconTemplate>
-                         </MenuItem>
-                     </a>
-                     <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/inactivos"); })">
-                         <MenuItem Key="003" Title=@("Inactivos")>
-                             <IconTemplate>
-                                 <i class="fa-solid fa-user-large-slash" style="color: #263040;"></i>
-                             </IconTemplate>
-                         </MenuItem>
-                     </a>
-                     <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
-                         <MenuItem Key="004" Title=@("Sanciones")>
-                             <IconTemplate>
-                                 <i class="fa-solid fa-user-xmark" style="color: #263040;"></i>
-                             </IconTemplate>
-                         </MenuItem>
-                     </a>
-                     <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
-                         <MenuItem Key="005" Title=@("Ascensos")>
-                             <IconTemplate>
-                                 <i class="fa-solid fa-user-plus" style="color: #263040;"></i>
-                             </IconTemplate>
-                         </MenuItem>
-                     </a>
                  </SubMenu>
                  <SubMenu class="xd" Key="sub6" Title="Salidas" TitleTemplate=@sub7Title>
                      <a @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialSalidas"); })">
