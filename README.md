@@ -9,6 +9,12 @@
 
 ---
 
+### Estado del Proyecto
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/EEST1Chivilcoy/BomberosVoluntariosChivilcoy/actions
+)
+
+---
+
 ***Tecnologias Usadas:*** 
 - ASP.NET
 - ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
