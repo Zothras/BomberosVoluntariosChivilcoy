@@ -427,7 +427,7 @@
                             };
                         salidaIncendioForestal.Damnificados.Add(damn);
                     }
-                    await SalidaService.CargarIncendio(salidaIncendioForestal);
+                    await SalidaService.CargarSalida(salidaIncendioForestal);
                     HandleOk1(salidaIncendioForestal.NumeroParte);
                     await Init();
                     StateHasChanged();

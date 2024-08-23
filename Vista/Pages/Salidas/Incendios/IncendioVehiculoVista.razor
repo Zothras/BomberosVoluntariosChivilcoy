@@ -484,7 +484,7 @@
                             };
                         salidaIncendioVehicular.Damnificados.Add(damn);
                     }
-                    await SalidaService.CargarIncendio(salidaIncendioVehicular);
+                    await SalidaService.CargarSalida(salidaIncendioVehicular);
                     HandleOk1(salidaIncendioVehicular.NumeroParte);
                     await Init();
                     StateHasChanged();

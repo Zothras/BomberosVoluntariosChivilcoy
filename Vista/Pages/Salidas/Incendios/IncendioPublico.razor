@@ -428,7 +428,7 @@
                             };
                         salidaIncendioEstabPublico.Damnificados.Add(damn);
                     }
-                    await SalidaService.CargarIncendio(salidaIncendioEstabPublico);
+                    await SalidaService.CargarSalida(salidaIncendioEstabPublico);
                     HandleOk1(salidaIncendioEstabPublico.NumeroParte);
                     await Init();
                     StateHasChanged();

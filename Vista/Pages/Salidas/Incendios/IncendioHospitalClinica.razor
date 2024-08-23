@@ -429,7 +429,7 @@
                             };
                         salidaIncendioHospYClinica.Damnificados.Add(damn);
                     }
-                    await SalidaService.CargarIncendio(salidaIncendioHospYClinica);
+                    await SalidaService.CargarSalida(salidaIncendioHospYClinica);
                     HandleOk1(salidaIncendioHospYClinica.NumeroParte);
                     await Init();
                     StateHasChanged();

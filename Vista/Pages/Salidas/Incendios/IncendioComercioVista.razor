@@ -405,7 +405,7 @@
                     };
                 salidaIncendioComercio.Damnificados.Add(damn);
             }
-            await SalidaService.CargarIncendio(salidaIncendioComercio);
+            await SalidaService.CargarSalida(salidaIncendioComercio);
             HandleOk1(salidaIncendioComercio.NumeroParte);
             await Init();
             StateHasChanged();

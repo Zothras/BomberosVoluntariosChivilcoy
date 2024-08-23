@@ -428,7 +428,7 @@
                             };
                         salidaIncendioVivienda.Damnificados.Add(damn);
                     }
-                    await SalidaService.CargarIncendio(salidaIncendioVivienda);
+                    await SalidaService.CargarSalida(salidaIncendioVivienda);
                     HandleOk1(salidaIncendioVivienda.NumeroParte);
                     await Init();
                     StateHasChanged();

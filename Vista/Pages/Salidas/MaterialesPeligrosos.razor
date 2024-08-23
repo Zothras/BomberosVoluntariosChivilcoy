@@ -523,7 +523,7 @@
                 materiales.Damnificados.Add(damn);
             }
 
-            await SalidaService.CargarMaterialesPeligrosos(materiales);
+            await SalidaService.CargarSalida(materiales);
             HandleOk1(materiales.NumeroParte);
             await Init();
             StateHasChanged();

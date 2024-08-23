@@ -431,7 +431,7 @@
                             };
                         salidaIncendioEducativo.Damnificados.Add(damn);
                     }
-                    await SalidaService.CargarIncendio(salidaIncendioEducativo);
+                    await SalidaService.CargarSalida(salidaIncendioEducativo);
                     HandleOk1(salidaIncendioEducativo.NumeroParte);
                     await Init();
                     StateHasChanged();
