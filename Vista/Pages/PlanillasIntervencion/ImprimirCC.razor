@@ -27,7 +27,7 @@
         body {
             padding: .5em 4.5em;
             /* width: 100%;
-            height: 100%; */
+                    height: 100%; */
             width: 826px;
             height: 2712px;
             display: flex;
@@ -37,7 +37,7 @@
 
         /* seccion 1 */
 
-        .sec1 { 
+        .sec1 {
             display: flex;
             flex-direction: column;
         }
@@ -343,17 +343,17 @@
 
         public string ApellidoConfecciono { get; set; }
 
-        public string Confecciono { get { return NombreConfecciono + "," + ApellidoConfecciono; } } 
+        public string Confecciono { get { return NombreConfecciono + "," + ApellidoConfecciono; } }
 
         public string GraduadoCargo { get { return GraduadoNombre + "," + ApellidoConfecciono; } }
 
-        public string GraduadoNombre  { get; set; }
+        public string GraduadoNombre { get; set; }
 
         public string GraduadoApellido { get; set; }
 
         public int NumeroParte { get; set; }
 
-        public string Recepcionista{ get; set; }
+        public string Recepcionista { get; set; }
 
         public TipoCausaIncendio? Causa { get; set; }
 
@@ -381,7 +381,7 @@
         await CargarEncargado();
 
     }
-    public async Task CargarEncargado ()
+    public async Task CargarEncargado()
     {
 
         var salida = await Context.Set<Salida>().SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte);
@@ -401,9 +401,16 @@
             IntervencionVM.NumeroParte = salida.NumeroParte;
             IntervencionVM.Recepcionista = salida.ReceptorBombero != null ? salida.ReceptorBombero.Nombre + salida.ReceptorBombero.Apellido : "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
-            IntervencionVM.Causa = (salida as Incendio).SuperficieAfectadaCausa;
+            if (salida is Incendio incendio)
+            {
+                IntervencionVM.Causa = incendio.SuperficieAfectadaCausa;
+            }
+
+            if (salida.GetType().GetProperty("TipoLugar") != null)
+            {
+                IntervencionVM.Lugar = "" + (salida as dynamic).TipoLugar;
+            }
             IntervencionVM.Zona = salida.TipoZona;
-            IntervencionVM.Lugar = "" + (salida as dynamic).TipoLugar;
         }
     }
 
