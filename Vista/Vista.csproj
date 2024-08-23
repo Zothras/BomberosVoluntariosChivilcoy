@@ -23,7 +23,7 @@
     <Folder Include="wwwroot\Imagenes\Icons\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.20.2" />
+    <PackageReference Include="AntDesign" Version="0.20.2.1" />
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />    
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
