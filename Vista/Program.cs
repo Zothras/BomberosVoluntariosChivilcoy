@@ -32,6 +32,7 @@ builder.Services.AddScoped<IDepositoService, DepositoService>();
 builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<ISalidaService, SalidaService>();
 builder.Services.AddScoped<IParteService, ParteService>();
+builder.Services.AddTransient<PdfGenerator>();
 builder.Services.AddHttpClient<GeorefService>();
 
 //Errores detallados
