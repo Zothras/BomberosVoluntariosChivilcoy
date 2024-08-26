@@ -1,0 +1,176 @@
+﻿@implements IDisposable
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/bomberos/ascenso"
+
+<style>
+    .template {
+        margin-top: 20px;
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-table {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .ant-table-title {
+        background-color: #A63333
+    }
+
+    .ant-table-thead .ant-table-cell {
+        background-color: #A63333 !important;
+        color: white !important;
+        font-weight: bold;
+    }
+
+    .ant-table-cell {
+        padding: 16px !important;
+    }
+
+    .title-template-container {
+        background-color: #A63333;
+        padding: 16px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ant-modal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+
+    .ant-modal .ant-form-item-label > label {
+        color: #FFFFFF;
+        padding: 2px 4px;
+        margin-right: 267.2px;
+    }
+
+</style>
+
+<Flex Class="flex-container" Justify="center" Align="center">
+    <div class="template">
+        <Table DataSource="ascensos" PageSize="6" Bordered Responsive>
+            <TitleTemplate>
+                <Space Size="@("large")" Style="width: 100%; justify-content: flex-end;">
+                    <h4>Ascensos</h4>
+                    <SpaceItem>
+                        <Button OnClick="()=>_visibleCargar = true" Type="Primary"><Icon Type="plus" />Cargar</Button>
+                    </SpaceItem>
+                </Space>
+            </TitleTemplate>
+            <ColumnDefinitions>
+                <Column TData="AscensoBombero" Title="Foto" Width="100">
+                    <Image Src="@CargarImage(context)" />
+                </Column>
+                <PropertyColumn Property="b=>b.NombreYApellido"></PropertyColumn>
+                <PropertyColumn Property="b=>b.FechaEmision"></PropertyColumn>
+                <PropertyColumn Property="b=>b.Descripcion"></PropertyColumn>
+                <PropertyColumn Property="b=>b.GradoAntiguo"></PropertyColumn>
+                <PropertyColumn Property="b=>b.GradoAscenso"></PropertyColumn>
+            </ColumnDefinitions>
+        </Table>
+    </div>
+</Flex>
+
+@if(_visibleCargar == true)
+{
+    <Modal Footer="null" OnCancel="()=> _visibleCargar = false" Visible="@_visibleCargar" Style="width: 35%!important;">
+        <AgregarAscenso OnClose="OnClose"/>
+    </Modal>
+}
+
+@code {
+    List<AscensoViewModel> ascensos = new List<AscensoViewModel>();
+
+    // Variables
+    BomberosDbContext Context { get; set; }
+    bool _visibleCargar = false;
+
+    // View Model
+    public class AscensoViewModel
+    {
+        public Bombero PersonalAfectado { get; set; }
+        public string NombreYApellido { get; set; }
+        public DateTime FechaEmision { get; set; }
+        public string Descripcion { get; set; }
+        public EscalafonJerarquico GradoAntiguo { get; set; }
+        public EscalafonJerarquico GradoAscenso { get; set; }
+    }
+
+    // Init y Carga de datos
+
+    public async void OnClose()
+    {
+        _visibleCargar = false;
+        await Init();
+        StateHasChanged();
+    }
+
+    public async Task CargarAscenso()
+    {
+        var ascenso = await Context.AscensoBomberos.ToListAsync();
+
+        foreach (var a in ascenso)
+        {
+            var bomberoafectado = await Context.Bomberos.Where(b => b.PersonaId == a.PersonaId).SingleOrDefaultAsync();
+            AscensoViewModel ac = new()
+                {
+                    PersonalAfectado = bomberoafectado,
+                    NombreYApellido = bomberoafectado.Nombre + " " + bomberoafectado.Apellido,
+                    FechaEmision = a.FechaEmision,
+                    Descripcion = a.Descripcion,
+                    GradoAntiguo = a.GradoAntiguo,
+                    GradoAscenso = a.GradoAscenso
+                };
+            ascensos.Add(ac);
+        }
+    }
+
+    public string CargarImage(AscensoViewModel ascenso)
+    {
+        var Context = DbFactory.CreateDbContext();
+
+        string src = "/";
+
+        Imagen? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == ascenso.PersonalAfectado.ImagenId).SingleOrDefault();
+
+        if (imagen is not null)
+        {
+            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
+        }
+
+        return src;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+
+        Context = DbFactory.CreateDbContext();
+        await CargarAscenso();
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

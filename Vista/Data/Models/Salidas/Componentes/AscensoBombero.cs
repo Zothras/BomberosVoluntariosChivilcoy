@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personales;
 
@@ -10,7 +11,8 @@ namespace Vista.Data.Models.Salidas.Componentes
         
         public DateTime FechaEmision { get; set; }
 
-        public string Descripcion { get; set; }
+        [StringLength(255)]
+        public string? Descripcion { get; set; }
 
         public EscalafonJerarquico  GradoAntiguo { get; set; }
 

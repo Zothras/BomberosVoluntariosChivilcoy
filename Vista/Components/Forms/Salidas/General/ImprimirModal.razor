@@ -11,11 +11,12 @@
             SubTitle="">
     </Result>
     <p style="font-size: 20px;">Imprimir con croquis</p>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{NumeroParte}/{true}", true); })">Si</button>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{NumeroParte}/{false}", true); })">No</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{AnioNumeroParte}/{NumeroParte}/{true}", true); })">Si</button>
+    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{AnioNumeroParte}/{NumeroParte}/{false}", true); })">No</button>
 </Modal>
 
 @code {
+    [Parameter] public int AnioNumeroParte { get; set; }
     [Parameter] public int NumeroParte { get; set; }
 
     bool _visible1 = true;

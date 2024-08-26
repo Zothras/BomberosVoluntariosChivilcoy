@@ -13,6 +13,10 @@
 @using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Rescates;
 
+@*Componentes Generales*@
+@using Vista.Components.Forms.Salidas.General;
+
+
 <style>
     .template {
         width: 100%;
@@ -36,34 +40,6 @@
         background-color: #732D2D !important;
         color: white !important;
     }
-
-    /* .ant-form-item-label > label {
-        position: relative;
-        display: grid;
-        align-items: center;
-        max-width: 100%;
-        height: 32px;
-        color: rgba(0, 0, 0, 0.85);
-        font-size: 14px;
-        background-color: #A63333 !important;
-        color: white !important;
-    }
-    
-    .ant-form {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        color: rgba(0, 0, 0, 0.85);
-        font-size: 14px;
-        font-variant: tabular-nums;
-        line-height: 1.5715;
-        list-style: none;
-        font-feature-settings: 'tnum';
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px !important;
-        width: 30px !important;
-    } */
 
     .ant-modal-body {
         padding: 4px;
@@ -115,7 +91,6 @@
                 </Dropdown>
 
             </ActionColumn>
-            @*<Column Title="Salidas" @bind-Field="@discriminadores" Sortable />*@
         </ColumnDefinitions>
     
     </Table>
@@ -126,7 +101,7 @@
 
 @if (mostrarDetalle is true)
 {
-    <DetalleSalida @key="salidaId" salidaId="salidaId" />
+    <ImprimirModal AnioNumeroParte="@anioNumeroParte" NumeroParte="@NumeroParte"/>
 }
 @if (mostrarEditar is true)
 {
@@ -198,16 +173,12 @@
 
         TodosBomberos = await db.Bomberos.ToArrayAsync();
         Moviles = await db.Moviles.ToArrayAsync();
-        CargarBomberosView();
         StateHasChanged();
     }
 
     void OnChange(QueryModel<SalidasViewModel1> query)
     {
         Console.WriteLine(JsonSerializer.Serialize(query));
-
-        //dataSource = query.ExecuteQuery(data.AsQueryable())
-        //    .Where(x => string.IsNullOrWhiteSpace(searchString) || x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     void OnRowClick(RowData<SalidasViewModel1> row)
@@ -318,115 +289,25 @@
     public bool mostrarDetalle= false;
     public bool mostrarEditar= false;
     int salidaId;
+    int anioNumeroParte;
+    int NumeroParte;
 
-    public List<BomberoViweModel> bomberoTodos = new();
     private void ShowModalDetalle(int Id)
     {
 
-        numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == Id);
-        mostrarDetalle = true;
+        var salida = salidas.FirstOrDefault(n => n.SalidaId == Id);
         salidaId = Id;
+        NumeroParte = salida.NumeroParte;
+        anioNumeroParte = salida.AnioNumeroParte;
 
-
+        mostrarDetalle = true;
     }
+
     private void ShowModalEditar(int Id)
     {
         numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == Id);
         mostrarEditar= true;
         salidaId = Id;
     }
-
-    
-    
-    //private async void GetMovilSaidasViewModel(){
-    //    using var db = await DbFactory.CreateDbContextAsync();
-    //    foreach (MovilSalidaViewModels m in MovilesSalidasL)
-    //    {
-    //        Bombero? bomberoChofer = await db.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-    //        Movil? Movilsalida = await db.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).SingleOrDefaultAsync();
-    //        MovilSalida movilS = new()
-    //        {
-    //                CargoCombustible = m.CargoCombustible,
-    //                Chofer = bomberoChofer,
-    //                Movil = Movilsalida
-    //        };
-    //            salidaIncendioComercio.Moviles.Add(movilS);
-    //    }
-    //}
-    public void CargarBomberosView()
-    {
-
-        foreach (Bombero b in TodosBomberos)
-        {
-            BomberoViweModel bombero = new()
-                {
-                    FechaNacimiento = b.FechaNacimiento,
-                    Sexo = b.Sexo,
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    Documento = b.Documento,
-                    NumeroLegajo = b.NumeroLegajo,
-                    NumeroIoma = b.NumeroIoma,
-                    LugarNacimiento = b.LugarNacimiento,
-                    Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
-                    Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                    Estado = b.Estado,
-                    Chofer = b.Chofer,
-                    VencimientoRegistro = b.VencimientoRegistro,
-                    Direccion = b.Direccion,
-                    Observaciones = b.Observaciones,
-                    Profesion = b.Profesion,
-                    NivelEstudios = b.NivelEstudios,
-                    FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
-
-                };
-            bomberoTodos.Add(bombero);
-            if (b.Chofer == true)
-            {
-                BomberoViweModel bomberoChofer = new()
-                    {
-                        FechaNacimiento = b.FechaNacimiento,
-                        Sexo = b.Sexo,
-                        Nombre = b.Nombre,
-                        Apellido = b.Apellido,
-                        Documento = b.Documento,
-                        NumeroLegajo = b.NumeroLegajo,
-                        NumeroIoma = b.NumeroIoma,
-                        LugarNacimiento = b.LugarNacimiento,
-                        Grado = b.Grado,
-                        //NombreImagen = b.NombreImagen,
-                        //TipoImagen = b.TipoImagen,
-                        //Base64Imagen = b.Base64,
-                        Dotacion = b.Dotacion,
-                        //Nombre = b.NombreBrigada,
-                        //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                        Estado = b.Estado,
-                        Chofer = b.Chofer,
-                        VencimientoRegistro = b.VencimientoRegistro,
-                        Direccion = b.Direccion,
-                        Observaciones = b.Observaciones,
-                        Profesion = b.Profesion,
-                        NivelEstudios = b.NivelEstudios,
-                        FechaAceptacion = b.FechaAceptacion,
-                        //TelefonoCel = b.TelefonoCel,
-                        //TelefonoFijo = b.TelefonoFijo,
-                        //TelefonoLaboral = b.TelefonoLaboral,
-                        //Email = b.Email,
-
-                    };
-                bomberoChoferes.Add(bomberoChofer);
-            }
-        }
-    }
-
     
 }

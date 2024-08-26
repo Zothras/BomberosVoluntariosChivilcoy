@@ -16,6 +16,9 @@ namespace Vista.Services
         {
             _httpClient = httpClient;
             _jsRuntime = jsRuntime;
+
+            // Añadir el encabezado User-Agent
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
         }
 
         public async Task<bool> CheckApiConnectionAsync()
