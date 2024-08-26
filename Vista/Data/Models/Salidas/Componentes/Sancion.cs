@@ -24,9 +24,8 @@ namespace Vista.Data.Models.Salidas.Componentes
         public int EncargadoAreaId { get; set; }
         [ForeignKey("EncargadoAreaId")]
         public Bombero EncargadoArea { get; set; }
-
-        [Required, StringLength(255)]
-        public string observaciones { get; set; }
+        [StringLength(255)]
+        public string? observaciones { get; set; }
 
     }
 }

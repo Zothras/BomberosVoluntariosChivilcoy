@@ -154,9 +154,8 @@ namespace Vista.Services
             {
                 throw new InvalidOperationException("No se pudo encontrar el BomberoAfectado.");
             }
-
+            BomberoAfectado.Grado = ascenso.GradoAscenso;
             ascenso.PersonalAfectado = BomberoAfectado;
-
             _context.AscensoBomberos.Add(ascenso);
             await _context.SaveChangesAsync();
             return ascenso;

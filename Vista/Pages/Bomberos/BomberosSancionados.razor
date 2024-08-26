@@ -1,0 +1,185 @@
+﻿@implements IDisposable
+@inject NavigationManager navigationManager
+@inject IDbContextFactory<BomberosDbContext> DbFactory
+@inject IMessageService message
+@page "/bomberos/sancionados"
+
+<style>
+    .template {
+        margin-top: 20px;
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-table {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .ant-table-title {
+        background-color: #A63333
+    }
+
+    .ant-table-thead .ant-table-cell {
+        background-color: #A63333 !important;
+        color: white !important;
+        font-weight: bold;
+    }
+
+    .ant-table-cell {
+        padding: 16px !important;
+    }
+
+    .title-template-container {
+        background-color: #A63333;
+        padding: 16px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ant-modal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+
+        .ant-modal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+            margin-right: 267.2px;
+        }
+
+</style>
+
+<Flex Class="flex-container" Justify="center" Align="center">
+    <div class="template">
+        <Table DataSource="sancionesVM" PageSize="6" Bordered Responsive>
+            <TitleTemplate>
+                <Space Size="@("large")" Style="width: 100%; justify-content: flex-end;">
+                    <h4>Sanciones</h4>
+                    <SpaceItem>
+                        <Button OnClick="()=>_visibleCargar = true" Type="Primary"><Icon Type="plus" />Cargar</Button>
+                    </SpaceItem>
+                </Space>
+            </TitleTemplate>
+            <ColumnDefinitions>
+                <Column TData="AscensoBombero" Title="Foto" Width="100">
+                    <Image Src="@CargarImage(context)" />
+                </Column>
+                <PropertyColumn Property="c=>c.Encargado"></PropertyColumn>
+                <PropertyColumn Property="c=>c.Sancionado"></PropertyColumn>
+                <PropertyColumn Property="c=>c.FechaDesde"></PropertyColumn>
+                <PropertyColumn Property="c=>c.FechaHasta"></PropertyColumn>
+                <PropertyColumn Property="c=>c.TipoSancion"></PropertyColumn>
+                <PropertyColumn Property="c=>c.SancionArea"></PropertyColumn>
+                <PropertyColumn Property="c=>c.Observaciones"></PropertyColumn>
+            </ColumnDefinitions>
+        </Table>
+    </div>
+</Flex>
+
+@if(_visibleCargar == true)
+{
+    <Modal Footer="null" OnCancel="()=> _visibleCargar = false" Visible="@_visibleCargar" Style="width: 35%!important;">
+        <AgregarSancion OnClose="OnClose"/>
+    </Modal>
+}
+
+@code {
+    List<SancionViewModel> sancionesVM = new();
+
+    // Variables
+    BomberosDbContext Context { get; set; }
+    bool _visibleCargar = false;
+
+    // View Model
+    public class SancionViewModel
+    {
+        public DateTime FechaDesde { get; set; }
+        public DateTime FechaHasta { get; set; }
+        public TipoSancion TipoSancion { get; set; }
+        public AreaSancion SancionArea { get; set; }
+        public Bombero PersonalSancionado { get; set; }
+        public Bombero EncargadoArea { get; set; }
+        public int NumeroLegajoEncargado { get; set; }
+        public int NumeroLegajoSancionado { get; set; }
+        public string Sancionado { get; set; }
+        public string Encargado { get; set; }
+        public string Observaciones { get; set; }
+    }
+
+    // Init y Carga de datos
+
+    public async void OnClose()
+    {
+        _visibleCargar = false;
+        await Init();
+        StateHasChanged();
+    }
+
+    public async Task CargarSanciones()
+    {
+        var sanciones = await Context.Sanciones.ToListAsync();
+        foreach (Sancion s in sanciones)
+        {
+            var bombero = await Context.Bomberos.Where(B => B.PersonaId == s.PersonaId).SingleOrDefaultAsync();
+            var bomberoEncargado = await Context.Bomberos.Where(B => B.PersonaId == s.EncargadoAreaId).SingleOrDefaultAsync();
+            SancionViewModel san = new()
+                {
+                    FechaDesde = s.FechaDesde,
+                    FechaHasta = s.FechaHasta,
+                    PersonalSancionado = bombero,
+                    Sancionado = bombero.Nombre + " " + bombero.Apellido,
+                    TipoSancion = s.TipoSancion,
+                    SancionArea = s.SacionArea,
+                    EncargadoArea = bomberoEncargado,
+                    Encargado = bomberoEncargado.Nombre + " " + bomberoEncargado.Apellido,
+                    Observaciones = s.observaciones
+                };
+            sancionesVM.Add(san);
+        }
+    }
+
+    public string CargarImage(SancionViewModel ascenso)
+    {
+        var Context = DbFactory.CreateDbContext();
+
+        string src = "/";
+
+        Imagen? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == ascenso.PersonalSancionado.ImagenId).SingleOrDefault();
+
+        if (imagen is not null)
+        {
+            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
+        }
+
+        return src;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+    private async Task Init()
+    {
+        Context = DbFactory.CreateDbContext();
+        await CargarSanciones();
+    }
+    public void Dispose()
+    {
+        Context?.Dispose();
+    }
+}

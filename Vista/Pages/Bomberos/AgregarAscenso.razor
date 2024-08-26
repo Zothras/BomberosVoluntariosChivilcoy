@@ -27,25 +27,18 @@
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Seleccione Bombero Encargado"
                 DefaultActiveFirstOption="false"
+                OnSelectedItemChanged="HandleChange"
                 EnableSearch>
         </Select>
     </FormItem>
     <FormItem Label="Fecha de emision">
-        <DatePicker @bind-Value="AscensoVM.FechaEmision" />
+        <DatePicker AllowClear="false" @bind-Value="AscensoVM.FechaEmision" />
     </FormItem>
     <FormItem Label="Descripción">
         <Input @bind-Value="AscensoVM.Descripcion" />
     </FormItem>
     <FormItem Label="Grado antiguo">
-        @foreach (var item in BomberoTodos)
-        {
-            if (item.NumeroLegajo == Bombero)
-            {
-                AscensoVM.GradoAntiguo = item.Grado;
-                break;
-            }
-        }
-        <Input @bind-Value="AscensoVM.GradoAntiguo" Disabled />
+        <Input Value="@AscensoVM.GradoAntiguo" Disabled />
     </FormItem>
     <FormItem Label="Grado ascenso">
         <EnumSelect TEnum="@EscalafonJerarquico" @bind-Value="@AscensoVM.GradoAscenso" />
@@ -61,89 +54,51 @@
 </Form>
 
 @code {
+    [Parameter] public EventCallback OnClose { get; set; }
+    List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
     public Bombero[]? bomberos;
     public int Bombero { get; set; }
     BomberosDbContext Context { get; set; }
+    AscensoViewModel AscensoVM { get; set; } = new AscensoViewModel();
+
+    private async void HandleChange()
+    {
+        Bombero bombero = Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefault();
+        if (bombero != null)
+        {
+            AscensoVM.GradoAntiguo = bombero.Grado;
+        }
+    }
+
+    // View Model
 
     public class AscensoViewModel
     {
         public Bombero PersonalAfectado { get; set; }
-        public DateTime FechaEmision { get; set; }
+        public DateTime FechaEmision { get; set; } = DateTime.Now;
         public string Descripcion { get; set; }
         public EscalafonJerarquico GradoAntiguo { get; set; }
         public EscalafonJerarquico GradoAscenso { get; set; }
     }
 
-    AscensoViewModel AscensoVM { get; set; } = new AscensoViewModel();
-
-    protected override async Task OnInitializedAsync ()
-    {
-        await Init();
-    }
-
-    private async Task Init ()
-    {
-        AscensoVM = new();
-
-        Context = DbFactory.CreateDbContext();
-
-        await CargarBomberosView();
-    }
-
-    void handleChange (EscalafonJerarquico escalafon)
-    {
-        Console.WriteLine(escalafon);
-    }
-    List<BomberoViweModel> BomberoTodos = new List<BomberoViweModel>();
-    public async Task CargarBomberosView ()
-    {
-        BomberoTodos = new();
-        var bomberos = await Context.Bomberos.ToListAsync();
-        foreach (Bombero b in bomberos)
-        {
-            BomberoViweModel bombero = new()
-            {
-                Nombre = b.Nombre,
-                Apellido = b.Apellido,
-                NumeroLegajo = b.NumeroLegajo
-            };
-            BomberoTodos.Add(bombero);
-        }
-    }
-
-    public async Task EstadoBombero ()
-    {
-        Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
-
-
-        if (BomberoAfectado is not null)
-        {
-            BomberoAfectado.Grado = AscensoVM.GradoAscenso;
-        }
-
-       
-        await Context.SaveChangesAsync();
-
-    }
+    // OnFinish
 
     private async void OnFinish (EditContext editContext)
     {
         try
         {
             Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
-
-            Vista.Data.Models.Salidas.Componentes.AscensoBombero Bombasck = new()
+            Vista.Data.Models.Salidas.Componentes.AscensoBombero ascenso = new()
                 {
-
                     FechaEmision = AscensoVM.FechaEmision,
                     Descripcion = AscensoVM.Descripcion,
                     GradoAntiguo = AscensoVM.GradoAntiguo,
                     GradoAscenso = AscensoVM.GradoAscenso,
                     PersonalAfectado = BomberoAfectado
                 };
-            await BomberoService.AscenderBombero(Bombasck);
-            await EstadoBombero();
+            await BomberoService.AscenderBombero(ascenso);
             await Init();
+            await OnClose.InvokeAsync();
             StateHasChanged();
             await message.Success("Bombero Ascendido");
         }
@@ -163,16 +118,36 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(AscensoVM)}");
     }
 
-    private bool mostrarDatos = false;
+    // Init y Carga de datos
 
-    private void MostrarDatos()
+    public async Task CargarBomberosView()
     {
-        mostrarDatos = true;
+        BomberoTodos = new();
+        var bomberos = await Context.Bomberos.ToListAsync();
+        foreach (Bombero b in bomberos)
+        {
+            BomberoViweModel bombero = new()
+                {
+                    Nombre = b.Nombre,
+                    Apellido = b.Apellido,
+                    NumeroLegajo = b.NumeroLegajo
+                };
+            BomberoTodos.Add(bombero);
+        }
     }
 
-    private void ShowModalAgregar()
+    protected override async Task OnInitializedAsync()
     {
-        mostrarDatos = true;
+        await Init();
+    }
+
+    private async Task Init()
+    {
+        AscensoVM = new();
+
+        Context = DbFactory.CreateDbContext();
+
+        await CargarBomberosView();
     }
 
     public void Dispose()
