@@ -14,9 +14,21 @@
 <style>
     .boton_p {
         background-color: #732D2D !important;
-        margin-right: 80px !important; 
         border-radius: 5px 5px !important;
         color: white;
+    }
+
+    .steps-action {
+        margin-top: 10px !important;     
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+        margin-left: 254px;
+    }
+
+    [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled), button:not(:disabled) {
+        cursor: pointer;
+        color: white !important;
     }
 
     .ant-carousel .slick-dots li {
@@ -45,12 +57,6 @@
         padding-top: 80px;
     }
 
-    .steps-action {
-        margin-top: 24px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 5px;
-    }
 
     .inpt-cont {
         min-width: 100px;
