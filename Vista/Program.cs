@@ -6,6 +6,7 @@ using Vista.Services;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using AntDesign;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,21 @@ builder.Services.AddScoped<IParteService, ParteService>();
 builder.Services.AddTransient<PdfGenerator>();
 builder.Services.AddHttpClient<GeorefService>();
 
+// Configurar la localización
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new List<CultureInfo>
+    {
+        new CultureInfo("es-AR")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("es-AR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+
 //Errores detallados
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
@@ -54,6 +70,20 @@ LocaleProvider.SetLocale("es-Es");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Añadir el middleware de localización
+var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>()?.Value;
+
+if (localizationOptions != null)
+{
+    app.UseRequestLocalization(localizationOptions);
+}
+else
+{
+    // Manejar el caso en que localizationOptions sea null
+    Console.WriteLine("Error: RequestLocalizationOptions no está configurado correctamente.");
+}
+
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.Run();

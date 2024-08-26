@@ -185,7 +185,7 @@
             <div>
                 <ul>
                     <li style="display: inline-block;">FECHA: @IntervencionVM.Fecha.Date</li>
-                    <li style="display: inline-block;margin-left: 8.5em;">DIA: @IntervencionVM.Fecha.DayOfWeek</li>
+                    <li style="display: inline-block; margin-left: 8.5em;"> Día: @IntervencionVM.DiaDeLaSemana </li>
                     <li>AVISADO POR: @IntervencionVM.AvisadoPor </li>
                     <li>RECEPCIONADO POR: @IntervencionVM.Recepcionista</li>
                     <li>TIPO SERVICIO: @IntervencionVM.TipoServicio</li>
@@ -307,15 +307,6 @@
 </html>
 
 @code {
-    public class Fecha
-    {
-        public static void Main()
-        {
-            DateTime dateValue = new DateTime(2023, 8, 17);
-            CultureInfo culture = new CultureInfo("es-ES");
-            Console.WriteLine(dateValue.ToString("dddd", culture));
-        }
-    }
 
     [Parameter]
     public int? AnioSalida { get; set; }
@@ -329,6 +320,8 @@
     public class IntervencionViewModel
     {
         public DateTime Fecha { get; set; }
+
+        public string DiaDeLaSemana => Fecha.ToString("dddd", new CultureInfo("es-ES"));
 
         public string AvisadoPor { get; set; }
 
