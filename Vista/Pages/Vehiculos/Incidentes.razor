@@ -187,7 +187,7 @@
                 <PropertyColumn Title="Número Movil" Property="m=>m.NumeroMovil" Sortable />
                 <PropertyColumn Title="Encargado" Property="@(c => CargarEncargado(context))" Sortable />
                 <PropertyColumn Title="Patente" Property="c=>c.Patente" Sortable />
-                <ActionColumn Title="Firmas" Align=ColumnAlign.Center>
+                <ActionColumn Align=ColumnAlign.Center>
                     <Space>
                         <SpaceItem>
                             <Button Danger OnClick="()=>IncidentesVista(context.VehiculoId)">

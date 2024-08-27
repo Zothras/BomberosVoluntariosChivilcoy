@@ -62,29 +62,28 @@
         padding: 2px 4px;
         margin-right: 267.2px;
     }
-
 </style>
 
 <Flex Class="flex-container" Justify="center" Align="center">
     <div class="template">
         <Table DataSource="ascensos" PageSize="6" Bordered Responsive>
             <TitleTemplate>
-                <Space Size="@("large")" Style="width: 100%; justify-content: flex-end;">
-                    <h4>Ascensos</h4>
+                <Space Size="@("large")" Style="width: 100%; justify-content: space-between;">
+                    <h4 style="color:white">Ascensos</h4>
                     <SpaceItem>
-                        <Button OnClick="()=>_visibleCargar = true" Type="Primary"><Icon Type="plus" />Cargar</Button>
+                        <Button OnClick="()=>_visibleCargar = true" Type="primary"><Icon Type="plus" /> Cargar</Button>
                     </SpaceItem>
                 </Space>
             </TitleTemplate>
             <ColumnDefinitions>
-                <Column TData="AscensoBombero" Title="Foto" Width="100">
-                    <Image Src="@CargarImage(context)" />
+                <Column TData="AscensoBombero" Title="Numero de Legajo">
+                    @context.PersonalAfectado.NumeroLegajo
                 </Column>
-                <PropertyColumn Property="b=>b.NombreYApellido"></PropertyColumn>
-                <PropertyColumn Property="b=>b.FechaEmision"></PropertyColumn>
-                <PropertyColumn Property="b=>b.Descripcion"></PropertyColumn>
-                <PropertyColumn Property="b=>b.GradoAntiguo"></PropertyColumn>
-                <PropertyColumn Property="b=>b.GradoAscenso"></PropertyColumn>
+                <PropertyColumn Property="b=>b.NombreYApellido" Title="Nombre y Apellido" />
+                <PropertyColumn Property="b=>b.FechaEmision" Title="Fecha de Emisión" />
+                <PropertyColumn Property="b=>b.Descripcion" Title="Descripción" />
+                <PropertyColumn Property="b=>b.GradoAntiguo" Title="Grado Anterior" />
+                <PropertyColumn Property="b=>b.GradoAscenso" Title="Grado Ascendido" />
             </ColumnDefinitions>
         </Table>
     </div>
@@ -144,21 +143,6 @@
         }
     }
 
-    public string CargarImage(AscensoViewModel ascenso)
-    {
-        var Context = DbFactory.CreateDbContext();
-
-        string src = "/";
-
-        Imagen? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == ascenso.PersonalAfectado.ImagenId).SingleOrDefault();
-
-        if (imagen is not null)
-        {
-            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
-        }
-
-        return src;
-    }
     protected override async Task OnInitializedAsync()
     {
         await Init();

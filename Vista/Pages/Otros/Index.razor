@@ -18,7 +18,8 @@
         "n0 n3 n3"
         "n4 n3 n3"
         "n5 n5 n6"
-        "n7 n8 n6";
+        "n7 n8 n6"
+        "n9 n9 n10";
         max-width: 960px;
         min-width: 300px;
         gap: 10px;
@@ -107,6 +108,10 @@
 
     .art8 {
         grid-area: n7;
+    }
+
+    .art10 {
+        grid-area: n10;
     }
 
     #mapDiv div:focus-visible{
@@ -494,7 +499,7 @@
             </div>
         </article>
     </a>
-    <a @onclick="@(() => { navigationManager.NavigateTo("/"); })" style="border-radius: 10px;">
+    <a @onclick="@(() => { navigationManager.NavigateTo("/incidentes-vehiculos"); })" style="border-radius: 10px;">
         <article class="art9" style="background-color:darkgrey">
             <div class="bomberosArt" style="height: 112px;">
                 <h1 style="font-size: 33px;margin-top: 0;">FIRMAS</h1>
@@ -503,6 +508,30 @@
             </div>
         </article>
     </a>
+    <article class="art10" style="background-color:darkgrey">
+        <div style="display: flex;padding: 20px;justify-content: space-evenly;height: 100%;">
+            <h1 style="color: white;">ÉTICA</h1>
+            <style>
+                .art10 button {
+                    border-radius: 50%;
+                    width: 35px;
+                    height: 35px;
+                }
+            </style>
+            <div style="gap: 10px">
+                <Popover ContentTemplate="@art7c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
+                        <i class="fa-solid fa-user-xmark"></i>
+                    </button>
+                </Popover>
+                <Popover ContentTemplate="@art7d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </Popover>
+            </div>
+        </div>
+    </article>
 </div>
 
 @code {

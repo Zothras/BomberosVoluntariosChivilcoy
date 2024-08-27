@@ -11,13 +11,15 @@
       OnFinishFailed="OnFinishFailed"
       Style="widthwidth: 100%;height: 100%;">
     
-    <FormItem Label="Fecha Desde:">
+    <FormItem Label="Fecha Desde">
         <DatePicker AllowClear="false" @bind-Value="SancionVM.FechaDesde" />
     </FormItem>
-    <FormItem Label="Fecha Hasta:">
-        <DatePicker AllowClear="false" @bind-Value="SancionVM.FechaHasta" />
-    </FormItem>
-    <FormItem Label="Personal Sancionado:">
+    @if(SancionVM.TipoSancion == TipoSancion.Sancion){
+        <FormItem Label="Fecha Hasta">
+            <DatePicker AllowClear="false" @bind-Value="SancionVM.FechaHasta" />
+        </FormItem>
+    }
+    <FormItem Label="Personal Sancionado">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@ListabomberosVM"
@@ -33,13 +35,13 @@
     <FormItem Label="Numero Legajo">
         <AntDesign.InputNumber @bind-Value="SancionVM.NumeroLegajoSancionado" Disabled />
     </FormItem>
-    <FormItem Label="Tipo Sancion:">
+    <FormItem Label="Tipo Sancion">
         <EnumSelect TEnum="TipoSancion" @bind-Value="@SancionVM.TipoSancion" />
     </FormItem>
-    <FormItem Label="Area Sancion:">
+    <FormItem Label="Area Sancion">
         <EnumSelect TEnum="AreaSancion" @bind-Value="@SancionVM.SancionArea" />
     </FormItem>
-    <FormItem Label="Encargado Area:">
+    <FormItem Label="Encargado Area">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@ListabomberosVM"

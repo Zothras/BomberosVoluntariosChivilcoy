@@ -68,23 +68,20 @@
     <div class="template">
         <Table DataSource="sancionesVM" PageSize="6" Bordered Responsive>
             <TitleTemplate>
-                <Space Size="@("large")" Style="width: 100%; justify-content: flex-end;">
-                    <h4>Sanciones</h4>
+                <Space Size="@("large")" Style="width: 100%; justify-content: space-between;">
+                    <h4 style="color:white">Sanciones</h4>
                     <SpaceItem>
-                        <Button OnClick="()=>_visibleCargar = true" Type="Primary"><Icon Type="plus" />Cargar</Button>
+                        <Button OnClick="()=>_visibleCargar = true" Type="primary"><Icon Type="plus" /> Cargar</Button>
                     </SpaceItem>
                 </Space>
             </TitleTemplate>
             <ColumnDefinitions>
-                <Column TData="AscensoBombero" Title="Foto" Width="100">
-                    <Image Src="@CargarImage(context)" />
-                </Column>
                 <PropertyColumn Property="c=>c.Encargado"></PropertyColumn>
                 <PropertyColumn Property="c=>c.Sancionado"></PropertyColumn>
-                <PropertyColumn Property="c=>c.FechaDesde"></PropertyColumn>
-                <PropertyColumn Property="c=>c.FechaHasta"></PropertyColumn>
-                <PropertyColumn Property="c=>c.TipoSancion"></PropertyColumn>
-                <PropertyColumn Property="c=>c.SancionArea"></PropertyColumn>
+                <PropertyColumn Property="c=>c.FechaDesde" Title="Fecha Desde"></PropertyColumn>
+                <PropertyColumn Property="c=>c.FechaHasta" Title="Fecha Hasta"></PropertyColumn>
+                <PropertyColumn Property="c=>c.TipoSancion" Title="Tipo"></PropertyColumn>
+                <PropertyColumn Property="c=>c.SancionArea" Title="Sanción Area"></PropertyColumn>
                 <PropertyColumn Property="c=>c.Observaciones"></PropertyColumn>
             </ColumnDefinitions>
         </Table>
@@ -151,22 +148,6 @@
                 };
             sancionesVM.Add(san);
         }
-    }
-
-    public string CargarImage(SancionViewModel ascenso)
-    {
-        var Context = DbFactory.CreateDbContext();
-
-        string src = "/";
-
-        Imagen? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == ascenso.PersonalSancionado.ImagenId).SingleOrDefault();
-
-        if (imagen is not null)
-        {
-            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
-        }
-
-        return src;
     }
 
     protected override async Task OnInitializedAsync()
