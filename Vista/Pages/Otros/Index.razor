@@ -502,7 +502,7 @@
         </article>
     </a>
     <a @onclick="@(() => { navigationManager.NavigateTo("/incidentes-vehiculos"); })" style="border-radius: 10px;">
-        <article class="art9" style="background-color:darkgrey">
+        <article class="art9" style="background-color:#2680ac">
             <div class="bomberosArt" style="height: 112px;">
                 <h1 style="font-size: 33px;margin-top: 0;">FIRMAS</h1>
                 <i style="position: absolute;left: 17px;top: 53px;color: white;" class="fa-sharp fa-solid fa-ship"></i>
@@ -512,7 +512,7 @@
     </a>
 
     @* ETICA *@
-    <article class="art11" style="background-color:darkgrey;margin-bottom: 110px !important;margin-top: 15px !important;">
+    <article class="art11" style="background-color:#952929;margin-bottom: 110px !important;margin-top: 15px !important">
         <div style="display: flex;padding: 20px;justify-content: space-evenly;height: 100%;">
             <h1 style="color: white;">ÉTICA</h1>
             <style>
@@ -522,7 +522,7 @@
                     height: 35px;   
                 }
             </style>
-            <div style="gap: 10px">
+            <div style="gap: 10px;justify-content: center;display: flex;margin-top: 10px !important;">
                 <Popover ContentTemplate="@art7c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                     <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
                         <i class="fa-solid fa-user-xmark"></i>

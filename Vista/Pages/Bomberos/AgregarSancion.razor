@@ -4,6 +4,34 @@
 @using Vista.Services
 @inject IBomberoService BomberoService
 
+
+<style> 
+    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+        text-decoration: none;
+        background: #40a9ff !important;
+    }
+
+    .ant-btn:hover, .ant-btn:focus {
+        color: white !important;
+        border-color: #40a9ff !important;
+        background: #40a9ff !important;
+    }
+
+    .ant-form-horizontal .ant-form-item-label {
+        flex-grow: 0;
+        font-weight: bold;
+    }
+
+    .ant-modal-header {
+        padding: 0px !important;
+        color: rgba(0, 0, 0, 0.85);
+        background: #fff;
+        border-bottom: 1px solid #f0f0f0;
+        border-radius: 2px 2px 0 0;
+    }
+
+</style>
+
 <Form Model="@SancionVM"
       LabelColSpan="8"
       WrapperColSpan="16"
@@ -60,7 +88,7 @@
             display: flex !important;
             justify-content: flex-end !important;
             align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
-        <Button Style="border: 1px solid red !important; margin-right: 60px" HtmlType="submit">
+        <Button Style="background-color: #1890ff !important; border-color:currentColor !important; margin-right: 60px; margin-bottom: 17px !important; color: white;" HtmlType="submit">
             Cargar Sancion
         </Button>
     </FormItem>
