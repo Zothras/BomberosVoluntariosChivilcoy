@@ -460,32 +460,6 @@
             <h1 style="font-size: 33px; margin-top: 0;">PERSONAL</h1>
             <i Style="position: absolute; left: 17px; top:53px; color: white;" class="fa-solid fa-user"></i>
             <p style="position: absolute; left: 38px; top: 48px; color: white; font-family: 'Inter', sans-serif; font-size: 15px;">Ver Personal</p>
-            @* BOTONES DE MENU BOMBEROS ============ POSIBLE USO? --------------------------------------------------------------------
-
-                <div class="btnCont">
-                <Popover ContentTemplate="@art7a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })">
-                        <i class="fa-solid fa-user-large"></i>
-                    </button>
-                </Popover>
-                <Popover ContentTemplate="@art7b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/inactivos"); })">
-                        <i class="fa-solid fa-user-large-slash"></i>
-                    </button>
-                </Popover>
-                <Popover ContentTemplate="@art7c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
-                        <i class="fa-solid fa-user-xmark"></i>
-                    </button>
-                </Popover>
-                <Popover ContentTemplate="@art7d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </button>
-                </Popover>
-            </div>
-
-              BOTONES DE MENU BOMBEROS ============ POSIBLE USO? -------------------------------------------------------------------- *@ 
         </div>
     </article>
     </a>

@@ -316,6 +316,14 @@
                         <li class="nav-item"><a class="nav-link" href="/bomberos">Personal</a></li>
                     </ChildContent>
                 </MenuItem>
+                <MenuItem Key="11">
+                    <IconTemplate>
+                        <i class=" fa-solid fa-scroll" style="color: #263040;padding-right: 6px;"></i>
+                    </IconTemplate>
+                    <ChildContent>
+                        <li class="nav-item"><a class="nav-link" href="/incidentes-vehiculos">Firmas</a></li>
+                    </ChildContent>
+                </MenuItem>
                  <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title Id="salidas">
                      <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
                          <MenuItem Key="02" Title=@("Materiales peligrosos")>
@@ -434,6 +442,22 @@
                          </MenuItem>
                      </a>
                  </SubMenu>
+                <SubMenu class="xd" Key="sub8" Title="Ética" TitleTemplate=@sub8Title>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
+                        <MenuItem Key="16" Title=@("Sanciones")>
+                            <IconTemplate>
+                                <i class="fa-solid fa-user-xmark"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
+                    <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
+                        <MenuItem Key="17" Title=@("Ascensos")>
+                            <IconTemplate>
+                                <i class="fa-solid fa-user-plus"></i>
+                            </IconTemplate>
+                        </MenuItem>
+                    </a>
+                </SubMenu>
              </Menu>
          </Sider>
          <Layout>
@@ -503,6 +527,13 @@
     @<span class="spanSalidas" style="position: relative;">
         <Icon Type="history" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Reportes</span>
+    </span>
+    ;
+
+    RenderFragment sub8Title =
+    @<span class="spanSalidas" style="position: relative;">
+        <Icon class="menuSalidas" Type="book" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
+        <span class="spanContentSalidas" style="padding-left: 32px!important;">Ética</span>
     </span>
     ;
 
