@@ -43,19 +43,22 @@
 
 <div class="slick-contenedor @animationClass">
     <h6>Cuerpo Participante</h6>
-    <div class="inpt-cont">
-        <lable class="inpt-cont--lbl"> Elija el movil</lable>
-        <Select TItem="MovilSalida"
-                TItemValue="string"
-                DataSource="@Model.Moviles"
-                @bind-Value="@NroMovil"
-                LabelName="@nameof(MovilSalida.Movil.NumeroMovil)"
-                ValueName="@nameof(MovilSalida.Movil.NumeroMovil)"
-                Placeholder="Seleccione un movil"
-                DefaultActiveFirstOption="false"
-                AllowClear="true" EnableSearch>
-        </Select>
-    </div>
+    @if (Model.Moviles != null && Model.Moviles.Any())
+    {
+        <div class="inpt-cont">
+            <lable class="inpt-cont--lbl"> Elija el movil</lable>
+            <Select TItem="MovilSalida"
+                    TItemValue="Movil"
+                    DataSource="@Model.Moviles"
+                    @bind-Value="@MovilParaAsignar"
+                    LabelName="@nameof(MovilSalida.Movil.NumeroMovil)"
+                    ValueName="@nameof(MovilSalida.Movil)"
+                    Placeholder="Seleccione un movil"
+                    DefaultActiveFirstOption="false"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </div>
+    }
     @if (BotonSolo)
     {
         <div class="inpt-cont">
@@ -176,8 +179,8 @@
 </div>
 
 @code {
-    [Parameter] public SalidasViewModels Model { get; set; }
-    [Parameter] public string animationClass { get; set; }
+    [Parameter] public SalidasViewModels? Model { get; set; }
+    [Parameter] public string? animationClass { get; set; }
 
     private IEnumerable<BomberoSalidaViewModels> _selectedRows = new List<BomberoSalidaViewModels>(); //Bomberos Seleccionados
     private List<BomberoViweModel> bomberosTodos = new(); //Lista con todos los bomberos
@@ -188,7 +191,7 @@
     private BomberoViweModel? EncargadoSeleccionado { get; set; }
     private BomberoViweModel? PlanillaSeleccionado { get; set; }
 
-    private string NroMovil { get; set; }
+    private Movil? MovilParaAsignar { get; set; }
 
     private bool BotonSolo { get; set; } = true;
     private bool MostrarBoton => _selectedRows.Any(); //Any() es un método de LINQ que verifica si una colección tiene al menos un elemento.
@@ -224,7 +227,7 @@
                             NumeroLegajo = bombero.NumeroLegajo,
                             Nombre = bombero.Nombre,
                             Apellido = bombero.Apellido,
-                            MovilAsignado = Model.Moviles.FirstOrDefault(m => m.Movil.NumeroMovil == NroMovil)
+                            MovilAsignado = participante.MovilAsignado
                         };
 
                     bomberosToRemove.Add(bombero);
@@ -280,7 +283,7 @@
             // Crea el nuevo objeto de salida del bombero
             var nuevoBomberoSalida = new BomberoSalidaViewModels
                 {
-                    MovilAsignado = Model.Moviles.FirstOrDefault(m => m.Movil.NumeroMovil == NroMovil),
+                    MovilAsignado = MovilParaAsignar,
                     Nombre = bomberoSeleccionado.Nombre,
                     Apellido = bomberoSeleccionado.Apellido,
                     NumeroLegajo = bomberoSeleccionado.NumeroLegajo

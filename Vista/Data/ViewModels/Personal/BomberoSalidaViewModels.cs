@@ -6,7 +6,7 @@ namespace Vista.Data.ViewModels.Personal
     public class BomberoSalidaViewModels
     {
 
-        public MovilSalida? MovilAsignado { get; set; }
+        public Movil? MovilAsignado { get; set; }
         public EscalafonJerarquico Grado { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
