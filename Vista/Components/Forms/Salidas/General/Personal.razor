@@ -46,19 +46,21 @@
     @if (Model.Moviles != null && Model.Moviles.Any())
     {
         <div class="inpt-cont">
-            <lable class="inpt-cont--lbl"> Elija el movil</lable>
-            <Select TItem="MovilSalida"
+            <label class="inpt-cont--lbl">Elija el movil</label>
+            <Select TItem="Movil"
                     TItemValue="Movil"
-                    DataSource="@Model.Moviles"
+                    DataSource="@MovilesParaAsignar"
                     @bind-Value="@MovilParaAsignar"
-                    LabelName="@nameof(MovilSalida.Movil.NumeroMovil)"
-                    ValueName="@nameof(MovilSalida.Movil)"
+                    LabelName="@nameof(Movil.NumeroMovil)"
                     Placeholder="Seleccione un movil"
                     DefaultActiveFirstOption="false"
-                    AllowClear="true" EnableSearch>
+                    AllowClear="true"
+                    EnableSearch="true">
             </Select>
         </div>
     }
+
+
     @if (BotonSolo)
     {
         <div class="inpt-cont">
@@ -192,6 +194,7 @@
     private BomberoViweModel? PlanillaSeleccionado { get; set; }
 
     private Movil? MovilParaAsignar { get; set; }
+    private List<Movil>? MovilesParaAsignar { get; set; }
 
     private bool BotonSolo { get; set; } = true;
     private bool MostrarBoton => _selectedRows.Any(); //Any() es un método de LINQ que verifica si una colección tiene al menos un elemento.
@@ -200,6 +203,11 @@
     {
         bomberosTodos = await BomberoService.GetAllBomberosAsync(); // Obtiene todos los Bomberos.
         bomberosSalirTodos = bomberosTodos.ToList(); // Copia el contenido de la Lista bomberosTodos a una nueva lista.
+
+        if (Model.Moviles != null && Model.Moviles.Any())
+        {
+            MovilesParaAsignar = Model.Moviles.Select(ms => ms.Movil).ToList();
+        }
 
         if (Model.LegajoEncargado != default)
         {
