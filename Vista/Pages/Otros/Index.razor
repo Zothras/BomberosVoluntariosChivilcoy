@@ -5,91 +5,127 @@
 @page "/"
 
 <style>
-    .gridContainer{
+    /* Grid Container
+        Las demas clases y elementos se encuentran dentro de este
+        Por tanto tener en cuenta al cambiar alguna propiedad relacionada con tamaño o posicion */
+
+    .gridContainer {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         /* grid-template-rows: repeat(6, 1fr); */
-        grid-auto-rows: minmax(100px, auto);
+        grid-auto-rows: minmax(17%, auto);
         grid-template-areas:
-        "img img img"
-        "img img img"
-        "img img img"
-        "n0 n1 n2"
-        "n0 n3 n3"
-        "n4 n3 n3"
-        "n5 n5 n6"
-        "n7 n8 n6"
-        "n9 n9 n10"
+            "img img img"
+            "img img img"
+            "img img img"
+            "n0 n1 n2"
+            "n0 n3 n3"
+            "n4 n3 n3"
+            "n5 n5 n6"
+            "n7 n8 n6"
+            "n9 n9 n10"
             "n9 n9 n10";
-        max-width: 960px;
-        min-width: 300px;
-        gap: 10px;
+        max-width: 75.27%;
+        min-width: 44.06%;
+        gap: 0.73%;
         height: 100vh;
-        margin: 10px;
+        margin-left: 0.73%;
+        margin-top: 1.3%;
     }
 
-    .imgCont{
+    /* Componentes */
+
+    article {
+        border-radius: 1vw;
+        background: white;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        overflow: hidden;
+    }
+
+
+    button {
+        border: none;
+        outline: none;
+    }
+
+    .ant-popover-inner {
+        border-radius: 6px !important;
+    }
+
+    .ant-popover-inner-content {
+        padding: 3px !important;
+    }
+
+        .ant-popover-inner-content p {
+            font-weight: 600 !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+
+    /* Clases de imagenes */
+
+    .imgCont {
         grid-area: img;
         min-width: 300px;
     }
 
-    .imgBomberos{
+    .imgBomberos {
         width: 100%;
-        object-fit:cover;
+        object-fit: cover;
         min-width: 300px;
         border-radius: 10px;
         height: 100%;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
     }
 
-    article{
-        border-radius: 10px;
-        background: white;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-        overflow: hidden;
+    .imgBomberos2 {
+        filter: brightness(0.5);
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
     }
-    .art1{
+
+    /* Clases de Buttons */
+
+    .btnCont {
+        position: absolute;
+        left: 1em;
+        top: 7.5em;
+        display: flex;
+        width: 100%;
+        gap: 10px;
+    }
+
+    /* Clases Art */
+
+    .art1 {
         grid-area: n0;
     }
-    .art2{
+
+    .art2 {
         grid-area: n1;
         background: #fff;
         padding: 18px;
         margin-left: 0;
+        width: 100%;
+        height: 100%;
+        font-size: 1vw;
     }
 
-    .art2 h1{
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-    }
-    .art2 span{
-        margin-top: 10px;
-        font-family: 'Inter', sans-serif;
-        font-size: 15px;
-    }
-
-    .art3{
+    .art3 {
         grid-area: n2;
         background: #262626;
         padding: 18px;
         margin-left: 0;
-    }
-
-    .art3 h1 {
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        color: white;
-    }
-
-    .art3 span {
-        margin-top: 10px;
-        font-family: 'Inter', sans-serif;
-        font-size: 15px;
-        color: white;
+        width: 100%;
+        height: 100%;
+        font-size: 1vw;
     }
 
     .art4 {
         grid-area: n3;
+        background: #ad2102;
+        width: 100%;
+        height: 100%;
     }
 
     .art5 {
@@ -109,50 +145,91 @@
 
     .art8 {
         grid-area: n7;
+        width: 100%;
+        height: 100%;
+    }
+
+    .art9 {
+        width: 100%;
+        height: 100%;
     }
 
     .art11 {
+        width: 100%;
+        max-height: 50%;
         grid-area: n9;
     }
 
-    #mapDiv div:focus-visible{
-        border: none!important;
-        outline: none!important;
+    /* Componentes dentro de Art */
+
+    .art2 h1 {
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        font-size: 3vw;
     }
 
-    /* seccion Bomberos */
+    .art2 span {
+        margin-top: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 1vw;
+    }
 
-    .bomberosArt{
+    .art3 h1 {
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        color: white;
+        font-size: 3vw;
+    }
+
+    .art3 span {
+        margin-top: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        color: white;
+        font-size: 1vw;
+    }
+
+    .art4 button {
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 3vw;
+        width: 3vw;
+        margin: 3px;
+        font-size: 1vw;
+    }
+
+    .art4-cont {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        justify-content: space-between;
+    }
+
+    .art6 h1 {
+        font-size: 3vw;
+    }
+
+    /* Modulo Bomberos */
+
+    .bomberosArt {
         height: 100%;
         position: relative;
+        font-size: 1vw;
     }
 
-        .imgBomberos2 {
-            filter: brightness(0.5);
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-        }
-
-        .bomberosArt h1{
+        .bomberosArt h1 {
             position: absolute;
             left: 0;
             top: 0;
             padding: 15px;
             color: white;
             font-family: 'Inter', sans-serif;
-            font-size: 45px;
+            font-size: 2.5vw;
             font-weight: 900;
-            margin-top: 28px;
-        }
-
-        .btnCont{
-            position: absolute;
-            left: 1em;
-            top: 7.5em;
-            display: flex;
-            width: 100%;
-            gap: 10px;
         }
 
         .bomberosArt button {
@@ -165,34 +242,13 @@
             align-items: center;
         }
 
-        /* .bomberosArt button:hover {
-            filter: invert(1);
-        } */
-        .bomberosArt i{
+        .bomberosArt i {
             color: black;
         }
 
-        button{
-            border: none;
-            outline: none;
-        }
+    /* Modulo Departamentos */
 
-    .ant-popover-inner{
-        border-radius: 6px!important;
-    }
-
-    .ant-popover-inner-content{
-        padding: 3px!important;
-    }
-
-        .ant-popover-inner-content p{
-            font-weight: 600!important;
-            font-family: 'Inter', sans-serif!important;
-        }
-
-    /* seccion Herramientas */
-
-    .btnContA5{
+    .btnContA5 {
         display: flex;
         width: 100%;
         height: 100%;
@@ -200,7 +256,7 @@
         align-items: center;
     }
 
-        .btnContA5 button{
+        .btnContA5 button {
             border-radius: 50%;
             padding: .3em;
             height: 40px;
@@ -210,40 +266,26 @@
             align-items: center;
             background: white;
             margin-top: 2em;
+            height: 3vw;
+            width: 3vw;
+            font-size: 1vw;
         }
 
-        .art5-Title {
-            font-size: 1.5em;
-            position: absolute;
-            left: 0;
-            top: 0;
-            padding: 10px 0 0 16px;
-            font-weight: 700;
-            font-family: 'Inter', sans-serif;
-        }
-
-    .art4{
-        background: #ad2102;
-        display: flex;
-        
+    .art5-Title {
+        font-size: 1.5vw;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 10px 0 0 16px;
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
     }
 
-    .art4 button{
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 42px;
-        width: 42px;
-        margin: 3px;
-    }
+    /* Otros */
 
-    .art4-cont {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        padding: 15px;
-        justify-content: space-between;
+    #mapDiv div:focus-visible {
+        border: none !important;
+        outline: none !important;
     }
 
     .custom-icon {
@@ -262,11 +304,10 @@
 
 <div class="gridContainer">
     <div class="imgCont">
-        <img class="imgBomberos" src="imagenes/bombeross.jpg"/> 
+        <img class="imgBomberos" src="imagenes/bombeross.jpg" />
     </div>
-    
     <article class="art1">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d409.06599683140723!2d-60.018304051505964!3d-34.89319762296309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bea549b89c92c3%3A0xf5d09238b61d6e33!2sBomberos%20de%20Chivilcoy!5e0!3m2!1ses-419!2sar!4v1688997377809!5m2!1ses-419!2sar"  style="border:0!important;outline: 0!important;width: 100%; height: 100%;border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d409.06599683140723!2d-60.018304051505964!3d-34.89319762296309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bea549b89c92c3%3A0xf5d09238b61d6e33!2sBomberos%20de%20Chivilcoy!5e0!3m2!1ses-419!2sar!4v1688997377809!5m2!1ses-419!2sar" style="border:0!important;outline: 0!important;width: 100%; height: 100%;border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </article>
     @* BOMBEROS *@
     <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos/Legajo"); })" style="border-radius: 10px;">
@@ -391,7 +432,7 @@
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; width: 100%;">
-                <h2 style="font-size: 1.5rem;padding: 0;position: inherit;color: white;margin-left: 5px;">
+                <h2 style="font-size: 2.5vw;padding: 0;position: inherit;color: white;margin-left: 5px;">
                     CARGAR SALIDAS
                 </h2>
             </div>
@@ -420,13 +461,14 @@
         <img src="imagenes/herramientas.png" style="margin-right: -26px;" />
     </article>
     <article class="art6" style="background: #2988B4;">
-        <div style="display: flex;padding: 20px;align-items: center;justify-content: space-evenly;height: 100%;">
+        <div style="display: flex;padding-top: 0.6%;padding-left:1.46%;align-items: center;justify-content: space-evenly;height: 100%;">
             <h1 style="color: white;">REPORTES</h1>
             <style>
-                .art6 button{ 
+                .art6 button {
                     border-radius: 50%;
-                    width: 35px;
-                    height: 35px;
+                    width: 2.5vw;
+                    height: 2.5vw;
+                    font-size: 1vw;
                 }
             </style>
             <Popover ContentTemplate="@art6a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
@@ -454,49 +496,50 @@
         </div>
     </article>
     <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })" style="border-radius: 10px;">
-    <article class="art7">
-        <div class="bomberosArt">
-            <img class="imgBomberos2" src="imagenes/bomberosGrid.jpg"/>
-            <h1 style="font-size: 33px; margin-top: 0;">PERSONAL</h1>
-            <i Style="position: absolute; left: 17px; top:53px; color: white;" class="fa-solid fa-user"></i>
-            <p style="position: absolute; left: 38px; top: 48px; color: white; font-family: 'Inter', sans-serif; font-size: 15px;">Ver Personal</p>
-        </div>
-    </article>
+        <article class="art7">
+            <div class="bomberosArt">
+                <img class="imgBomberos2" src="imagenes/bomberosGrid.jpg" />
+                <h1>PERSONAL</h1>
+                <i style="position: absolute;left: 5%;top: 27%;color: white;" class="fa-solid fa-user"></i>
+                <p style="position: absolute; left: 13%; top: 23%; color: white; font-family: 'Inter', sans-serif; font-size: 1.2vw;">Ver Personal</p>
+            </div>
+        </article>
     </a>
     <a @onclick="@(() => { navigationManager.NavigateTo("/unidades"); })" style="border-radius: 10px;">
         <article class="art8">
-            <div class="bomberosArt" style="height: 112px;">
-                <img class="imgBomberos2" style="filter: brightness(0.6);" src="imagenes/moviles.jpg" />
-                <h1 style="font-size: 33px;margin-top: 0;">UNIDADES</h1>
+            <div class="bomberosArt">
+                <img class="imgBomberos2" src="imagenes/moviles.jpg" />
+                <h1>UNIDADES</h1>
                 <img src="imagenes/icons/fire_truck.svg"
                      alt="Camión de Bomberos"
-                     style="width: 15.75px; height: 14px; position: absolute; left: 17px; top: 53px;" />
-                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver unidades</p>
+                     style="width: 5%; height: 14%; position: absolute; left: 7%; top: 50%;" />
+                <p style="position: absolute;left: 13%;top: 45%;color: white;font-family: 'Inter', sans-serif;font-size: 1.2vw;">Ver unidades</p>
             </div>
         </article>
     </a>
     <a @onclick="@(() => { navigationManager.NavigateTo("/incidentes-vehiculos"); })" style="border-radius: 10px;">
         <article class="art9" style="background-color:#2680ac">
-            <div class="bomberosArt" style="height: 112px;">
-                <h1 style="font-size: 33px;margin-top: 0;">FIRMAS</h1>
-                <i style="position: absolute;left: 17px;top: 53px;color: white;" class="fa-sharp fa-solid fa-ship"></i>
-                <p style="position: absolute;left: 38px;top: 48px;color: white;font-family: 'Inter', sans-serif;font-size: 15px;">Ver firmas</p>
+            <div class="bomberosArt">
+                <h1>FIRMAS</h1>
+                <i style="position: absolute;left: 5%;top: 50%;color: white;" class="fa-sharp fa-solid fa-ship"></i>
+                <p style="position: absolute;left: 13%;top: 45%;color: white;font-family: 'Inter', sans-serif;font-size: 1.2vw;">Ver firmas</p>
             </div>
         </article>
     </a>
 
     @* ETICA *@
-    <article class="art11" style="background-color:#952929;margin-bottom: 110px !important;margin-top: 15px !important">
-        <div style="display: flex;padding: 20px;justify-content: space-evenly;height: 100%;">
-            <h1 style="color: white;">ÉTICA</h1>
+    <article class="art11" style="background-color:#952929;margin-bottom: 15% !important;margin-top: 0 !important">
+        <div style="display: flex;padding: 5%;justify-content: space-evenly;height: 100%;">
+            <h1 style="color: white; font-size: 3vw;">ÉTICA</h1>
             <style>
                 .art11 button {
                     border-radius: 50%;
-                    width: 35px;
-                    height: 35px;   
+                    width: 2.5vw;
+                    height: 2.5vw;
+                    font-size: 1vw;
                 }
             </style>
-            <div style="gap: 10px;justify-content: center;display: flex;margin-top: 10px !important;">
+            <div style="gap: 10px;justify-content: center;display: flex;margin-top: 3% !important;">
                 <Popover ContentTemplate="@art7c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                     <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
                         <i class="fa-solid fa-user-xmark"></i>
@@ -600,7 +643,7 @@
     @<div>
         <p>Deposito</p>
     </div>;
-    
+
     // art 6
     private RenderFragment art6a =
     @<div>
