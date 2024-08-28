@@ -430,7 +430,7 @@
                         Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
                         BomberoSalida BomSalida = new()
                             {
-                                Salio = bom.Salio,
+                                MovilAsignado = bom.MovilAsignado,
                                 Bombero = bomberoSalida
                             };
                         salidaIncendioVehicular.CuerpoParticipante.Add(BomSalida);

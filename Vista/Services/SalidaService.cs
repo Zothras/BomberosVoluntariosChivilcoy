@@ -47,7 +47,7 @@ namespace Vista.Services
                     if (bomberoSalida == null) break;
                     BomberoSalida BomSalida = new()
                     {
-                        Salio = bom.Salio,
+                        MovilAsignado = bom.MovilAsignado,
                         Bombero = bomberoSalida.Bombero,
                     };
                     bomberossalida.Add(BomSalida);

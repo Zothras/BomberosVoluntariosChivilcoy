@@ -484,7 +484,7 @@
             {
                 BomberoSalidaViewModels b = new()
                     {
-                        Salio = bomberoSalidaView.Salio,
+                        MovilAsignado = bomberoSalidaView.MovilAsignado,
                         Nombre = bom.Nombre,
                         Apellido = bom.Apellido,
                         NumeroLegajo = BomberoCuerpo
@@ -628,7 +628,7 @@
                 Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
                 BomberoSalida BomSalida = new()
                     {
-                        Salio = bom.Salio,
+                        MovilAsignado = bom.MovilAsignado,
                         Grado = bom.Grado,
                         Bombero = bomberoSalida
                     };

@@ -225,7 +225,6 @@
         </FormItem>
         <Checkbox @bind-Checked="chekB"> Salió</Checkbox>
         <br />
-        <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
         <br />
         <div>
             <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
@@ -400,7 +399,7 @@
                 Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
                 BomberoSalida BomSalida = new()
                     {
-                        Salio = bom.Salio,
+                        MovilAsignado = bom.MovilAsignado,
                         Grado = bom.Grado,
                         Bombero = bomberoSalida
                     };
@@ -542,33 +541,11 @@
         StateHasChanged();
     }
 
-    public async Task AgregarCuerpoParticipante()
-    {
-        var boberos = await Context.Bomberos.ToArrayAsync();
-        foreach (var bom in boberos)
-        {
-            if (bom.NumeroLegajo == BomberoCuerpo)
-            {
-                BomberoSalidaViewModels b = new()
-                    {
-                        Salio = bomberoSalidaView.Salio,
-                        Nombre = bom.Nombre,
-                        Apellido = bom.Apellido,
-                        NumeroLegajo = BomberoCuerpo
-                    };
-                bomberosSalida.Add(b);
-
-            }
-        }
-        StateHasChanged();
-
-    }
     protected override async Task OnInitializedAsync()
     {
-
         await Init();
-
     }
+
     private async Task Init()
     {
         AnimalViewModel = new();

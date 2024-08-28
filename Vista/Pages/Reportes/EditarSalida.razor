@@ -241,9 +241,6 @@
 
         @foreach (BomberoSalida cp in salidasViewModel.CuerpoParticipante)
         {
-
-
-
             <FormItem Label="Cuerpo Participante">
                 <Select TItem="BomberoViweModel"
                         TItemValue="int"
@@ -261,14 +258,6 @@
                         OnSearch="OnSearch">
                 </Select>
             </FormItem>
-            //traer datos de cada bombero
-            <FormItem Label="¿Salio Bombero?">
-                <Switch @bind-Value="@cp.Salio" CheckedChildren="Salio" UnCheckedChildren="No Salio" />@*Tengo un problema y este componente no se puede usar con lista sino con variales solas*@
-            </FormItem>
-
-
-
-
         }
 
         <FormItem Label="¿Quien lleno la planilla?">
@@ -1797,15 +1786,12 @@
                 Superficie = factorClimaticoViewModel.Superficie,
                 DetalleSuperficieDañada = factorClimaticoViewModel.DetalleSuperficieDañada
 
-            
-
-
         };
         foreach (BomberoSalida bom in salidasViewModel.CuerpoParticipante)
         {
             BomberoSalida BomSalida = new()
                 {
-                    Salio = bom.Salio,
+                    MovilAsignado = bom.MovilAsignado,
                     Grado = bom.Grado,
                     Bombero = bom.Bombero
                 };
@@ -1943,7 +1929,7 @@
         {
             BomberoSalida BomSalida = new()
                 {
-                    Salio = bom.Salio,
+                    MovilAsignado = bom.MovilAsignado,
                     Grado = bom.Grado,
                     Bombero = bom.Bombero
                 };
@@ -2100,7 +2086,7 @@
         {
             BomberoSalida BomSalida = new()
                 {
-                    Salio = bom.Salio,
+                    MovilAsignado = bom.MovilAsignado,
                     Grado = bom.Grado,
                     Bombero = bom.Bombero
                 };
@@ -2236,7 +2222,7 @@
         {
             BomberoSalida BomSalida = new()
                 {
-                    Salio = bom.Salio,
+                    MovilAsignado = bom.MovilAsignado,
                     Grado = bom.Grado,
                     Bombero = bom.Bombero
                 };
@@ -2370,7 +2356,7 @@
         {
             BomberoSalida BomSalida = new()
                 {
-                    Salio = bom.Salio,
+                    MovilAsignado = bom.MovilAsignado,
                     Grado = bom.Grado,
                     Bombero = bom.Bombero
                 };

@@ -120,7 +120,6 @@
             </ActionColumn>
         </Table>
     </div>
-        <Button OnClick="@AgregarDamnificado">Agregar damnificado</Button>
     }
     @*Solicitante datos*@
     <b><label>Datos de solicitante</label></b>
@@ -232,7 +231,6 @@
     </FormItem>
     <Checkbox @bind-Checked="chekB"> Salió</Checkbox>
     <br />
-    <Button OnClick="@AgregarCuerpoParticipante">Cargar cuerpo participante</Button>
     <br />
     <div>
         <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
@@ -536,7 +534,7 @@
                 Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
                 BomberoSalida BomSalida = new()
                     {
-                        Salio = bom.Salio,
+                        MovilAsignado = bom.MovilAsignado,
                         Grado = bom.Grado,
                         Bombero = bomberoSalida
                     };
@@ -658,45 +656,6 @@
 
             };
         MovilesSalidasL.Add(m);
-        StateHasChanged();
-    }
-
-    public async Task AgregarCuerpoParticipante()
-    {
-        var boberos = await Context.Bomberos.ToArrayAsync();
-        foreach (var bom in boberos)
-        {
-            if (bom.NumeroLegajo == BomberoCuerpo)
-            {
-                BomberoSalidaViewModels b = new()
-                    {
-                        Salio = bomberoSalidaView.Salio,
-                        Nombre = bom.Nombre,
-                        Apellido = bom.Apellido,
-                        NumeroLegajo = BomberoCuerpo
-                    };
-                bomberosSalida.Add(b);
-
-            }
-        }
-        StateHasChanged();
-
-    }
-
-    public async void AgregarDamnificado()
-    {
-        DamnificadoViewModels dp = new()
-            {
-                Nombre = damnificado.Nombre,
-                Apellido = damnificado.Apellido,
-                Dni = damnificado.Dni,
-                Sexo = damnificado.Sexo,
-                LugarDeNacimiento = damnificado.LugarDeNacimiento,
-                Edad = damnificado.Edad,
-                Estado = damnificado.Estado,
-
-            };
-        DamnificadosSalida.Add(dp);
         StateHasChanged();
     }
 

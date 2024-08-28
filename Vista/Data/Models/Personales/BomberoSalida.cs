@@ -8,7 +8,7 @@ namespace Vista.Data.Models.Personales
     {
         public int BomberoSalidaId { get; set; }
 
-        public bool Salio { get; set; }
+        public MovilSalida? MovilAsignado { get; set; }
         public EscalafonJerarquico Grado { get; set; }
 
         public int PersonaId { get; set; }

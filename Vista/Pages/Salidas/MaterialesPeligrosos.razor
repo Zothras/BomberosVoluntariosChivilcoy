@@ -477,7 +477,7 @@
                 Bombero? bomberoSalida = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == bom.NumeroLegajo);
                 BomberoSalida BomSalida = new()
                     {
-                        Salio = bom.Salio,
+                        MovilAsignado = bom.MovilAsignado,
                         Bombero = bomberoSalida,
                         Grado = bomberoSalida.Grado
                     };

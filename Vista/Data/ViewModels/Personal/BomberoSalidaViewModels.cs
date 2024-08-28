@@ -1,11 +1,12 @@
 ﻿using Vista.Data.Enums;
+using Vista.Data.Models.Personales;
 
 namespace Vista.Data.ViewModels.Personal
 {
     public class BomberoSalidaViewModels
     {
 
-        public bool Salio { get; set; }
+        public MovilSalida? MovilAsignado { get; set; }
         public EscalafonJerarquico Grado { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
