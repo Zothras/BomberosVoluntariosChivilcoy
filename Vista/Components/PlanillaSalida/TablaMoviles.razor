@@ -1,0 +1,25 @@
+﻿@using Vista.Data.ViewModels.Personal;
+
+<table>
+    <thead>
+        <tr>
+            <th>MOVIL</th>
+            <th>KM LLEGADA</th>
+            <th>CHOFER</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Movil in movilesSalida)
+        {
+            <tr>
+                <td>@Movil.Movil.NumeroMovil</td>
+                <td>@Movil.KmLlegada</td>
+                <td>@Movil.Chofer</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public List<MovilSalida> movilesSalida { get; set; } 
+}

@@ -5,6 +5,10 @@
 @using System;
 @using System.Globalization;
 @inject NavigationManager navigationManager
+@inject IJSRuntime JSRuntime
+
+@*Componentes Utilizados - HTML Puro*@
+@using Vista.Components.PlanillaSalida;
 
 <!DOCTYPE html>
 <html lang="es-ES">
@@ -173,7 +177,7 @@
                     <h3>PLANILLA DE INTERVENCION</h3>
                     <br>
                     <h3 style="font-size: 1.3em;">NRO: </h3>
-                    <h1 style="font-size: 2.8em;display: inline-block;position: absolute;top: 24px;right: 20px;">@IntervencionVM.NumeroParte/@año</h1>
+                    <h1 style="font-size: 2.8em;display: inline-block;position: absolute;top: 24px;right: 20px;">@IntervencionVM.NumeroParte/@IntervencionVM.AnioSalida</h1>
                 </div>
             </div>
         </div>
@@ -184,7 +188,7 @@
         <div class="sec2-contenedor">
             <div>
                 <ul>
-                    <li style="display: inline-block;">FECHA: @IntervencionVM.Fecha.Date</li>
+                    <li style="display: inline-block;">FECHA: @IntervencionVM.FechaImprimir</li>
                     <li style="display: inline-block; margin-left: 8.5em;"> Día: @IntervencionVM.DiaDeLaSemana </li>
                     <li>AVISADO POR: @IntervencionVM.AvisadoPor </li>
                     <li>RECEPCIONADO POR: @IntervencionVM.Recepcionista</li>
@@ -215,22 +219,10 @@
             </p>
         </div>
         <div>
-            <table>
-                <thead>
-                    <tr>
-                        <td>MOVIL</td>
-                        <td>KM LLEGADA</td>
-                        <td>CHOFER</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
+            {
+                <TablaMoviles movilesSalida="@IntervencionVM.movilesSalida"></TablaMoviles>
+            }
         </div>
     </div>
     <!-- seccion 3  -->
@@ -320,7 +312,7 @@
     public class IntervencionViewModel
     {
         public DateTime Fecha { get; set; }
-
+        public string FechaImprimir => Fecha.ToString("d");
         public string DiaDeLaSemana => Fecha.ToString("dddd", new CultureInfo("es-ES"));
 
         public string AvisadoPor { get; set; }
@@ -344,6 +336,7 @@
         public string GraduadoApellido { get; set; }
 
         public int NumeroParte { get; set; }
+        public int AnioSalida { get; set; }
 
         public string Recepcionista { get; set; }
 
@@ -352,13 +345,13 @@
         public TipoZona Zona { get; set; }
 
         public string Lugar { get; set; }
+
+        public List<MovilSalida> movilesSalida { get; set; }
     }
 
     BomberosDbContext Context { get; set; }
 
     IntervencionViewModel IntervencionVM { get; set; } = new();
-
-    int año = DateTime.Now.Year;
 
     private async Task Init()
     {
@@ -391,8 +384,10 @@
             IntervencionVM.GraduadoNombre = encargado.Nombre;
             IntervencionVM.GraduadoApellido = encargado.Apellido;
             IntervencionVM.NumeroParte = salida.NumeroParte;
-            IntervencionVM.Recepcionista = salida.ReceptorBombero != null ? salida.ReceptorBombero.Nombre + salida.ReceptorBombero.Apellido : "No se registro recepcionista.";
+            IntervencionVM.AnioSalida = salida.AnioNumeroParte;
+            IntervencionVM.Recepcionista = salida.NombreYApellidoReceptor ?? "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
+
             if (salida is Incendio incendio)
             {
                 IntervencionVM.Causa = incendio.SuperficieAfectadaCausa;
@@ -402,7 +397,17 @@
             {
                 IntervencionVM.Lugar = "" + (salida as dynamic).TipoLugar;
             }
+
             IntervencionVM.Zona = salida.TipoZona;
+
+            if (salida.Moviles != null && salida.Moviles.Any())
+            {
+                IntervencionVM.movilesSalida = salida.Moviles.ToList();
+            }
+            else
+            {
+                IntervencionVM.movilesSalida = new List<MovilSalida>(); // Asignar una lista vacía si no hay elementos
+            }
         }
     }
 
@@ -415,7 +420,7 @@
     {
         if (firstRender)
         {
-            navigationManager.NavigateTo("javascript:window.print()");
+            await JSRuntime.InvokeVoidAsync("window.print");
         }
     }
 }
