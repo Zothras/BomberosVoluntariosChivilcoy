@@ -66,6 +66,13 @@
     .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content:hover, .xd4 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content span i {
         color: rgb(230, 230, 230) !important;
     }
+        .xd5 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content:hover, .xd5 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content span i {
+        color: rgb(230, 230, 230) !important;
+    }
+
+    .xd5 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content:hover, .xd5 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-title-content span i {
+        color: rgb(230, 230, 230) !important;
+    }
 
     /* /arrows/ */
     .xd .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
@@ -87,6 +94,16 @@
         .xd4.ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow:hover {
             color: rgb(230, 230, 230) !important;
         }
+
+        .xd5 .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
+        color: rgb(230, 230, 230) !important;
+
+        }
+                .xd5.ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow:hover {
+            color: rgb(230, 230, 230) !important;
+        }
+
+
 
     a.nav-link::before {
         margin-left: 8px !important;
@@ -310,13 +327,13 @@
                 </MenuItem>
                 <MenuItem Key="9" Icon="container">
                     <IconTemplate>
-                        <i class="fa-solid fa-user icoSelected" style="color:#263040;"></i>
+                        <i class="fa-solid fa-people-group" style="color:#263040;"></i>
                     </IconTemplate>
                     <ChildContent>
                         <li class="nav-item"><a class="nav-link" href="/bomberos">Personal</a></li>
                     </ChildContent>
                 </MenuItem>
-                <MenuItem Key="11">
+                <MenuItem Key="8">
                     <IconTemplate>
                         <i class=" fa-solid fa-scroll" style="color: #263040;padding-right: 6px;"></i>
                     </IconTemplate>
@@ -324,6 +341,7 @@
                         <li class="nav-item"><a class="nav-link" href="/incidentes-vehiculos">Firmas</a></li>
                     </ChildContent>
                 </MenuItem>
+
                  <SubMenu class="xd" Key="sub1" Title="Salidas" TitleTemplate=@sub2Title Id="salidas">
                      <a @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
                          <MenuItem Key="02" Title=@("Materiales peligrosos")>
@@ -442,16 +460,16 @@
                          </MenuItem>
                      </a>
                  </SubMenu>
-                <SubMenu class="xd" Key="sub8" Title="Ética" TitleTemplate=@sub8Title>
+                <SubMenu class="xd5" Key="sub8" Title="Ética" TitleTemplate=@sub8Title>
                     <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
-                        <MenuItem Key="16" Title=@("Sanciones")>
+                        <MenuItem Key="26" Title=@("Sanciones")>
                             <IconTemplate>
                                 <i class="fa-solid fa-user-xmark"></i>
                             </IconTemplate>
                         </MenuItem>
                     </a>
                     <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
-                        <MenuItem Key="17" Title=@("Ascensos")>
+                        <MenuItem Key="27" Title=@("Ascensos")>
                             <IconTemplate>
                                 <i class="fa-solid fa-user-plus"></i>
                             </IconTemplate>
