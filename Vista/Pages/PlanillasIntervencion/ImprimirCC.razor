@@ -313,7 +313,15 @@
     {
         public DateTime Fecha { get; set; }
         public string FechaImprimir => Fecha.ToString("d");
-        public string DiaDeLaSemana => Fecha.ToString("dddd", new CultureInfo("es-ES"));
+
+        public string DiaDeLaSemana
+        {
+            get
+            {
+                var diaSemana = Fecha.ToString("dddd", new CultureInfo("es-ES"));
+                return char.ToUpper(diaSemana[0]) + diaSemana.Substring(1);
+            }
+        }
 
         public string AvisadoPor { get; set; }
 
@@ -376,8 +384,8 @@
             var encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.EncargadoId);
 
             IntervencionVM.Fecha = salida.HoraSalida.Date;
-            IntervencionVM.HoraSalida = "" + salida.HoraSalida.TimeOfDay;
-            IntervencionVM.HoraLlegada = "" + salida.HoraLlegada.TimeOfDay;
+            IntervencionVM.HoraSalida = salida.HoraSalida.ToString(@"HH\:mm\:ss");
+            IntervencionVM.HoraLlegada = salida.HoraLlegada.ToString(@"HH\:mm\:ss");
             IntervencionVM.AvisadoPor = salida.NombreSolicitante + "," + salida.ApellidoSolicitante;
             IntervencionVM.NombreConfecciono = quienlleno.Nombre;
             IntervencionVM.ApellidoConfecciono = quienlleno.Apellido;
