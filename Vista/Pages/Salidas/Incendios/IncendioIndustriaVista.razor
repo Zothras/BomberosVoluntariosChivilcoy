@@ -207,7 +207,7 @@
             }
             @if (_visible1 == true)
             {
-                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+                <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
             }
         </div>
     </div>
@@ -230,27 +230,19 @@
     Bombero[] TodosBomberos;
     Movil[] Moviles;
 
-    @*Sin Uso*@
-    //bool switchValueS { get; set; }
-    //bool chek { get; set; }
-    bool _visible1;
 
+    //Impresion Planilla
+    bool _visible1;
+    public int ImprimirAnio;
     public int ImprimirNumeroParte;
-    void HandleOk1(int _numeroParte)
+
+    void HandleOk1(int _anio, int _numeroParte)
     {
+        ImprimirAnio = _anio;
         ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
     }
-
-
-    @*Damnificados | Bomberos | Moviles y Chofer | Steps *@
-
-    @*Damnificados*@
-    bool switchValue { get; set; }// Cargar Damnificado [Si/No]
-
-    @*Metodo*@
-
-
+    
     @*Bomberos*@
     int BomberoReceptor;// Falta info..
 
@@ -478,7 +470,7 @@
                         salidaIncendioIndustria.Damnificados.Add(damn);
                     }
                     await SalidaService.CargarSalida(salidaIncendioIndustria);
-                    HandleOk1(salidaIncendioIndustria.NumeroParte);
+                    HandleOk1(salidaIncendioIndustria.AnioNumeroParte, salidaIncendioIndustria.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");

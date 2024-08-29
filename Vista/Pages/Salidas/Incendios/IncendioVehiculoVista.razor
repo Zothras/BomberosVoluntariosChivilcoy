@@ -201,7 +201,7 @@
             }
             @if (_visible1 == true)
             {
-                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+                <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
             }
         </div>
     </div>
@@ -234,14 +234,17 @@
         StateHasChanged();
     }
 
+    //Impresion - Planilla
+
     public int ImprimirNumeroParte;
-    void HandleOk1(int _numeroParte)
+    public int ImprimirAnio;
+
+    void HandleOk1(int _anio, int _numeroParte)
     {
+        ImprimirAnio = _anio;
         ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
     }
-
-    @*Damnificados | Bomberos | Moviles y Chofer | Steps *@
 
     @*Damnificados*@
     bool switchValue { get; set; }// Cargar Damnificado [Si/No]
@@ -486,7 +489,7 @@
                         salidaIncendioVehicular.Damnificados.Add(damn);
                     }
                     await SalidaService.CargarSalida(salidaIncendioVehicular);
-                    HandleOk1(salidaIncendioVehicular.NumeroParte);
+                    HandleOk1(salidaIncendioVehicular.AnioNumeroParte, salidaIncendioVehicular.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");

@@ -208,7 +208,7 @@
         }
         @if (_visible1 == true)
         {
-            <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+            <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
         }
     </div>
 </Form>
@@ -265,9 +265,14 @@
         animationClass = "slick-contenedor-D";
     }
 
+    //Planilla
+
     public int ImprimirNumeroParte;
-    void HandleOk1(int _numeroParte)
+    public int ImprimirAnio;
+
+    void HandleOk1(int _anio, int _numeroParte)
     {
+        ImprimirAnio = _anio;
         ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
     }
@@ -430,7 +435,7 @@
                         salidaIncendioEstabPublico.Damnificados.Add(damn);
                     }
                     await SalidaService.CargarSalida(salidaIncendioEstabPublico);
-                    HandleOk1(salidaIncendioEstabPublico.NumeroParte);
+                    HandleOk1(salidaIncendioEstabPublico.AnioNumeroParte, salidaIncendioEstabPublico.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");

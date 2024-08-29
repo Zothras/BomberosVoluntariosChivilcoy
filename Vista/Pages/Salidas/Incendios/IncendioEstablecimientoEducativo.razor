@@ -208,7 +208,7 @@
         }
         @if (_visible1 == true)
         {
-            <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+            <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
         }
     </div>
 </Form>
@@ -283,8 +283,11 @@
     }
 
     public int ImprimirNumeroParte;
-    void HandleOk1(int _numeroParte)
+    public int ImprimirAnio;
+
+    void HandleOk1(int _anio, int _numeroParte)
     {
+        ImprimirAnio = _anio;
         ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
     }
@@ -430,7 +433,7 @@
                         salidaIncendioEducativo.Damnificados.Add(damn);
                     }
                     await SalidaService.CargarSalida(salidaIncendioEducativo);
-                    HandleOk1(salidaIncendioEducativo.NumeroParte);
+                    HandleOk1(salidaIncendioEducativo.AnioNumeroParte, salidaIncendioEducativo.NumeroParte);
                     await Init();
                     StateHasChanged();
                     await message.Success("Salida agregada correctamente");
