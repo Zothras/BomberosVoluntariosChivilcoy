@@ -18,6 +18,11 @@ namespace Vista.Data.Models.Personales
         public string? QuienLleno { get; set; }
         public string? TelefonoQuienLleno { get; set; }
         public DotacionesSalidas DotacionSalida { get; set; }
+        
+        // Relación con Salida
+        public int SalidaId { get; set; }  // Clave foránea
+        public Salida Salida { get; set; } // Navegación
+
         public int PersonaId { get; set; }
         [ForeignKey(nameof(PersonaId))]
         public Bombero? Chofer { get; set; }

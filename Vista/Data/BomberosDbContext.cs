@@ -237,6 +237,12 @@ namespace Vista.Data
                 .WithOne(dc => dc.ServicioEspecial)
                 .HasForeignKey<DatosCapacitacion>(dc => dc.DatosCapacitacionId);
 
+            // Configuración de la relación uno a muchos entre Salida y MovilSalida
+            modelBuilder.Entity<MovilSalida>()
+                .HasOne(ms => ms.Salida)
+                .WithMany(s => s.Moviles)
+                .HasForeignKey(ms => ms.SalidaId);
+
             // Enum
             modelBuilder
                 .Entity<Persona>()
