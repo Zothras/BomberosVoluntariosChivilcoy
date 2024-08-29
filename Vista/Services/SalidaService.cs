@@ -32,59 +32,81 @@ namespace Vista.Services
         {
             try
             {
-                Bombero? bomberoEncargado = await _context.Bomberos.Where(b => b.NumeroLegajo == salida.Encargado.NumeroLegajo).SingleOrDefaultAsync();
-                Bombero? BomberoLlenoPlanilla = await _context.Bomberos.Where(b => b.NumeroLegajo == salida.QuienLleno.NumeroLegajo).SingleOrDefaultAsync();
-                Bombero? bomberoReceptor = salida.ReceptorBombero != null ? await _context.Bomberos.Where(b => b.NumeroLegajo == salida.ReceptorBombero.NumeroLegajo).SingleOrDefaultAsync() : null;
+                // Cargar datos de los bomberos
+                var bomberoEncargado = await _context.Bomberos
+                    .SingleOrDefaultAsync(b => b.NumeroLegajo == salida.Encargado.NumeroLegajo);
+                var bomberoLlenoPlanilla = await _context.Bomberos
+                    .SingleOrDefaultAsync(b => b.NumeroLegajo == salida.QuienLleno.NumeroLegajo);
+                var bomberoReceptor = salida.ReceptorBombero != null
+                    ? await _context.Bomberos
+                        .SingleOrDefaultAsync(b => b.NumeroLegajo == salida.ReceptorBombero.NumeroLegajo)
+                    : null;
+
                 salida.ReceptorBombero = bomberoReceptor;
                 salida.Encargado = bomberoEncargado;
-                salida.QuienLleno = BomberoLlenoPlanilla;
+                salida.QuienLleno = bomberoLlenoPlanilla;
 
-                //Cuerpo participante
-                List<BomberoSalida> bomberossalida = new List<BomberoSalida>();
-                foreach (BomberoSalida bom in salida.CuerpoParticipante)
+                // Procesar cuerpo participante
+                var bomberossalida = new List<BomberoSalida>();
+                foreach (var bom in salida.CuerpoParticipante)
                 {
-                    BomberoSalida? bomberoSalida = await _context.BomberosSalida.Where(b => b.BomberoSalidaId == bom.BomberoSalidaId).SingleOrDefaultAsync();
-                    if (bomberoSalida == null) break;
-                    BomberoSalida BomSalida = new()
+                    var bomberoSalida = await _context.BomberosSalida
+                        .SingleOrDefaultAsync(b => b.BomberoSalidaId == bom.BomberoSalidaId);
+                    if (bomberoSalida == null) continue;
+
+                    var bomSalida = new BomberoSalida
                     {
                         MovilAsignado = bom.MovilAsignado,
-                        Bombero = bomberoSalida.Bombero,
+                        Bombero = bomberoSalida.Bombero
                     };
-                    bomberossalida.Add(BomSalida);
+                    bomberossalida.Add(bomSalida);
                 }
                 salida.CuerpoParticipante = bomberossalida;
 
-                //Moviles
-                List<MovilSalida> movilessalida = new List<MovilSalida>();
-                foreach (MovilSalida m in salida.Moviles)
+                // Procesar móviles
+                var movilessalida = new List<MovilSalida>();
+                if (salida.Moviles != null && salida.Moviles.Any())
                 {
-                    Bombero? bomberoChofer = await _context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
-                    Movil? Movilsalida = await _context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
-                    if (bomberoChofer == null || Movilsalida == null) break;
-                    Movilsalida.Kilometraje = m.KmLlegada;
-                    MovilSalida movilS = new()
+                    foreach (var m in salida.Moviles)
                     {
-                        CargoCombustible = m.CargoCombustible,
-                        NumeroFactura = m.NumeroFactura,
-                        FechaFactura = m.FechaFactura,
-                        TipoConbustible = m.TipoConbustible,
-                        CantidadLitros = m.CantidadLitros,
-                        QuienLleno = m.QuienLleno,
-                        TelefonoQuienLleno = m.TelefonoQuienLleno,
-                        KmLlegada = m.KmLlegada,
-                        Chofer = bomberoChofer,
-                        Movil = Movilsalida
-                    };
-                    movilessalida.Add(movilS);
+                        var bomberoChofer = await _context.Bomberos
+                            .SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
+                        var movilsalida = await _context.Moviles
+                            .SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
+
+                        if (bomberoChofer == null || movilsalida == null) continue;
+
+                        movilsalida.Kilometraje += m.KmLlegada; // Actualizar el kilometraje
+
+                        var movilS = new MovilSalida
+                        {
+                            CargoCombustible = m.CargoCombustible,
+                            NumeroFactura = m.NumeroFactura,
+                            FechaFactura = m.FechaFactura,
+                            TipoConbustible = m.TipoConbustible,
+                            CantidadLitros = m.CantidadLitros,
+                            QuienLleno = m.QuienLleno,
+                            TelefonoQuienLleno = m.TelefonoQuienLleno,
+                            KmLlegada = m.KmLlegada,
+                            Chofer = bomberoChofer,
+                            Movil = movilsalida,
+                            SalidaId = salida.SalidaId // Asignar el ID de la salida
+                        };
+                        _context.MovilesSalida.Add(movilS); // Agregar al contexto
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: Error al cargar los moviles de salida. (¿Son Nulos?)");
                 }
                 salida.Moviles = movilessalida;
 
-                //Damnificados
-                List<Damnificado> damnificadossalida = new List<Damnificado>();
-                foreach (Damnificado d in salida.Damnificados)
-                {
 
-                    Damnificado damn = new()
+                // Procesar damnificados
+                var damnificadossalida = new List<Damnificado>();
+                foreach (var d in salida.Damnificados)
+                {
+                    var damn = new Damnificado
                     {
                         Nombre = d.Nombre,
                         Apellido = d.Apellido,
@@ -92,12 +114,13 @@ namespace Vista.Services
                         Sexo = d.Sexo,
                         LugarDeNacimiento = d.LugarDeNacimiento,
                         Edad = d.Edad,
-                        Estado = d.Estado,
+                        Estado = d.Estado
                     };
                     damnificadossalida.Add(damn);
                 }
                 salida.Damnificados = damnificadossalida;
 
+                // Agregar la salida al contexto y guardar cambios
                 _context.Set<T>().Add(salida);
                 await _context.SaveChangesAsync();
                 return salida;
