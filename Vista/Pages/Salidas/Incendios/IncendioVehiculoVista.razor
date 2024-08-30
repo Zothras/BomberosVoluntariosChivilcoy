@@ -139,13 +139,13 @@
                 @*General*@
                 <DatosGenerales Model="@salidaIncendioVehicularView"
                                 animationClass="@animationClass"
-                                esSoloDireccion="true"/>
+                                esSoloDireccion="true" />
             }
             else if (current == 1)
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioVehicularView"
-                           animationClass="@animationClass" />
+                               animationClass="@animationClass" />
             }
             else if (current == 2)
             {
@@ -439,28 +439,46 @@
                         salidaIncendioVehicular.CuerpoParticipante.Add(BomSalida);
                     }
 
-                    foreach (MovilSalidaViewModels m in MovilesSalidasL)
+                    // Moviles
+                    if (salidaIncendioVehicularView.Moviles != null && salidaIncendioVehicularView.Moviles.Any())
                     {
-                        Bombero? bomberoChofer = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
-                        Movil? Movilsalida = await Context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil);
-                        if (Movilsalida is not null)
+                        // Crear una lista para los móviles de salida
+                        var movilessalida = new List<MovilSalida>();
+
+                        foreach (var m in salidaIncendioVehicularView.Moviles)
                         {
-                            Movilsalida.Kilometraje = m.KmLlegada;
-                        }
-                        MovilSalida movilS = new()
+                            // Obtener el bombero chofer y el móvil desde la base de datos
+                            var bomberoChofer = await Context.Bomberos
+                                .SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
+                            var movilsalida = await Context.Moviles
+                                .SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
+
+                            // Actualizar el kilometraje del móvil
+                            if (movilsalida != null)
                             {
-                                CargoCombustible = m.CargoCombustible,
-                                NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                                FechaFactura = movilSalidaViewModels.FechaFactura,
-                                TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                                CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                                QuienLleno = movilSalidaViewModels.QuienLleno,
-                                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                                KmLlegada = m.KmLlegada,
-                                Chofer = bomberoChofer,
-                                Movil = Movilsalida
-                            };
-                        salidaIncendioVehicular.Moviles.Add(movilS);
+                                movilsalida.Kilometraje = m.KmLlegada;
+                            }
+
+                            // Crear una nueva instancia de MovilSalida y agregarla a la lista
+                            var movilS = new MovilSalida
+                                {
+                                    CargoCombustible = m.CargoCombustible,
+                                    NumeroFactura = movilSalidaViewModels.NumeroFactura,
+                                    FechaFactura = movilSalidaViewModels.FechaFactura,
+                                    TipoConbustible = movilSalidaViewModels.TipoConbustible,
+                                    CantidadLitros = movilSalidaViewModels.CantidadLitros,
+                                    QuienLleno = movilSalidaViewModels.QuienLleno,
+                                    TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
+                                    KmLlegada = m.KmLlegada,
+                                    Chofer = bomberoChofer,
+                                    Movil = movilsalida
+                                };
+
+                            movilessalida.Add(movilS);
+                        }
+
+                        // Asignar la lista de móviles a la salida
+                        salidaIncendioVehicular.Moviles = movilessalida;
                     }
 
                     VehiculoDamnificado AgregarVehiculo = new()
@@ -507,7 +525,7 @@
         }
     }
 
-    
+
 
     //OnFinishFailed
     private void OnFinishFailed(EditContext editContext)
