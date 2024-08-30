@@ -43,12 +43,12 @@ namespace Vista.Services
                 List<BomberoSalida> bomberossalida = new List<BomberoSalida>();
                 foreach (BomberoSalida bom in salida.CuerpoParticipante)
                 {
-                    BomberoSalida? bomberoSalida = await _context.BomberosSalida.Where(b => b.BomberoSalidaId == bom.BomberoSalidaId).SingleOrDefaultAsync();
-                    if (bomberoSalida == null) break;
+                    Bombero? bomberoSalida = await _context.Bomberos.Where(b => b.NumeroLegajo == bom.Bombero.NumeroLegajo).SingleOrDefaultAsync();
+                    Movil? movilSalio = await _context.Moviles.Where(m => m.NumeroMovil == bom.MovilAsignado.NumeroMovil).SingleOrDefaultAsync();
                     BomberoSalida BomSalida = new()
                     {
-                        MovilAsignado = bom.MovilAsignado,
-                        Bombero = bomberoSalida.Bombero,
+                        MovilAsignado = movilSalio,
+                        Bombero = bomberoSalida
                     };
                     bomberossalida.Add(BomSalida);
                 }

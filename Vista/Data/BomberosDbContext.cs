@@ -243,6 +243,12 @@ namespace Vista.Data
                 .WithMany(s => s.Moviles)
                 .HasForeignKey(ms => ms.SalidaId);
 
+            // Configuración de la relación uno a muchos entre Salida y BomberoSalida
+            modelBuilder.Entity<BomberoSalida>()
+                .HasOne(bs => bs.Salida)
+                .WithMany(s => s.CuerpoParticipante) // Asegúrate de que Salida tenga una colección BomberosSalidas
+                .HasForeignKey(bs => bs.SalidaId);
+
             // Enum
             modelBuilder
                 .Entity<Persona>()
