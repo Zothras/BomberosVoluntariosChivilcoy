@@ -77,19 +77,6 @@
             font-size: 3em;
         }
 
-        thead tr td {
-            border: 1px solid black;
-            font-weight: bold;
-        }
-
-        table {
-            text-align: center;
-        }
-
-            table td {
-                padding: 0 1.5em;
-            }
-
         /* seccion 2*/
         .sec2-contenedor {
             margin-left: 20px;
@@ -193,7 +180,7 @@
                     <li>AVISADO POR: @IntervencionVM.AvisadoPor </li>
                     <li>RECEPCIONADO POR: @IntervencionVM.Recepcionista</li>
                     <li>TIPO SERVICIO: @IntervencionVM.TipoServicio</li>
-                    <li>DIRECCION: </li>
+                    <li>DIRECCION: @IntervencionVM.Direccion</li>
                     <li>JEFE DE LA INTERVENCION: </li>
                 </ul>
             </div>
@@ -355,6 +342,8 @@
         public string Lugar { get; set; }
 
         public List<MovilSalida> movilesSalida { get; set; }
+
+        public string Direccion { get; set; }
     }
 
     BomberosDbContext Context { get; set; }
@@ -377,7 +366,12 @@
     public async Task CargarEncargado()
     {
         var salida = await Context.Set<Salida>()
-        .SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte && s.AnioNumeroParte == AnioSalida);
+            .Include(s => s.Moviles)  // Incluye la relación con MovilesSalida
+                .ThenInclude(ms => ms.Movil)  // Incluye los detalles de cada Movil en MovilesSalida
+            .Include(s => s.Moviles)  // Incluye nuevamente la relación con MovilesSalida
+                .ThenInclude(ms => ms.Chofer)  // Incluye los detalles del Bombero en MovilesSalida
+            .SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte && s.AnioNumeroParte == AnioSalida);
+
         if (salida != null)
         {
             var quienlleno = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.QuienLlenoId);
@@ -395,6 +389,7 @@
             IntervencionVM.AnioSalida = salida.AnioNumeroParte;
             IntervencionVM.Recepcionista = salida.NombreYApellidoReceptor ?? "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
+            IntervencionVM.Direccion = $"{salida.CalleORuta} {salida.NumeroOKilometro}";
 
             if (salida is Incendio incendio)
             {

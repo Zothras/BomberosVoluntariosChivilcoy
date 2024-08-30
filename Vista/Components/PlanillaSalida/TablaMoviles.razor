@@ -1,5 +1,20 @@
 ﻿@using Vista.Data.ViewModels.Personal;
 
+<style>
+
+    table {
+        border-collapse: collapse; /* Asegura que los bordes se colapsen juntos */
+    }
+
+    th, td {
+        border: 1px solid black; /* Define un borde sólido de 1px */
+        padding: 8px; /* Añade algo de espacio dentro de las celdas */
+        text-align: left; /* Alinea el texto a la izquierda */
+    }
+
+
+</style>
+
 <table>
     <thead>
         <tr>
@@ -14,12 +29,12 @@
             <tr>
                 <td>@Movil.Movil.NumeroMovil</td>
                 <td>@Movil.KmLlegada</td>
-                <td>@Movil.Chofer</td>
+                <td>@($"{Movil.Chofer.Apellido}, {Movil.Chofer.Nombre}")</td>
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-    [Parameter] public List<MovilSalida> movilesSalida { get; set; } 
+    [Parameter] public List<MovilSalida> movilesSalida { get; set; }
 }
