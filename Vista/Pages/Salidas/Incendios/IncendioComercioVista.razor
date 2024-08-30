@@ -43,7 +43,7 @@
         padding: 10px;
         min-width: 320px !important;
         flex-wrap: wrap;
-        background-color:white !important;
+        background-color: white !important;
     }
 
     .inpt-cont {
@@ -135,19 +135,19 @@
             {
                 @*General*@
                 <DatosGenerales Model="@salidaIncendioComercioView"
-                                animationClass="@animationClass"/>
+                                animationClass="@animationClass" />
             }
             else if (current == 1)
             {
-            @*Solicitante | Receptor | Damnificado*@
+                @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioComercioView"
-                           animationClass="@animationClass" />
+                               animationClass="@animationClass" />
             }
             else if (current == 2)
             {
                 @*Seguro*@
                 <Seguro Model="@salidaIncendioComercioView"
-                animationClass="@animationClass" />
+                        animationClass="@animationClass" />
             }
             else if (current == 3)
             {
@@ -177,8 +177,7 @@
             {
                 <div class="slick-contenedor">
                     <DatosSalida Model="@salidaIncendioComercioView"
-                                 animationClass="@animationClass"
-                                  />
+                                 animationClass="@animationClass" />
                 </div>
             }
         </div>
@@ -237,7 +236,7 @@
     bool loading = false;
     void toggle(bool value) => loading = value;
 
-    
+
     @*Steps*@
     public int current { get; set; } = 0;//Ubicacion del Step
     private string animationClass = "";
@@ -290,10 +289,10 @@
     {
         salidaIncendioComercioView = new();
         Context = DbFactory.CreateDbContext();
-        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado  
+        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
     }
 
-    
+
 
     private async void OnFinish(EditContext editContext)
     {
@@ -357,19 +356,22 @@
                     CuerpoParticipante = new()
                 };
 
-
-            foreach (BomberoSalidaViewModels bom in bomberosSalida)
+            //Verifica si hay Bomberos en la Salida y recorre para verificar / arreglar las relaciones.
+            if (salidaIncendioComercioView.CuerpoParticipante != null && salidaIncendioComercioView.CuerpoParticipante.Any())
             {
-                Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-                BomberoSalida BomSalida = new()
-                    {
-                        MovilAsignado = bom.MovilAsignado,
-                        Bombero = bomberoSalida
-                    };
-                salidaIncendioComercio.CuerpoParticipante.Add(BomSalida);
+                foreach (BomberoSalida bom in salidaIncendioComercioView.CuerpoParticipante)
+                {
+                    Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.Bombero.NumeroLegajo).SingleOrDefaultAsync();
+                    Movil? movilSalio = await Context.Moviles.Where(m => m.NumeroMovil == bom.MovilAsignado.NumeroMovil).SingleOrDefaultAsync();
+                    BomberoSalida BomSalida = new()
+                        {
+                            MovilAsignado = movilSalio,
+                            Bombero = bomberoSalida
+                        };
+                    salidaIncendioComercio.CuerpoParticipante.Add(BomSalida);
+                }
             }
 
-            // Verificar si salidaIncendioComercioView.Moviles no es nulo y contiene elementos
             if (salidaIncendioComercioView.Moviles != null && salidaIncendioComercioView.Moviles.Any())
             {
                 // Crear una lista para los móviles de salida
@@ -427,7 +429,7 @@
                 salidaIncendioComercio.Damnificados.Add(damn);
             }
             await SalidaService.CargarSalida(salidaIncendioComercio);
-            HandleOk1(salidaIncendioComercio.AnioNumeroParte ,salidaIncendioComercio.NumeroParte);
+            HandleOk1(salidaIncendioComercio.AnioNumeroParte, salidaIncendioComercio.NumeroParte);
             await Init();
             StateHasChanged();
         }

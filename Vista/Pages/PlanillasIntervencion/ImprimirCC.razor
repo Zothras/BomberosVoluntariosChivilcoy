@@ -198,12 +198,7 @@
             <p>
                 LISTADO DE BOMBEROS EN MOVILES
             </p>
-            <p style="padding-top: .4em;">
-                Bomberos que arribaron en el movil:
-            </p>
-            <p>
-                - [1º AYUDANTE] , -[2º AYUDANTE] , -[3º AYUDANTE] , - [BOMBERO]
-            </p>
+            @*<BomberosMovil MovilesQueSalieron="@IntervencionVM.movilesSalida"></BomberosMovil>*@
         </div>
         <div>
             @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
@@ -389,7 +384,7 @@
             IntervencionVM.AnioSalida = salida.AnioNumeroParte;
             IntervencionVM.Recepcionista = salida.NombreYApellidoReceptor ?? "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
-            IntervencionVM.Direccion = $"{salida.CalleORuta} {salida.NumeroOKilometro}";
+            IntervencionVM.Direccion = $"{salida.CalleORuta ?? "Calle Desconocida"} {salida.NumeroOKilometro ?? "s/n"}";
 
             if (salida is Incendio incendio)
             {

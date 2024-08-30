@@ -1,0 +1,15 @@
+﻿@foreach (var Movil in MovilesQueSalieron)
+{
+    <p style="padding-top: .4em;">
+        Bomberos que arribaron en el movil: @Movil.Movil.NumeroMovil
+    </p>
+    <p>
+        - [1º AYUDANTE] , -[2º AYUDANTE] , -[3º AYUDANTE] , - [BOMBERO]
+    </p>
+}
+
+
+@code {
+    [Parameter] public List<MovilSalida> MovilesQueSalieron { get; set; }
+    [Parameter] public List<Bombero> bomberos { get; set; }
+}
