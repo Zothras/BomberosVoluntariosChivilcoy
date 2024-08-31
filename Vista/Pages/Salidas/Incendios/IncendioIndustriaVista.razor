@@ -246,45 +246,6 @@
     @*Bomberos*@
     int BomberoReceptor;// Falta info..
 
-    @*Carga*@
-
-    public async Task CargarBomberosView()
-    {
-        bomberoTodos = new();
-        bomberoChoferes = new();
-        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
-        foreach (Bombero b in TodosBomberos)
-        {
-            BomberoViweModel bombero = new()
-                {
-                    FechaNacimiento = b.FechaNacimiento,
-                    Sexo = b.Sexo,
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    Documento = b.Documento,
-                    NumeroLegajo = b.NumeroLegajo,
-                    NumeroIoma = b.NumeroIoma,
-                    LugarNacimiento = b.LugarNacimiento,
-                    Grado = b.Grado,
-                    Dotacion = b.Dotacion,
-                    Estado = b.Estado,
-                    Chofer = b.Chofer,
-                    VencimientoRegistro = b.VencimientoRegistro,
-                    Direccion = b.Direccion,
-                    Observaciones = b.Observaciones,
-                    Profesion = b.Profesion,
-                    NivelEstudios = b.NivelEstudios,
-                    FechaAceptacion = b.FechaAceptacion,
-                };
-            if (b.Chofer == true)
-            {
-                bomberoChoferes.Add(bombero);
-            }
-            bomberoTodos.Add(bombero);
-        }
-    }
-
-
     @*Moviles | Chofer*@
     int chofer;
     string NumeroMovil;
@@ -347,7 +308,6 @@
         salidaIncendioIndustrialView.Tipo = TipoIncendio.Industria; // Establecer valor predeterminado
         TodosBomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
-        await CargarBomberosView();
     }
     private async void OnFinish(EditContext editContext)
     {
@@ -418,60 +378,19 @@
                             Moviles = new(),
                             CuerpoParticipante = new()
                         };
-                    foreach (BomberoSalidaViewModels bom in bomberosSalida)
+
+                    //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
+                    if (salidaIncendioIndustrialView.CuerpoParticipante != null && salidaIncendioIndustrialView.CuerpoParticipante.Any())
                     {
-                        Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-                        BomberoSalida BomSalida = new()
-                            {
-                                MovilAsignado = bom.MovilAsignado,
-                                Bombero = bomberoSalida
-                            };
-                        salidaIncendioIndustria.CuerpoParticipante.Add(BomSalida);
+                        salidaIncendioIndustria.CuerpoParticipante = salidaIncendioIndustrialView.CuerpoParticipante.ToList();
                     }
 
-                    // Moviles
+                    //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
                     if (salidaIncendioIndustrialView.Moviles != null && salidaIncendioIndustrialView.Moviles.Any())
                     {
-                        // Crear una lista para los móviles de salida
-                        var movilessalida = new List<MovilSalida>();
-
-                        foreach (var m in salidaIncendioIndustrialView.Moviles)
-                        {
-                            // Obtener el bombero chofer y el móvil desde la base de datos
-                            var bomberoChofer = await Context.Bomberos
-                                .SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
-                            var movilsalida = await Context.Moviles
-                                .SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
-
-                            // Actualizar el kilometraje del móvil
-                            if (movilsalida != null)
-                            {
-                                movilsalida.Kilometraje = m.KmLlegada;
-                            }
-
-                            // Crear una nueva instancia de MovilSalida y agregarla a la lista
-                            var movilS = new MovilSalida
-                                {
-                                    CargoCombustible = m.CargoCombustible,
-                                    NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                                    FechaFactura = movilSalidaViewModels.FechaFactura,
-                                    TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                                    CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                                    QuienLleno = movilSalidaViewModels.QuienLleno,
-                                    TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                                    KmLlegada = m.KmLlegada,
-                                    Chofer = bomberoChofer,
-                                    Movil = movilsalida
-                                };
-
-                            movilessalida.Add(movilS);
-                        }
-
-                        // Asignar la lista de móviles a la salida
-                        salidaIncendioIndustria.Moviles = movilessalida;
+                        salidaIncendioIndustria.Moviles = salidaIncendioIndustrialView.Moviles.ToList();
                     }
-
-
+  
                     foreach (DamnificadoViewModels d in DamnificadosSalida)
                     {
 

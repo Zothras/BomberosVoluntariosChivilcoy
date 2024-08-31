@@ -154,7 +154,7 @@
         {
             @*Solicitante | Receptor | Damnificado*@
             <Participantes Model="@incendioEducativoModel"
-                       animationClass="@animationClass" />
+                           animationClass="@animationClass" />
         }
         else if (current == 2)
         {
@@ -186,15 +186,13 @@
                 }
             </div>
             <Establecimiento Model="@incendioEducativoModel"
-                             
                              animationClass="@animationClass" />
         }
         else if (current == 6)
         {
             <div class="slick-contenedor">
                 <DatosSalida Model="@incendioEducativoModel"
-                             animationClass="@animationClass"
-                              />
+                             animationClass="@animationClass" />
             </div>
         }
     </div>
@@ -314,7 +312,6 @@
         incendioEducativoModel.Tipo = TipoIncendio.EstablecimientoEducativo; // Establecer valor predeterminado
         TodosBomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
-        await CargarBomberosView();
     }
 
     //Carga de datos
@@ -389,58 +386,16 @@
                             CuerpoParticipante = new()
                         };
 
-                    //Cuerpo participante y chofer
-                    foreach (BomberoSalidaViewModels bom in bomberosSalida)
+                    //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
+                    if (incendioEducativoModel.CuerpoParticipante != null && incendioEducativoModel.CuerpoParticipante.Any())
                     {
-                        Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-                        if (bomberoSalida == null) break;
-                        BomberoSalida BomSalida = new()
-                            {
-                                MovilAsignado = bom.MovilAsignado,
-                                Bombero = bomberoSalida,
-                            };
-                        salidaIncendioEducativo.CuerpoParticipante.Add(BomSalida);
+                        salidaIncendioEducativo.CuerpoParticipante = incendioEducativoModel.CuerpoParticipante.ToList();
                     }
 
+                    //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
                     if (incendioEducativoModel.Moviles != null && incendioEducativoModel.Moviles.Any())
                     {
-                        // Crear una lista para los móviles de salida
-                        var movilessalida = new List<MovilSalida>();
-
-                        foreach (var m in incendioEducativoModel.Moviles)
-                        {
-                            // Obtener el bombero chofer y el móvil desde la base de datos
-                            var bomberoChofer = await Context.Bomberos
-                                .SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
-                            var movilsalida = await Context.Moviles
-                                .SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
-
-                            // Actualizar el kilometraje del móvil
-                            if (movilsalida != null)
-                            {
-                                movilsalida.Kilometraje = m.KmLlegada;
-                            }
-
-                            // Crear una nueva instancia de MovilSalida y agregarla a la lista
-                            var movilS = new MovilSalida
-                                {
-                                    CargoCombustible = m.CargoCombustible,
-                                    NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                                    FechaFactura = movilSalidaViewModels.FechaFactura,
-                                    TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                                    CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                                    QuienLleno = movilSalidaViewModels.QuienLleno,
-                                    TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                                    KmLlegada = m.KmLlegada,
-                                    Chofer = bomberoChofer,
-                                    Movil = movilsalida
-                                };
-
-                            movilessalida.Add(movilS);
-                        }
-
-                        // Asignar la lista de móviles a la salida
-                        salidaIncendioEducativo.Moviles = movilessalida;
+                        salidaIncendioEducativo.Moviles = incendioEducativoModel.Moviles.ToList();
                     }
 
                     //Damnificados
@@ -482,52 +437,6 @@
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(incendioEducativoModel)}");
         message.Error("Error al cargar, posible información ausente");
-    }
-    
-    public async Task CargarBomberosView()
-    {
-        bomberoTodos = new();
-        bomberoChoferes = new();
-        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
-        foreach (Bombero b in bomberos)
-        {
-            BomberoViweModel bombero = new()
-                {
-                    FechaNacimiento = b.FechaNacimiento,
-                    Sexo = b.Sexo,
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    Documento = b.Documento,
-                    NumeroLegajo = b.NumeroLegajo,
-                    NumeroIoma = b.NumeroIoma,
-                    LugarNacimiento = b.LugarNacimiento,
-                    Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
-                    Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                    Estado = b.Estado,
-                    Chofer = b.Chofer,
-                    VencimientoRegistro = b.VencimientoRegistro,
-                    Direccion = b.Direccion,
-                    Observaciones = b.Observaciones,
-                    Profesion = b.Profesion,
-                    NivelEstudios = b.NivelEstudios,
-                    FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
-
-                };
-            if (b.Chofer == true)
-            {
-                bomberoChoferes.Add(bombero);
-            }
-            bomberoTodos.Add(bombero);
-        }
     }
 
     public void Dispose()

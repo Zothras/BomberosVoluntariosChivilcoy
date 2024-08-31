@@ -345,72 +345,29 @@
                     CantidadAmbientes = salidaIncendioComercioView.CantidadAmbientes,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
+
                     Seguro = new()
                     {
                         CompañiaAseguradora = salidaIncendioComercioView.CompaniaAseguradora,
                         NumeroDePoliza = salidaIncendioComercioView.NumeroPoliza,
                         FechaDeVencimineto = salidaIncendioComercioView.FechaVencimineto,
                     },
+
                     Damnificados = new(),
                     Moviles = new(),
                     CuerpoParticipante = new()
                 };
 
-            //Verifica si hay Bomberos en la Salida y recorre para verificar / arreglar las relaciones.
+            //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
             if (salidaIncendioComercioView.CuerpoParticipante != null && salidaIncendioComercioView.CuerpoParticipante.Any())
             {
-                foreach (BomberoSalida bom in salidaIncendioComercioView.CuerpoParticipante)
-                {
-                    Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.Bombero.NumeroLegajo).SingleOrDefaultAsync();
-                    Movil? movilSalio = await Context.Moviles.Where(m => m.NumeroMovil == bom.MovilAsignado.NumeroMovil).SingleOrDefaultAsync();
-                    BomberoSalida BomSalida = new()
-                        {
-                            MovilAsignado = movilSalio,
-                            Bombero = bomberoSalida
-                        };
-                    salidaIncendioComercio.CuerpoParticipante.Add(BomSalida);
-                }
+                salidaIncendioComercio.CuerpoParticipante = salidaIncendioComercioView.CuerpoParticipante.ToList();
             }
 
+            //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
             if (salidaIncendioComercioView.Moviles != null && salidaIncendioComercioView.Moviles.Any())
             {
-                // Crear una lista para los móviles de salida
-                var movilessalida = new List<MovilSalida>();
-
-                foreach (var m in salidaIncendioComercioView.Moviles)
-                {
-                    // Obtener el bombero chofer y el móvil desde la base de datos
-                    var bomberoChofer = await Context.Bomberos
-                        .SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
-                    var movilsalida = await Context.Moviles
-                        .SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
-
-                    // Actualizar el kilometraje del móvil
-                    if (movilsalida != null)
-                    {
-                        movilsalida.Kilometraje = m.KmLlegada;
-                    }
-
-                    // Crear una nueva instancia de MovilSalida y agregarla a la lista
-                    var movilS = new MovilSalida
-                        {
-                            CargoCombustible = m.CargoCombustible,
-                            NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                            FechaFactura = movilSalidaViewModels.FechaFactura,
-                            TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                            CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                            QuienLleno = movilSalidaViewModels.QuienLleno,
-                            TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                            KmLlegada = m.KmLlegada,
-                            Chofer = bomberoChofer,
-                            Movil = movilsalida
-                        };
-
-                    movilessalida.Add(movilS);
-                }
-
-                // Asignar la lista de móviles a la salida
-                salidaIncendioComercio.Moviles = movilessalida;
+                salidaIncendioComercio.Moviles = salidaIncendioComercioView.Moviles.ToList();
             }
 
 

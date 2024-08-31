@@ -382,61 +382,17 @@
                             CuerpoParticipante = new()
                         };
 
-                    //Cuerpo participante y chofer
-                    foreach (BomberoSalidaViewModels bom in bomberosSalida)
+                    //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
+                    if (IncendioPublicoModel.CuerpoParticipante != null && IncendioPublicoModel.CuerpoParticipante.Any())
                     {
-                        Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-                        if (bomberoSalida == null) break;
-                        BomberoSalida BomSalida = new()
-                            {
-                                MovilAsignado = bom.MovilAsignado,
-                                Bombero = bomberoSalida,
-                            };
-                        salidaIncendioEstabPublico.CuerpoParticipante.Add(BomSalida);
+                        salidaIncendioEstabPublico.CuerpoParticipante = IncendioPublicoModel.CuerpoParticipante.ToList();
                     }
 
-                    // Moviles
+                    //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
                     if (IncendioPublicoModel.Moviles != null && IncendioPublicoModel.Moviles.Any())
                     {
-                        // Crear una lista para los móviles de salida
-                        var movilessalida = new List<MovilSalida>();
-
-                        foreach (var m in IncendioPublicoModel.Moviles)
-                        {
-                            // Obtener el bombero chofer y el móvil desde la base de datos
-                            var bomberoChofer = await Context.Bomberos
-                                .SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
-                            var movilsalida = await Context.Moviles
-                                .SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
-
-                            // Actualizar el kilometraje del móvil
-                            if (movilsalida != null)
-                            {
-                                movilsalida.Kilometraje = m.KmLlegada;
-                            }
-
-                            // Crear una nueva instancia de MovilSalida y agregarla a la lista
-                            var movilS = new MovilSalida
-                                {
-                                    CargoCombustible = m.CargoCombustible,
-                                    NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                                    FechaFactura = movilSalidaViewModels.FechaFactura,
-                                    TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                                    CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                                    QuienLleno = movilSalidaViewModels.QuienLleno,
-                                    TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                                    KmLlegada = m.KmLlegada,
-                                    Chofer = bomberoChofer,
-                                    Movil = movilsalida
-                                };
-
-                            movilessalida.Add(movilS);
-                        }
-
-                        // Asignar la lista de móviles a la salida
-                        salidaIncendioEstabPublico.Moviles = movilessalida;
+                        salidaIncendioEstabPublico.Moviles = IncendioPublicoModel.Moviles.ToList();
                     }
-
 
                     //Damnificados
                     foreach (DamnificadoViewModels d in DamnificadosSalida)
@@ -478,7 +434,7 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(IncendioPublicoModel)}");
         message.Error("Error al cargar, posible información ausente");
     }
-    
+
     public async Task CargarBomberosView()
     {
         bomberoTodos = new();
