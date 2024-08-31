@@ -8,6 +8,7 @@
 @inject IJSRuntime JSRuntime
 
 @*Componentes Utilizados - HTML Puro*@
+@using Vista.Components;
 @using Vista.Components.PlanillaSalida;
 
 <!DOCTYPE html>
@@ -198,10 +199,13 @@
             <p>
                 LISTADO DE BOMBEROS EN MOVILES
             </p>
-            @*<BomberosMovil MovilesQueSalieron="@IntervencionVM.movilesSalida"></BomberosMovil>*@
+            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
+            {
+                <BomberosMovil BomberosSalidas="@IntervencionVM.CuerpoSalida" MovilesQueSalieron="@IntervencionVM.movilesSalida"></BomberosMovil>
+            }
         </div>
         <div>
-            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
+            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any() && IntervencionVM.CuerpoSalida != null && IntervencionVM.CuerpoSalida.Any())
             {
                 <TablaMoviles movilesSalida="@IntervencionVM.movilesSalida"></TablaMoviles>
             }
@@ -339,6 +343,8 @@
         public List<MovilSalida> movilesSalida { get; set; }
 
         public string Direccion { get; set; }
+
+        public List <BomberoSalida> CuerpoSalida { get; set; }
     }
 
     BomberosDbContext Context { get; set; }
@@ -365,7 +371,12 @@
                 .ThenInclude(ms => ms.Movil)  // Incluye los detalles de cada Movil en MovilesSalida
             .Include(s => s.Moviles)  // Incluye nuevamente la relación con MovilesSalida
                 .ThenInclude(ms => ms.Chofer)  // Incluye los detalles del Bombero en MovilesSalida
+            .Include(s => s.CuerpoParticipante)  // Incluye la relación con BomberosSalida
+                .ThenInclude(bs => bs.Bombero)  // Incluye los detalles de Bombero en BomberosSalida
+            .Include(s => s.CuerpoParticipante)  // Incluye nuevamente la relación con BomberosSalida
+                .ThenInclude(bs => bs.MovilAsignado)  // Incluye los detalles del MovilAsignado en BomberosSalida
             .SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte && s.AnioNumeroParte == AnioSalida);
+
 
         if (salida != null)
         {
@@ -405,6 +416,15 @@
             else
             {
                 IntervencionVM.movilesSalida = new List<MovilSalida>(); // Asignar una lista vacía si no hay elementos
+            }
+
+            if (salida.CuerpoParticipante != null && salida.CuerpoParticipante.Any())
+            {
+                IntervencionVM.CuerpoSalida = salida.CuerpoParticipante.ToList();
+            }
+            else
+            {
+                IntervencionVM.CuerpoSalida = new List<BomberoSalida>(); // Asignar una lista vacía si no hay elementos
             }
         }
     }
