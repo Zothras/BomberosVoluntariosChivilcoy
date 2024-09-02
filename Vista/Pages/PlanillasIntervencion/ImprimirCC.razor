@@ -4,6 +4,7 @@
 @layout EmptyLayout
 @using System;
 @using System.Globalization;
+@using System.Text.RegularExpressions;
 @inject NavigationManager navigationManager
 @inject IJSRuntime JSRuntime
 
@@ -215,7 +216,7 @@
     <div class="sec3">
         <div>
             <p class="sec3-titulo">
-                B) @IntervencionVM.TipoServicio
+                B) @IntervencionVM.TipoSalida
             </p>
         </div>
         <div class="sec3-contenedor">
@@ -223,7 +224,7 @@
                 <h3 class="sec3-titulo">
                     Detalle o Daños generales:
                 </h3>
-                <p>incendio de contenedor</p>
+                <p></p>
             </div>
             <div>
                 <h3 class="sec3-titulo h3-2">
@@ -238,9 +239,21 @@
                         <h3>Compania: </h3>
                     </div>
                     <h3 style="padding-bottom: 0px;">Personas que pueden atestiguar: </h3>
+                    <p>..........................................................................................................................................................................................................</p>
                 </div>
             </div>
         </div>
+        @if (IntervencionVM.Damnificados != null && IntervencionVM.Damnificados.Any())
+        {
+            <div>
+                <p class="sec3-titulo">
+                    C) Heridos Y Fallecidos
+                </p>
+            </div>
+            <div class="sec3-contenedor">
+                <TablaDamnificados Damnificados="@IntervencionVM.Damnificados"></TablaDamnificados>
+            </div>
+        }
     </div>
     <!-- seccion 4  -->
     <div class="sec4">
@@ -309,6 +322,8 @@
             }
         }
 
+        public string DetallesSalida { get; set; }
+
         public string AvisadoPor { get; set; }
 
         public string TipoServicio { get; set; }
@@ -344,27 +359,33 @@
 
         public string Direccion { get; set; }
 
-        public List <BomberoSalida> CuerpoSalida { get; set; }
+        public List<BomberoSalida> CuerpoSalida { get; set; }
+
+        public List<Damnificado> Damnificados { get; set; }
+
+        public string TipoSalida { get; set; }
     }
 
     BomberosDbContext Context { get; set; }
 
     IntervencionViewModel IntervencionVM { get; set; } = new();
 
-    private async Task Init()
+    private Task Init()
     {
         Context = DbFactory.CreateDbContext();
         IntervencionVM = new();
+        return Task.CompletedTask;
     }
 
     protected override async Task OnInitializedAsync()
     {
 
         await Init();
-        await CargarEncargado();
+        await CargarSalida();
 
     }
-    public async Task CargarEncargado()
+
+    public async Task CargarSalida()
     {
         var salida = await Context.Set<Salida>()
             .Include(s => s.Moviles)  // Incluye la relación con MovilesSalida
@@ -383,6 +404,9 @@
             var quienlleno = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.QuienLlenoId);
             var encargado = await Context.Bomberos.SingleOrDefaultAsync(b => b.PersonaId == salida.EncargadoId);
 
+            string nombreObjeto = salida.GetType().Name;
+            IntervencionVM.TipoSalida = Regex.Replace(nombreObjeto, "(?<!^)([A-Z])", " $1");
+
             IntervencionVM.Fecha = salida.HoraSalida.Date;
             IntervencionVM.HoraSalida = salida.HoraSalida.ToString(@"HH\:mm\:ss");
             IntervencionVM.HoraLlegada = salida.HoraLlegada.ToString(@"HH\:mm\:ss");
@@ -396,6 +420,7 @@
             IntervencionVM.Recepcionista = salida.NombreYApellidoReceptor ?? "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
             IntervencionVM.Direccion = $"{salida.CalleORuta ?? "Calle Desconocida"} {salida.NumeroOKilometro ?? "s/n"}";
+            IntervencionVM.DetallesSalida = salida.Descripcion;
 
             if (salida is Incendio incendio)
             {
@@ -425,6 +450,11 @@
             else
             {
                 IntervencionVM.CuerpoSalida = new List<BomberoSalida>(); // Asignar una lista vacía si no hay elementos
+            }
+
+            if (salida.Damnificados != null && salida.Damnificados.Any())
+            {
+                IntervencionVM.Damnificados = salida.Damnificados.ToList();
             }
         }
     }
