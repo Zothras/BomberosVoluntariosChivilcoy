@@ -370,26 +370,18 @@
                 salidaIncendioComercio.Moviles = salidaIncendioComercioView.Moviles.ToList();
             }
 
-
-            foreach (DamnificadoViewModels d in DamnificadosSalida)
+            //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
+            if (salidaIncendioComercioView.Damnificados != null && salidaIncendioComercioView.Damnificados.Any())
             {
-                Damnificado damn = new()
-                    {
-                        Nombre = d.Nombre,
-                        Apellido = d.Apellido,
-                        Dni = d.Dni,
-                        Sexo = d.Sexo,
-                        LugarDeNacimiento = d.LugarDeNacimiento,
-                        Edad = d.Edad,
-                        Estado = d.Estado,
-                    };
-                salidaIncendioComercio.Damnificados.Add(damn);
+                salidaIncendioComercio.Damnificados = salidaIncendioComercioView.Damnificados.ToList();
             }
+
             await SalidaService.CargarSalida(salidaIncendioComercio);
             HandleOk1(salidaIncendioComercio.AnioNumeroParte, salidaIncendioComercio.NumeroParte);
             await Init();
             StateHasChanged();
         }
+
         catch (Exception e)
         {
             await Init();
@@ -399,6 +391,7 @@
             else
                 await message.Error(e.Message, 5);
         }
+
         Console.WriteLine($"Success:{JsonSerializer.Serialize(salidaIncendioComercioView)}");
     }
 
