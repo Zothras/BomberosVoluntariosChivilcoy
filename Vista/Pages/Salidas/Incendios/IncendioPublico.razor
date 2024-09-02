@@ -220,7 +220,6 @@
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
 
@@ -394,22 +393,12 @@
                         salidaIncendioEstabPublico.Moviles = IncendioPublicoModel.Moviles.ToList();
                     }
 
-                    //Damnificados
-                    foreach (DamnificadoViewModels d in DamnificadosSalida)
+                    //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
+                    if (IncendioPublicoModel.Damnificados != null && IncendioPublicoModel.Damnificados.Any())
                     {
-
-                        Damnificado damn = new()
-                            {
-                                Nombre = d.Nombre,
-                                Apellido = d.Apellido,
-                                Dni = d.Dni,
-                                Sexo = d.Sexo,
-                                LugarDeNacimiento = d.LugarDeNacimiento,
-                                Edad = d.Edad,
-                                Estado = d.Estado,
-                            };
-                        salidaIncendioEstabPublico.Damnificados.Add(damn);
+                        salidaIncendioEstabPublico.Damnificados = IncendioPublicoModel.Damnificados.ToList();
                     }
+
                     await SalidaService.CargarSalida(salidaIncendioEstabPublico);
                     HandleOk1(salidaIncendioEstabPublico.AnioNumeroParte, salidaIncendioEstabPublico.NumeroParte);
                     await Init();

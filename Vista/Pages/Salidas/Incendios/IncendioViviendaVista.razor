@@ -392,22 +392,12 @@
                         salidaIncendioVivienda.Moviles = salidaIncendioViviendaVista.Moviles.ToList();
                     }
 
-                    //Damnificados
-                    foreach (DamnificadoViewModels d in DamnificadosSalida)
+                    //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
+                    if (salidaIncendioViviendaVista.Damnificados != null && salidaIncendioViviendaVista.Damnificados.Any())
                     {
-
-                        Damnificado damn = new()
-                            {
-                                Nombre = d.Nombre,
-                                Apellido = d.Apellido,
-                                Dni = d.Dni,
-                                Sexo = d.Sexo,
-                                LugarDeNacimiento = d.LugarDeNacimiento,
-                                Edad = d.Edad,
-                                Estado = d.Estado,
-                            };
-                        salidaIncendioVivienda.Damnificados.Add(damn);
+                        salidaIncendioVivienda.Damnificados = salidaIncendioViviendaVista.Damnificados.ToList();
                     }
+
                     await SalidaService.CargarSalida(salidaIncendioVivienda);
                     HandleOk1(salidaIncendioVivienda.AnioNumeroParte, salidaIncendioVivienda.NumeroParte);
                     await Init();

@@ -302,7 +302,6 @@
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
     private VehiculoDamnificadoViewModels vehiculo = new();
-    public List<DamnificadoViewModels> DamnificadosSalida = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
     public List<BomberoViweModel> bomberoTodos = new();
@@ -485,19 +484,10 @@
                 materiales.Moviles = modelMateriales.Moviles.ToList();
             }
 
-            foreach (DamnificadoViewModels d in DamnificadosSalida)
+            //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
+            if (modelMateriales.Damnificados != null && modelMateriales.Damnificados.Any())
             {
-                Damnificado damn = new()
-                    {
-                        Nombre = d.Nombre,
-                        Apellido = d.Apellido,
-                        Dni = d.Dni,
-                        Sexo = d.Sexo,
-                        LugarDeNacimiento = d.LugarDeNacimiento,
-                        Edad = d.Edad,
-                        Estado = d.Estado
-                    };
-                materiales.Damnificados.Add(damn);
+                materiales.Damnificados = modelMateriales.Damnificados.ToList();
             }
 
             await SalidaService.CargarSalida(materiales);
