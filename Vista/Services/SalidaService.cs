@@ -84,7 +84,6 @@ namespace Vista.Services
                 List<Damnificado> damnificadossalida = new List<Damnificado>();
                 foreach (Damnificado d in salida.Damnificados)
                 {
-
                     Damnificado damn = new()
                     {
                         Nombre = d.Nombre,

@@ -377,27 +377,32 @@
         return Task.CompletedTask;
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-
-        await Init();
-        await CargarSalida();
-
-    }
-
-    public async Task CargarSalida()
+    private async Task<Salida> CargarSalida()
     {
         var salida = await Context.Set<Salida>()
-            .Include(s => s.Moviles)  // Incluye la relación con MovilesSalida
-                .ThenInclude(ms => ms.Movil)  // Incluye los detalles de cada Movil en MovilesSalida
-            .Include(s => s.Moviles)  // Incluye nuevamente la relación con MovilesSalida
-                .ThenInclude(ms => ms.Chofer)  // Incluye los detalles del Bombero en MovilesSalida
-            .Include(s => s.CuerpoParticipante)  // Incluye la relación con BomberosSalida
-                .ThenInclude(bs => bs.Bombero)  // Incluye los detalles de Bombero en BomberosSalida
-            .Include(s => s.CuerpoParticipante)  // Incluye nuevamente la relación con BomberosSalida
-                .ThenInclude(bs => bs.MovilAsignado)  // Incluye los detalles del MovilAsignado en BomberosSalida
-            .SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte && s.AnioNumeroParte == AnioSalida);
+        .Include(s => s.Moviles)  // Incluye la relación con MovilesSalida
+          .ThenInclude(ms => ms.Movil)  // Incluye los detalles de cada Movil en MovilesSalida
+        .Include(s => s.Moviles)  // Incluye nuevamente la relación con MovilesSalida
+          .ThenInclude(ms => ms.Chofer)  // Incluye los detalles del Bombero en MovilesSalida
+        .Include(s => s.CuerpoParticipante)  // Incluye la relación con BomberosSalida
+          .ThenInclude(bs => bs.Bombero)  // Incluye los detalles de Bombero en BomberosSalida
+        .Include(s => s.CuerpoParticipante)  // Incluye nuevamente la relación con BomberosSalida
+          .ThenInclude(bs => bs.MovilAsignado)  // Incluye los detalles del MovilAsignado en BomberosSalida
+        .Include(s => s.Damnificados)
+        .SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte && s.AnioNumeroParte == AnioSalida);
 
+        return salida;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+        await CargarIntervencion();
+    }
+
+    public async Task CargarIntervencion()
+    {
+        Salida salida = await CargarSalida();
 
         if (salida != null)
         {

@@ -207,7 +207,6 @@
 </Form>
 
 @code {
-
     @*Context y ViewModels*@
     BomberosDbContext Context { get; set; }
     public IncendioComercioViewModels salidaIncendioComercioView = new();
@@ -235,7 +234,6 @@
 
     bool loading = false;
     void toggle(bool value) => loading = value;
-
 
     @*Steps*@
     public int current { get; set; } = 0;//Ubicacion del Step
@@ -285,14 +283,13 @@
     {
         await Init();
     }
+
     private async Task Init()
     {
         salidaIncendioComercioView = new();
         Context = DbFactory.CreateDbContext();
         salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
     }
-
-
 
     private async void OnFinish(EditContext editContext)
     {
@@ -396,12 +393,10 @@
     }
 
     // OnFinishFailed
-
     private void OnFinishFailedModel(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
     }
-
 
     private void OnFinishFailed(EditContext editContext)
     {
@@ -410,7 +405,6 @@
     }
 
     @*"Delete" y Dispose*@
-
     public void Dispose()
     {
         Context?.Dispose();
