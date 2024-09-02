@@ -129,6 +129,7 @@
                 <PropertyColumn Property="c => c.NumeroLegajo" Title="Legajo" DefaultSortOrder="@SortDirection.Descending"
                                 SorterCompare="@((a,b)=> a - b)"></PropertyColumn>
                 <PropertyColumn Property="c => c.ApellidoYNombre" Title="Apellido y Nombre" Sortable="true" DefaultSortOrder="@SortDirection.Ascending"></PropertyColumn>
+                <PropertyColumn Property="@(c => c.MovilAsignado != null ? c.MovilAsignado.NumeroMovil : "Cuartel")" Title="Asignación"></PropertyColumn>
                 <ActionColumn Title="Acciones">
                     <Popconfirm Title="¿Quieres eliminar este bombero?" OnConfirm="() => deleteRow(row.NumeroLegajo)" OkText="Si" CancelText="No">
                         <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
@@ -211,12 +212,12 @@
 
         if (Model.LegajoEncargado != default)
         {
-            EncargadoSeleccionado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Model.LegajoEncargado);
+            EncargadoSeleccionado = await BomberoService.ObtenerBomberoPorLegajoAsync(Model.LegajoEncargado);
         }
 
         if (Model.LegajoLLenoPlanilla != default)
         {
-            PlanillaSeleccionado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Model.LegajoLLenoPlanilla);
+            PlanillaSeleccionado = await BomberoService.ObtenerBomberoPorLegajoAsync(Model.LegajoLLenoPlanilla);
         }
 
         if (Model.CuerpoParticipante != null)
