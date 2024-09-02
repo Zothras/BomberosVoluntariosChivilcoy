@@ -103,7 +103,18 @@
 
     .art2 {
         grid-area: n1;
-        background: #fff;
+        background: #3b509f;
+        padding: 18px;
+        margin-left: 0;
+        width: 100%;
+        height: 100%;
+        font-size: 1vw;
+        color: white;
+    }
+
+    .art3 {
+        grid-area: n2;
+        background: #663737;
         padding: 18px;
         margin-left: 0;
         width: 100%;
@@ -111,9 +122,9 @@
         font-size: 1vw;
     }
 
-    .art3 {
+    .art3-PERSONAL {
         grid-area: n2;
-        background: #262626;
+        background: #663737;
         padding: 18px;
         margin-left: 0;
         width: 100%;
@@ -122,24 +133,26 @@
     }
 
     .art4 {
-        background-image: url('https://i.imgur.com/ZN7adhk.jpeg');
-        background-size: cover;
+/*         background-image: url('https://i.imgur.com/ZN7adhk.jpeg'); */        
+/*         background-size: cover;
         background-position: center;
-        background-repeat: no-repeat;
+        background-repeat: no-repeat; */
         grid-area: n3;
         width: 100%;
         height: 100%;
+        background-color:#A63636
     }
 
     .art5 {
         grid-area: n4;
         display: flex;
-        background: #ffe7ba;
+        background: #a44e33;
         position: relative;
     }
 
     .art6 {
         grid-area: n5;
+        background-color: #D5955C !important;
     }
 
     .art7 {
@@ -148,8 +161,13 @@
 
     .art8 {
         grid-area: n7;
+        background: #262626;
+        padding: 18px;
+        margin-left: 0;
         width: 100%;
         height: 100%;
+        font-size: 1vw;
+        color: white !important;
     }
 
     .art9 {
@@ -161,6 +179,7 @@
         width: 100%;
         max-height: 50%;
         grid-area: n9;
+        background-color: #5e2626 !important
     }
 
     /* Componentes dentro de Art */
@@ -185,6 +204,21 @@
     }
 
     .art3 span {
+        margin-top: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        color: white;
+        font-size: 1vw;
+    }
+
+    .art3-PERSONAL h1 {
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        color: white;
+        font-size: 3vw;
+    }
+
+    .art3-PERSONAL span {
         margin-top: 10px;
         font-family: 'Inter', sans-serif;
         font-size: 15px;
@@ -315,8 +349,8 @@
     @* BOMBEROS *@
     <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos/Legajo"); })" style="border-radius: 10px;">
         <article class="art2">
-            <h1>LEGAJO</h1>
-            <i class="fa-solid fa-user icoSelected" style="color: #263040;padding-right: 6px;"></i>
+            <h1 style="color: white;">LEGAJO</h1>
+            <i class="fa-solid fa-user icoSelected" style="color: white;padding-right: 6px;"></i>
             <span>Visite su legajo</span>
         </article>
     </a>
@@ -441,8 +475,9 @@
             </div>
         </div>
     </article>
+    @* DEPARTAMENTOS *@
     <article class="art5">
-        <h1 class="art5-Title" style="padding: 10px 0 0 8px;">DEPARTAMENTOS</h1>
+        <h1 class="art5-Title" style="padding: 10px 0 0 8px; color:white !important;">DEPARTAMENTOS</h1>
         <div class="btnContA5">
             <Popover OverlayClassName="myPopover" ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
@@ -460,8 +495,10 @@
                 </button>
             </Popover>
         </div>
-        <img src="imagenes/herramientas.png" style="margin-right: -26px;" />
-    </article>
+@*         <img src="imagenes/herramientas.png" style="margin-right: -26px;" />
+ *@    </article>
+
+    @* REPORTES *@
     <article class="art6" style="background: #2988B4;">
         <div style="display: flex;padding-top: 0.6%;padding-left:1.46%;align-items: center;justify-content: space-evenly;height: 100%;">
             <h1 style="color: white;">REPORTES</h1>
@@ -497,33 +534,29 @@
             </Popover>
         </div>
     </article>
-    <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })" style="border-radius: 10px;">
-        <article class="art7">
-            <div class="bomberosArt">
-                <img class="imgBomberos2" src="imagenes/bomberosGrid.jpg" />
-                <h1>PERSONAL</h1>
-                <i style="position: absolute;left: 5%;top: 27%;color: white;" class="fa-solid fa-user"></i>
-                <p style="position: absolute; left: 13%; top: 23%; color: white; font-family: 'Inter', sans-serif; font-size: 1.2vw;">Ver Personal</p>
-            </div>
+    @* PERSONAL/BOMBEROS *@
+        <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })" style="border-radius: 10px;">
+        <article class="art3-PERSONAL">
+            <h1>PERSONAL</h1>
+            <i class="fa-solid fa-people-group" style="color: white;padding-right: 6px;"></i>
+            <span>Ver el personal</span>
         </article>
-    </a>
+        </a>    
+        @* UNIDADES *@
     <a @onclick="@(() => { navigationManager.NavigateTo("/unidades"); })" style="border-radius: 10px;">
         <article class="art8">
-            <div class="bomberosArt">
-                <img class="imgBomberos2" src="imagenes/moviles.jpg" />
-                <h1>UNIDADES</h1>
-                <img src="imagenes/icons/fire_truck.svg"
-                     alt="Camión de Bomberos"
-                     style="width: 5%; height: 14%; position: absolute; left: 7%; top: 50%;" />
-                <p style="position: absolute;left: 13%;top: 45%;color: white;font-family: 'Inter', sans-serif;font-size: 1.2vw;">Ver unidades</p>
-            </div>
+            <h1 style="color:white !important;">UNIDADES</h1>
+            <i class="fa-solid fa-file-signature" style="color: white;padding-right: 6px;"></i>
+            <span>Ver las unidades</span>
         </article>
     </a>
+
+    @* FIRMAS *@
     <a @onclick="@(() => { navigationManager.NavigateTo("/incidentes-vehiculos"); })" style="border-radius: 10px;">
-        <article class="art9" style="background-color:#2680ac">
+        <article class="art9" style="background-color:#2b4f7d">
             <div class="bomberosArt">
                 <h1>FIRMAS</h1>
-                <i style="position: absolute;left: 5%;top: 50%;color: white;" class="fa-sharp fa-solid fa-ship"></i>
+                <i style="position: absolute;left: 5%;top: 50%;color: white;" class="fa-solid fa-scroll"></i>
                 <p style="position: absolute;left: 13%;top: 45%;color: white;font-family: 'Inter', sans-serif;font-size: 1.2vw;">Ver firmas</p>
             </div>
         </article>
