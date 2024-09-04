@@ -200,13 +200,13 @@
             <p>
                 LISTADO DE BOMBEROS EN MOVILES
             </p>
-            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
+            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any() && IntervencionVM.CuerpoSalida != null && IntervencionVM.CuerpoSalida.Any())
             {
                 <BomberosMovil BomberosSalidas="@IntervencionVM.CuerpoSalida" MovilesQueSalieron="@IntervencionVM.movilesSalida"></BomberosMovil>
             }
         </div>
         <div>
-            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any() && IntervencionVM.CuerpoSalida != null && IntervencionVM.CuerpoSalida.Any())
+            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
             {
                 <TablaMoviles movilesSalida="@IntervencionVM.movilesSalida"></TablaMoviles>
             }
@@ -243,6 +243,27 @@
                 </div>
             </div>
         </div>
+        @if (IntervencionVM.TipoTecho != null && IntervencionVM.TipoAbertura != null)
+        {
+            <div>
+                <p class="sec3-titulo">
+                    B) Incendio
+                </p>
+            </div>
+            <div class="sec3-contenedor">
+                <span>
+                    Tipo Techo: @IntervencionVM.TipoTecho.ToString()
+                    Tipo Abertura: @IntervencionVM.TipoAbertura.ToString()
+                    @if (IntervencionVM.CantidadPisos != null && IntervencionVM.CantidadPisosAfectados != null)
+                    {
+                        <span>
+                            Cantidad de Pisos: @IntervencionVM.CantidadPisos
+                            Pisos Afectados: @IntervencionVM.CantidadPisosAfectados
+                        </span>
+                    }
+                </span>
+            </div>
+        }
         @if (IntervencionVM.Damnificados != null && IntervencionVM.Damnificados.Any())
         {
             <div>
@@ -269,7 +290,7 @@
         }
         <div>
             <p class="sec3-titulo" style="margin-top: 10px;">OBSERVACIONES:</p>
-            <p>llamado de guardia Nº 2</p>
+            <p></p>
         </div>
         <div style="display: flex;padding: 3em;justify-content:center; gap: 15em;">
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em; text-align: center;">
@@ -322,48 +343,55 @@
             }
         }
 
-        public string DetallesSalida { get; set; }
+        public string? DetallesSalida { get; set; }
 
-        public string AvisadoPor { get; set; }
+        public string? AvisadoPor { get; set; }
 
-        public string TipoServicio { get; set; }
+        public string? TipoServicio { get; set; }
 
-        public string HoraSalida { get; set; }
+        public string? HoraSalida { get; set; }
 
-        public string HoraLlegada { get; set; }
+        public string? HoraLlegada { get; set; }
 
-        public string NombreConfecciono { get; set; }
+        public string? NombreConfecciono { get; set; }
 
-        public string ApellidoConfecciono { get; set; }
+        public string? ApellidoConfecciono { get; set; }
 
         public string Confecciono { get { return NombreConfecciono + "," + ApellidoConfecciono; } }
 
         public string GraduadoCargo { get { return GraduadoNombre + "," + ApellidoConfecciono; } }
 
-        public string GraduadoNombre { get; set; }
+        public string? GraduadoNombre { get; set; }
 
-        public string GraduadoApellido { get; set; }
+        public string? GraduadoApellido { get; set; }
 
         public int NumeroParte { get; set; }
         public int AnioSalida { get; set; }
 
-        public string Recepcionista { get; set; }
+        public string? Recepcionista { get; set; }
 
         public TipoCausaIncendio? Causa { get; set; }
 
         public TipoZona Zona { get; set; }
 
-        public string Lugar { get; set; }
+        public string? Lugar { get; set; }
 
-        public List<MovilSalida> movilesSalida { get; set; }
+        public List<MovilSalida>? movilesSalida { get; set; }
 
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
 
-        public List<BomberoSalida> CuerpoSalida { get; set; }
+        public List<BomberoSalida>? CuerpoSalida { get; set; }
 
-        public List<Damnificado> Damnificados { get; set; }
+        public List<Damnificado>? Damnificados { get; set; }
 
-        public string TipoSalida { get; set; }
+        public string? TipoSalida { get; set; }
+
+        public TipoIncendioTecho? TipoTecho { get; set; }
+
+        public TipoIncendioAbertura? TipoAbertura { get; set; }
+
+        public string? CantidadPisos { get; set; }
+        public string? CantidadPisosAfectados { get; set; }
     }
 
     BomberosDbContext Context { get; set; }
@@ -430,6 +458,10 @@
             if (salida is Incendio incendio)
             {
                 IntervencionVM.Causa = incendio.SuperficieAfectadaCausa;
+                IntervencionVM.TipoAbertura = incendio.TipoAbertura;
+                IntervencionVM.TipoTecho = incendio.TipoTecho;
+                IntervencionVM.CantidadPisos = incendio.CantidadPisos != null ? incendio.CantidadPisos.ToString() : null;
+                IntervencionVM.CantidadPisosAfectados = incendio.PisoAfectado != null ? incendio.PisoAfectado.ToString() : null;
             }
 
             if (salida.GetType().GetProperty("TipoLugar") != null)
