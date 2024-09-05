@@ -290,38 +290,38 @@
         <div class="sec3-contenedor">
             <div>
                 <h3 class="sec3-titulo">
-                    Detalle o Daños generales:
+                    DETALLE O DAÑOS GENERALES:
                 </h3>
                 <p></p>
             </div>
             <div>
                 <h3 class="sec3-titulo h3-2">
-                    Elementos cercanos no afectados:
+                    ELEMENTOS CERCANOS NO AFECTADOS:
                 </h3>
                 <br><br><br>
                 <div class="div2-div" style="padding-bottom: 0px;">
                     <h3>Nombre de Locatario o Propietario: </h3>
                     <div class="div2-div-contenido">
                         <h3>Dni: </h3>
-                        <h3>Seguro: </h3>
-                        <h3>Compania: </h3>
+                        <h3>Seguro Poliza: @(IntervencionVM.SeguroPoliza ?? "")</h3>
+                        <h3>Seguro Compania: @(IntervencionVM.SeguroCompania ?? "")</h3>
                     </div>
                     <h3 style="padding-bottom: 0px;">Personas que pueden atestiguar: </h3>
                     <p>..........................................................................................................................................................................................................</p>
                 </div>
             </div>
         </div>
+        <div>
+            <p class="sec3-titulo">
+                B) Incendio
+            </p>
+        </div>
         @if (IntervencionVM.TipoTecho != null && IntervencionVM.TipoAbertura != null)
         {
-            <div>
-                <p class="sec3-titulo">
-                    B) Incendio
-                </p>
-            </div>
             <div class="sec3-contenedor">
                 <span>
-                    Tipo Techo: @IntervencionVM.TipoTecho.ToString()
-                    Tipo Abertura: @IntervencionVM.TipoAbertura.ToString()
+                    TIPO TECHO: @IntervencionVM.TipoTecho.ToString()
+                    TIPO ABERTURA: @IntervencionVM.TipoAbertura.ToString()
                     @if (IntervencionVM.CantidadPisos != null && IntervencionVM.CantidadPisosAfectados != null)
                     {
                         <span>
@@ -332,15 +332,25 @@
                 </span>
             </div>
         }
+        @if (!string.IsNullOrEmpty(IntervencionVM.SuperficieTotal))
+        {
+            <h3>SUPERFICIE AFECTADA: @IntervencionVM.SuperficieTotal</h3>
+        }
+        <div>
+            <p class="sec3-titulo">
+                C) Heridos Y Fallecidos
+            </p>
+        </div>
         @if (IntervencionVM.Damnificados != null && IntervencionVM.Damnificados.Any())
         {
-            <div>
-                <p class="sec3-titulo">
-                    C) Heridos Y Fallecidos
-                </p>
-            </div>
             <div class="sec3-contenedor">
                 <TablaDamnificados Damnificados="@IntervencionVM.Damnificados"></TablaDamnificados>
+            </div>
+        }
+        else
+        {
+            <div class="sec3-contenedor">
+                <p>No se registraron heridos ni fallecidos en esta intervención.</p>
             </div>
         }
     </div>
@@ -364,7 +374,7 @@
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em; text-align: center;">
                 <div>
                     <h3>CONFECCIONO  </h3>
-                    <p>1º AYUDANTE- @IntervencionVM.Confecciono</p>
+                    <p>[@IntervencionVM.ConfeccionoRango] - @IntervencionVM.Confecciono</p>
                 </div>
                 <div>
                     <p>....................................</p>
@@ -374,7 +384,7 @@
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em;text-align: center;">
                 <div>
                     <h3>GRADUADO A CARGO  </h3>
-                    <p>1º AYUDANTE- @IntervencionVM.GraduadoCargo</p>
+                    <p>[@IntervencionVM.GraduadoRango] - @IntervencionVM.GraduadoCargo</p>
                 </div>
                 <div>
                     <p>....................................</p>
@@ -425,9 +435,19 @@
 
         public string? ApellidoConfecciono { get; set; }
 
-        public string Confecciono { get { return NombreConfecciono + "," + ApellidoConfecciono; } }
+        public string Confecciono
+        {
+            get { return ApellidoConfecciono + ", " + NombreConfecciono; }
+        }
 
-        public string GraduadoCargo { get { return GraduadoNombre + "," + ApellidoConfecciono; } }
+        public string GraduadoCargo
+        {
+            get { return ApellidoConfecciono + ", " + GraduadoNombre; }
+        }
+
+        //Rangos Graduado - Confecciono (Modificar luego)
+        public string? ConfeccionoRango { get; set; }
+        public string? GraduadoRango { get; set; }
 
         public string? GraduadoNombre { get; set; }
 
@@ -460,6 +480,27 @@
 
         public string? CantidadPisos { get; set; }
         public string? CantidadPisosAfectados { get; set; }
+
+        //Datos del Seguro
+        public string? SeguroPoliza { get; set; }
+        public string? SeguroCompania { get; set; }
+
+        // Superficie Afectada
+        public string? CantidadDeSuperficie { get; set; } // Cantidad de la superficie afectada
+        public string? UnidadDeSuperficie { get; set; } // Unidad de medida (km, hectárea, etc.)
+
+        // Variable que suma ambas
+        public string? SuperficieTotal
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(CantidadDeSuperficie) || string.IsNullOrEmpty(UnidadDeSuperficie))
+                {
+                    return null;
+                }
+                return $"{CantidadDeSuperficie} {UnidadDeSuperficie}";
+            }
+        }
     }
 
     BomberosDbContext Context { get; set; }
@@ -473,7 +514,7 @@
         return Task.CompletedTask;
     }
 
-    private async Task<Salida> CargarSalida()
+    private async Task<Salida?> CargarSalida()
     {
         var salida = await Context.Set<Salida>()
         .Include(s => s.Moviles)  // Incluye la relación con MovilesSalida
@@ -485,6 +526,7 @@
         .Include(s => s.CuerpoParticipante)  // Incluye nuevamente la relación con BomberosSalida
           .ThenInclude(bs => bs.MovilAsignado)  // Incluye los detalles del MovilAsignado en BomberosSalida
         .Include(s => s.Damnificados)
+        .Include(s => s.Seguro)
         .SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte && s.AnioNumeroParte == AnioSalida);
 
         return salida;
@@ -498,7 +540,7 @@
 
     public async Task CargarIntervencion()
     {
-        Salida salida = await CargarSalida();
+        Salida? salida = await CargarSalida();
 
         if (salida != null)
         {
@@ -514,14 +556,22 @@
             IntervencionVM.AvisadoPor = salida.NombreSolicitante + "," + salida.ApellidoSolicitante;
             IntervencionVM.NombreConfecciono = quienlleno.Nombre;
             IntervencionVM.ApellidoConfecciono = quienlleno.Apellido;
+            IntervencionVM.ConfeccionoRango = quienlleno.Grado.ToString();
             IntervencionVM.GraduadoNombre = encargado.Nombre;
             IntervencionVM.GraduadoApellido = encargado.Apellido;
+            IntervencionVM.GraduadoRango = quienlleno.Grado.ToString();
             IntervencionVM.NumeroParte = salida.NumeroParte;
             IntervencionVM.AnioSalida = salida.AnioNumeroParte;
             IntervencionVM.Recepcionista = salida.NombreYApellidoReceptor ?? "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
             IntervencionVM.Direccion = $"{salida.CalleORuta ?? "Calle Desconocida"} {salida.NumeroOKilometro ?? "s/n"}";
             IntervencionVM.DetallesSalida = salida.Descripcion;
+
+            if (salida.Seguro != null)
+            {
+                IntervencionVM.SeguroCompania = salida.Seguro.CompañiaAseguradora;
+                IntervencionVM.SeguroPoliza = salida.Seguro.NumeroDePoliza;
+            }
 
             if (salida is Incendio incendio)
             {
@@ -530,6 +580,18 @@
                 IntervencionVM.TipoTecho = incendio.TipoTecho;
                 IntervencionVM.CantidadPisos = incendio.CantidadPisos != null ? incendio.CantidadPisos.ToString() : null;
                 IntervencionVM.CantidadPisosAfectados = incendio.PisoAfectado != null ? incendio.PisoAfectado.ToString() : null;
+
+                //Superficie
+                int superficie;
+                if (int.TryParse(incendio.DetalleSuperficieAfectadaIncendio, out superficie))
+                {
+                    IntervencionVM.CantidadDeSuperficie = superficie.ToString();
+                }
+                else
+                {
+                    IntervencionVM.CantidadDeSuperficie = null; // O deja el valor actual sin cambiar
+                }
+                IntervencionVM.UnidadDeSuperficie = incendio.TipoSuperficieAfectada.ToString();
             }
 
             if (salida.GetType().GetProperty("TipoLugar") != null)
