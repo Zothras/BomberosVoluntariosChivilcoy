@@ -170,7 +170,7 @@
                 <DatosVehiculoDamnificado Model="@salidaIncendioVehicularView"
                                           animationClass="@animationClass"
                                           vehiculo="@vehiculo"
-                                          DamnificadosSalida="@DamnificadosSalida"
+                                          DamnificadosSalida="@salidaIncendioVehicularView.Damnificados"
                                           damnificadoVehiculoId="@damnificadoVehiculoId"
                                           damnificadoVehiculoCall="@HandleDamnificadoVehiculo" />
             }
@@ -214,7 +214,6 @@
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    public List<DamnificadoViewModels> DamnificadosSalida = new();
     public VehiculoDamnificadoViewModels vehiculo = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
@@ -357,8 +356,6 @@
                             Descripcion = salidaIncendioVehicularView.Descripcion,
                             HoraSalida = salidaIncendioVehicularView.HoraSalida,
                             HoraLlegada = salidaIncendioVehicularView.HoraLLegada,
-                            //KmSalida = salidaIncendioVehicularView.KmSalida,
-                            //KmLlegada = salidaIncendioVehicularView.KmLlegada,
                             NumeroParte = salidaIncendioVehicularView.NumeroParte,
                             AnioNumeroParte = salidaIncendioVehicularView.AnioNumeroParte,
                             CalleORuta = salidaIncendioVehicularView.CalleORuta,
@@ -414,6 +411,7 @@
                             Color = vehiculo.Color,
                             Airbag = vehiculo.Airbag
                         };
+
                     foreach (DamnificadoViewModels d in DamnificadosSalida)
                     {
                         Damnificado damn = new()
