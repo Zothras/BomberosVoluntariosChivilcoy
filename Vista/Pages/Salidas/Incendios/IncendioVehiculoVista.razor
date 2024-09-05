@@ -412,7 +412,7 @@
                             Airbag = vehiculo.Airbag
                         };
 
-                    foreach (DamnificadoViewModels d in DamnificadosSalida)
+                    foreach (var d in salidaIncendioVehicularView.Damnificados)
                     {
                         Damnificado damn = new()
                             {
@@ -423,10 +423,11 @@
                                 LugarDeNacimiento = d.LugarDeNacimiento,
                                 Edad = d.Edad,
                                 Estado = d.Estado,
-                                VehiculoDamnificado = d.NombreYApellido == damnificadoVehiculoId ? AgregarVehiculo : null
+                                VehiculoDamnificado = $"{d.Apellido} , {d.Nombre}" == damnificadoVehiculoId ? AgregarVehiculo : null
                             };
                         salidaIncendioVehicular.Damnificados.Add(damn);
                     }
+
                     await SalidaService.CargarSalida(salidaIncendioVehicular);
                     HandleOk1(salidaIncendioVehicular.AnioNumeroParte, salidaIncendioVehicular.NumeroParte);
                     await Init();
