@@ -18,8 +18,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
 
+    <style>
+        /* Estilos generales para pantalla */
         html, body {
             overflow-y: auto !important;
         }
@@ -39,11 +40,11 @@
             gap: 1em;
         }
 
-        /* seccion 1 */
-
+        /* Sección 1 */
         .sec1 {
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .sec1-content {
@@ -56,14 +57,25 @@
             margin-top: 0;
         }
 
+            .sec1-content div {
+                position: absolute;
+            }
+
+            .sec1-content img {
+                height: 100px;
+                width: 100px;
+                margin-left: 100px;
+            }
+
             .sec1-content h2 {
-                text-decoration: underline;
-                text-align: center;
                 font-size: 1.5em;
+                text-align: center;
+                text-decoration: underline;
             }
 
             .sec1-content p {
                 text-align: center;
+                font-size: 12.4px;
             }
 
         .sec1 h3 {
@@ -75,39 +87,45 @@
             }
 
         .sec1 h1 {
+            font-size: 2.8em;
             display: inline-block;
-            font-size: 3em;
+            position: absolute;
+            top: 24px;
+            right: 20px;
         }
 
-        /* seccion 2*/
-        .sec2-contenedor {
+        /* Sección 2 */
+        .sec2 {
             margin-left: 20px;
         }
 
-        .sec2 p:first-child {
-            font-weight: bold;
-        }
-
-        .sec2 .sec2-contenedor div ul {
-            list-style: none;
-            padding: 1.5em;
-            font-weight: bold;
-        }
-
-            .sec2 .sec2-contenedor div ul li {
-                padding: .3em 0;
+            .sec2 p:first-child {
+                font-weight: bold;
             }
 
-        .sec2-contenedor {
-            display: flex;
-            gap: 8em;
-        }
+            .sec2 .sec2-contenedor {
+                display: flex;
+                gap: 8em;
+            }
 
-        .sec2 div:nth-child(3) {
+                .sec2 .sec2-contenedor div ul {
+                    list-style: none;
+                    padding: 1.5em;
+                    font-weight: bold;
+                }
+
+                    .sec2 .sec2-contenedor div ul li {
+                        padding: .3em 0;
+                    }
+
+        .sec2-contenedor div:nth-child(3) {
             padding: 1em 0 7em 0;
         }
 
-        /* seccion 3 */
+        /* Sección 3 */
+        .sec3 {
+            margin-top: 1em;
+        }
 
         .sec3-titulo {
             font-weight: bold;
@@ -131,8 +149,8 @@
             padding: 3em 0 .3em 0;
         }
 
-        .div2-div > h3:first-child, .div2-div > h3:last-child {
-            padding: 0 .7em;
+        .div2-div {
+            padding-bottom: 0;
         }
 
         .div2-div-contenido {
@@ -140,8 +158,7 @@
             gap: 16em;
         }
 
-        /* seccion 4 */
-
+        /* Sección 4 */
         .croquis {
             width: 90%;
             height: 23em;
@@ -150,6 +167,57 @@
             margin-left: 12px;
             margin-top: 5px;
         }
+
+        /* Estilos para impresión */
+        @@media print {
+            body {
+                padding: 1em;
+                width: auto;
+                height: auto;
+                margin: 0;
+                font-size: 12px; /* Ajustar el tamaño de fuente para impresión */
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            .sec1, .sec2, .sec3, .sec4 {
+                page-break-inside: avoid; /* Evita que las secciones se rompan en medio de una página */
+            }
+
+            .sec2-contenedor {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .croquis {
+                width: 100%;
+                height: auto;
+                margin-left: 0;
+            }
+
+            .sec1-content div {
+                position: static; /* Elimina la posición absoluta para impresión */
+            }
+
+            .sec1-content img {
+                margin-left: 0; /* Elimina el margen izquierdo para impresión */
+            }
+
+            .sec1-content h1 {
+                font-size: 2em; /* Ajusta el tamaño de la fuente para impresión */
+                position: static; /* Elimina la posición absoluta para impresión */
+                top: auto;
+                right: auto;
+            }
+
+            .sec1-content h2, .sec1-content p {
+                font-size: 12px; /* Ajusta el tamaño de la fuente para impresión */
+            }
+            /* Opcional: ajustar márgenes, fuentes y otros estilos según sea necesario */
+        }
+
     </style>
 </head>
 <body>
