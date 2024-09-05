@@ -159,13 +159,27 @@
     .ant-dropdown-trigger{
         height: 32px !important;
     }
+    
+    .ant-table-tbody > tr.ant-table-row.Aprobada > td {
+        background-color: rgb(209, 255, 207) !important;
+    }
+
+    .ant-table-tbody > tr.ant-table-row.Pendiente > td {
+        background-color: rgb(255, 255, 192) !important;
+    }
+
+    .ant-table-tbody > tr.ant-table-row.Rechazada > td {
+        background-color: rgb(255, 96, 96) !important;
+    }
+
    /*  .ant-table-tbody{
         overflow: scroll!important;
     } */
 </style>
 <div class="template">
     @*dataSource= Contenido que contiene mi tabla *@
-    <Table Class="Tabla" DataSource="LicenciasActivasVM" PageSize="20" Responsive Style="border: none;width: 100%;">
+    <Table Class="Tabla" DataSource="LicenciasActivasVM" PageSize="20" Responsive Style="border: none;width: 100%;"
+    RowClassName="@(c => c.Data.EstadoLicencia.ToString())">
         <TitleTemplate>
             <div class="botonesCont">
                 <div class="inpt-cont-inline">
@@ -219,15 +233,15 @@
                     @{
                         if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
                         {
-                            <p style="color: red;">@TipoEstadoLicencia.Rechazada</p>
+                            <p>@TipoEstadoLicencia.Rechazada</p>
                         }
                         else if (muestra.EstadoLicencia == TipoEstadoLicencia.Aprobada)
                         {
-                            <p style="color: green;">@TipoEstadoLicencia.Aprobada</p>
+                            <p>@TipoEstadoLicencia.Aprobada</p>
                         }
                         else
                         {
-                            <p style="color: yellow;">@TipoEstadoLicencia.Pendiente</p>
+                            <p>@TipoEstadoLicencia.Pendiente</p>
                         }
                     }
                 </Template>
