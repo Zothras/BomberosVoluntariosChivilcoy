@@ -25,6 +25,7 @@ builder.Services.AddDbContextFactory<BomberosDbContext>(
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAntDesign();
 builder.Services.AddHostedService<InitData>();
 builder.Services.AddScoped<IBomberoService, BomberoService>();
