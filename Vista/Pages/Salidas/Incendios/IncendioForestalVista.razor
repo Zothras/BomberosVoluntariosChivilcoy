@@ -403,8 +403,7 @@
         }
         catch (Exception e)
         {
-            await Init();
-            StateHasChanged();
+            // Notificar al usuario
             if (e.InnerException != null)
                 await message.Error(e.InnerException.Message, 5);
             else
