@@ -121,21 +121,23 @@
 
 </style>
 
-<div class="contenedor" style="max-width: 100%;margin-top: 2em;">
-    <Steps Current="current">
-        @foreach (var item in steps)
-        {
-            <Step Title="@item.Title" Subtitle="@item.Content" />
-        }
-    </Steps>
 
-    <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
-        <Form Model="@accidenteViewModels"
-              LabelColSpan="8"
-              WrapperColSpan="16"
-              OnFinish="OnFinish"
-              OnFinishFailed="OnFinishFailed"
-              Style="width: 100%;height: 100%;overflow: hidden!important;">
+<Form Model="@accidenteViewModels"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;overflow: hidden!important;">
+
+    <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
+        <Steps Current="current">
+            @foreach (var item in steps)
+            {
+                <Step Title="@item.Title" Subtitle="@item.Content" />
+            }
+        </Steps>
+
+        <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
             @if (current == 0)
             {
                 @*General*@
@@ -161,68 +163,54 @@
                 <Personal Model="@accidenteViewModels"
                           animationClass="@animationClass" />
             }
-
-        </Form>
-    </div>
-</div>
-
-@*Tipo servicio*@
-@*  <FormItem Label="Tipo Servicio salida">
-            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@accidenteViewModels.TipoServicio" />
-        </FormItem> *@
-@*salidas rescates*@
-@*  <FormItem Label="Tipo Accidente">
-            <EnumSelect TEnum="TipoAccidente" @bind-Value="@accidenteViewModels.Tipo" />
-        </FormItem>
-
-        <FormItem Label="Cantidad de vheiculo">
-            <AntDesign.InputNumber @bind-Value="accidenteViewModels.CantidadVheiculo" />
-        </FormItem>
-        <FormItem Label="Tipo Condiciones Climaticas">
-            <EnumSelect TEnum="TipoCondicionesClimaticas" @bind-Value="@accidenteViewModels.CondicionesClimaticas" />
-            @if (accidenteViewModels.CondicionesClimaticas == TipoCondicionesClimaticas.Otro)
+            else if (current == 4)
             {
-                <FormItem Label="Otro Abertura">
-                    <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
+                <div class="slick-contenedor @animationClass">
+                    @*Tipo servicio*@
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo Servicio salida</label>
+                        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@accidenteViewModels.TipoServicio" />
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo Accidente</label>
+                        <EnumSelect TEnum="TipoAccidente" @bind-Value="@accidenteViewModels.Tipo" />
+                    </div>
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Condiciones Climaticas</label>
+                        <EnumSelect TEnum="TipoCondicionesClimaticas" @bind-Value="@accidenteViewModels.CondicionesClimaticas" />
+                        @if (accidenteViewModels.CondicionesClimaticas == TipoCondicionesClimaticas.Otro)
+                        {
+                            <label class="inpt-cont--lbl">Otra</label>
+                            <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="steps-action">
+            @if (current > 0)
+            {
+                <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+            }
+            @if (current < steps.Length - 1)
+            {
+                <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+            }
+            @if (current == steps.Length - 1)
+            {
+                <FormItem WrapperColSpan="16">
+                    <Button Class="boton_p" HtmlType="submit">
+                        Imprimir salida
+                    </Button>
                 </FormItem>
             }
-        </FormItem>
-
-        <FormItem Label="Otra condicion">
-            <Input @bind-Value="@accidenteViewModels.OtroCondicion" />
-        </FormItem>
-        <FormItem WrapperColOffset="8" WrapperColSpan="16">
-            <Button Class="boton_p" HtmlType="submit" OnClick="@CargarAccidente">
-                Cargar salida
-            </Button>
-        </FormItem>
-    </Form>
-</div>
-*@
-
-
-<div class="steps-action">
-    @if (current > 0)
-    {
-        <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
-    }
-    @if (current < steps.Length - 1)
-    {
-        <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
-    }
-    @if (current == steps.Length - 1)
-    {
-        <FormItem WrapperColSpan="16">
-            <Button Class="boton_p" HtmlType="submit">
-                Imprimir salida
-            </Button>
-        </FormItem>
-    }
-    @if (_visible1 == true)
-    {
-        <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
-    }
-</div>
+            @if (_visible1 == true)
+            {
+                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+            }
+        </div>
+    </div>
+</Form>
 
 @code {
 
