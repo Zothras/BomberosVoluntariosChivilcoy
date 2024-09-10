@@ -403,32 +403,24 @@
                     {
                         salidaIncendioVehicular.Moviles = salidaIncendioVehicularView.Moviles.ToList();
                     }
-
-                    VehiculoDamnificado AgregarVehiculo = new()
-                        {
-                            Marca = vehiculo.Marca,
-                            Patente = vehiculo.Patente,
-                            Tipo = vehiculo.Tipo,
-                            Año = vehiculo.Año,
-                            Modelo = vehiculo.Modelo,
-                            Color = vehiculo.Color,
-                            Airbag = vehiculo.Airbag
-                        };
-                    foreach (DamnificadoViewModels d in DamnificadosSalida)
+                    // Aquí agregamos los vehículos afectados a la lista correcta
+                    if (salidaIncendioVehicularView.VehiculoAfectados != null && salidaIncendioVehicularView.VehiculoAfectados.Any())
                     {
-                        Damnificado damn = new()
-                            {
-                                Nombre = d.Nombre,
-                                Apellido = d.Apellido,
-                                Dni = d.Dni,
-                                Sexo = d.Sexo,
-                                LugarDeNacimiento = d.LugarDeNacimiento,
-                                Edad = d.Edad,
-                                Estado = d.Estado,
-                                VehiculoDamnificado = d.NombreYApellido == damnificadoVehiculoId ? AgregarVehiculo : null
-                            };
-                        salidaIncendioVehicular.Damnificados.Add(damn);
+                        foreach (var vehiculo in salidaIncendioVehicularView.VehiculoAfectados)
+                        {
+                            VehiculoAfectadoIncendio vehiculoAfectado = new()
+                                {
+                                    Marca = vehiculo.Marca,
+                                    Patente = vehiculo.Patente,
+                                    Tipo = vehiculo.Tipo,
+                                    Año = vehiculo.Año,
+                                    Modelo = vehiculo.Modelo,
+                                    Airbag = vehiculo.Airbag
+                                };
+                            salidaIncendioVehicular.VehiculoAfectados.Add(vehiculoAfectado);
+                        }
                     }
+                 
                     await SalidaService.CargarSalida(salidaIncendioVehicular);
                     HandleOk1(salidaIncendioVehicular.AnioNumeroParte, salidaIncendioVehicular.NumeroParte);
                     await Init();

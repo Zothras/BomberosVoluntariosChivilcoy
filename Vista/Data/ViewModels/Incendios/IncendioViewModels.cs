@@ -12,7 +12,8 @@ public class IncendioViewModels : SalidasViewModels
 
     public bool Hidrante { get; set; }
 
-    public List<VehiculoAfectadoIncendio> VehiculoAfectados { get; set; }//Lo cambie por VehiculoAfectadoIncendio
+
+    public List<VehiculoAfectadoIncendio> VehiculoAfectados { get; set; } = new();//Lo cambie por VehiculoAfectadoIncendio
     public TipoEvacuacion TipoEvacuacion { get; set; }
     public TipoSuperficie TipoSuperficieAfectada { get; set; }
 
