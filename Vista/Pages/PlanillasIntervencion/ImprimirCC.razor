@@ -18,8 +18,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
 
+    <style>
+        /* Estilos generales para pantalla */
         html, body {
             overflow-y: auto !important;
         }
@@ -39,11 +40,11 @@
             gap: 1em;
         }
 
-        /* seccion 1 */
-
+        /* Sección 1 */
         .sec1 {
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .sec1-content {
@@ -56,14 +57,25 @@
             margin-top: 0;
         }
 
+            .sec1-content div {
+                position: absolute;
+            }
+
+            .sec1-content img {
+                height: 100px;
+                width: 100px;
+                margin-left: 100px;
+            }
+
             .sec1-content h2 {
-                text-decoration: underline;
-                text-align: center;
                 font-size: 1.5em;
+                text-align: center;
+                text-decoration: underline;
             }
 
             .sec1-content p {
                 text-align: center;
+                font-size: 12.4px;
             }
 
         .sec1 h3 {
@@ -75,39 +87,45 @@
             }
 
         .sec1 h1 {
+            font-size: 2.8em;
             display: inline-block;
-            font-size: 3em;
+            position: absolute;
+            top: 24px;
+            right: 20px;
         }
 
-        /* seccion 2*/
-        .sec2-contenedor {
+        /* Sección 2 */
+        .sec2 {
             margin-left: 20px;
         }
 
-        .sec2 p:first-child {
-            font-weight: bold;
-        }
-
-        .sec2 .sec2-contenedor div ul {
-            list-style: none;
-            padding: 1.5em;
-            font-weight: bold;
-        }
-
-            .sec2 .sec2-contenedor div ul li {
-                padding: .3em 0;
+            .sec2 p:first-child {
+                font-weight: bold;
             }
 
-        .sec2-contenedor {
-            display: flex;
-            gap: 8em;
-        }
+            .sec2 .sec2-contenedor {
+                display: flex;
+                gap: 8em;
+            }
 
-        .sec2 div:nth-child(3) {
+                .sec2 .sec2-contenedor div ul {
+                    list-style: none;
+                    padding: 1.5em;
+                    font-weight: bold;
+                }
+
+                    .sec2 .sec2-contenedor div ul li {
+                        padding: .3em 0;
+                    }
+
+        .sec2-contenedor div:nth-child(3) {
             padding: 1em 0 7em 0;
         }
 
-        /* seccion 3 */
+        /* Sección 3 */
+        .sec3 {
+            margin-top: 1em;
+        }
 
         .sec3-titulo {
             font-weight: bold;
@@ -131,8 +149,8 @@
             padding: 3em 0 .3em 0;
         }
 
-        .div2-div > h3:first-child, .div2-div > h3:last-child {
-            padding: 0 .7em;
+        .div2-div {
+            padding-bottom: 0;
         }
 
         .div2-div-contenido {
@@ -140,8 +158,7 @@
             gap: 16em;
         }
 
-        /* seccion 4 */
-
+        /* Sección 4 */
         .croquis {
             width: 90%;
             height: 23em;
@@ -150,6 +167,57 @@
             margin-left: 12px;
             margin-top: 5px;
         }
+
+        /* Estilos para impresión */
+        @@media print {
+            body {
+                padding: 1em;
+                width: auto;
+                height: auto;
+                margin: 0;
+                font-size: 12px; /* Ajustar el tamaño de fuente para impresión */
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            .sec1, .sec2, .sec3, .sec4 {
+                page-break-inside: avoid; /* Evita que las secciones se rompan en medio de una página */
+            }
+
+            .sec2-contenedor {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .croquis {
+                width: 100%;
+                height: auto;
+                margin-left: 0;
+            }
+
+            .sec1-content div {
+                position: static; /* Elimina la posición absoluta para impresión */
+            }
+
+            .sec1-content img {
+                margin-left: 0; /* Elimina el margen izquierdo para impresión */
+            }
+
+            .sec1-content h1 {
+                font-size: 2em; /* Ajusta el tamaño de la fuente para impresión */
+                position: static; /* Elimina la posición absoluta para impresión */
+                top: auto;
+                right: auto;
+            }
+
+            .sec1-content h2, .sec1-content p {
+                font-size: 12px; /* Ajusta el tamaño de la fuente para impresión */
+            }
+            /* Opcional: ajustar márgenes, fuentes y otros estilos según sea necesario */
+        }
+
     </style>
 </head>
 <body>
@@ -200,13 +268,13 @@
             <p>
                 LISTADO DE BOMBEROS EN MOVILES
             </p>
-            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
+            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any() && IntervencionVM.CuerpoSalida != null && IntervencionVM.CuerpoSalida.Any())
             {
                 <BomberosMovil BomberosSalidas="@IntervencionVM.CuerpoSalida" MovilesQueSalieron="@IntervencionVM.movilesSalida"></BomberosMovil>
             }
         </div>
         <div>
-            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any() && IntervencionVM.CuerpoSalida != null && IntervencionVM.CuerpoSalida.Any())
+            @if (IntervencionVM.movilesSalida != null && IntervencionVM.movilesSalida.Any())
             {
                 <TablaMoviles movilesSalida="@IntervencionVM.movilesSalida"></TablaMoviles>
             }
@@ -222,36 +290,67 @@
         <div class="sec3-contenedor">
             <div>
                 <h3 class="sec3-titulo">
-                    Detalle o Daños generales:
+                    DETALLE O DAÑOS GENERALES:
                 </h3>
                 <p></p>
             </div>
             <div>
                 <h3 class="sec3-titulo h3-2">
-                    Elementos cercanos no afectados:
+                    ELEMENTOS CERCANOS NO AFECTADOS:
                 </h3>
                 <br><br><br>
                 <div class="div2-div" style="padding-bottom: 0px;">
                     <h3>Nombre de Locatario o Propietario: </h3>
                     <div class="div2-div-contenido">
                         <h3>Dni: </h3>
-                        <h3>Seguro: </h3>
-                        <h3>Compania: </h3>
+                        <h3>Seguro Poliza: @(IntervencionVM.SeguroPoliza ?? "")</h3>
+                        <h3>Seguro Compania: @(IntervencionVM.SeguroCompania ?? "")</h3>
                     </div>
                     <h3 style="padding-bottom: 0px;">Personas que pueden atestiguar: </h3>
                     <p>..........................................................................................................................................................................................................</p>
                 </div>
             </div>
         </div>
+        <div>
+            <p class="sec3-titulo">
+                B) Incendio
+            </p>
+        </div>
+        @if (IntervencionVM.TipoTecho != null && IntervencionVM.TipoAbertura != null)
+        {
+            <div class="sec3-contenedor">
+                <span>
+                    TIPO TECHO: @IntervencionVM.TipoTecho.ToString()
+                    TIPO ABERTURA: @IntervencionVM.TipoAbertura.ToString()
+                    @if (IntervencionVM.CantidadPisos != null && IntervencionVM.CantidadPisosAfectados != null)
+                    {
+                        <span>
+                            Cantidad de Pisos: @IntervencionVM.CantidadPisos
+                            Pisos Afectados: @IntervencionVM.CantidadPisosAfectados
+                        </span>
+                    }
+                </span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(IntervencionVM.SuperficieTotal))
+        {
+            <h3>SUPERFICIE AFECTADA: @IntervencionVM.SuperficieTotal</h3>
+        }
+        <div>
+            <p class="sec3-titulo">
+                C) Heridos Y Fallecidos
+            </p>
+        </div>
         @if (IntervencionVM.Damnificados != null && IntervencionVM.Damnificados.Any())
         {
-            <div>
-                <p class="sec3-titulo">
-                    C) Heridos Y Fallecidos
-                </p>
-            </div>
             <div class="sec3-contenedor">
                 <TablaDamnificados Damnificados="@IntervencionVM.Damnificados"></TablaDamnificados>
+            </div>
+        }
+        else
+        {
+            <div class="sec3-contenedor">
+                <p>No se registraron heridos ni fallecidos en esta intervención.</p>
             </div>
         }
     </div>
@@ -269,13 +368,13 @@
         }
         <div>
             <p class="sec3-titulo" style="margin-top: 10px;">OBSERVACIONES:</p>
-            <p>llamado de guardia Nº 2</p>
+            <p></p>
         </div>
         <div style="display: flex;padding: 3em;justify-content:center; gap: 15em;">
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em; text-align: center;">
                 <div>
                     <h3>CONFECCIONO  </h3>
-                    <p>1º AYUDANTE- @IntervencionVM.Confecciono</p>
+                    <p>[@IntervencionVM.ConfeccionoRango] - @IntervencionVM.Confecciono</p>
                 </div>
                 <div>
                     <p>....................................</p>
@@ -285,7 +384,7 @@
             <div style="display: flex;justify-content: space-between;flex-direction: column;gap: 3em;text-align: center;">
                 <div>
                     <h3>GRADUADO A CARGO  </h3>
-                    <p>1º AYUDANTE- @IntervencionVM.GraduadoCargo</p>
+                    <p>[@IntervencionVM.GraduadoRango] - @IntervencionVM.GraduadoCargo</p>
                 </div>
                 <div>
                     <p>....................................</p>
@@ -322,48 +421,86 @@
             }
         }
 
-        public string DetallesSalida { get; set; }
+        public string? DetallesSalida { get; set; }
 
-        public string AvisadoPor { get; set; }
+        public string? AvisadoPor { get; set; }
 
-        public string TipoServicio { get; set; }
+        public string? TipoServicio { get; set; }
 
-        public string HoraSalida { get; set; }
+        public string? HoraSalida { get; set; }
 
-        public string HoraLlegada { get; set; }
+        public string? HoraLlegada { get; set; }
 
-        public string NombreConfecciono { get; set; }
+        public string? NombreConfecciono { get; set; }
 
-        public string ApellidoConfecciono { get; set; }
+        public string? ApellidoConfecciono { get; set; }
 
-        public string Confecciono { get { return NombreConfecciono + "," + ApellidoConfecciono; } }
+        public string Confecciono
+        {
+            get { return ApellidoConfecciono + ", " + NombreConfecciono; }
+        }
 
-        public string GraduadoCargo { get { return GraduadoNombre + "," + ApellidoConfecciono; } }
+        public string GraduadoCargo
+        {
+            get { return ApellidoConfecciono + ", " + GraduadoNombre; }
+        }
 
-        public string GraduadoNombre { get; set; }
+        //Rangos Graduado - Confecciono (Modificar luego)
+        public string? ConfeccionoRango { get; set; }
+        public string? GraduadoRango { get; set; }
 
-        public string GraduadoApellido { get; set; }
+        public string? GraduadoNombre { get; set; }
+
+        public string? GraduadoApellido { get; set; }
 
         public int NumeroParte { get; set; }
         public int AnioSalida { get; set; }
 
-        public string Recepcionista { get; set; }
+        public string? Recepcionista { get; set; }
 
         public TipoCausaIncendio? Causa { get; set; }
 
         public TipoZona Zona { get; set; }
 
-        public string Lugar { get; set; }
+        public string? Lugar { get; set; }
 
-        public List<MovilSalida> movilesSalida { get; set; }
+        public List<MovilSalida>? movilesSalida { get; set; }
 
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
 
-        public List<BomberoSalida> CuerpoSalida { get; set; }
+        public List<BomberoSalida>? CuerpoSalida { get; set; }
 
-        public List<Damnificado> Damnificados { get; set; }
+        public List<Damnificado>? Damnificados { get; set; }
 
-        public string TipoSalida { get; set; }
+        public string? TipoSalida { get; set; }
+
+        public TipoIncendioTecho? TipoTecho { get; set; }
+
+        public TipoIncendioAbertura? TipoAbertura { get; set; }
+
+        public string? CantidadPisos { get; set; }
+        public string? CantidadPisosAfectados { get; set; }
+
+        //Datos del Seguro
+        public string? SeguroPoliza { get; set; }
+        public string? SeguroCompania { get; set; }
+
+        // Superficie Afectada
+        public string? CantidadDeSuperficie { get; set; } // Cantidad de la superficie afectada
+        public string? UnidadDeSuperficie { get; set; } // Unidad de medida (km, hectárea, etc.)
+
+        // Variable que suma ambas
+        public string? SuperficieTotal
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(CantidadDeSuperficie) || string.IsNullOrEmpty(UnidadDeSuperficie))
+                {
+                    return null;
+                }
+                return $"{CantidadDeSuperficie} {UnidadDeSuperficie}";
+            }
+        }
     }
 
     BomberosDbContext Context { get; set; }
@@ -377,7 +514,7 @@
         return Task.CompletedTask;
     }
 
-    private async Task<Salida> CargarSalida()
+    private async Task<Salida?> CargarSalida()
     {
         var salida = await Context.Set<Salida>()
         .Include(s => s.Moviles)  // Incluye la relación con MovilesSalida
@@ -389,6 +526,7 @@
         .Include(s => s.CuerpoParticipante)  // Incluye nuevamente la relación con BomberosSalida
           .ThenInclude(bs => bs.MovilAsignado)  // Incluye los detalles del MovilAsignado en BomberosSalida
         .Include(s => s.Damnificados)
+        .Include(s => s.Seguro)
         .SingleOrDefaultAsync(s => s.NumeroParte == NumeroParte && s.AnioNumeroParte == AnioSalida);
 
         return salida;
@@ -402,7 +540,7 @@
 
     public async Task CargarIntervencion()
     {
-        Salida salida = await CargarSalida();
+        Salida? salida = await CargarSalida();
 
         if (salida != null)
         {
@@ -418,8 +556,10 @@
             IntervencionVM.AvisadoPor = salida.NombreSolicitante + "," + salida.ApellidoSolicitante;
             IntervencionVM.NombreConfecciono = quienlleno.Nombre;
             IntervencionVM.ApellidoConfecciono = quienlleno.Apellido;
+            IntervencionVM.ConfeccionoRango = quienlleno.Grado.ToString();
             IntervencionVM.GraduadoNombre = encargado.Nombre;
             IntervencionVM.GraduadoApellido = encargado.Apellido;
+            IntervencionVM.GraduadoRango = quienlleno.Grado.ToString();
             IntervencionVM.NumeroParte = salida.NumeroParte;
             IntervencionVM.AnioSalida = salida.AnioNumeroParte;
             IntervencionVM.Recepcionista = salida.NombreYApellidoReceptor ?? "No se registro recepcionista.";
@@ -427,9 +567,31 @@
             IntervencionVM.Direccion = $"{salida.CalleORuta ?? "Calle Desconocida"} {salida.NumeroOKilometro ?? "s/n"}";
             IntervencionVM.DetallesSalida = salida.Descripcion;
 
+            if (salida.Seguro != null)
+            {
+                IntervencionVM.SeguroCompania = salida.Seguro.CompañiaAseguradora;
+                IntervencionVM.SeguroPoliza = salida.Seguro.NumeroDePoliza;
+            }
+
             if (salida is Incendio incendio)
             {
                 IntervencionVM.Causa = incendio.SuperficieAfectadaCausa;
+                IntervencionVM.TipoAbertura = incendio.TipoAbertura;
+                IntervencionVM.TipoTecho = incendio.TipoTecho;
+                IntervencionVM.CantidadPisos = incendio.CantidadPisos != null ? incendio.CantidadPisos.ToString() : null;
+                IntervencionVM.CantidadPisosAfectados = incendio.PisoAfectado != null ? incendio.PisoAfectado.ToString() : null;
+
+                //Superficie
+                int superficie;
+                if (int.TryParse(incendio.DetalleSuperficieAfectadaIncendio, out superficie))
+                {
+                    IntervencionVM.CantidadDeSuperficie = superficie.ToString();
+                }
+                else
+                {
+                    IntervencionVM.CantidadDeSuperficie = null; // O deja el valor actual sin cambiar
+                }
+                IntervencionVM.UnidadDeSuperficie = incendio.TipoSuperficieAfectada.ToString();
             }
 
             if (salida.GetType().GetProperty("TipoLugar") != null)

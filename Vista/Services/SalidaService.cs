@@ -44,7 +44,15 @@ namespace Vista.Services
                 foreach (BomberoSalida bom in salida.CuerpoParticipante)
                 {
                     Bombero? bomberoSalida = await _context.Bomberos.Where(b => b.NumeroLegajo == bom.Bombero.NumeroLegajo).SingleOrDefaultAsync();
-                    Movil? movilSalio = await _context.Moviles.Where(m => m.NumeroMovil == bom.MovilAsignado.NumeroMovil).SingleOrDefaultAsync();
+                    Movil? movilSalio = null;
+
+                    if (bom.MovilAsignado != null)
+                    {
+                        movilSalio = await _context.Moviles
+                            .Where(m => m.NumeroMovil == bom.MovilAsignado.NumeroMovil)
+                            .SingleOrDefaultAsync();
+                    }
+
                     BomberoSalida BomSalida = new()
                     {
                         MovilAsignado = movilSalio,

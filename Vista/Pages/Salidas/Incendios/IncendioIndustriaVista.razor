@@ -15,6 +15,31 @@
 @using Vista.Components.Forms.Salidas.General;
 
 <style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+        border-radius: 5px 5px !important;
+    }
+
+    .steps-action {
+        margin-top: 10px !important;
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+        margin-left: 254px;
+    }
+
+    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+        text-decoration: none;
+        background: #40a9ff !important;
+    }
+
+    .ant-btn:hover, .ant-btn:focus {
+        color: white !important;
+        border-color: #40a9ff !important;
+        background: #40a9ff !important;
+    }
+
     .ant-carousel .slick-dots li {
         display: none !important;
     }
@@ -42,13 +67,10 @@
     }
 
     .steps-action {
-        margin-top: 10px !important;
+        margin-top: 24px;
         display: flex;
         justify-content: flex-end;
         gap: 5px;
-        margin-right: 78px !important;
-    }
-
     }
 
     .inpt-cont {
@@ -93,33 +115,11 @@
         }
     }
 
-    .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
-        border-radius: 5px 5px !important;
-    }
-
-    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
-        text-decoration: none;
-        background: #40a9ff !important;
-    }
-
-    .ant-btn:hover, .ant-btn:focus {
-        color: white !important;
-        border-color: #40a9ff !important;
-        background: #40a9ff !important;
-    }
-
-    textarea {
-        resize: none !important;
-        min-height: 250pxpx !important;
-        width: 100% !important;
-    }
-
     .ant-checkbox-input:checked + .ant-checkbox-inner {
         background-color: #4CAF50 !important;
         border-color: #4CAF50 !important;
     }
+
 </style>
 
 <Form Model="@salidaIncendioIndustrialView"
@@ -142,13 +142,13 @@
             {
                 @*General*@
                 <DatosGenerales Model="@salidaIncendioIndustrialView"
-                    animationClass="@animationClass" />
+                                animationClass="@animationClass" />
             }
             else if (current == 1)
             {
                 @*Solicitante | Receptor | Damnificado*@
                 <Participantes Model="@salidaIncendioIndustrialView"
-                           animationClass="@animationClass" />
+                               animationClass="@animationClass" />
             }
             else if (current == 2)
             {
@@ -178,9 +178,9 @@
                     </div>
                 </div>
                 <Establecimiento Model="@salidaIncendioIndustrialView"
-                    animationClass="@animationClass" />
+                                 animationClass="@animationClass" />
             }
-            else if(current == 6)
+            else if (current == 6)
             {
                 <div class="slick-contenedor">
                     <DatosSalida Model="@salidaIncendioIndustrialView"
@@ -241,7 +241,7 @@
         ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
     }
-    
+
     @*Bomberos*@
     int BomberoReceptor;// Falta info..
 
@@ -389,7 +389,7 @@
                     {
                         salidaIncendioIndustria.Moviles = salidaIncendioIndustrialView.Moviles.ToList();
                     }
-  
+
                     //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
                     if (salidaIncendioIndustrialView.Damnificados != null && salidaIncendioIndustrialView.Damnificados.Any())
                     {
@@ -406,8 +406,7 @@
         }
         catch (Exception e)
         {
-            await Init();
-            StateHasChanged();
+            // Notificar al usuario
             if (e.InnerException != null)
                 await message.Error(e.InnerException.Message, 5);
             else
@@ -415,7 +414,7 @@
         }
     }
 
-    
+
 
     //OnFinishFailed
     private void OnFinishFailed(EditContext editContext)

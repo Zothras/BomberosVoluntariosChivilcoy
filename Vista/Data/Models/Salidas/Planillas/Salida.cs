@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
-    
+
     public abstract class Salida
     {
         public int SalidaId { get; set; }
@@ -17,23 +17,23 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         [Required, StringLength(255)]
         public string Descripcion { get; set; }
-        [Required, StringLength(255)]
-        public string CalleORuta { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroOKilometro { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
+        public string? CalleORuta { get; set; }
+        [StringLength(255)]
+        public string? NumeroOKilometro { get; set; }
+        [StringLength(255)]
         public string? EntreCalles { get; set; }
         [StringLength(255)]
         public string? PisoNumero { get; set; }
         [StringLength(255)]
         public string? Depto { get; set; }
         public TipoZona TipoZona { get; set; }
-        
+
         public string NombreSolicitante { get; set; }
         public string ApellidoSolicitante { get; set; }
         public string DniSolicitante { get; set; }
         public string TelefonoSolicitante { get; set; }
-        
+
         public string? NombreYApellidoReceptor { get; set; }
 
         public int? ReceptorId { get; set; }
@@ -49,7 +49,7 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         //relaciones con bomberos y moviles
         public List<MovilSalida> Moviles { get; set; }
-        
+
         public List<BomberoSalida> CuerpoParticipante { get; set; }
 
         public int EncargadoId { get; set; }
@@ -60,5 +60,7 @@ namespace Vista.Data.Models.Salidas.Planillas
         [ForeignKey("QuienLlenoId")]
         public Bombero QuienLleno { get; set; }
         public TipoServicioSalida TipoServicio { get; set; }
+        public double? Latitud { get; set; }
+        public double? Longitud { get; set; }
     }
 }

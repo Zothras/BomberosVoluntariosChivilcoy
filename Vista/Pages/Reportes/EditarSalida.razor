@@ -84,12 +84,6 @@
             <Input @bind-Value="@salidasViewModel.TelefonoSolicitante" />
         </FormItem>
         @*Datos del receptor*@
-        <FormItem Label="Nombre y apellido del receptor">
-            <Input @bind-Value="@salidasViewModel.NombreYApellidoReceptor" />
-        </FormItem>
-        <FormItem Label="Legajo receptor">
-            <Input @bind-Value="@salidasViewModel.LegajoReceptor" />
-        </FormItem>
 
         @*Seguro del lugar*@
         <div>
@@ -1583,7 +1577,6 @@
                 ApellidoSolicitante = salida.ApellidoSolicitante,
                 DniSolicitante = salida.DniSolicitante,
                 TelefonoSolicitante = salida.TelefonoSolicitante,
-                NombreYApellidoReceptor = salida.NombreYApellidoReceptor,
                 ReceptorId = salida.ReceptorId,
                 ReceptorBombero = salida.ReceptorBombero,
                 Damnificados = salida.Damnificados,

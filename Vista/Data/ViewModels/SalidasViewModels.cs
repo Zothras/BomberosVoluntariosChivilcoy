@@ -68,7 +68,21 @@ namespace Vista.Data.ViewModels
         public string TelefonoSolicitante { get; set; }
 
         //Datos del bombero receptor
-        public string? NombreYApellidoReceptor { get; set; }
+
+        public string? NombreYApellidoReceptor
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ApellidoReceptor) && string.IsNullOrEmpty(NombreReceptor))
+                    return null;
+
+                // Combina el apellido y el nombre con una coma y un espacio
+                return $"{ApellidoReceptor}, {NombreReceptor}";
+            }
+        }
+
+        public string? NombreReceptor { get; set; }
+        public string? ApellidoReceptor { get; set; }
         public int LegajoReceptor { get; set; }
 
         public List<Damnificado>? Damnificados { get; set; }
@@ -93,5 +107,8 @@ namespace Vista.Data.ViewModels
         }
         public int LegajoLLenoPlanilla { get; set; }
         public TipoServicioSalida TipoServicio { get; set; }
+
+        public double? Latitud { get; set; }
+        public double? Longitud { get; set; }
     }
 }

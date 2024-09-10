@@ -170,7 +170,6 @@
                 <DatosVehiculoDamnificado Model="@salidaIncendioVehicularView"
                                           animationClass="@animationClass"
                                           vehiculo="@vehiculo"
-                                          DamnificadosSalida="@DamnificadosSalida"
                                           damnificadoVehiculoId="@damnificadoVehiculoId"
                                           damnificadoVehiculoCall="@HandleDamnificadoVehiculo" />
             }
@@ -214,7 +213,6 @@
     private DamnificadoViewModels damnificado = new();
     private MovilSalidaViewModels movilSalidaViewModels = new();
     private BomberoSalidaViewModels bomberoSalidaView = new();
-    public List<DamnificadoViewModels> DamnificadosSalida = new();
     public VehiculoDamnificadoViewModels vehiculo = new();
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<BomberoSalidaViewModels> bomberosSalida = new();
@@ -357,8 +355,6 @@
                             Descripcion = salidaIncendioVehicularView.Descripcion,
                             HoraSalida = salidaIncendioVehicularView.HoraSalida,
                             HoraLlegada = salidaIncendioVehicularView.HoraLLegada,
-                            //KmSalida = salidaIncendioVehicularView.KmSalida,
-                            //KmLlegada = salidaIncendioVehicularView.KmLlegada,
                             NumeroParte = salidaIncendioVehicularView.NumeroParte,
                             AnioNumeroParte = salidaIncendioVehicularView.AnioNumeroParte,
                             CalleORuta = salidaIncendioVehicularView.CalleORuta,
@@ -431,8 +427,7 @@
         }
         catch (Exception e)
         {
-            await Init();
-            StateHasChanged();
+            // Notificar al usuario
             if (e.InnerException != null)
                 await message.Error(e.InnerException.Message, 5);
             else

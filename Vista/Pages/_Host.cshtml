@@ -2,14 +2,25 @@
 @namespace Vista.Pages
 @using Vista
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @{
     Layout = "_Layout";
+    var path = string.Empty;
+    if (HttpContextAccessor.HttpContext != null)
+    {
+        path = HttpContextAccessor.HttpContext.Request.Path.Value ?? string.Empty;
+    }
 }
 
 <component type="typeof(App)" render-mode="ServerPrerendered" />
 <head>
-    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
-    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    <meta name="robots" content="noindex, nofollow">
+    @if (!path.Contains("/PlanillasIntervencion/Imprimir/"))
+    {
+        <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
+        <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    }
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fjalla+One&family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -18,6 +29,9 @@
 </head>
 
 <body>
-    <script src="https://kit.fontawesome.com/272199268b.js" crossorigin="anonymous"></script>
+    @if (!path.Contains("/PlanillasIntervencion/Imprimir/"))
+    {
+        <script src="https://kit.fontawesome.com/272199268b.js" crossorigin="anonymous"></script>
+    }
     <script src="js/BlazorDownloadFile.saveAsFile.js"></script>
 </body>
