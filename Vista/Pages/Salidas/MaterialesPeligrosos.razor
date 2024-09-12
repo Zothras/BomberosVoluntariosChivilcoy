@@ -275,7 +275,7 @@
             }
             @if (_visible1 == true)
             {
-                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+                <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
             }
         </div>
     </div>
@@ -285,7 +285,8 @@
 {
     //Variables de la Impresion
     private bool _visible1;
-    private int ImprimirNumeroParte;
+    public int ImprimirAnio;
+    public int ImprimirNumeroParte;
 
 
     public int current { get; set; } = 0;
@@ -354,8 +355,9 @@
     }
 
     //Metodos Nuevos Relacionados a la Impresion:
-    void HandleOk1(int _numeroParte)
+    void HandleOk1(int _anio, int _numeroParte)
     {
+        ImprimirAnio = _anio;
         ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
     }
@@ -367,9 +369,10 @@
             Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(modelMateriales.LegajoEncargado);
             Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(modelMateriales.LegajoLLenoPlanilla);
             Vista.Data.Models.Salidas.Planillas.MaterialPeligroso? numeroParte = await Context.MaterialesPeligrosos.Where(m => m.NumeroParte == modelMateriales.NumeroParte).SingleOrDefaultAsync();
+
             if (numeroParte != null)
             {
-                message.Warning("Numero parte ya existente.");
+                await message.Warning("Numero parte ya existente.");
                 return;
             }
 
@@ -491,7 +494,7 @@
             }
 
             await SalidaService.CargarSalida(materiales);
-            HandleOk1(materiales.NumeroParte);
+            HandleOk1(materiales.AnioNumeroParte, materiales.NumeroParte);
             await Init();
             StateHasChanged();
         }
