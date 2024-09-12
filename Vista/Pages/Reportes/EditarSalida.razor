@@ -27,10 +27,10 @@
           OnFinishFailed="OnFinishFailedEditar"
     @ref="@_form">
         @*Datos generales de las salidas*@
-        <FormItem Label="Numero de parte">
+        <FormItem Label="Número de parte">
             <AntDesign.InputNumber @bind-Value="salidasViewModel.NumeroParte" Disabled />
         </FormItem>
-        <FormItem Label="Descripcion">
+        <FormItem Label="Descripción">
             <Input @bind-Value="@salidasViewModel.Descripcion" />
         </FormItem>
         <FormItem Label="Fecha salida">
@@ -52,13 +52,13 @@
         <FormItem Label="Calle/Ruta">
             <Input @bind-Value="@salidasViewModel.CalleORuta" />
         </FormItem>
-        <FormItem Label="Numero/kilometro">
+        <FormItem Label="Número/Kilómetro">
             <Input @bind-Value="@salidasViewModel.NumeroOKilometro" />
         </FormItem>
         <FormItem Label="Entre calles">
             <Input @bind-Value="@salidasViewModel.EntreCalles" />
         </FormItem>
-        <FormItem Label="PisoNumero">
+        <FormItem Label="Piso Número">
             <Input @bind-Value="@salidasViewModel.PisoNumero" />
         </FormItem>
         <FormItem Label="Depto">
@@ -74,13 +74,13 @@
         <FormItem Label="Nombre del solicitante">
             <Input @bind-Value="@salidasViewModel.NombreSolicitante" />
         </FormItem>
-        <FormItem Label="Apelldio del solicitante">
+        <FormItem Label="Apellido del solicitante">
             <Input @bind-Value="@salidasViewModel.ApellidoSolicitante" />
         </FormItem>
-        <FormItem Label="documneto del solicitante">
+        <FormItem Label="Documento del solicitante">
             <Input @bind-Value="@salidasViewModel.DniSolicitante" />
         </FormItem>
-        <FormItem Label="Telefono  del solicitante">
+        <FormItem Label="Teléfono del solicitante">
             <Input @bind-Value="@salidasViewModel.TelefonoSolicitante" />
         </FormItem>
         @*Datos del receptor*@
@@ -103,13 +103,13 @@
                     @if (switchValueS == true)
                     {
                         <b><label>Seguro del lugar afectado</label></b>
-                        <FormItem Label="Compania Aseguradora">
+                        <FormItem Label="Compañia Aseguradora">
                             <Input @bind-Value="@salidasViewModel.CompaniaAseguradora" />
                         </FormItem>
-                        <FormItem Label="NumeroPoliza">
+                        <FormItem Label="Número Poliza">
                             <Input @bind-Value="@salidasViewModel.NumeroPoliza" />
                         </FormItem>
-                        <FormItem Label="FechaVencimineto">
+                        <FormItem Label="Fecha Vencimineto">
                             <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@salidasViewModel.FechaVencimineto" />
                         </FormItem>
                     }
@@ -138,7 +138,7 @@
                 <FormItem Label="Lugar De nacimiento">
                     <Input @bind-Value="@d.LugarDeNacimiento" />
                 </FormItem>
-                <FormItem Label="edad">
+                <FormItem Label="Edad">
                     <AntDesign.InputNumber @bind-Value="d.Edad" />
                 </FormItem>
                 <FormItem Label="Tipo material">
@@ -151,7 +151,7 @@
         @*a la hora de pedir el chofer y movil,
         pedir dato unico para no cargar todo y buscarlo en la base de datos*@
         @*Moviles de salidas*@
-        <b><label>Datos de movil y chofer</label></b>
+        <b><label>Datos de móvil y chofer</label></b>
         <br />
         @*@for (int j = 0; j< salidasViewModel[numeroParteVisualizar].Moviles.Count; j++ )*@-------------@*Al hacerlo co for no se puede, ya que el elemento una vez que se muestra es
         desechado, por lo tanto tiraba una exepcion al intentar acceder a la lista de booleanos*@
@@ -180,7 +180,7 @@
                 </Select>
             </FormItem>
 
-            <FormItem Label="Numero de movil">
+            <FormItem Label="Número de móvil">
                 <Select TItem="Movil"
                         TItemValue="string"
                         DataSource="@Moviles"
@@ -209,19 +209,19 @@
             </FormItem>
             if (mv.CargoCombustible == true)
             {
-                <FormItem Label="Numero Factura">
+                <FormItem Label="Número Factura">
                     <Input @bind-Value="@mv.NumeroFactura" />
                 </FormItem>
-                <FormItem Label="Tipo Conbustible">
+                <FormItem Label="Tipo Combustible">
                     <Input @bind-Value="@mv.TipoConbustible" />
                 </FormItem>
                 <FormItem Label="Cantidad Litros">
                     <Input @bind-Value="@mv.CantidadLitros" />
                 </FormItem>
-                <FormItem Label="Quien Lleno">
+                <FormItem Label="Quién Lleno">
                     <Input @bind-Value="@mv.QuienLleno" />
                 </FormItem>
-                <FormItem Label="Telefono Quien Lleno">
+                <FormItem Label="Teléfono Quien Lleno">
                     <Input @bind-Value="@mv.TelefonoQuienLleno" />
                 </FormItem>
             }
@@ -366,7 +366,7 @@
                         @if (switchValueS == true)
                         {
                             <b><label>Seguro del lugar afectado</label></b>
-                            <FormItem Label="Compania Aseguradora">
+                            <FormItem Label="Compañia Aseguradora">
                                 <Input @bind-Value="@salidasViewModel.CompaniaAseguradora" />
                             </FormItem>
                             <FormItem Label="NumeroPoliza">
