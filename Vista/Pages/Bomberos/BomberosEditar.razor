@@ -30,22 +30,22 @@
     <FormItem Label="DNI">
         <Input DefaultValue="@bomberoVM.Documento" @bind-Value="@bomberoVM.Documento" />
     </FormItem>
-    <FormItem Label="Direccion">
+    <FormItem Label="Dirección">
         <Input DefaultValue="@bomberoVM.Direccion" @bind-Value="@bomberoVM.Direccion" />
     </FormItem>
-    <FormItem Label="Dotaciones">
+    <FormItem Label="Dotaciónes">
         <EnumSelect DefaultValue="@bomberoVM.Dotacion" TEnum="TipoDotaciones" @bind-Value="@bomberoVM.Dotacion" />
     </FormItem>
 
-    <FormItem Label="Numero Legajo">
+    <FormItem Label="Número Legajo">
         <AntDesign.InputNumber DefaultValue="@bomberoVM.NumeroLegajo" @bind-Value="@bomberoVM.NumeroLegajo" />
     </FormItem>
 
-    <FormItem Label="Fecha de Aceptacion">
+    <FormItem Label="Fecha de Aceptación">
         <DatePicker DefaultValue="@bomberoVM.FechaAceptacion" @bind-Value="@bomberoVM.FechaAceptacion" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
     </FormItem>
 
-    <FormItem Label="Numero IOMA">
+    <FormItem Label="Número IOMA">
         <Input DefaultValue="@bomberoVM.NumeroIoma" @bind-Value="@bomberoVM.NumeroIoma" />
     </FormItem>
 
@@ -53,7 +53,7 @@
         <Input DefaultValue="@bomberoVM.LugarNacimiento" @bind-Value="@bomberoVM.LugarNacimiento" />
     </FormItem>
 
-    <FormItem Label="Grupo Sanguineo">
+    <FormItem Label="Grupo Sanguíneo">
         <EnumSelect DefaultValue="@bomberoVM.GrupoSanguineo" TEnum="TipoGrupoSanguineo" @bind-Value="@bomberoVM.GrupoSanguineo" />
     </FormItem>
 
@@ -65,15 +65,15 @@
         <AntDesign.InputNumber DefaultValue="@bomberoVM.Peso" @bind-Value="@bomberoVM.Peso" />
     </FormItem>
 
-    <FormItem Label="Observaciones">
+    <FormItem Label="Observaciónes">
         <Input DefaultValue="@bomberoVM.Observaciones" @bind-Value="@bomberoVM.Observaciones" />
     </FormItem>
 
-    <FormItem Label="Nivel de estuduio">
+    <FormItem Label="Nivel de estudio">
         <Input DefaultValue="@bomberoVM.NivelEstudios" @bind-Value="@bomberoVM.NivelEstudios" />
     </FormItem>
 
-    <FormItem Label="Profesion">
+    <FormItem Label="Profesión">
         <Input DefaultValue="@bomberoVM.Profesion" @bind-Value="@bomberoVM.Profesion" />
     </FormItem>
 
@@ -115,15 +115,15 @@
     </FormItem>
 
     @* Carga Contacto-----------------------------------------------------------------------*@
-    <FormItem Label="Telefono Laboral">
+    <FormItem Label="Teléfono Laboral">
         <Input DefaultValue="@contactoVM.TelefonoLaboral" @bind-Value="@contactoVM.TelefonoLaboral" />
     </FormItem>
 
-    <FormItem Label="Telefono Celular">
+    <FormItem Label="Teléfono Celular">
         <Input DefaultValue="@contactoVM.TelefonoCel" @bind-Value="@contactoVM.TelefonoCel" />
     </FormItem>
 
-    <FormItem Label="Telefono Fijo">
+    <FormItem Label="Teléfono Fijo">
         <Input DefaultValue="@contactoVM.TelefonoFijo" @bind-Value="@contactoVM.TelefonoFijo" />
     </FormItem>
 
