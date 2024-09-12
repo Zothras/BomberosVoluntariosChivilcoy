@@ -367,9 +367,10 @@
             Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(modelMateriales.LegajoEncargado);
             Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(modelMateriales.LegajoLLenoPlanilla);
             Vista.Data.Models.Salidas.Planillas.MaterialPeligroso? numeroParte = await Context.MaterialesPeligrosos.Where(m => m.NumeroParte == modelMateriales.NumeroParte).SingleOrDefaultAsync();
+
             if (numeroParte != null)
             {
-                message.Warning("Numero parte ya existente.");
+                await message.Warning("Numero parte ya existente.");
                 return;
             }
 
