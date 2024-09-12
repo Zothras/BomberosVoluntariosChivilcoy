@@ -377,12 +377,12 @@
                             QuienLleno = BomberoLlenoPlanilla,
                             ReceptorBombero = bomberoReceptor,
                             Encargado = bomberoEncargado,
-                            Seguro = new()
-                            {
-                                CompañiaAseguradora = salidaIncendioVehicularView.CompaniaAseguradora,
-                                NumeroDePoliza = salidaIncendioVehicularView.NumeroPoliza,
-                                FechaDeVencimineto = salidaIncendioVehicularView.FechaVencimineto,
-                            },
+                           // Seguro = new()
+                           // {
+                             //   CompañiaAseguradora = salidaIncendioVehicularView.CompaniaAseguradora,
+                             //   NumeroDePoliza = salidaIncendioVehicularView.NumeroPoliza,
+                            //    FechaDeVencimineto = salidaIncendioVehicularView.FechaVencimineto,
+                           // },
                             Damnificados = new(),
                             Moviles = new(),
                             CuerpoParticipante = new()
@@ -411,7 +411,15 @@
                                     Tipo = vehiculo.Tipo,
                                     Año = vehiculo.Año,
                                     Modelo = vehiculo.Modelo,
-                                    Airbag = vehiculo.Airbag
+                                    Airbag = vehiculo.Airbag,
+                                    // Hice una nueva instancia de SeguroVehiculo para cada vehículo
+                                    Seguro = new SeguroVehiculo()
+                                    {
+                                        CompañiaAseguradora = vehiculo.Seguro?.CompañiaAseguradora,
+                                        NumeroDePoliza = vehiculo.Seguro?.NumeroDePoliza,
+                                        FechaDeVencimineto = vehiculo.Seguro?.FechaDeVencimineto
+                                    }
+
                                 };
                             salidaIncendioVehicular.VehiculoAfectados.Add(vehiculoAfectado);
                         }
