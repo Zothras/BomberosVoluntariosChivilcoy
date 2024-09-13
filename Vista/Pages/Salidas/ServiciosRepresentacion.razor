@@ -37,7 +37,7 @@
 <h2 style="text-align:center; text-decoration:underline;">Servicio de Representacion</h2>
 
 <Form Model="@modelServiciosEspecialesRepresentacion"
-      LabelColSpan="8"
+      LabelColSpan="10"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
@@ -62,7 +62,7 @@
     <FormItem Label="Calle/Ruta">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.CalleORuta" />
     </FormItem>
-    <FormItem Label="Número/kilometro">
+    <FormItem Label="Número/Kilómetro">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NumeroOKilometro" />
     </FormItem>
     <FormItem Label="Entre calles">
@@ -111,7 +111,7 @@
             <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
             <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
             <ActionColumn Title="Acciones">
-                <Popconfirm Title="Seguro que quiere borrar??"
+                <Popconfirm Title="¿Seguro que quieres borrar?"
                             OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
                             OkText="Si"
                             CancelText="No">
@@ -126,13 +126,13 @@
     <FormItem Label="Nombre del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NombreSolicitante" />
     </FormItem>
-    <FormItem Label="Apellidoo del solicitante">
+    <FormItem Label="Apellido del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.ApellidoSolicitante" />
     </FormItem>
     <FormItem Label="Documento del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.DniSolicitante" />
     </FormItem>
-    <FormItem Label="Teléfono  del solicitante">
+    <FormItem Label="Teléfono del solicitante">
         <Input @bind-Value="@modelServiciosEspecialesRepresentacion.TelefonoSolicitante" />
     </FormItem>
     @*Datos del receptor*@
@@ -154,7 +154,7 @@
         @bind-Value="@chofer"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione a un bombero"
+                Placeholder="Seleccione un bombero"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
@@ -199,7 +199,7 @@
             <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
             <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
             <ActionColumn Title="Acción">
-                <Popconfirm Title="Seguro que quieres borrar?"
+                <Popconfirm Title="¿Seguro que quieres borrar?"
                             OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
                             OkText="Si"
                             CancelText="No">
@@ -221,7 +221,7 @@
                 @bind-Value="@BomberoCuerpo"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione el bombero"
+                Placeholder="Seleccione un bombero"
                 DefaultActiveFirstOption="false"
                 EnableSearch>
         </Select>
@@ -234,7 +234,7 @@
             <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
             <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
             <ActionColumn Title="Acciones">
-                <Popconfirm Title="Seguro que quieres borrar?"
+                <Popconfirm Title="¿Seguro que quieres borrar?"
                             OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
                             OkText="Si"
                             CancelText="No">
@@ -322,22 +322,21 @@
                 TItem="string"
                 LabelInValue="true"
                 OnSelectedItemChanged="@(item => _selectedItem1 = item)"
-                Style="width: 120px;">
+                Style="width: 240px;">
             <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("RescateConCuerda")" Label="RescateConCuerda" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("RescateEnAltura")" Label="RescateEnAltura" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("ComandoDeIncidente")" Label="ComandoDeIncidente" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("EstructurasColapsadas")" Label="EstructurasColapsadas" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("IncendiosEstructurales")" Label="IncendiosEstructurales" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("IncendiosForestales")" Label="IncendiosForestales" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("MaterialesPeligrosos")" Label="MaterialesPeligrosos" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("PedagogiaYDidactiva")" Label="PedagogiaYDidactiva" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("RescateAcuatico")" Label="RescateAcuatico" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Rescate con Cuerda")" Label="Rescate con Cuerda" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Rescate en Altura")" Label="Rescate en Altura" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Comando de Incidente")" Label="Comando de Incidente" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Estructuras Colapsadas")" Label="Estructuras Colapsadas" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Incendios Estructurales")" Label="Incendios Estructurales" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Incendios Forestales")" Label="Incendios Forestales" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Materiales Peligrosos")" Label="Materiales Peligrosos" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("PedagogiaYDidactiva")" Label="Pedagogia y Didactiva" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Rescate Acuatico")" Label="Rescate Acuatico" />
                 <SelectOption TItemValue="string" TItem="string" Value="@("Socorrismo")" Label="Socorrismo" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("DepartamentoDeOperaciones")" Label="DepartamentoDeOperaciones" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("EscuelaDeCadetes")" Label="EscuelaDeCadetes" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("MaterialesPeligrosos")" Label="MaterialesPeligrosos" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("SeguridadDelBombero")" Label="SeguridadDelBombero" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Departamento de Operaciones")" Label="Departamento de Operaciones" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Escuela de Cadetes")" Label="Escuela de Cadetes" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("Seguridad del Bombero")" Label="Seguridad del Bombero" />
                 <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
             </SelectOptions>
         </Select>
@@ -348,7 +347,7 @@
             <Input @bind-Value="modelServiciosEspecialesRepresentacion.CapacitacionOtra" />
         </FormItem>
     }
-    <FormItem Label="Dias capacitación">
+    <FormItem Label="Días capacitación">
          <Input @bind-Value="modelServiciosEspecialesRepresentacion.DiasCapacitacion" />
     </FormItem>
     <FormItem Label="Horarios capacitación">
