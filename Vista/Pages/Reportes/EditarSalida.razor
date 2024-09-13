@@ -77,7 +77,7 @@
         <FormItem Label="Apellido del solicitante">
             <Input @bind-Value="@salidasViewModel.ApellidoSolicitante" />
         </FormItem>
-        <FormItem Label="Documento del solicitante">
+        <FormItem Label="DNI del solicitante">
             <Input @bind-Value="@salidasViewModel.DniSolicitante" />
         </FormItem>
         <FormItem Label="Teléfono del solicitante">
@@ -106,10 +106,10 @@
                         <FormItem Label="Compañia Aseguradora">
                             <Input @bind-Value="@salidasViewModel.CompaniaAseguradora" />
                         </FormItem>
-                        <FormItem Label="Número Poliza">
+                        <FormItem Label="Número Póliza">
                             <Input @bind-Value="@salidasViewModel.NumeroPoliza" />
                         </FormItem>
-                        <FormItem Label="Fecha Vencimineto">
+                        <FormItem Label="Fecha Vencimiento">
                             <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@salidasViewModel.FechaVencimineto" />
                         </FormItem>
                     }
@@ -369,10 +369,10 @@
                             <FormItem Label="Compañia Aseguradora">
                                 <Input @bind-Value="@salidasViewModel.CompaniaAseguradora" />
                             </FormItem>
-                            <FormItem Label="NumeroPoliza">
+                            <FormItem Label="Número Póliza">
                                 <Input @bind-Value="@salidasViewModel.NumeroPoliza" />
                             </FormItem>
-                            <FormItem Label="FechaVencimineto">
+                            <FormItem Label="Fecha Vencimiento">
                                 <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@salidasViewModel.FechaVencimineto" />
                             </FormItem>
                         }
