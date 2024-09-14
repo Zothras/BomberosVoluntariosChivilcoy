@@ -12,11 +12,13 @@
 ### Estado del Proyecto
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/EEST1Chivilcoy/BomberosVoluntariosChivilcoy/actions
 )
+![Web Status](https://img.shields.io/website-up-down-green-red/http/bomberos.azurewebsites.net)
+![Issue Open](https://img.shields.io/github/issues/EEST1Chivilcoy/BomberosVoluntariosChivilcoy.svg)
 
 ---
 
 ***Tecnologias Usadas:*** 
-- ASP.NET
+- ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-%23006B75.svg?style=for-the-badge&logo=aspnetcore&logoColor=white)
 - ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
 ***Framework utilizados:***
@@ -26,6 +28,6 @@
 
 ***Editores de Codigo y Visualizacion de Base de datos***
 - ![Visual Studio](https://img.shields.io/badge/Visual_Studio-5C2D91?style=for-the-badge&logo=visual%20studio&logoColor=white)
-- DBeaver
+- ![DBeaver](https://img.shields.io/badge/DBeaver-1f425f?style=for-the-badge&logo=dbeaver&logoColor=white)
 
 #### Para más información, consulte la documentación en la wiki del proyecto: 👉🏼 [Wiki Bomberos](https://github.com/EEST1Chivilcoy/BomberosVoluntariosChivilcoy/wiki "Wiki Bomberos")
