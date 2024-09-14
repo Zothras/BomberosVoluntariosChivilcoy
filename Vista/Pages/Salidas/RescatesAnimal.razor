@@ -9,7 +9,7 @@
 
 @*Servicios Utilizados*@
 @using Vista.Services;
-@inject ISalidaService SalidaService;
+@inject ISalidaService SalidaService
 @inject IBomberoService BomberoService
 
 @*Componentes Generales*@
@@ -197,7 +197,7 @@
             }
             @if (_visible1 == true)
             {
-                <ImprimirModal NumeroParte="@ImprimirNumeroParte" />
+                <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
             }
         </div>
     </div>
