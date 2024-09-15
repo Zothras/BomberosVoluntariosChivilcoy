@@ -13,6 +13,31 @@
 @using Vista.Components.Forms.Salidas.General;
 
 <style>
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+        border-radius: 5px 5px !important;
+    }
+
+    .steps-action {
+        margin-top: 10px !important;
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+        margin-left: 254px;
+    }
+
+    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+        text-decoration: none;
+        background: #40a9ff !important;
+    }
+
+    .ant-btn:hover, .ant-btn:focus {
+        color: white !important;
+        border-color: #40a9ff !important;
+        background: #40a9ff !important;
+    }
+
     .ant-carousel .slick-dots li {
         display: none !important;
     }
@@ -29,21 +54,21 @@
         width: auto !important;
     }
 
+    .steps-content {
+        margin-top: 16px;
+        border: 1px dashed #e9e9e9;
+        border-radius: 6px;
+        background-color: #fafafa;
+        min-height: 200px;
+        text-align: center;
+        padding-top: 80px;
+    }
+
     .steps-action {
-        margin-top: 10px !important;
+        margin-top: 24px;
         display: flex;
         justify-content: flex-end;
         gap: 5px;
-        margin-right: 78px !important;
-    }
-
-    .steps-content {
-        max-height: 620px;
-        max-width: 450px;
-        padding: 10px;
-        min-width: 320px !important;
-        flex-wrap: wrap;
-        background-color: white !important;
     }
 
     .inpt-cont {
@@ -84,31 +109,8 @@
         }
 
         .ant-picker-panel-container {
-            overflox: auto !imporant;
+            overflow: auto !important;
         }
-    }
-
-    .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
-        border-radius: 5px 5px !important;
-    }
-
-    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
-        text-decoration: none;
-        background: #40a9ff !important;
-    }
-
-    .ant-btn:hover, .ant-btn:focus {
-        color: white !important;
-        border-color: #40a9ff !important;
-        background: #40a9ff !important;
-    }
-
-    textarea {
-        resize: none !important;
-        min-height: 85px !important;
-        width: 100% !important;
     }
 
     .ant-checkbox-input:checked + .ant-checkbox-inner {
@@ -130,57 +132,59 @@
                 <Step Title="@item.Title" Subtitle="@item.Content" />
             }
         </Steps>
-        <div class="steps-content" style="max-height: 620px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
-            @if (current == 0)
-            {
-                @*General*@
-                <DatosGenerales Model="@salidaIncendioComercioView"
-                                animationClass="@animationClass" />
-            }
-            else if (current == 1)
-            {
-                @*Solicitante | Receptor | Damnificado*@
-                <Participantes Model="@salidaIncendioComercioView"
+        <Flex Justify="center">
+            <div class="steps-content" style="max-height: 620px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+                @if (current == 0)
+                {
+                    @*General*@
+                    <DatosGenerales Model="@salidaIncendioComercioView"
+                                    animationClass="@animationClass" />
+                }
+                else if (current == 1)
+                {
+                    @*Solicitante | Receptor | Damnificado*@
+                    <Participantes Model="@salidaIncendioComercioView"
+                                   animationClass="@animationClass" />
+                }
+                else if (current == 2)
+                {
+                    @*Seguro*@
+                    <Seguro Model="@salidaIncendioComercioView"
+                            animationClass="@animationClass" />
+                }
+                else if (current == 3)
+                {
+                    @*Chofer y Moviles*@
+                    <Vehiculos Model="@salidaIncendioComercioView"
                                animationClass="@animationClass" />
-            }
-            else if (current == 2)
-            {
-                @*Seguro*@
-                <Seguro Model="@salidaIncendioComercioView"
-                        animationClass="@animationClass" />
-            }
-            else if (current == 3)
-            {
-                @*Chofer y Moviles*@
-                <Vehiculos Model="@salidaIncendioComercioView"
-                           animationClass="@animationClass" />
-            }
-            else if (current == 4)
-            {
-                @*Bomberos*@
-                <Personal Model="@salidaIncendioComercioView"
-                          animationClass="@animationClass" />
-            }
-            else if (current == 5)
-            {
-                @*Info-Salida*@
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Lugar</label>
-                        <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar" />
+                }
+                else if (current == 4)
+                {
+                    @*Bomberos*@
+                    <Personal Model="@salidaIncendioComercioView"
+                              animationClass="@animationClass" />
+                }
+                else if (current == 5)
+                {
+                    @*Info-Salida*@
+                    <div class="inpt-cont-inline">
+                        <div class="inpt-cont">
+                            <label class="inpt-cont--lbl">Lugar</label>
+                            <EnumSelect TEnum="TipoLugarComercioIncendio" @bind-Value="@salidaIncendioComercioView.TipoLugar" />
+                        </div>
                     </div>
-                </div>
-                <Establecimiento Model="@salidaIncendioComercioView"
-                                 animationClass="@animationClass" />
-            }
-            else if (current == 6)
-            {
-                <div class="slick-contenedor">
-                    <DatosSalida Model="@salidaIncendioComercioView"
-                                 animationClass="@animationClass" />
-                </div>
-            }
-        </div>
+                    <Establecimiento Model="@salidaIncendioComercioView"
+                                     animationClass="@animationClass" />
+                }
+                else if (current == 6)
+                {
+                    <div class="slick-contenedor">
+                        <DatosSalida Model="@salidaIncendioComercioView"
+                                     animationClass="@animationClass" />
+                    </div>
+                }
+            </div>
+        </Flex>
         <div class="steps-action">
             @if (current > 0)
             {
