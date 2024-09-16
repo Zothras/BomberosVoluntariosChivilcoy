@@ -572,7 +572,7 @@
             using var db = await DbFactory.CreateDbContextAsync();
 
             // Buscar el bombero en la base de datos
-            var bombero = await db.Bomberos.FindAsync(bomberoId);
+            var bombero = await db.Bomberos.FirstOrDefaultAsync(b => b.NumeroLegajo == bomberoId);
             if (bombero == null)
             {
                 Console.WriteLine($"Bombero con ID {bomberoId} no encontrado.");
