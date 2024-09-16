@@ -11,6 +11,8 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 
 <style>
+
+  
     .ant-table-wrapper {
         width: 40em !important;
     }
@@ -179,6 +181,9 @@
                     {
                         <div class="lista bombero" draggable="false" cursor="pointer">
                             @bombero.Apellido @bombero.Nombre
+                            <Button Type="submit" @onclick="() => RemoveBomberoFromBrigada(bombero.NumeroLegajo)" Style="margin-left: 10px;">
+                                Eliminar
+                            </Button>
                         </div>
                     }
                 }
@@ -294,6 +299,10 @@
 
         StateHasChanged();
     }
+
+
+  
+
 
     // Brigadas Bomberos Test
 
@@ -552,6 +561,58 @@
         public string nombreBombro { get; set; }
         public EscalafonJerarquico Grado { get; set; }
 
+    }
+
+    // Eliminar un bombero de la brigada 
+
+    private async Task RemoveBomberoFromBrigada(int bomberoId)
+    {
+        try
+        {
+            using var db = await DbFactory.CreateDbContextAsync();
+
+            // Buscar el bombero en la base de datos
+            var bombero = await db.Bomberos.FindAsync(bomberoId);
+            if (bombero == null)
+            {
+                Console.WriteLine($"Bombero con ID {bomberoId} no encontrado.");
+                return;
+            }
+
+            // Eliminar el bombero de la brigada
+            bombero.BrigadaId = null;
+            db.Bomberos.Update(bombero);
+            await db.SaveChangesAsync();
+
+            // Actualizar las listas locales
+            await UpdateLocalListsAfterRemoval(bomberoId);
+
+            Console.WriteLine($"Bombero {bombero.Nombre} eliminado de la brigada correctamente.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al eliminar el bombero de la brigada: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateLocalListsAfterRemoval(int bomberoId)
+    {
+        // Actualizar la lista de bomberos sin brigada
+        var bombero = bomberos.FirstOrDefault(b => b.NumeroLegajo == bomberoId);
+        if (bombero != null)
+        {
+            // Añadir el bombero a la lista de bomberos sin brigada
+            bomberosSinBrigada.Add(bombero);
+
+            // Eliminar el bombero de la lista de bomberos en la brigada
+            if (selectedBrigadaId.HasValue)
+            {
+                BomberosEnBrigadaSeleccionada.Remove(bombero);
+            }
+        }
+
+        // Recargar las listas si es necesario
+        await OnInitializedAsync();
     }
 }
 @code {

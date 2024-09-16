@@ -17,14 +17,18 @@
                     <thead>
                         <tr>
                             <th>Bomberos</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach (Bombero b in bomberos)
                         {
                             <tr>
-                                <td>@b.Nombre  @b.Apellido</td>
+                                <td>
+                                    <div>
+                                        @b.Nombre  @b.Apellido
+                                    </div>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -36,8 +40,8 @@
 </div>
 <button @onclick="@(() => { navigationManager.NavigateTo("/brigadas"); })"> Volver </button>
 
+
 @code {
-    //guarda la brigada que llego de la otra pagina
     [Parameter]
     public int? BrigadaId { get; set; }
 
@@ -50,6 +54,8 @@
     //declara los arreglos que se van a mostrar en vista y los ViewModel
     public BrigadaViewModel brigadaView { get; set; } = new();
     public Bombero[]? bomberos;
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,5 +70,8 @@
         {
             brigadaView.Nombre = b.Nombre;
         }
-    }
+    }   
+      
+}
+
 }
