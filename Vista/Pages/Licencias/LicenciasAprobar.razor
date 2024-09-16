@@ -23,11 +23,11 @@
 </style>
 <div>
     <Table DataSource="LicenciasActivasVM" Bordered Responsive Size="TableSize.Small">
-        <PropertyColumn Property="c=>c.NombreYApellido"></PropertyColumn>
+        <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre"></PropertyColumn>
             <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy"></PropertyColumn>
             <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy"></PropertyColumn>
-        <PropertyColumn Property="c=>c.TipoLicencia"></PropertyColumn>
-        <PropertyColumn Property="c=>c.EstadoLicencia"></PropertyColumn>
+        <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia"></PropertyColumn>
+        <PropertyColumn Title="Estado" Property="c=>c.EstadoLicencia"></PropertyColumn>
         <ActionColumn Title="Acciones" Style="display:flex;justify-content:space-around;">
             <Popconfirm Title="¿Quiere aprobar esta licencia?"
                 OnConfirm="()=> AprobarLicencia(context.LicenciaId)"
@@ -57,7 +57,7 @@
         public TipoEstadoLicencia EstadoLicencia { get; set; }
         public int PersonaId { get; set; }
         public Bombero? PersonalAfectado { get; set; }
-        public string? NombreYApellido { get; set; }
+        public string? ApellidoYNombre { get; set; }
     }
 
 
@@ -90,9 +90,7 @@
                     Desde = l.Desde,
                     Hasta = l.Hasta,
                     EstadoLicencia = l.EstadoLicencia,
-                    NombreYApellido = l.PersonalAfectado.Nombre + "," + l.PersonalAfectado.Apellido
-
-
+                    ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
                 };
             LicenciasActivasVM.Add(LicVm);
         }

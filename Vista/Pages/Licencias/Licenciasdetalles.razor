@@ -172,12 +172,9 @@
         background-color: rgb(255, 96, 96) !important;
     }
 
-   /*  .ant-table-tbody{
-        overflow: scroll!important;
-    } */
 </style>
+
 <div class="template">
-    @*dataSource= Contenido que contiene mi tabla *@
     <Table Class="Tabla" DataSource="LicenciasActivasVM" PageSize="20" Responsive Style="border: none;width: 100%;"
     RowClassName="@(c => c.Data.EstadoLicencia.ToString())">
         <TitleTemplate>
@@ -223,7 +220,7 @@
              </div>
          </TitleTemplate>
          <ColumnDefinitions Context="muestra">
-             <PropertyColumn Title="Nombre y apellido" Property="c=>c.NombreYApellido" Sortable></PropertyColumn>
+             <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
              <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
              <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
              <PropertyColumn Title="Duración en Días" Property="c=>c.DuracionEnDias" Sortable></PropertyColumn>
@@ -273,7 +270,7 @@
         public TipoEstadoLicencia EstadoLicencia { get; set; }
         public int PersonaId { get; set; }
         public Bombero? PersonalAfectado { get; set; }
-        public string? NombreYApellido { get; set; }
+        public string? ApellidoYNombre { get; set; }
 
         public int DuracionEnDias
         {
@@ -323,7 +320,7 @@
                     Desde = l.Desde,
                     Hasta = l.Hasta,
                     EstadoLicencia = l.EstadoLicencia,
-                    NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
+                    ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
                 };
 
             LicenciasActivasVM.Add(LicVm);
@@ -349,7 +346,7 @@
                     Desde = licencia.Desde,
                     Hasta = licencia.Hasta,
                     EstadoLicencia = licencia.EstadoLicencia,
-                    NombreYApellido = licencia.PersonalAfectado?.Nombre + "," + licencia.PersonalAfectado?.Apellido,
+                    ApellidoYNombre = licencia.PersonalAfectado?.Apellido + ", " + licencia.PersonalAfectado?.Nombre,
                 };
 
             LicenciasActivasVM.Add(LicVm);
@@ -381,7 +378,7 @@
                     Desde = l.Desde,
                     Hasta = l.Hasta,
                     EstadoLicencia = l.EstadoLicencia,
-                    NombreYApellido = l.PersonalAfectado?.Nombre + "," + l.PersonalAfectado?.Apellido,
+                    ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
                 };
             LicenciasActivasVM.Add(LicVm);
         }
