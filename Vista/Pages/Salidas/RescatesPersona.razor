@@ -1,7 +1,5 @@
-﻿@implements IDisposable
-@inject IMessageService message
+﻿@inject IMessageService message
 @inject NavigationManager navigationManager
-@inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/rescates-persona"
 
 @using Vista.Data.ViewModels.Personal;
@@ -98,7 +96,6 @@
 
 @code {
     private RescatePersonaViewModels PersonaViewModel = new();
-    private BomberosDbContext? db;
 
     @*Steps*@
 
@@ -152,12 +149,12 @@
             Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(PersonaViewModel.LegajoEncargado);
             Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(PersonaViewModel.LegajoLLenoPlanilla);
 
-            // Utiliza el null-conditional operator para evitar warnings
-            Vista.Data.Models.Salidas.Planillas.RescatePersona? numeroParte = await (db?.RescatePersonas
-                .Where(m => m.NumeroParte == PersonaViewModel.NumeroParte)
-                .SingleOrDefaultAsync() ?? Task.FromResult<Vista.Data.Models.Salidas.Planillas.RescatePersona?>(null));
+            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<RescatePersona>(
+                PersonaViewModel.NumeroParte,
+                m => m.NumeroParte == PersonaViewModel.NumeroParte
+            );
 
-            if (numeroParte != null)
+            if (numeroParteRescate != null)
             {
                 await message.Warning("Numero parte ya existente.");
                 return;
@@ -243,7 +240,6 @@
     private void Init()
     {
         PersonaViewModel = new();
-        db = DbFactory.CreateDbContext();
     }
 
     @*Finish Failed*@
@@ -263,11 +259,5 @@
         ImprimirAnio = _anio;
         ImprimirNumeroParte = _numeroParte;
         _visible1 = true;
-    }
-
-    @*Dispose*@
-    public void Dispose()
-    {
-        db?.Dispose();
     }
 }

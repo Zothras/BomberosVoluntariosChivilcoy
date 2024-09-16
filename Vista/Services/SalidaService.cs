@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using Vista.Data;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personales;
@@ -16,6 +17,8 @@ namespace Vista.Services
     public interface ISalidaService
     {
         Task<Salida> CargarSalida<T>(T entidad) where T : Salida;
+        Task<T?> ObtenerSalidaPorNumeroParteAsync<T>(int numeroParte,
+    Expression<Func<T, bool>> predicate) where T : class;
 
     }
 
@@ -28,6 +31,14 @@ namespace Vista.Services
             _context = context;
         }
 
+        public async Task<T?> ObtenerSalidaPorNumeroParteAsync<T>(int numeroParte,
+    Expression<Func<T, bool>> predicate) where T : class
+        {
+            // Consulta genérica a la base de datos utilizando el predicado de búsqueda
+            return await _context.Set<T>()
+                .Where(predicate)
+                .SingleOrDefaultAsync();
+        }
         public async Task<Salida> CargarSalida<T>(T salida) where T : Salida
         {
             try
