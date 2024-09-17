@@ -122,14 +122,26 @@
         new StepItem {Title = " ", Content = ""}  /* Salida */
     };
 
+    private void ToggleAnimationD()
+    {
+        animationClass = "slick-contenedor-D";
+    }
+
+    private void ToggleAnimationI()
+    {
+        animationClass = "slick-contenedor-I";
+    }
+
     void OnPreClick()
     {
         current--;
+        ToggleAnimationI();
     }
 
     void OnNextClick()
     {
         current++;
+                ToggleAnimationD();
     }
 
     @*Carga de Salida*@
