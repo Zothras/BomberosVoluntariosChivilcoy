@@ -10,8 +10,7 @@
 ---
 
 ### Estado del Proyecto
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/EEST1Chivilcoy/BomberosVoluntariosChivilcoy/actions
-)
+![Build Status](https://github.com/EEST1Chivilcoy/BomberosVoluntariosChivilcoy/actions/workflows/master_bomberos.yml/badge.svg)
 ![Web Status](https://img.shields.io/website-up-down-green-red/http/bomberos.azurewebsites.net)
 ![Issue Open](https://img.shields.io/github/issues/EEST1Chivilcoy/BomberosVoluntariosChivilcoy.svg)
 
