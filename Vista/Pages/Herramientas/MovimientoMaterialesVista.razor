@@ -77,12 +77,13 @@
      </FormItem>
 
     <CheckboxGroup Style="width:100%" @bind-Value="@_value" TValue="string" OnChange="OnChange">
-
         <Row>
             <Col Span="8">
             <Checkbox Label="Bombero" @bind-Value="@chIsBombero">Bombero</Checkbox>
+            </Col>
             <Col Span="8">
             <Checkbox Label="Movil" @bind-Value="@chIsMovil">Movil</Checkbox>
+            </Col>
         </Row>
     </CheckboxGroup>
 
