@@ -38,8 +38,10 @@
         <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
             @if (current == 0)
             {
-                <DatosGenerales Model="@HospitalClinicaViewModel"
-                                animationClass="@animationClass" />
+                @*General*@
+                    <DatosGenerales Model="@HospitalClinicaViewModel"
+                                animationClass="@animationClass"
+                                esSoloDireccion="true" />
             }
             else if (current == 1)
             {
