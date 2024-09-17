@@ -73,7 +73,7 @@
        Style="width: 100%;height: 100%;">
 
      <FormItem Label="Rubro">
-         <EnumSelect TEnum="@TipoMovimiento" @bind-Value="@MovimientoVM.TipoMovimiento" />
+         <Select TItem= @bind-Value="@MovimientoVM.TipoMovimiento"/>
      </FormItem>
 
     <CheckboxGroup Style="width:100%" @bind-Value="@_value" TValue="string" OnChange="OnChange">
