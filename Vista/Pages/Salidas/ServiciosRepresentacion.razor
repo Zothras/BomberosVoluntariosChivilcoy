@@ -1,787 +1,271 @@
-﻿@implements IDisposable
+﻿@inject IMessageService message
 @inject NavigationManager navigationManager
-@inject IDbContextFactory<BomberosDbContext> DbFactory
-@inject IMessageService message
 @page "/salidas/serviciosRepresentacion"
-@using System.ComponentModel.DataAnnotations;
-@using Vista.Data.ViewModels.Servicios;
+
+@using Vista.Data.ViewModels.Personal;
+@using Vista.Data.ViewModels.Rescates;
+
+@*Servicios Utilizados*@
+@using Vista.Services;
+@inject ISalidaService SalidaService
+@inject IBomberoService BomberoService
 
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
 
-<h2 style="text-align:center; text-decoration:underline;">Servicio de Representacion</h2>
-
-<Form Model="@modelServiciosEspecialesRepresentacion"
-      LabelColSpan="14"
+<Form Model="@PersonaViewModel"
+      LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed">
-    @*Datos generales de las salidas*@
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;overflow: hidden!important;">
 
-    <FormItem Label="Descripción">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.Descripcion" />
-    </FormItem>
-    <FormItem Label="Fecha salida">
-        <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@modelServiciosEspecialesRepresentacion.FechaSalida" />
-    </FormItem>
-    <FormItem Label="Fecha llegada">
-        <DatePicker TValue="DateTime" Disabled="@true" DefaultValue="@modelServiciosEspecialesRepresentacion.FechaLlegada" />
-    </FormItem>
-    <FormItem Label="Hora salida">
-        <TimePicker @bind-Value="modelServiciosEspecialesRepresentacion.TimeSalida" Format="HH:mm" />
-    </FormItem>
-    <FormItem Label="Hora llegada">
-        <TimePicker @bind-Value="modelServiciosEspecialesRepresentacion.TimeLlegada" Format="HH:mm" />
-    </FormItem>
-    @*Datos Localizacion*@
-    <FormItem Label="Calle/Ruta">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.CalleORuta" />
-    </FormItem>
-    <FormItem Label="Número/Kilómetro">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NumeroOKilometro" />
-    </FormItem>
-    <FormItem Label="Entre calles">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.EntreCalles" />
-    </FormItem>
-    <FormItem Label="Piso Número">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.PisoNumero" />
-    </FormItem>
-    <FormItem Label="Depto">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.Depto" />
-    </FormItem>
-    <FormItem Label="Tipo zona">
-        <EnumSelect TEnum="TipoZona" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoZona" />
-    </FormItem>
-    @*Datos de damnificados*@
-    <FormItem Label="¿Hubo damnificados?">
-        <Switch @bind-Checked="switchValue" />
-    </FormItem>
-    @if (switchValue == true)
-    {
+    <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
 
-        <FormItem Label="Nombre">
-            <Input @bind-Value="@damnificado.Nombre" />
-        </FormItem>
-        <FormItem Label="Apellido">
-            <Input @bind-Value="@damnificado.Apellido" />
-        </FormItem>
-        <FormItem Label="Documento">
-            <Input @bind-Value="@damnificado.Dni" />
-        </FormItem>
-        <FormItem Label="Tipo sexo">
-            <EnumSelect TEnum="TipoSexo" @bind-Value="@damnificado.Sexo" />
-        </FormItem>
-        <FormItem Label="Lugar De nacimiento">
-            <Input @bind-Value="@damnificado.LugarDeNacimiento" />
-        </FormItem>
-        <FormItem Label="Edad">
-            <AntDesign.InputNumber @bind-Value="damnificado.Edad" />
-        </FormItem>
-        <FormItem Label="Tipo material">
-            <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
-        </FormItem>
-        <div>
-            <Table Context="Damnificados" DataSource="DamnificadosSalida" Bordered>
-            <PropertyColumn Property="d=>d.NombreYApellido"></PropertyColumn>
-            <PropertyColumn Property="d=>d.Edad"></PropertyColumn>
-            <PropertyColumn Property="d=>d.Estado"></PropertyColumn>
-            <ActionColumn Title="Acciones">
-                <Popconfirm Title="¿Seguro que quieres borrar?"
-                            OnConfirm="()=> deleteRowDamnificados(Damnificados.Dni)"
-                            OkText="Si"
-                            CancelText="No">
-                    <a>Borrar</a>
-                </Popconfirm>
-            </ActionColumn>
-        </Table>
-    </div>
-    }
-    @*Solicitante datos*@
-    <b><label>Datos de solicitante</label></b>
-    <FormItem Label="Nombre del solicitante">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.NombreSolicitante" />
-    </FormItem>
-    <FormItem Label="Apellido del solicitante">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.ApellidoSolicitante" />
-    </FormItem>
-    <FormItem Label="Documento del solicitante">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.DniSolicitante" />
-    </FormItem>
-    <FormItem Label="Teléfono del solicitante">
-        <Input @bind-Value="@modelServiciosEspecialesRepresentacion.TelefonoSolicitante" />
-    </FormItem>
-    @*Datos del receptor*@
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2>SERVICIO DE REPRESENTACION</h2>
+        </div>
 
-    @*Moviles de salidas*@
-    @*a la hora de pedir el chofer y movil,
-    pedir dato unico para no cargar todo y buscarlo en la base de datos*@
-    <b><label>Datos de chófer</label></b>
-    <br />
-    <FormItem Label="¿Cargó Combustible?" style="display: grid;place-items: center;">
-
-        <Switch DefaultChecked="false" @bind-Checked="@chekM" CheckedChildren="Cargó" UnCheckedChildren="No Cargó" OnChange="OnChangeChofer" />
-    </FormItem>
-    
-    <FormItem Label="Elija el chófer">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoChoferes"
-        @bind-Value="@chofer"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione un bombero"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    <FormItem Label="Número de movil">
-        <Select TItem="Movil"
-                TItemValue="string"
-                DataSource="@Moviles"
-                @bind-Value="@NumeroMovil"
-                LabelName="@nameof(Movil.NumeroMovil)"
-                ValueName="@nameof(Movil.NumeroMovil)"
-                Placeholder="Seleccione el móvil"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-
-    </FormItem>
-    <br />
-    @if (NumeroMovil is not null)
-    {
-        foreach (Movil m in Moviles)
-        {
-            //Tendria que recorrer a movilSalida para poner el km de llegada
-            if (m.NumeroMovil==NumeroMovil)
+        <Steps Current="current">
+            @foreach (var item in steps)
             {
-               @* m. = m.;*@
-                <FormItem>
-                    <AntDesign.InputNumber @bind-Value="@m.Kilometraje" Disabled="true" />
-                </FormItem>
-                <FormItem>
-                    <AntDesign.InputNumber @bind-Value="@movilSalidaViewModels.KmLlegada" />
-                </FormItem>
-                break;
+                <Step Title="@item.Title" Subtitle="@item.Content" />
             }
-        }
-    }
-    <br />
-    <Button OnClick="@AgregarMovilSalida">Cargar Movil salida</Button>
-    <br />
-    <div>
-        <Table Context="MovilesSalidasL1" DataSource="MovilesSalidasL" Bordered>
-            <PropertyColumn Property="c=>c.MovilesSalida.NumeroMovil"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Chofer.NumeroLegajo"></PropertyColumn>
-            <ActionColumn Title="Acción">
-                <Popconfirm Title="¿Seguro que quieres borrar?"
-                            OnConfirm="()=> deleteRowMovil(MovilesSalidasL1.NumeroMovil)"
-                            OkText="Si"
-                            CancelText="No">
-                    <a>Borrar</a>
-                </Popconfirm>
-            </ActionColumn>
-        </Table>
+        </Steps>
+
+        <Flex Justify="center">
+            <div class="steps-content" style="max-height: 530px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+                @if (current == 0)
+                {
+                    @*General*@
+                    <DatosGenerales Model="@PersonaViewModel"
+                                    animationClass="@animationClass" />
+                }
+                else if (current == 1)
+                {
+                    @*Solicitante | Receptor | Damnificado*@
+                    <Participantes Model="@PersonaViewModel"
+                                   animationClass="@animationClass" />
+                }
+                else if (current == 2)
+                {
+                    @*Chofer y Moviles*@
+                    <Vehiculos Model="@PersonaViewModel"
+                               animationClass="@animationClass" />
+                }
+                else if (current == 3)
+                {
+                    @*Bomberos*@
+                    <Personal Model="@PersonaViewModel"
+                              animationClass="@animationClass" />
+                }
+                else if (current == 4)
+                {
+                    @*Tipo servicio*@
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo Servicio Salida</label>
+                        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@PersonaViewModel.TipoServicio" />
+                    </div>
+
+                    @*Propio de rescates*@
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo Lugar de Rescate</label>
+                        <EnumSelect TEnum="TipoRescatePersona" @bind-Value="@PersonaViewModel.TipoRescatePersona" />
+                    </div>
+                }
+            </div>
+        </Flex>
+        <div class="steps-action">
+            @if (current > 0)
+            {
+                <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+            }
+            @if (current < steps.Length - 1)
+            {
+                <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+            }
+            @if (current == steps.Length - 1)
+            {
+                <FormItem WrapperColSpan="16">
+                    <Button Class="boton_p" HtmlType="submit">
+                        Imprimir salida
+                    </Button>
+                </FormItem>
+            }
+            @if (_visible1 == true)
+            {
+                <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
+            }
+        </div>
     </div>
-
-    @*Cuerpos paraticipantes*@
-    <b><label>Cuerpo Participante</label></b>
-    <FormItem Label="Tipo Escalafón">
-        <EnumSelect TEnum="EscalafonJerarquico" @bind-Value="@bomberoSalidaView.Grado" />
-    </FormItem>
-    <FormItem Label="Elija el bombero">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoTodos"
-                @bind-Value="@BomberoCuerpo"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione un bombero"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    <Checkbox @bind-Checked="chekB"> Salió</Checkbox>
-    <br />
-    <br />
-    <div>
-        <Table Context="bomberosSalida1" DataSource="bomberosSalida" Bordered>
-            <PropertyColumn Property="c=>c.Nombre"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Apellido"></PropertyColumn>
-            <ActionColumn Title="Acciones">
-                <Popconfirm Title="¿Seguro que quieres borrar?"
-                            OnConfirm="()=> deleteRow(bomberosSalida1.NumeroLegajo)"
-                            OkText="Si"
-                            CancelText="No">
-                    <a>Borrar</a>
-                </Popconfirm>
-            </ActionColumn>
-        </Table>
-    </div>
-    <b><label>Elija al encargado</label></b>
-    <FormItem Label="Encargado">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoTodos"
-                @bind-Value="@BomberoEncargado"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione un encargado"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    <b><label>Quién llenó la planilla</label></b>
-    <FormItem Label="Bombero que llenó la planilla">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@bomberoTodos"
-                @bind-Value="@QuienLLenoPlanilla"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione un encargado"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    @*Tipo servicio*@
-    <br />
-    <b><label>Servicio salida</label></b>
-    <br />
-    <FormItem Label="Tipo Servicio salida">
-        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoServicio" />
-    </FormItem>
-
-    @*propio de la salida de Servicio representacion*@
-
-     <br />
-    <b><label>Servicio Representación</label></b>
-    <br />
-
-    <FormItem Label="Tipo Organización Beneficiada">
-        <EnumSelect TEnum="TipoOrganizacionBeneficiada" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoOrganizacion" />
-    </FormItem>
-    <FormItem Label="Tipo Representación">
-        <EnumSelect TEnum="TipoServicioRepresentacion" @bind-Value="@modelServiciosEspecialesRepresentacion.TipoRepresentacion" />
-    </FormItem>
-    
-     <FormItem Label="Datos Capacitación">
-        <Select @bind-Value="@modelServiciosEspecialesRepresentacion.NivelCapacitacion"
-            DefaultValue="@("Cuartel")"
-		    TItemValue="string"
-            TItem="string"
-            LabelInValue="true"
-            OnSelectedItemChanged="@(item => _selectedItem = item)"
-		    Style="width: 120px;">
-		    <SelectOptions>
-                    <SelectOption TItemValue="string" TItem="string" Value="@("Cuartel")" Label="Cuartel" />
-                    <SelectOption TItemValue="string" TItem="string" Value="@("Federativa")" Label="Federativa" />
-                    <SelectOption TItemValue="string" TItem="string" Value="@("Nacional")" Label="Nacional" />
-                    <SelectOption TItemValue="string" TItem="string" Value="@("Internacional")" Label="Internacional" />
-                    <SelectOption TItemValue="string" TItem="string" Value="@("Regional")" Label="Regional" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
-		    </SelectOptions>
-        </Select> 
-    </FormItem>
-    @if ( modelServiciosEspecialesRepresentacion.NivelCapacitacion == "Otro")
-    {
-         <FormItem Label="Otra">
-            <Input @bind-Value="modelServiciosEspecialesRepresentacion.NivelCapacitacionOtro" />
-         </FormItem>
-    }
-
-    <FormItem Label="Tipo Capacitación">
-        <Select @bind-Value="@modelServiciosEspecialesRepresentacion.TipoCapacitacion"
-                DefaultValue="@("Cuartel")"
-                TItemValue="string"
-                TItem="string"
-                LabelInValue="true"
-                OnSelectedItemChanged="@(item => _selectedItem1 = item)"
-                Style="width: 240px;">
-            <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("Rescate con Cuerda")" Label="Rescate con Cuerda" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Rescate en Altura")" Label="Rescate en Altura" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Comando de Incidente")" Label="Comando de Incidente" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Estructuras Colapsadas")" Label="Estructuras Colapsadas" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Incendios Estructurales")" Label="Incendios Estructurales" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Incendios Forestales")" Label="Incendios Forestales" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Materiales Peligrosos")" Label="Materiales Peligrosos" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("PedagogiaYDidactiva")" Label="Pedagogia y Didactiva" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Rescate Acuatico")" Label="Rescate Acuatico" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Socorrismo")" Label="Socorrismo" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Departamento de Operaciones")" Label="Departamento de Operaciones" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Escuela de Cadetes")" Label="Escuela de Cadetes" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Seguridad del Bombero")" Label="Seguridad del Bombero" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("Otro")" Label="Otro" />
-            </SelectOptions>
-        </Select>
-    </FormItem>
-    @if (modelServiciosEspecialesRepresentacion.TipoCapacitacion == "Otro")
-    {
-        <FormItem Label="Otra">
-            <Input @bind-Value="modelServiciosEspecialesRepresentacion.CapacitacionOtra" />
-        </FormItem>
-    }
-    <FormItem Label="Días capacitación">
-         <Input @bind-Value="modelServiciosEspecialesRepresentacion.DiasCapacitacion" />
-    </FormItem>
-    <FormItem Label="Horarios capacitación">
-         <Input @bind-Value="modelServiciosEspecialesRepresentacion.HorariosCapacitacion" />
-    </FormItem>
-
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Class="boton_p" HtmlType="submit" OnClick="@CargarServicioRepresentacion">
-            Imprimir salida
-        </Button>
-    </FormItem>
 </Form>
 
-<Modal Title="@("Datos de la carga de combustible")"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
-    <Form Loading="loading" Model="@movilSalidaViewModels"
-          LabelColSpan="8"
-          WrapperColSpan="16"
-          OnFinish="OnFinishModel"
-          OnFinishFailed="OnFinishFailed"
-    @ref="@_form1">
-        <FormItem Label="Número factura">
-            <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
-        </FormItem>
-        <FormItem Label="Fecha factura">
-            <DatePicker TValue="DateTime?" ShowTime="@true" @bind-Value="@movilSalidaViewModels.FechaFactura" />
-        </FormItem>
-        <FormItem Label="Tipo Combustible">
-            <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
-        </FormItem>
-        <FormItem Label="Cantidad de Litros">
-            <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
-        </FormItem>
-        <FormItem Label="Quién llenó">
-            <Input @bind-Value="@movilSalidaViewModels.QuienLleno" />
-        </FormItem>
-        <FormItem Label="Teléfono Quién Lléno">
-            <Input @bind-Value="@movilSalidaViewModels.TelefonoQuienLleno" />
-        </FormItem>
-    </Form>
-</Modal>
+@code {
+    private RescatePersonaViewModels PersonaViewModel = new();
 
-<Modal Title="@("Datos de la carga de Representacion")"
-       Visible="@imprimirmodal"
-       OnOk="@HandleOkIMP"
-       OnCancel="@HandleCancelIMP">
-       <p>Imprimir con croquis</p>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelServiciosEspecialesRepresentacion.NumeroParte}/{true}", true); })">Si</button>
-    <button @onclick="@(() => { navigationManager.NavigateTo($"/PlanillasIntervencion/Imprimir/{modelServiciosEspecialesRepresentacion.NumeroParte}/{false}", true); })">No</button>
-</Modal>
+    @*Steps*@
 
-@code
-{
-    //private void CambiarValoesEnum()
-    //{
-    //    modelServiciosEspecialesRepresentacion.NivelCapacitacion= (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), _selectedValue);
-    //}
-    //private void CambiarValoesEnum1()
-    //{
-    //    modelServiciosEspecialesRepresentacion.TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), _selectedValue1);
-    //}
-    string _selectedValue;
-    string _selectedItem;
-    string _selectedValue1;
-    string _selectedItem1;
+    public int current { get; set; } = 0;//Ubicacion del Step
+    private string animationClass = "";
 
-    private DamnificadoViewModels damnificado = new();
-    private ServicioEspecialRepresentacionViewModels modelServiciosEspecialesRepresentacion = new();
-    private MovilSalidaViewModels movilSalidaViewModels = new();
-    private BomberoSalidaViewModels bomberoSalidaView = new();
-    //private VehiculoDamnificadoViewModels vehiculo = new();
-    public List<DamnificadoViewModels> DamnificadosSalida = new();
-    public List<MovilSalidaViewModels> MovilesSalidasL = new();
-    public List<BomberoSalidaViewModels> bomberosSalida = new();
-    private Form<MovilSalidaViewModels> _form1;
-
-    BomberosDbContext Context;
-    Bombero[] TodosBomberos;
-    Movil[] Moviles;
-
-    public List<BomberoViweModel> bomberoChoferes = new();
-    public List<BomberoViweModel> bomberoTodos = new();
-    bool switchValue { get; set; }
-    bool switchValueS { get; set; }
-    bool switchValueV { get; set; }
-    bool chek { get; set; }
-    bool chekM { get; set; } = false;//probe poniendolo en el OnInitializedAsync, pero cada vez qque cambio un dato creo que se ejecuta y se me cierra el modal
-    bool chekB { get; set; }
-    bool imprimirmodal;
-
-    int BomberoReceptor;
-    string NumeroMovil;
-    int chofer;
-    int BomberoCuerpo;
-    int BomberoEncargado;
-    int QuienLLenoPlanilla;
-
-
-    //direccion
-    protected override async Task OnInitializedAsync()
+    public class StepItem
     {
-
-        await Init();
-    }
-    private async Task Init()
-    {
-        modelServiciosEspecialesRepresentacion = new();
-        Context = DbFactory.CreateDbContext();
-        TodosBomberos = await Context.Bomberos.ToArrayAsync();
-        Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
-        await CargarBomberosView();
+        public string? Title { get; set; }
+        public string? Content { get; set; }
     }
 
-    public async Task CargarServicioRepresentacion()
+    public StepItem[] steps =
+    {
+        new StepItem {Title = " ", Content = ""}, /* Datos generales */
+        new StepItem {Title = " ", Content = ""}, /* Solicitante / Receptor / Damnificado */
+        new StepItem {Title = " ", Content = ""}, /* Vehiculos */
+        new StepItem {Title = " ", Content = ""}, /* Personal */
+        new StepItem {Title = " ", Content = ""}  /* Salida */
+    };
+
+    private void ToggleAnimationD()
+    {
+        animationClass = "slick-contenedor-D";
+    }
+
+    private void ToggleAnimationI()
+    {
+        animationClass = "slick-contenedor-I";
+    }
+
+    void OnPreClick()
+    {
+        current--;
+        ToggleAnimationI();
+    }
+
+    void OnNextClick()
+    {
+        current++;
+        ToggleAnimationD();
+    }
+
+    @*Carga de Salida*@
+
+    private async void OnFinish(EditContext editContext)
     {
 
         try
         {
-            Bombero? bomberoReceptor = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoReceptor).SingleOrDefaultAsync();
-            Bombero? bomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == BomberoEncargado).SingleOrDefaultAsync();
-            Bombero? BomberoLlenoPlanilla = await Context.Bomberos.Where(b => b.NumeroLegajo == QuienLLenoPlanilla).SingleOrDefaultAsync();
+            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(PersonaViewModel.LegajoEncargado);
+            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(PersonaViewModel.LegajoLLenoPlanilla);
 
-            Vista.Data.Models.Salidas.Planillas.ServicioEspecialRepresentaciones ServicioRepresentacion = new()
+            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<RescatePersona>(
+                PersonaViewModel.NumeroParte,
+                m => m.NumeroParte == PersonaViewModel.NumeroParte
+            );
+
+            if (numeroParteRescate != null)
+            {
+                await message.Warning("Numero parte ya existente.");
+                return;
+            }
+
+            RescatePersona Rescates = new()
                 {
-
-                    NumeroParte = modelServiciosEspecialesRepresentacion.NumeroParte,
-                    HoraSalida = modelServiciosEspecialesRepresentacion.HoraSalida,
-                    HoraLlegada = modelServiciosEspecialesRepresentacion.HoraLLegada,
-                    //KmSalida = modelServiciosEspecialesRepresentacion.KmSalida,
-                    //KmLlegada = modelServiciosEspecialesRepresentacion.KmLlegada,
-                    Descripcion = modelServiciosEspecialesRepresentacion.Descripcion,
-                    CalleORuta = modelServiciosEspecialesRepresentacion.CalleORuta,
-                    NumeroOKilometro = modelServiciosEspecialesRepresentacion.NumeroOKilometro,
-                    EntreCalles = modelServiciosEspecialesRepresentacion.EntreCalles,
-                    PisoNumero = modelServiciosEspecialesRepresentacion.PisoNumero,
-                    Depto = modelServiciosEspecialesRepresentacion.Depto,
-                    //Enum.GetName(typeof(TipoGrupoSanguineo), bomberoView.GrupoSanguineo)
-                    TipoZona = modelServiciosEspecialesRepresentacion.TipoZona,
-                    NombreSolicitante = modelServiciosEspecialesRepresentacion.NombreSolicitante,
-                    ApellidoSolicitante = modelServiciosEspecialesRepresentacion.ApellidoSolicitante,
-                    DniSolicitante = modelServiciosEspecialesRepresentacion.DniSolicitante,
-                    TelefonoSolicitante = modelServiciosEspecialesRepresentacion.TelefonoSolicitante,
-                    NombreYApellidoReceptor = modelServiciosEspecialesRepresentacion.NombreYApellidoReceptor,
-                    TipoServicio = modelServiciosEspecialesRepresentacion.TipoServicio,
-                    //Organizacion beneficiada
-                    TipoOrganizacion = modelServiciosEspecialesRepresentacion.TipoOrganizacion,
-                    //Tipo de representación
-                    TipoRepresentacion = modelServiciosEspecialesRepresentacion.TipoRepresentacion,
-                    //Carga capacitacion
+                    NumeroParte = PersonaViewModel.NumeroParte,
+                    AnioNumeroParte = PersonaViewModel.AnioNumeroParte,
+                    HoraSalida = PersonaViewModel.HoraSalida,
+                    HoraLlegada = PersonaViewModel.HoraLLegada,
+                    Descripcion = PersonaViewModel.Descripcion,
+                    CalleORuta = PersonaViewModel.CalleORuta,
+                    NumeroOKilometro = PersonaViewModel.NumeroOKilometro,
+                    EntreCalles = PersonaViewModel.EntreCalles,
+                    PisoNumero = PersonaViewModel.PisoNumero,
+                    Depto = PersonaViewModel.Depto,
+                    NombreYApellidoReceptor = PersonaViewModel.NombreYApellidoReceptor,
+                    TipoZona = PersonaViewModel.TipoZona,
+                    NombreSolicitante = PersonaViewModel.NombreSolicitante,
+                    ApellidoSolicitante = PersonaViewModel.ApellidoSolicitante,
+                    DniSolicitante = PersonaViewModel.DniSolicitante,
+                    TelefonoSolicitante = PersonaViewModel.TelefonoSolicitante,
+                    TipoServicio = PersonaViewModel.TipoServicio,
                     QuienLleno = BomberoLlenoPlanilla,
-                    ReceptorBombero = bomberoReceptor,
                     Encargado = bomberoEncargado,
-                    Seguro = new()
-                    {
-                        CompañiaAseguradora = modelServiciosEspecialesRepresentacion.CompaniaAseguradora,
-                        NumeroDePoliza = modelServiciosEspecialesRepresentacion.NumeroPoliza,
-                        FechaDeVencimineto = modelServiciosEspecialesRepresentacion.FechaVencimineto,
-                    },
+                    //Carga propio de rescates
+                    TipoRescatePersona = PersonaViewModel.TipoRescatePersona,
+
+                    //Seguro = new() <-- Consultar si es requerido
+                    //{
+                    //    CompañiaAseguradora = PersonaViewModel.CompaniaAseguradora,
+                    //    NumeroDePoliza = PersonaViewModel.NumeroPoliza,
+                    //    FechaDeVencimineto = PersonaViewModel.FechaVencimineto,
+                    //},
+
+                    //Iniciación de Listas
                     Damnificados = new(),
                     Moviles = new(),
-                    CuerpoParticipante = new(),
-                    //Carga Representacion
-                    DatosCapacitacion = new()
-                    {
-                        NivelCapacitacion = (TipoNivelCapacitacion)Enum.Parse(typeof(TipoNivelCapacitacion), modelServiciosEspecialesRepresentacion.NivelCapacitacion),
-                        NivelCapacitacionOtro = modelServiciosEspecialesRepresentacion.NivelCapacitacionOtro,
-                        TipoCapacitacion = (TipoCapacitacion)Enum.Parse(typeof(TipoCapacitacion), modelServiciosEspecialesRepresentacion.TipoCapacitacion),
-                        CapacitacionOtra = modelServiciosEspecialesRepresentacion.CapacitacionOtra,
-                        DiasCapacitacion = modelServiciosEspecialesRepresentacion.DiasCapacitacion,
-                        HorariosCapacitacion = modelServiciosEspecialesRepresentacion.HorariosCapacitacion
-
-                    }
-
+                    CuerpoParticipante = new()
 
                 };
-            foreach (BomberoSalidaViewModels bom in bomberosSalida)
+
+            //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
+            if (PersonaViewModel.CuerpoParticipante != null && PersonaViewModel.CuerpoParticipante.Any())
             {
-                Bombero? bomberoSalida = await Context.Bomberos.Where(b => b.NumeroLegajo == bom.NumeroLegajo).SingleOrDefaultAsync();
-                BomberoSalida BomSalida = new()
-                    {
-                        MovilAsignado = bom.MovilAsignado,
-                        Grado = bom.Grado,
-                        Bombero = bomberoSalida
-                    };
-                ServicioRepresentacion.CuerpoParticipante.Add(BomSalida);
+                Rescates.CuerpoParticipante = PersonaViewModel.CuerpoParticipante.ToList();
             }
-            foreach (MovilSalidaViewModels m in MovilesSalidasL)
+
+            //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
+            if (PersonaViewModel.Moviles != null && PersonaViewModel.Moviles.Any())
             {
-                Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == m.Chofer.NumeroLegajo).SingleOrDefaultAsync();
-                Movil? movilsalida = await Context.Moviles.Where(mob => mob.NumeroMovil == m.MovilesSalida.NumeroMovil).
-                Include(s => s.Seguro).
-                Include(i => i.Imagen).
-                Include(f => f.Firmas).
-                //Include(b => b.Bomberos).
-                Include(i => i.Incidentes).
-                SingleOrDefaultAsync();
-                MovilSalida movilS = new()
-                    {
-                        CargoCombustible = m.CargoCombustible,
-                        NumeroFactura = m.NumeroFactura,
-                        FechaFactura = m.FechaFactura,
-                        TipoConbustible = m.TipoConbustible,
-                        CantidadLitros = m.CantidadLitros,
-                        QuienLleno = m.QuienLleno,
-                        TelefonoQuienLleno = m.TelefonoQuienLleno,
-                        KmLlegada = m.KmLlegada,
-                        Chofer = bomberoChofer,
-                        Movil = new()
-                        {
-                            NumeroMovil = movilsalida.NumeroMovil,
-                            NumeroMotor = movilsalida.NumeroMotor,
-                            ModeloBomba = movilsalida.ModeloBomba,
-                            NumeroChasis = movilsalida.NumeroChasis,
-                            Estado = movilsalida.Estado,
-                            //KmSalida = m.KmSalida,
-                            //KmLlegada = m.KmLlegada,
-                            ImagenId = movilsalida.ImagenId,
-                            Imagen = movilsalida.Imagen,
-                            Firmas = movilsalida.Firmas,
-                            //Bomberos = movilsalida.Bomberos,
-                            Incidentes = movilsalida.Incidentes,
-                            Marca = movilsalida.Marca,
-                            Modelo = movilsalida.Modelo,
-                            Año = movilsalida.Año,
-                            Patente = movilsalida.Patente,
-                            Tipo = movilsalida.Tipo,
-                            Seguro = movilsalida.Seguro,
-                            SeguroId = movilsalida.SeguroId,
-                            Kilometraje = m.KmLlegada,
-
-
-                        }
-
-
-
-                        //encontrar forma de meter kilometros en movil de arriba
-
-                    };
-                ServicioRepresentacion.Moviles.Add(movilS);
+                Rescates.Moviles = PersonaViewModel.Moviles.ToList();
             }
-            foreach (DamnificadoViewModels d in DamnificadosSalida)
+
+            //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
+            if (PersonaViewModel.Damnificados != null && PersonaViewModel.Damnificados.Any())
             {
-
-                Damnificado damn = new()
-                    {
-                        Nombre = d.Nombre,
-                        Apellido = d.Apellido,
-                        Dni = d.Dni,
-                        Sexo = d.Sexo,
-                        LugarDeNacimiento = d.LugarDeNacimiento,
-                        Edad = d.Edad,
-                        Estado = d.Estado,
-
-                    };
-                ServicioRepresentacion.Damnificados.Add(damn);
-
-
+                Rescates.Damnificados = PersonaViewModel.Damnificados.ToList();
             }
-            Context.ServicioEspecialesRespresentaciones.Add(ServicioRepresentacion);
-            await Context.SaveChangesAsync();
 
-            await Init();
+            await SalidaService.CargarSalida(Rescates);
+            HandleOk1(Rescates.AnioNumeroParte, Rescates.NumeroParte);
+            Init();
             StateHasChanged();
-            await message.Success("Salida agregada correctamente");
-            imprimirmodal = true;
         }
         catch (Exception e)
         {
-            await Init();
-            StateHasChanged();
+            // Notificar al usuario
             if (e.InnerException != null)
                 await message.Error(e.InnerException.Message, 5);
             else
                 await message.Error(e.Message, 5);
-            imprimirmodal = true;
-
         }
-
-
     }
 
-
-    public async Task AgregarMovilSalida()
+    @*Inicio*@
+    protected override void OnInitialized()
     {
-
-        Bombero? bomberoChofer = await Context.Bomberos.Where(b => b.NumeroLegajo == chofer).SingleOrDefaultAsync();
-        Movil? Movilsalida = await Context.Moviles.Where(m => m.NumeroMovil == NumeroMovil).Include(s=>s.Seguro).SingleOrDefaultAsync();
-        MovilSalidaViewModels m = new()
-            {
-                CargoCombustible = chekM,
-                NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                FechaFactura = movilSalidaViewModels.FechaFactura,
-                TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                QuienLleno = movilSalidaViewModels.QuienLleno,
-                TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                Chofer = bomberoChofer,
-                MovilesSalida = Movilsalida,
-                KmLlegada=movilSalidaViewModels.KmLlegada
-
-            };
-        MovilesSalidasL.Add(m);
-        StateHasChanged();
+        Init();
     }
 
-    private void OnFinish(EditContext editContext)
+    private void Init()
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(modelServiciosEspecialesRepresentacion)}");
+        PersonaViewModel = new();
     }
 
+    @*Finish Failed*@
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelServiciosEspecialesRepresentacion)}");
-    }
-    
-    void OnChange(string[] checkedValues)
-    {
-        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
-    }
-    private void OnChangeChofer(bool checkedValue)
-    {
-        if (checkedValue) ShowModal();
-    }
-    // array de las opciones posibles, buscar la opcion y agregarla en la planilla
-    public async Task CargarBomberosView()
-    {
-        bomberoTodos = new();
-        bomberoChoferes = new();
-        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
-        foreach (Bombero b in bomberos)
-        {
-            BomberoViweModel bombero = new()
-                {
-                    FechaNacimiento = b.FechaNacimiento,
-                    Sexo = b.Sexo,
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    Documento = b.Documento,
-                    NumeroLegajo = b.NumeroLegajo,
-                    NumeroIoma = b.NumeroIoma,
-                    LugarNacimiento = b.LugarNacimiento,
-                    Grado = b.Grado,
-                    //NombreImagen = b.NombreImagen,
-                    //TipoImagen = b.TipoImagen,
-                    //Base64Imagen = b.Base64,
-                    Dotacion = b.Dotacion,
-                    //Nombre = b.NombreBrigada,
-                    //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                    Estado = b.Estado,
-                    Chofer = b.Chofer,
-                    VencimientoRegistro = b.VencimientoRegistro,
-                    Direccion = b.Direccion,
-                    Observaciones = b.Observaciones,
-                    Profesion = b.Profesion,
-                    NivelEstudios = b.NivelEstudios,
-                    FechaAceptacion = b.FechaAceptacion,
-                    //TelefonoCel = b.TelefonoCel,
-                    //TelefonoFijo = b.TelefonoFijo,
-                    //TelefonoLaboral = b.TelefonoLaboral,
-                    //Email = b.Email,
-
-                };
-            bomberoTodos.Add(bombero);
-        }
-        foreach (Bombero c in bomberos)
-        {
-            if (c.Chofer == true)
-            {
-                BomberoViweModel bomberoChofer = new()
-                    {
-                        FechaNacimiento = c.FechaNacimiento,
-                        Sexo = c.Sexo,
-                        Nombre = c.Nombre,
-                        Apellido = c.Apellido,
-                        Documento = c.Documento,
-                        NumeroLegajo = c.NumeroLegajo,
-                        NumeroIoma = c.NumeroIoma,
-                        LugarNacimiento = c.LugarNacimiento,
-                        Grado = c.Grado,
-                        //NombreImagen = b.NombreImagen,
-                        //TipoImagen = b.TipoImagen,
-                        //Base64Imagen = b.Base64,
-                        Dotacion = c.Dotacion,
-                        //Nombre = b.NombreBrigada,
-                        //GrupoSanguineo = Enum.GetName(typeof(TipoGrupoSanguineo), b.GrupoSanguineo),
-                        Estado = c.Estado,
-                        Chofer = c.Chofer,
-                        VencimientoRegistro = c.VencimientoRegistro,
-                        Direccion = c.Direccion,
-                        Observaciones = c.Observaciones,
-                        Profesion = c.Profesion,
-                        NivelEstudios = c.NivelEstudios,
-                        FechaAceptacion = c.FechaAceptacion,
-                        //TelefonoCel = b.TelefonoCel,
-                        //TelefonoFijo = b.TelefonoFijo,
-                        //TelefonoLaboral = b.TelefonoLaboral,
-                        //Email = b.Email,
-
-                    };
-                bomberoChoferes.Add(bomberoChofer);
-            }
-        }
+        message.Error("Error al cargar, posible información ausente");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(PersonaViewModel)}");
     }
 
-    bool loading = false;
+    @*Impresión*@
+    bool _visible1;
 
-    void toggle(bool value) => loading = value;
-
-    bool _visible = false;
-    private void ShowModal()
+    public int ImprimirAnio;
+    public int ImprimirNumeroParte;
+    void HandleOk1(int _anio, int _numeroParte)
     {
-        _visible = true;
+        ImprimirAnio = _anio;
+        ImprimirNumeroParte = _numeroParte;
+        _visible1 = true;
     }
-    private void HandleCancel(MouseEventArgs e)
-    {
-
-        _visible = false;
-    }
-    private void HandleCancelIMP(MouseEventArgs e)
-    {
-
-        imprimirmodal = false;
-    }
-    private void OnFinishModel(EditContext editContext)
-    {
-
-        _visible = false;
-    }
-    private void HandleOk(MouseEventArgs e)
-    {
-
-        _visible = false;
-
-    }
-    private void HandleOkIMP(MouseEventArgs e)
-    {
-
-        imprimirmodal = false;
-
-    }
-    void deleteRow(int numlegajo)
-    {
-        bomberosSalida = bomberosSalida.Where(d => d.NumeroLegajo != numlegajo).ToList();
-    }
-    void deleteRowMovil(string NumMovil)
-    {
-        MovilesSalidasL = MovilesSalidasL.Where(m => m.NumeroMovil != NumMovil).ToList();
-    }
-    void deleteRowDamnificados(string Dni)
-    {
-        DamnificadosSalida = DamnificadosSalida.Where(m => m.Dni != Dni).ToList();
-    }
-    public void Dispose()
-    {
-        Context?.Dispose();
-    }
-
 }
 
 
