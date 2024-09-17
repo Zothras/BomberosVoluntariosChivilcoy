@@ -20,6 +20,9 @@
     <None Remove="wwwroot\Moviles\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Data\Models\Salidas\Componentes\VehículoInterviniente.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="wwwroot\Imagenes\Icons\" />
   </ItemGroup>
   <ItemGroup>

@@ -53,11 +53,12 @@
         </TitleTemplate>
         <ColumnDefinitions>
             <PropertyColumn Property="c => c.NroEquipo"
+                            title="Número Equipo"
                             DefaultSortOrder="@SortDirection.Descending"
                             SorterCompare="@((a, b) => string.Compare(a, b))" />
             <PropertyColumn Property="c=>c.Modelo" Sortable />
                 <PropertyColumn Property="c=>c.Marca" Sortable />
-                <PropertyColumn Property="c=>c.NroSerie" />
+            <PropertyColumn title="Número Serie" Property="c=>c.NroSerie" />
                 <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
                 <PropertyColumn Title="Estado" Property="c=>c.Estado"
                                 SortDirections="new[] { SortDirection.Descending }"
