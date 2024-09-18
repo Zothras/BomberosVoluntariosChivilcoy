@@ -37,14 +37,15 @@
                 <PropertyColumn Property="c=>c.Stock" Sortable></PropertyColumn>
                 <PropertyColumn Property="c=>c.Codigo" Sortable></PropertyColumn>
         </ColumnDefinitions>
+        
     </Table>
-    <div style="display: flex;justify-content: space-between;margin-top: 10px;">
+    <div style="display: flex;justify-content: space-between;width: 100%; padding: 10px;">
+        
         <Button Class="primary" OnClick="()=>ShowModalAgregar()">Cargar Material</Button>
-    </div>
-    <div>
          <Button Type="primary" @onclick="_=>open()">Movimientos de los materiales</Button>
     </div>
 </div>
+    
 <div>
     <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
         <Overlay>
