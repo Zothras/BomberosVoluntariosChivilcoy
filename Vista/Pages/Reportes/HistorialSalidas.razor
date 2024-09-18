@@ -1,7 +1,6 @@
 ﻿@page "/Reportes/HistorialSalidas"
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
-@using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.Json;
@@ -78,7 +77,7 @@
                     <Overlay>
                         <Menu>
                             <MenuItem>
-                                <Button Class="boton_p" OnClick="()=>ShowModalEditar(context.SalidaId)">Editar</Button>
+                                <Button Class="boton_p">Editar</Button>
                             </MenuItem>
                             <MenuItem>
                                 <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button>
@@ -103,13 +102,6 @@
 {
     <ImprimirModal AnioNumeroParte="@anioNumeroParte" NumeroParte="@NumeroParte"/>
 }
-@if (mostrarEditar is true)
-{
-    <EditarSalida @key="salidaId" salidaId="salidaId" />
-    mostrarEditar = false;
-}
-
-
 
 @*Se traen los datos de salida generales y discriminador*@
 @code {
@@ -278,15 +270,13 @@
 }
 
 
-@*Modal Editar*@
+
 
 
 
 
 @code {
-    int numeroParteVisualizar;
     public bool mostrarDetalle= false;
-    public bool mostrarEditar= false;
     int salidaId;
     int anioNumeroParte;
     int NumeroParte;
@@ -301,12 +291,4 @@
 
         mostrarDetalle = true;
     }
-
-    private void ShowModalEditar(int Id)
-    {
-        numeroParteVisualizar = salidasViewModel.FindIndex(n => n.SalidaId == Id);
-        mostrarEditar= true;
-        salidaId = Id;
-    }
-    
 }
