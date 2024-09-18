@@ -4,6 +4,7 @@
 
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.ViewModels.Rescates;
+@using Vista.Data.Enums;
 
 @*Servicios Utilizados*@
 @using Vista.Services;
@@ -63,14 +64,8 @@
                 {
                     @*Tipo servicio*@
                     <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo Servicio Salida</label>
-                        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@PersonaViewModel.TipoServicio" />
-                    </div>
-
-                    @*Propio de rescates*@
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo Lugar de Rescate</label>
-                        <EnumSelect TEnum="TipoRescatePersona" @bind-Value="@PersonaViewModel.TipoRescatePersona" />
+                        <label class="inpt-cont--lbl">Tipo Servicio Representación</label>
+                        <EnumSelect TEnum="TipoServicioRepresentaciones" @bind-Value="@PersonaViewModel.TipoRepresentacion" />
                     </div>
                 }
             </div>
@@ -184,7 +179,7 @@
                     ApellidoSolicitante = PersonaViewModel.ApellidoSolicitante,
                     DniSolicitante = PersonaViewModel.DniSolicitante,
                     TelefonoSolicitante = PersonaViewModel.TelefonoSolicitante,
-                    TipoServicio = PersonaViewModel.TipoServicio,
+                    TipoRepresentacion = PersonaViewModel.TipoRepresentacion,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
                     //Carga propio de rescates
@@ -203,6 +198,7 @@
                     CuerpoParticipante = new()
 
                 };
+           
 
             //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
             if (PersonaViewModel.CuerpoParticipante != null && PersonaViewModel.CuerpoParticipante.Any())

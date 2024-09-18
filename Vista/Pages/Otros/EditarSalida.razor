@@ -14,7 +14,8 @@
 @using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Rescates;
 @using System.Windows;
-@using System.ComponentModel.DataAnnotations
+@using System.ComponentModel.DataAnnotations;
+@using Vista.Data.Enums;
 
 <Modal Title="@("Salida Editar")"
        Visible="@_visibleEditar"
@@ -515,7 +516,7 @@
                     <EnumSelect TEnum="TipoServiciosEspeciales" @bind-Value="@servicioEspecialRepresentacionViewModel.Tipo" />
                 </FormItem>
                 <FormItem Label="Tipo Representacion">
-                    <EnumSelect TEnum="TipoServicioRepresentacion" @bind-Value="@servicioEspecialRepresentacionViewModel.TipoRepresentacion" />
+                    <EnumSelect TEnum="TipoServicioRepresentaciones" @bind-Value="@servicioEspecialRepresentacionViewModel.TipoServicioRepresentacion" />
                 </FormItem>
                 <FormItem Label="Otro Representacion">
                     <Input @bind-Value="@servicioEspecialRepresentacionViewModel.OtroRepresentacion" />
@@ -1312,7 +1313,7 @@
 
         servicioEspecialRepresentacionViewModel = new()
             {
-                TipoRepresentacion = servicioEspecialRepresentaciones.TipoRepresentacion,
+                TipoServicioRepresentacion = servicioEspecialRepresentaciones.TipoRepresentacion,
                 TipoOrganizacion = servicioEspecialRepresentaciones.TipoOrganizacion,
                 OtroRepresentacion = servicioEspecialRepresentaciones.OtroRepresentacion,
                 //TipoPrevencion = servicioEspecialPrevencion.TipoPrevencion,

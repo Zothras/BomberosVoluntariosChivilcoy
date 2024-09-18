@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 
 
-    public enum TipoServicioRepresentacion
-    {
+    public enum TipoServicioRepresentaciones
+{
         [Display(Name = "Desfiles")]
         Desfiles,
         [Display(Name = "Honores Funerarios")]
