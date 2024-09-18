@@ -52,15 +52,15 @@
 </div>
 <Table DataSource="ListasMoviminetosVista" Bordered Responsive Style="min-width: 320px!important;" PageSize="5" Size="TableSize.Small">
          <ColumnDefinitions Context="muestra">
-             <PropertyColumn Property="c=>c.FechaIngreso" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+             <PropertyColumn Property="c=>c.FechaIngreso" Title="Fechas de Ingreso" Format="dd/MM/yyyy" Sortable></PropertyColumn>
          <PropertyColumn Property="c=>c.MaterialAsignado.Codigo" Sortable></PropertyColumn>
-         <PropertyColumn Property="c=>c.TipoMovimiento" 
+         <PropertyColumn Property="c=>c.TipoMovimiento" Title="Tipo de Movimiento"
                          SortDirections="new[] { SortDirection.Descending }"
                          Filters="DiscriminadorFilter"
                          OnFilter="((value,name)=>Enum.GetName(typeof(TipoMovimiento), name).StartsWith(Enum.GetName(typeof(TipoMovimiento), value)))" >
          </PropertyColumn>
          <PropertyColumn Property="c=>c.MaterialAsignado.Descripcion" Sortable></PropertyColumn>
-         <PropertyColumn Property="c=>c.BomberoOMovil" Sortable></PropertyColumn>
+         <PropertyColumn Property="c=>c.BomberoOMovil" Title="Bombero/Movil" Sortable></PropertyColumn>
          
      </ColumnDefinitions>
  </Table>
