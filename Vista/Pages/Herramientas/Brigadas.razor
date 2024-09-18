@@ -137,7 +137,7 @@
 
             <!-- Botón para mostrar modal de agregar brigada -->
             <div>
-                <Button Type="@ButtonType.Primary" OnClick="@ShowModalEliminar" Style="background-color: #732D2D; color:white; border-color:#732D2D !important">Eliminar Brigada</Button>
+                <Button Type="@ButtonType.Primary" OnClick="@ShowModalEliminar" Style="background-color: #FF0000; border-color:#FF0000 !important">Eliminar Brigada</Button>
                 <Button Type="@ButtonType.Primary" OnClick="@ShowModalAgregar" Style="background-color: #1890ff; border-color: #1890ff;">Agregar Brigada</Button>
             </div>
         </div>
@@ -226,7 +226,7 @@
 
     <!-- Modal Eliminar Brigada -->
 
-    <Modal Title="@("Agregar Brigada")"
+    <Modal Title="@("Eliminar Brigada")"
            Visible="@_visibleEliminar"
            OnOk="@HandleOkEliminar"
            OnCancel="@HandleCancelEliminar">
