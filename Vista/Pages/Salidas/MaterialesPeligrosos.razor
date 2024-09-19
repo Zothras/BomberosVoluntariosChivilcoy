@@ -102,7 +102,7 @@
                                 <SelectOptions>
                                     @foreach (var item in _items)
                                     {
-                                        <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+                                        <SelectOption TItemValue="string" TItem="string" Value=@item Label=@FormatName(item) />
                                     }
                                 </SelectOptions>
                             </Select>
@@ -124,7 +124,7 @@
                                     <SelectOptions>
                                         @foreach (var item in _items2)
                                         {
-                                            <SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+                                            <SelectOption TItemValue="string" TItem="string" Value=@item Label=@FormatName(item) />
                                         }
                                     </SelectOptions>
                                 </Select>
@@ -506,5 +506,18 @@
                 }
             }
         }
+    }
+
+    // Función para formatear los nombres
+    private string FormatName(string name)
+    {
+        return name switch
+        {
+            "DilucionDeVapores" => "Dilucion de Vapores",
+            "OtraAccionesMateriales" => "Otra Acciones Materiales",
+            "SinAccion" => "Sin Accion",
+            "OtraAccionesPersonas" => "Otra Acciones Personas",
+            _ => name // Devuelve el nombre original si no hay formato
+        };
     }
 }
