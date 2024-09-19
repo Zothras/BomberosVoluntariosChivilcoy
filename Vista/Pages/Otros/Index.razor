@@ -33,6 +33,13 @@
         margin-top: 1.3%;
     }
 
+    .background-container {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+       
+    }
+
     /* Componentes */
 
     article {
@@ -169,7 +176,7 @@
 
     .art8 {
         grid-area: n7;
-        background: #262626;
+        background: #eaa969;
         padding: 18px;
         margin-left: 0;
         width: 100%;
@@ -347,9 +354,9 @@
     }
 </style>
 
-<div class="gridContainer">
+<div class="background-container">
     <div class="imgCont">
-        <img class="FONDO_DE_PANTALLA" src="~/Imagenes/FONDO_DE_PANTALLA (1).svg" />
+        <img class="FONDO_DE_PANTALLA" src="~/Imagenes/FONDO_DE_PANTALLA (1).jpg" />
     </div>
     @* BOMBEROS *@ 
     <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos/Legajo"); })" style="border-radius: 10px;">
