@@ -293,7 +293,7 @@
                         salidaIncendioForestal.Damnificados = salidaIncendioForestalView.Damnificados.ToList();
                     }
 
-                    await SalidaService.CargarSalida(salidaIncendioForestal);
+                    await SalidaService.GuardarSalida(salidaIncendioForestal);
                     HandleOk1(salidaIncendioForestal.AnioNumeroParte, salidaIncendioForestal.NumeroParte);
                     await Init();
                     StateHasChanged();

@@ -61,7 +61,6 @@ namespace Vista.Data.Models.Salidas.Planillas
         public Bombero QuienLleno { get; set; }
         public TipoServicioSalida TipoServicio { get; set; }
 
-        public TipoServicioRepresentaciones TipoRepresentacion { get; set; }
         public double? Latitud { get; set; }
         public double? Longitud { get; set; }
     }

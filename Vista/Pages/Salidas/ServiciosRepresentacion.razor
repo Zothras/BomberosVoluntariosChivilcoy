@@ -3,10 +3,10 @@
 @page "/salidas/serviciosRepresentacion"
 
 @using Vista.Data.ViewModels.Personal;
-@using Vista.Data.ViewModels.Rescates;
 @using Vista.Data.Enums;
 
 @*Servicios Utilizados*@
+@using Vista.Data.ViewModels.Servicios
 @using Vista.Services;
 @inject ISalidaService SalidaService
 @inject IBomberoService BomberoService
@@ -14,7 +14,7 @@
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
 
-<Form Model="@PersonaViewModel"
+<Form Model="@RepresentacionViewModel"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
@@ -39,25 +39,25 @@
                 @if (current == 0)
                 {
                     @*General*@
-                    <DatosGenerales Model="@PersonaViewModel"
+                    <DatosGenerales Model="@RepresentacionViewModel"
                                     animationClass="@animationClass" />
                 }
                 else if (current == 1)
                 {
                     @*Solicitante | Receptor | Damnificado*@
-                    <Participantes Model="@PersonaViewModel"
+                    <Participantes Model="@RepresentacionViewModel"
                                    animationClass="@animationClass" />
                 }
                 else if (current == 2)
                 {
                     @*Chofer y Moviles*@
-                    <Vehiculos Model="@PersonaViewModel"
+                    <Vehiculos Model="@RepresentacionViewModel"
                                animationClass="@animationClass" />
                 }
                 else if (current == 3)
                 {
                     @*Bomberos*@
-                    <Personal Model="@PersonaViewModel"
+                    <Personal Model="@RepresentacionViewModel"
                               animationClass="@animationClass" />
                 }
                 else if (current == 4)
@@ -65,7 +65,7 @@
                     @*Tipo servicio*@
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Tipo Servicio Representación</label>
-                        <EnumSelect TEnum="TipoServicioRepresentaciones" @bind-Value="@PersonaViewModel.TipoRepresentacion" />
+                        <EnumSelect TEnum="TipoServicioRepresentaciones" @bind-Value="@RepresentacionViewModel.TipoRepresentacion" />
                     </div>
                 }
             </div>
@@ -96,7 +96,7 @@
 </Form>
 
 @code {
-    private RescatePersonaViewModels PersonaViewModel = new();
+    private ServicioEspecialRepresentacionViewModels RepresentacionViewModel = new();
 
     @*Steps*@
 
@@ -147,12 +147,12 @@
 
         try
         {
-            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(PersonaViewModel.LegajoEncargado);
-            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(PersonaViewModel.LegajoLLenoPlanilla);
+            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(RepresentacionViewModel.LegajoEncargado);
+            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(RepresentacionViewModel.LegajoLLenoPlanilla);
 
-            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<RescatePersona>(
-                PersonaViewModel.NumeroParte,
-                m => m.NumeroParte == PersonaViewModel.NumeroParte
+            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<ServicioEspecialRepresentacion>(
+                RepresentacionViewModel.NumeroParte,
+                m => m.NumeroParte == RepresentacionViewModel.NumeroParte
             );
 
             if (numeroParteRescate != null)
@@ -161,29 +161,28 @@
                 return;
             }
 
-            RescatePersona Rescates = new()
+            ServicioEspecialRepresentacion representacion = new()
                 {
-                    NumeroParte = PersonaViewModel.NumeroParte,
-                    AnioNumeroParte = PersonaViewModel.AnioNumeroParte,
-                    HoraSalida = PersonaViewModel.HoraSalida,
-                    HoraLlegada = PersonaViewModel.HoraLLegada,
-                    Descripcion = PersonaViewModel.Descripcion,
-                    CalleORuta = PersonaViewModel.CalleORuta,
-                    NumeroOKilometro = PersonaViewModel.NumeroOKilometro,
-                    EntreCalles = PersonaViewModel.EntreCalles,
-                    PisoNumero = PersonaViewModel.PisoNumero,
-                    Depto = PersonaViewModel.Depto,
-                    NombreYApellidoReceptor = PersonaViewModel.NombreYApellidoReceptor,
-                    TipoZona = PersonaViewModel.TipoZona,
-                    NombreSolicitante = PersonaViewModel.NombreSolicitante,
-                    ApellidoSolicitante = PersonaViewModel.ApellidoSolicitante,
-                    DniSolicitante = PersonaViewModel.DniSolicitante,
-                    TelefonoSolicitante = PersonaViewModel.TelefonoSolicitante,
-                    TipoRepresentacion = PersonaViewModel.TipoRepresentacion,
+                    NumeroParte = RepresentacionViewModel.NumeroParte,
+                    AnioNumeroParte = RepresentacionViewModel.AnioNumeroParte,
+                    HoraSalida = RepresentacionViewModel.HoraSalida,
+                    HoraLlegada = RepresentacionViewModel.HoraLLegada,
+                    Descripcion = RepresentacionViewModel.Descripcion,
+                    CalleORuta = RepresentacionViewModel.CalleORuta,
+                    NumeroOKilometro = RepresentacionViewModel.NumeroOKilometro,
+                    EntreCalles = RepresentacionViewModel.EntreCalles,
+                    PisoNumero = RepresentacionViewModel.PisoNumero,
+                    Depto = RepresentacionViewModel.Depto,
+                    NombreYApellidoReceptor = RepresentacionViewModel.NombreYApellidoReceptor,
+                    TipoZona = RepresentacionViewModel.TipoZona,
+                    NombreSolicitante = RepresentacionViewModel.NombreSolicitante,
+                    ApellidoSolicitante = RepresentacionViewModel.ApellidoSolicitante,
+                    DniSolicitante = RepresentacionViewModel.DniSolicitante,
+                    TelefonoSolicitante = RepresentacionViewModel.TelefonoSolicitante,
+                    TipoRepresentacion = RepresentacionViewModel.TipoRepresentacion,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
                     //Carga propio de rescates
-                    TipoRescatePersona = PersonaViewModel.TipoRescatePersona,
 
                     //Seguro = new() <-- Consultar si es requerido
                     //{
@@ -201,25 +200,25 @@
            
 
             //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
-            if (PersonaViewModel.CuerpoParticipante != null && PersonaViewModel.CuerpoParticipante.Any())
+            if (RepresentacionViewModel.CuerpoParticipante != null && RepresentacionViewModel.CuerpoParticipante.Any())
             {
-                Rescates.CuerpoParticipante = PersonaViewModel.CuerpoParticipante.ToList();
+                representacion.CuerpoParticipante = RepresentacionViewModel.CuerpoParticipante.ToList();
             }
 
             //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
-            if (PersonaViewModel.Moviles != null && PersonaViewModel.Moviles.Any())
+            if (RepresentacionViewModel.Moviles != null && RepresentacionViewModel.Moviles.Any())
             {
-                Rescates.Moviles = PersonaViewModel.Moviles.ToList();
+                representacion.Moviles = RepresentacionViewModel.Moviles.ToList();
             }
 
             //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
-            if (PersonaViewModel.Damnificados != null && PersonaViewModel.Damnificados.Any())
+            if (RepresentacionViewModel.Damnificados != null && RepresentacionViewModel.Damnificados.Any())
             {
-                Rescates.Damnificados = PersonaViewModel.Damnificados.ToList();
+                representacion.Damnificados = RepresentacionViewModel.Damnificados.ToList();
             }
 
-            await SalidaService.CargarSalida(Rescates);
-            HandleOk1(Rescates.AnioNumeroParte, Rescates.NumeroParte);
+            await SalidaService.GuardarSalida(representacion);
+            HandleOk1(representacion.AnioNumeroParte, representacion.NumeroParte);
             Init();
             StateHasChanged();
         }
@@ -241,14 +240,14 @@
 
     private void Init()
     {
-        PersonaViewModel = new();
+        RepresentacionViewModel = new();
     }
 
     @*Finish Failed*@
     private void OnFinishFailed(EditContext editContext)
     {
         message.Error("Error al cargar, posible información ausente");
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(PersonaViewModel)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(RepresentacionViewModel)}");
     }
 
     @*Impresión*@

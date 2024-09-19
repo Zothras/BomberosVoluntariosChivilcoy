@@ -297,7 +297,7 @@
                         salidaIncendioVivienda.Damnificados = salidaIncendioViviendaVista.Damnificados.ToList();
                     }
 
-                    await SalidaService.CargarSalida(salidaIncendioVivienda);
+                    await SalidaService.GuardarSalida(salidaIncendioVivienda);
                     HandleOk1(salidaIncendioVivienda.AnioNumeroParte, salidaIncendioVivienda.NumeroParte);
                     await Init();
                     StateHasChanged();

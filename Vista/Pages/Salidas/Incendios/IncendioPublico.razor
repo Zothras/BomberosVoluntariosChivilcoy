@@ -298,7 +298,7 @@
                         salidaIncendioEstabPublico.Damnificados = IncendioPublicoModel.Damnificados.ToList();
                     }
 
-                    await SalidaService.CargarSalida(salidaIncendioEstabPublico);
+                    await SalidaService.GuardarSalida(salidaIncendioEstabPublico);
                     HandleOk1(salidaIncendioEstabPublico.AnioNumeroParte, salidaIncendioEstabPublico.NumeroParte);
                     await Init();
                     StateHasChanged();

@@ -297,7 +297,7 @@
                         salidaIncendioEducativo.Damnificados = incendioEducativoModel.Damnificados.ToList();
                     }
 
-                    await SalidaService.CargarSalida(salidaIncendioEducativo);
+                    await SalidaService.GuardarSalida(salidaIncendioEducativo);
                     HandleOk1(salidaIncendioEducativo.AnioNumeroParte, salidaIncendioEducativo.NumeroParte);
                     await Init();
                     StateHasChanged();

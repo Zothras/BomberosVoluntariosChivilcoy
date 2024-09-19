@@ -34,7 +34,7 @@ namespace Vista.Data
         public DbSet<IncendioIndustria> IncendiosIndustrias { get; set; }
         public DbSet<IncendioVivienda> IncendiosViviendas { get; set; }
         public DbSet<MaterialPeligroso> MaterialesPeligrosos { get; set; }
-        public DbSet<ServicioEspecialRepresentaciones> ServicioEspecialesRespresentaciones { get; set; }
+        public DbSet<ServicioEspecialRepresentacion> ServicioEspecialesRespresentaciones { get; set; }
         public DbSet<ServicioEspecialPrevencion> ServicioEspecialPrevenciones { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
@@ -142,7 +142,7 @@ namespace Vista.Data
                 .HasValue<Accidente>(1)
                 .HasValue<FactorClimatico>(2)
                 .HasValue<MaterialPeligroso>(3)
-                .HasValue<ServicioEspecialRepresentaciones>(4)
+                .HasValue<ServicioEspecialRepresentacion>(4)
                 .HasValue<RescateAnimal>(5)
                 .HasValue<RescatePersona>(6)
                 .HasValue<IncendioComercio>(7)
@@ -232,9 +232,9 @@ namespace Vista.Data
                 .IsRequired(false);
 
 
-            modelBuilder.Entity<ServicioEspecial>()
+            modelBuilder.Entity<ServicioEspecialRepresentacion>()
                 .HasOne(se => se.DatosCapacitacion)
-                .WithOne(dc => dc.ServicioEspecial)
+                .WithOne(dc => dc.ServicioEspecialRepresentaciones)
                 .HasForeignKey<DatosCapacitacion>(dc => dc.DatosCapacitacionId);
 
             // Configuración de la relación uno a muchos entre Salida y MovilSalida
@@ -304,7 +304,7 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-                .Entity<ServicioEspecialRepresentaciones>()
+                .Entity<ServicioEspecialRepresentacion>()
                 .Property(s => s.TipoRepresentacion)
                 .HasConversion<string>()
                 .HasMaxLength(255);

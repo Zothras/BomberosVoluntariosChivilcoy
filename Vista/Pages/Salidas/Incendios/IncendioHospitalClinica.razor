@@ -296,7 +296,7 @@
                         salidaIncendioHospYClinica.Damnificados = HospitalClinicaViewModel.Damnificados.ToList();
                     }
 
-                    await SalidaService.CargarSalida(salidaIncendioHospYClinica);
+                    await SalidaService.GuardarSalida(salidaIncendioHospYClinica);
                     HandleOk1(salidaIncendioHospYClinica.AnioNumeroParte, salidaIncendioHospYClinica.NumeroParte);
                     await Init();
                     StateHasChanged();

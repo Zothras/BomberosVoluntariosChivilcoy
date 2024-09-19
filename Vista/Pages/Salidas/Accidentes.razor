@@ -286,7 +286,7 @@
 
             }
 
-            await SalidaService.CargarSalida(accidente);
+            await SalidaService.GuardarSalida(accidente);
             HandleOk1(accidente.AnioNumeroParte, accidente.NumeroParte);
             await Init();
             StateHasChanged();

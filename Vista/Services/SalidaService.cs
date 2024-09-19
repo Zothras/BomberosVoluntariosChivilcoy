@@ -16,7 +16,7 @@ namespace Vista.Services
 {
     public interface ISalidaService
     {
-        Task<Salida> CargarSalida<T>(T entidad) where T : Salida;
+        Task<Salida> GuardarSalida<T>(T entidad) where T : Salida;
         Task<T?> ObtenerSalidaPorNumeroParteAsync<T>(int numeroParte,
     Expression<Func<T, bool>> predicate) where T : class;
 
@@ -39,7 +39,7 @@ namespace Vista.Services
                 .Where(predicate)
                 .SingleOrDefaultAsync();
         }
-        public async Task<Salida> CargarSalida<T>(T salida) where T : Salida
+        public async Task<Salida> GuardarSalida<T>(T salida) where T : Salida
         {
             try
             {

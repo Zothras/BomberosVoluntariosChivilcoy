@@ -219,7 +219,7 @@
                 factorClimatico.Damnificados = modelFactorClimatico.Damnificados.ToList();
             }
 
-            await SalidaService.CargarSalida(factorClimatico);
+            await SalidaService.GuardarSalida(factorClimatico);
             HandleOk1(factorClimatico.AnioNumeroParte, factorClimatico.NumeroParte);
             Init();
             StateHasChanged();

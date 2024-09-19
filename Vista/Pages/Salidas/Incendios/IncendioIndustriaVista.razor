@@ -295,7 +295,7 @@
                         salidaIncendioIndustria.Damnificados = salidaIncendioIndustrialView.Damnificados.ToList();
                     }
 
-                    await SalidaService.CargarSalida(salidaIncendioIndustria);
+                    await SalidaService.GuardarSalida(salidaIncendioIndustria);
                     HandleOk1(salidaIncendioIndustria.AnioNumeroParte, salidaIncendioIndustria.NumeroParte);
                     await Init();
                     StateHasChanged();

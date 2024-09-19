@@ -222,7 +222,7 @@
                 Rescates.Damnificados = PersonaViewModel.Damnificados.ToList();
             }
 
-            await SalidaService.CargarSalida(Rescates);
+            await SalidaService.GuardarSalida(Rescates);
             HandleOk1(Rescates.AnioNumeroParte, Rescates.NumeroParte);
             Init();
             StateHasChanged();

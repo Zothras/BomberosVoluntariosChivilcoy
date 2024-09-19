@@ -324,7 +324,7 @@
                         }
                     }
 
-                    await SalidaService.CargarSalida(salidaIncendioVehicular);
+                    await SalidaService.GuardarSalida(salidaIncendioVehicular);
                     HandleOk1(salidaIncendioVehicular.AnioNumeroParte, salidaIncendioVehicular.NumeroParte);
                     await Init();
                     StateHasChanged();

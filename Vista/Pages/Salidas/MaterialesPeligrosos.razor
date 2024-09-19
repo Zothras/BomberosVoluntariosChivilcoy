@@ -385,7 +385,7 @@
                 materiales.Damnificados = modelMateriales.Damnificados.ToList();
             }
 
-            await SalidaService.CargarSalida(materiales);
+            await SalidaService.GuardarSalida(materiales);
             HandleOk1(materiales.AnioNumeroParte, materiales.NumeroParte);
             await Init();
             StateHasChanged();

@@ -22,6 +22,6 @@ namespace Vista.Data.Models.Salidas.Componentes
 
         public int SalidaId { get; set; }
         [ForeignKey("SalidaId")]
-        public ServicioEspecial ServicioEspecial { get; set; }
+        public ServicioEspecialRepresentacion ServicioEspecialRepresentaciones { get; set; }
     }
 }

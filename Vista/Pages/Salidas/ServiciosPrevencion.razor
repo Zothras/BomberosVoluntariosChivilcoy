@@ -233,7 +233,7 @@
                 Prevencion.Damnificados = modelServiciosEspecialesPrevencion.Damnificados.ToList();
             }
 
-            await SalidaService.CargarSalida(Prevencion);
+            await SalidaService.GuardarSalida(Prevencion);
             HandleOk1(Prevencion.AnioNumeroParte, Prevencion.NumeroParte);
             Init();
             StateHasChanged();

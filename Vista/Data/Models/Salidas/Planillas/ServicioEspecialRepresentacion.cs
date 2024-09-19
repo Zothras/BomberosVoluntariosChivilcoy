@@ -1,8 +1,10 @@
 ﻿using Vista.Data.Enums;
+using Vista.Data.Models.Salidas.Componentes;
 namespace Vista.Data.Models.Salidas.Planillas
 {
-    public class ServicioEspecialRepresentaciones : ServicioEspecial
+    public class ServicioEspecialRepresentacion : ServicioEspecial
     {
-        public new TipoServicioRepresentaciones TipoRepresentacion { get; set; }
+        public TipoServicioRepresentaciones TipoRepresentacion { get; set; }
+        public DatosCapacitacion? DatosCapacitacion { get; set; }
     }
 }
