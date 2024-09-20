@@ -53,7 +53,12 @@ namespace Vista.Data
         public DbSet<Novedad> Novedades { get; set; }
         public DbSet<NovedadVehiculo> NovedadesVehiculos { get; set; }
 
-        //propiedad experimental:
+        //Fuerzas
+
+        public DbSet<Fuerza> Fuerzas { get; set; }
+        public DbSet<FuerzaInterviniente> fuerzaIntervinientes { get; set; }
+
+        //propiedad experimental
         public DbSet<Salida> Salidas { get; set; }
 
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
