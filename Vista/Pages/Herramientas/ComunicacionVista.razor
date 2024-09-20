@@ -53,12 +53,12 @@
         </TitleTemplate>
         <ColumnDefinitions>
             <PropertyColumn Property="c => c.NroEquipo"
-                            title="Número Equipo"
+                            title="N° Equipo"
                             DefaultSortOrder="@SortDirection.Descending"
                             SorterCompare="@((a, b) => string.Compare(a, b))" />
             <PropertyColumn Property="c=>c.Modelo" Sortable />
                 <PropertyColumn Property="c=>c.Marca" Sortable />
-            <PropertyColumn title="Número Serie" Property="c=>c.NroSerie" />
+            <PropertyColumn title="N° Serie" Property="c=>c.NroSerie" />
                 <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
                 <PropertyColumn Title="Estado" Property="c=>c.Estado"
                                 SortDirections="new[] { SortDirection.Descending }"
@@ -66,8 +66,8 @@
                                 OnFilter="((value,name)=>Enum.GetName(typeof(TipoEstadoHandie), name).StartsWith(Enum.GetName(typeof(TipoEstadoHandie), value)))" />
                 <PropertyColumn Property="b=>b.Nombre" />
                 <PropertyColumn Property="b=>b.Apellido" Sortable />
-                <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="Número de Legajo" />
-                <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Número Movil" />
+                <PropertyColumn Property="b=>b.NroLegajo" Sortable Title="N° Legajo" />
+                <PropertyColumn Property="m=>m.NumeroMovil" Sortable Title="Movil" />
                 <ActionColumn Title="Action">
                 <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
