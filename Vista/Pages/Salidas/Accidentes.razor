@@ -119,6 +119,7 @@
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<AccidenteViewModels> VehiculosAfectdosAcci = new();
     private Form<MovilSalidaViewModels> _form1;
+    
 
     AccidenteViewModels _model;
 
@@ -317,7 +318,7 @@
                 CantidadVheiculo = vehiculosAfectadosAcc1.CantidadVehiculos,
                 VehiculosAfectado = vehiculosAfectadosAcc1.VehiculosAfectado,
                 CondicionesClimaticas = vehiculosAfectadosAcc1.CondicionesClimaticas,
-                OtroCondicion = vehiculosAfectadosAcc1.OtroCondicion
+                OtroCondicion = vehiculosAfectadosAcc1.OtroCondicion,
             };
         VehiculosAfectdosAcci.Add(Accidentes1);
         await Context.SaveChangesAsync();
@@ -343,6 +344,7 @@
         new StepItem {Title = " ", Content = ""}, /* Seguros */
         new StepItem {Title = " ", Content = ""}, /* Vehiculos */
         new StepItem {Title = " ", Content = ""}, /* Personal */
+        new StepItem {Title = "" , Content = ""}, /* Vehiculos Intervinientes */
     };
 
     //Botones de navegacion

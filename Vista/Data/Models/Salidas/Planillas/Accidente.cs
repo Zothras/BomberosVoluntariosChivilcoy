@@ -3,6 +3,7 @@ using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Vista.Data.ViewModels.Personal;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
@@ -15,6 +16,8 @@ namespace Vista.Data.Models.Salidas.Planillas
         public int CantidadVehiculos { get; set; }
 
         public List<VehiculoAfectadoAccidente> VehiculosAfectado { get; set; }
+
+       
         public TipoCondicionesClimaticas CondicionesClimaticas { get; set; }
         [Required, StringLength(255)]
         public string? OtroCondicion { get; set; }

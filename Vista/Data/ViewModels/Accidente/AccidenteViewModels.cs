@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Vista.Data.Enums;
 using Vista.Data.Models.Salidas.Componentes;
+using Vista.Data.ViewModels.Personal;
 
 namespace Vista.Data.ViewModels.Accidente
 {
@@ -12,5 +13,6 @@ namespace Vista.Data.ViewModels.Accidente
         public TipoCondicionesClimaticas CondicionesClimaticas { get; set; }
         [Required, StringLength(255)]
         public string? OtroCondicion { get; set; }
+      
     }
 }
