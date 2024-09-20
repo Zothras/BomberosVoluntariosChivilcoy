@@ -88,7 +88,7 @@
         <label class="inpt-cont--lbl">Descripcion</label>
         <TextArea Placeholder="Descripcion" @bind-Value="@Model.Descripcion" />
     </div>
-    @if (!esSoloDireccion)
+    @if (!esSoloDireccion && MostrarOpcionDepartamento)
     {
         <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
             <label class="inpt-cont--lbl">¿Este lugar es un departamento?</label>
@@ -114,6 +114,7 @@
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
     [Parameter] public bool esSoloDireccion { get; set; } = false;
+    [Parameter] public bool MostrarOpcionDepartamento { get; set; } = true;
 
     private bool isApiAvailable;
     private int anio = DateTime.Now.Year;
