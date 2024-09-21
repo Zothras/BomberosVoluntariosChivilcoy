@@ -225,9 +225,11 @@
                 <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo" Sortable
                                 DefaultSortOrder="@SortDirection.Descending"
                                 SorterCompare="@((a,b)=> a - b)" />
-                <PropertyColumn Title="Jerarquía" Property="c=>c.Grado" Sortable
-                                Filters="EscalafonJerarquicoFilter"
-                                OnFilter="((value,name)=>Enum.GetName(typeof(EscalafonJerarquico), name).StartsWith(Enum.GetName(typeof(EscalafonJerarquico), value)))" />
+
+                <PropertyColumn Title="Jerarquía"
+                                Property="@(c => c.Grado.GetDisplayName())"
+                                Sortable="true" />
+
                 <PropertyColumn Title="Estado" Property="c=>c.Estado" Sortable />
                     <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                     <Space>
