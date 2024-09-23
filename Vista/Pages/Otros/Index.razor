@@ -15,6 +15,9 @@
         /* grid-template-rows: repeat(6, 1fr); */
         grid-auto-rows: minmax(17%, auto);
         grid-template-areas:
+            "img img img"
+            "img img img"
+            "img img img"
             "n0 n1 n2"
             "n0 n3 n3"
             "n4 n3 n3"
@@ -58,6 +61,29 @@
             font-weight: 600 !important;
             font-family: 'Inter', sans-serif !important;
         }
+
+    /* Clases de imagenes */
+
+    .imgCont {
+        grid-area: img;
+        min-width: 300px;
+    }
+
+    .imgBomberos {
+        width: 100%;
+        object-fit: cover;
+        min-width: 300px;
+        border-radius: 10px;
+        height: 100%;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    }
+
+    .imgBomberos2 {
+        filter: brightness(0.5);
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
 
     /* Clases de Buttons */
 
@@ -315,6 +341,9 @@
 </style>
 
 <div class="gridContainer">
+    <div class="imgCont">
+            <img class="imgBomberos" src="imagenes/bombeross.jpg" />
+    </div>
     @* BOMBEROS *@ 
     <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos/Legajo"); })" style="border-radius: 10px;">
         <article class="art2">
