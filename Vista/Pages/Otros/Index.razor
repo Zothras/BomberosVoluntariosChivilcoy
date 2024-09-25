@@ -167,9 +167,23 @@
         margin-left: 0;
         width: 100%;
         height: 100%;
-        font-size: 32px;
+        font-size: 1vw;
         color: white !important;
+        
     }
+
+    .art8 h1 {
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        font-size: 32px;
+    }
+
+    .art8 span {
+        margin-top: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 1vw;
+    }
+
 
     .art9 {
         width: 100%;
@@ -543,7 +557,7 @@
         @* UNIDADES *@
     <a @onclick="@(() => { navigationManager.NavigateTo("/unidades"); })" style="border-radius: 10px;">
         <article class="art8">
-            <h1 style="color:white !important;">UNIDADES</h1>
+            <h1>UNIDADES</h1>
             <i class="fa-solid fa-file-signature" style="color: white;padding-right: 6px;"></i>
             <span>Ver las unidades</span>
         </article>
@@ -562,7 +576,7 @@
 
     @* ETICA *@
     <article class="art11" style="background-color:#952929;margin-bottom: 15% !important;margin-top: -21% !important">
-        <div style="display: flex;padding: 5%;justify-content: space-evenly;height: 100%;">
+        <div style="display: flex;padding: 5%; justify-content: space-evenly;height: 100%;">
             <h1 style="color: white; font-size: 32px;">ÉTICA</h1>
             <style>
                 .art11 button {
