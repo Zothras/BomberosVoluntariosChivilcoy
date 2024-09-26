@@ -13,13 +13,10 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         public TipoAccidente Tipo { get; set; }
 
-        public int CantidadVehiculos { get; set; }
-
-        public List<VehiculoAfectadoAccidente> VehiculosAfectado { get; set; }
-
+        public List<VehiculoAfectadoAccidente> VehiculosAfectado { get; set; } // TODO: Revisar con Agustín
        
         public TipoCondicionesClimaticas CondicionesClimaticas { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string? OtroCondicion { get; set; }
     }
 }

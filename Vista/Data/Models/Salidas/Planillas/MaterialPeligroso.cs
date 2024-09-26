@@ -8,7 +8,7 @@ namespace Vista.Data.Models.Salidas.Planillas
         //Localización, datos del solicitante, personas damnificadas y datos del seguro
         public TipoMaterialPeligroso Tipo { get; set; }  
         [Required, StringLength(255)]  
-        public string Sustancias { get; set; }
+        public string Sustancias { get; set; } // TODO: Consultar a Agustín
 
         //Acciones sobre los materiales
         public bool Controlada { get; set; }
@@ -31,8 +31,7 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         //Superficie Aferctada
         public TipoSuperficie TipoSuperficie { get; set; }
-        [Required, StringLength(255)]
-        public string DetalleSuperficieAfectada { get; set; }
+        public int CantidadAfectadaMaterialPeligroso { get; set; }
 
         //Situación
         public TipoSituacionExplosion TipoSituacion { get; set; }

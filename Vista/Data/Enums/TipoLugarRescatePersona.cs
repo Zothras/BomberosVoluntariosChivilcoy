@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace Vista.Data.Enums
 {
-    public enum TipoRescateAnimal
+    public enum TipoLugarRescatePersona
     {
         [Display(Name = "Casa")]
         Casa,
@@ -9,10 +9,16 @@ namespace Vista.Data.Enums
         Edificio,
         [Display(Name = "Centro Comercial")]
         CentroComercial,
-        [Display(Name = "Rio")]
+        [Display(Name = "Río")]
         Rio,
         [Display(Name = "Bosque")]
         Bosque,
+        [Display(Name = "Pileta")]
+        Pileta,
+        [Display(Name = "Pozo")]
+        Pozo,
+        [Display(Name = "Zanja")]
+        Zanja,
         [Display(Name = "Otro")]
         Otro
     }

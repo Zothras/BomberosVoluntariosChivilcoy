@@ -5,7 +5,7 @@ namespace Vista.Data.ViewModels.Rescates
 {
     public class RescateAnimaViewModels : RescateViewModels
     {
-        public TipoRescateAnimal TipoRescateAnimal { get; set; }
+        public TipoLugarRescateAnimal TipoRescateAnimal { get; set; }
 
         
     }

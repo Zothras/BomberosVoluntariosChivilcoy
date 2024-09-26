@@ -8,6 +8,6 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         //Tipo de lugar animal
 
-        public TipoRescateAnimal TipoRescateAnimal { get; set; }
+        public TipoLugarRescateAnimal LugarRescateAnimal { get; set; }
     }
 }

@@ -72,7 +72,7 @@
                     @*Propio de rescates*@
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Tipo Lugar de Rescate</label>
-                        <EnumSelect TEnum="TipoRescateAnimal" @bind-Value="@AnimalViewModel.TipoRescateAnimal" />
+                        <EnumSelect TEnum="TipoLugarRescateAnimal" @bind-Value="@AnimalViewModel.TipoRescateAnimal" />
                     </div>
                 }
             </div>
@@ -188,7 +188,7 @@
                     DniSolicitante = AnimalViewModel.DniSolicitante,
                     TelefonoSolicitante = AnimalViewModel.TelefonoSolicitante,
                     TipoServicio = AnimalViewModel.TipoServicio,
-                    TipoRescateAnimal = AnimalViewModel.TipoRescateAnimal,
+                    LugarRescateAnimal = AnimalViewModel.TipoRescateAnimal,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
 

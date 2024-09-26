@@ -20,7 +20,7 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         //Fin Superficie Afectada
         [Required]
-        public TipoIncendio Tipo { get; set; }
+        public TipoIncendio Tipo { get; set; } // TODO: Quitar
 
         public TipoIncendioAbertura? TipoAbertura { get; set; }
         [StringLength(255)]
@@ -29,7 +29,7 @@ namespace Vista.Data.Models.Salidas.Planillas
         [StringLength(255)]
         public string? OtroTecho { get; set; }
         [StringLength(255)]
-        public string? OtroLugar { get; set; }
+        public string? OtroLugarIncendio { get; set; }
         [StringLength(255)]
         public string? NombreEstablecimiento { get; set; }
         public int? CantidadPisos { get; set; }

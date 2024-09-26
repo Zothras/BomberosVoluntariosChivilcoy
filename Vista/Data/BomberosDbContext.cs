@@ -159,7 +159,8 @@ namespace Vista.Data
                 .HasValue<IncendioVivienda>(13)
                 .HasValue<ServicioEspecialPrevencion>(14)
                 .HasValue<Incendio>(15)
-                .HasValue<ServicioEspecial>(16);
+                .HasValue<ServicioEspecial>(16)
+                .HasValue<IncendioAeronaves>(17);
             modelBuilder.Entity<Salida>()
                 .ToTable("Salidas");
 
@@ -334,7 +335,7 @@ namespace Vista.Data
 
             modelBuilder
                 .Entity<RescateAnimal>()
-                .Property(r => r.TipoRescateAnimal)
+                .Property(r => r.LugarRescateAnimal)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
@@ -346,7 +347,7 @@ namespace Vista.Data
 
             modelBuilder
                 .Entity<RescatePersona>()
-                .Property(r => r.TipoRescatePersona)
+                .Property(r => r.LugarRescatePersona)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 

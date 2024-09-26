@@ -6,7 +6,7 @@ namespace Vista.Data.Models.Salidas.Planillas
 {
     public class ServicioEspecial : Salida
     {
-        public TipoServiciosEspeciales Tipo { get; set; }
+        public TipoServiciosEspeciales Tipo { get; set; } // TODO: Quitar
         public TipoOrganizacionBeneficiada TipoOrganizacion { get; set; }        
     }
 }

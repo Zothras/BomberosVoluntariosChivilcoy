@@ -8,6 +8,6 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         //Tipo de lugar persona
 
-        public TipoRescatePersona TipoRescatePersona { get; set; }
+        public TipoLugarRescatePersona LugarRescatePersona { get; set; }
     }
 }

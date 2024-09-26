@@ -2,34 +2,25 @@
 using System.ComponentModel.DataAnnotations;
 
 public enum TipoServiciosEspeciales
-    {
+{
     [Display(Name = "Capacitación")]
     Capacitacion,
-    [Display(Name = "Servicios Especiales")]
-    ServiciosEspeciales,
+    [Display(Name = "Especiales")]
+    Especiales, // TODO: Agregar
     [Display(Name = "Prevención")]
     Prevencion,
     [Display(Name = "Falsa Alarma")]
-    FalsaAlarma,
+    FalsaAlarma, // TODO: Agregar
     [Display(Name = "Representación")]
     Representacion,
-    [Display(Name = "Falso Aviso")]
-    FalsoAviso,
     [Display(Name = "Suministro de Agua")]
-    SuministroDeAgua,
-    [Display(Name = "Extracción de Panales")]
-    ExtraccionDePanales,
+    SuministroDeAgua, // TODO: Agregar
     [Display(Name = "Retirado de Obito")]
-    RetiradoDeObito,
+    RetiradoDeObito, // TODO: Agregar
     [Display(Name = "Colaboración con Fuerzas de Seguridad")]
-    ColaboracionConFuerzasDeSeguridad,
+    ColaboracionConFuerzasDeSeguridad, // TODO: Agregar
     [Display(Name = "Colaboración de Driza")]
-    ColaboracionDeDriza,
-    [Display(Name = "Escape de Gas (Auto)")]
-    EscapeDeGasAuto,
-    [Display(Name = "Escape de Gas (Casa)")]
-    EscapeDeGasCasa,
+    ColaboracionDeDriza, // Agregar
     [Display(Name = "Otro")]
-    Otro
+    Otro // TODO: Agregar
 }
-

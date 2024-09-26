@@ -95,7 +95,7 @@ namespace Vista.Pages.Salidas
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
                     //Carga propio de rescates
-                    TipoRescatePersona = PersonaViewModel.TipoRescatePersona,
+                    LugarRescatePersona = PersonaViewModel.TipoRescatePersona,
 
                     //Seguro = new() <-- Consultar si es requerido
                     //{

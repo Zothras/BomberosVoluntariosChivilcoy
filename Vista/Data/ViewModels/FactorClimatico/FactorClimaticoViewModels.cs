@@ -10,7 +10,6 @@ namespace Vista.Data.ViewModels.FactorClimatico
         //Daños superficie evacuada
         public TipoEvacuacion Evacuacion { get; set; }
         public TipoSuperficie Superficie { get; set; }
-        [Required, StringLength(255)]
-        public string DetalleSuperficieDañada { get; set; }
+        public int Cantidad { get; set; }
     }
 }

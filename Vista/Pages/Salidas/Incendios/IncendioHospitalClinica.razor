@@ -201,7 +201,7 @@
     {
         Context = DbFactory.CreateDbContext();
         HospitalClinicaViewModel = new();
-        HospitalClinicaViewModel.Tipo = TipoIncendio.Hospital; // Establecer valor predeterminado
+        HospitalClinicaViewModel.Tipo = TipoIncendio.HospitalClinica; // Establecer valor predeterminado
         TodosBomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
     }
@@ -259,7 +259,7 @@
                             OtraAbertura = HospitalClinicaViewModel.OtraAbertura,
                             TipoTecho = HospitalClinicaViewModel.TipoTecho,
                             OtroTecho = HospitalClinicaViewModel.OtroTecho,
-                            OtroLugar = HospitalClinicaViewModel.OtroLugar,
+                            OtroLugarIncendio = HospitalClinicaViewModel.OtroLugar,
                             NombreEstablecimiento = HospitalClinicaViewModel.NombreEstablecimiento,
                             CantidadPisos = HospitalClinicaViewModel.CantidadPisos,
                             PisoAfectado = HospitalClinicaViewModel.PisoAfectado,

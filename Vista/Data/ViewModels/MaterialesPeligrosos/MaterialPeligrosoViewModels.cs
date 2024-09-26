@@ -31,8 +31,7 @@ namespace Vista.Data.ViewModels.MaterialesPeligrosos
 
         //Superficie Aferctada
         public TipoSuperficie TipoSuperficie { get; set; }
-        [Required, StringLength(255)]
-        public string DetalleSuperficieAfectada { get; set; }
+        public int Cantidad { get; set; }
 
         //Situación
         public TipoSituacionExplosion TipoSituacion { get; set; }

@@ -142,7 +142,7 @@
                         </div>
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Detalles de surpeficie afectada</label>
-                            <TextArea Placeholder="Detalles de surpeficie afectada" @bind-Value="modelMateriales.DetalleSuperficieAfectada" />
+                            <AntDesign.InputNumber @bind-Value="modelMateriales.Cantidad" />
                         </div>
                     </div>
                 }
@@ -305,7 +305,7 @@
                     SinAccion = modelMateriales.SinAccion,
                     OtraAccionesPersonas = modelMateriales.OtraAccionesPersonas,
                     TipoSuperficie = modelMateriales.TipoSuperficie,
-                    DetalleSuperficieAfectada = modelMateriales.DetalleSuperficieAfectada,
+                    CantidadAfectadaMaterialPeligroso = modelMateriales.Cantidad,
                     TipoSituacion = modelMateriales.TipoSituacion,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,

@@ -7,13 +7,11 @@ namespace Vista.Data.Models.Salidas.Planillas
     {
         //Localización, datos del solicitante, personas damnificadas y datos del seguro
 
-        public TipoFactoresClimaticos Tipo { get; set; }
+        public TipoFactoresClimaticos Tipo { get; set; } // TODO: Consultar a Agustín
 
         //Daños superficie evacuada
-        public TipoEvacuacion Evacuacion { get; set; }
+        public TipoEvacuacion Evacuacion { get; set; } // TODO: Consultar a Agustín
         public TipoSuperficie Superficie { get; set; }
-        [Required, StringLength(255)]
-        public string DetalleSuperficieDañada { get; set; }
-
+        public int CantidadAfectadaFactorClimatico { get; set; }
     }
 }
