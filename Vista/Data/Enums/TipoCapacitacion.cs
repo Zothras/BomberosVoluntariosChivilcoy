@@ -32,6 +32,8 @@ namespace Vista.Data.Enums
         [Display(Name = "Escuela de Cadetes")]
         EscuelaDeCadetes,
         [Display(Name = "Seguridad del Bombero")]
-        SeguridadDelBombero
+        SeguridadDelBombero,
+        [Display(Name = "Otro")]
+        Otro
     }
 }

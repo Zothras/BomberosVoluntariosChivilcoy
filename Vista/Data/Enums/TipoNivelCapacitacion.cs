@@ -12,6 +12,8 @@ namespace Vista.Data.Enums
         [Display(Name = "Internacional")]
         Internacional,
         [Display(Name = "Regional")]
-        Regional
+        Regional,
+        [Display(Name = "Otro")]
+        Otro,
     }
 }
