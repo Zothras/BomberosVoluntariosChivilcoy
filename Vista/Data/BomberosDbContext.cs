@@ -17,7 +17,7 @@ namespace Vista.Data
         public DbSet<ImagenVehiculo> ImagenesVehiculo { get; set; }
         public DbSet<SeguroSalida> SegurosSalidas { get; set; }
         public DbSet<SeguroVehiculo> SeguroVehiculos { get; set; }
-        public DbSet<DatosCapacitacion> DatosCapacitaciones { get; set; }
+       
         public DbSet<EmbarcacionAfectada> EmbarcacionesAfectadas { get; set; }
         public DbSet<VehiculoAfectadoAccidente> VehiculosAfectadosAccidentes { get; set; }
         public DbSet<VehiculoAfectadoIncendio> VehiculosAfectadoIncendios { get; set; }
@@ -36,6 +36,7 @@ namespace Vista.Data
         public DbSet<MaterialPeligroso> MaterialesPeligrosos { get; set; }
         public DbSet<ServicioEspecialRepresentacion> ServicioEspecialesRespresentaciones { get; set; }
         public DbSet<ServicioEspecialPrevencion> ServicioEspecialPrevenciones { get; set; }
+        public DbSet<ServicioEspecialCapacitacion> ServicioEspecialCapacitacion { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<MovilSalida> MovilesSalida { get; set; }
@@ -160,7 +161,8 @@ namespace Vista.Data
                 .HasValue<ServicioEspecialPrevencion>(14)
                 .HasValue<Incendio>(15)
                 .HasValue<ServicioEspecial>(16)
-                .HasValue<IncendioAeronaves>(17);
+                .HasValue<IncendioAeronaves>(17)
+                .HasValue<ServicioEspecialCapacitacion>(18);
             modelBuilder.Entity<Salida>()
                 .ToTable("Salidas");
 
@@ -238,10 +240,6 @@ namespace Vista.Data
                 .IsRequired(false);
 
 
-            modelBuilder.Entity<ServicioEspecialRepresentacion>()
-                .HasOne(se => se.DatosCapacitacion)
-                .WithOne(dc => dc.ServicioEspecialRepresentaciones)
-                .HasForeignKey<DatosCapacitacion>(dc => dc.DatosCapacitacionId);
 
             // Configuración de la relación uno a muchos entre Salida y MovilSalida
             modelBuilder.Entity<MovilSalida>()
@@ -485,17 +483,6 @@ namespace Vista.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
-            modelBuilder
-                .Entity<DatosCapacitacion>()
-                .Property(d => d.NivelCapacitacion)
-                .HasConversion<string>()
-                .HasMaxLength(255);
-
-            modelBuilder
-                .Entity<DatosCapacitacion>()
-                .Property(d => d.TipoCapacitacion)
-                .HasConversion<string>()
-                .HasMaxLength(255);
 
             modelBuilder
                 .Entity<BomberoSalida>()
