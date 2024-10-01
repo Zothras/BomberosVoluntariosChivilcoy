@@ -18,7 +18,7 @@
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
-      Style="width: 100%;height: auto;overflow: hidden!important;">
+      Style="width: 100%;height: 100%;overflow: hidden!important;">
     <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
 
         <div style="text-align: center; margin-bottom: 20px;">
@@ -32,7 +32,7 @@
             }
         </Steps>
         <Flex Justify="center">
-            <div class="steps-content" style="max-height: 630px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
+            <div class="steps-content" style="max-height: 620px;max-width: 450px;padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
 
                 @if (current == 0)
                 {
@@ -146,31 +146,30 @@
                         </div>
                     </div>
                 }
-                <div class="steps-action">
-                    @if (current > 0)
-                    {
-                        <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
-                    }
-                    @if (current < steps.Length - 1)
-                    {
-                        <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
-                    }
-                    @if (current == steps.Length - 1)
-                    {
-                        <FormItem WrapperColSpan="16">
-                            <Button Class="boton_p" HtmlType="submit">
-                                Imprimir salida
-                            </Button>
-                        </FormItem>
-                    }
-                    @if (_visible1 == true)
-                    {
-                        <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
-                    }
-                </div>
             </div>
         </Flex>
-        
+        <div class="steps-action">
+            @if (current > 0)
+            {
+                <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+            }
+            @if (current < steps.Length - 1)
+            {
+                <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+            }
+            @if (current == steps.Length - 1)
+            {
+                <FormItem WrapperColSpan="16">
+                    <Button Class="boton_p" HtmlType="submit">
+                        Imprimir salida
+                    </Button>
+                </FormItem>
+            }
+            @if (_visible1 == true)
+            {
+                <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
+            }
+        </div>
     </div>
 </Form>
 
