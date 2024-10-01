@@ -225,7 +225,6 @@
     {
         Context = DbFactory.CreateDbContext();
         salidaIncendioVehicularView = new();
-        salidaIncendioVehicularView.Tipo = TipoIncendio.Vehicular; // Establecer valor predeterminado
         TodosBomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
     }
@@ -250,7 +249,7 @@
                 {
                     Vista.Data.Models.Salidas.Planillas.Incendio salidaIncendioVehicular = new()
                         {
-                            Tipo = salidaIncendioVehicularView.Tipo,
+                            
                             Descripcion = salidaIncendioVehicularView.Descripcion,
                             HoraSalida = salidaIncendioVehicularView.HoraSalida,
                             HoraLlegada = salidaIncendioVehicularView.HoraLLegada,

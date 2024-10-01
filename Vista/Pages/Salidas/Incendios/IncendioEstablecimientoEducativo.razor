@@ -202,7 +202,7 @@
     {
         Context = DbFactory.CreateDbContext();
         incendioEducativoModel = new();
-        incendioEducativoModel.Tipo = TipoIncendio.EstablecimientoEducativo; // Establecer valor predeterminado
+        //incendioEducativoModel.Tipo = TipoIncendio.EstablecimientoEducativo; // Establecer valor predeterminado
         TodosBomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
         Moviles = await Context.Moviles.OrderBy(m => m.NumeroMovil).ToArrayAsync();
     }
@@ -229,7 +229,7 @@
                     //Informacion de salida
                     Vista.Data.Models.Salidas.Planillas.IncendioEstablecimientoEducativo salidaIncendioEducativo = new()
                         {
-                            Tipo = incendioEducativoModel.Tipo,
+                           // Tipo = incendioEducativoModel.Tipo,
                             Descripcion = incendioEducativoModel.Descripcion,
                             HoraSalida = incendioEducativoModel.HoraSalida,
                             HoraLlegada = incendioEducativoModel.HoraLLegada,

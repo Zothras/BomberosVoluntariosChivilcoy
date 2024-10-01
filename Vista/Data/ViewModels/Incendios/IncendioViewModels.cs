@@ -5,8 +5,6 @@ namespace Vista.Data.ViewModels.Incendios;
 using Vista.Data.Models.Salidas.Componentes;
 public class IncendioViewModels : SalidasViewModels
 {
-    [Required]
-    public TipoIncendio Tipo { get; set; }
     public bool DeteccionAutomaticaId { get; set; }
     public bool Extintor { get; set; }
 

@@ -445,11 +445,11 @@ namespace Vista.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
-            modelBuilder
-                .Entity<Incendio>()
-                .Property(i => i.Tipo)
-                .HasConversion<string>()
-                .HasMaxLength(255);
+            //modelBuilder
+              //  .Entity<Incendio>()
+                //.Property(i => i.Tipo)
+                //.HasConversion<string>()
+                //.HasMaxLength(255);
 
             modelBuilder
                 .Entity<Incendio>()

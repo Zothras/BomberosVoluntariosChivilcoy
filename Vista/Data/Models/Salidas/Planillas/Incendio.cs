@@ -19,8 +19,6 @@ namespace Vista.Data.Models.Salidas.Planillas
         public TipoCausaIncendio SuperficieAfectadaCausa { get; set; }
 
         //Fin Superficie Afectada
-        [Required]
-        public TipoIncendio Tipo { get; set; } // TODO: Quitar
 
         public TipoIncendioAbertura? TipoAbertura { get; set; }
         [StringLength(255)]

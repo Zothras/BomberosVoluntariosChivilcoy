@@ -191,7 +191,6 @@
     {
         salidaIncendioComercioView = new();
         Context = DbFactory.CreateDbContext();
-        salidaIncendioComercioView.Tipo = TipoIncendio.Comercios; // Establecer valor predeterminado
     }
 
     private async void OnFinish(EditContext editContext)
@@ -208,7 +207,7 @@
             }
             IncendioComercio salidaIncendioComercio = new()
                 {
-                    Tipo = salidaIncendioComercioView.Tipo,
+                 
                     Descripcion = salidaIncendioComercioView.Descripcion,
                     HoraSalida = salidaIncendioComercioView.HoraSalida,
                     HoraLlegada = salidaIncendioComercioView.HoraLLegada,

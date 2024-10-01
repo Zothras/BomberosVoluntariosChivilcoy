@@ -19,8 +19,8 @@ public enum TipoServiciosEspeciales
     RetiradoDeObito, // TODO: Agregar
     [Display(Name = "Colaboración con Fuerzas de Seguridad")]
     ColaboracionConFuerzasDeSeguridad, // TODO: Agregar
-    [Display(Name = "Colaboración de Driza")]
-    ColaboracionDeDriza, // Agregar
+    [Display(Name = "Colocación de Driza")]
+    ColaboracionDeDriza,
     [Display(Name = "Otro")]
     Otro // TODO: Agregar
 }
