@@ -377,6 +377,14 @@
         <div class="art4-cont">
             <div>
                 <div>
+
+                    @* Incendio Aereonave*@
+                    <Popover ContentTemplate="@art4r" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-Aereonaves"); })">
+                            <i class="fa-brands fa-avianex"></i>
+                        </button>
+                    </Popover>
+
                     @* Incendios en comercio *@
                     <Popover OverlayClassName="myPopover" ContentTemplate="@art4d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
@@ -481,6 +489,11 @@
                     <Popover ContentTemplate="@art4p" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                         <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosColocaciónDriza"); })">
                             <i class="fa-duotone fa-solid fa-signature"></i>
+                        </button>
+                    </Popover>
+                    <Popover ContentTemplate="@art4q" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosCapacitacion"); })">
+                            <i class="fa-solid fa-chalkboard-user"></i>
                         </button>
                     </Popover>
                 </div>
@@ -683,6 +696,15 @@
     private RenderFragment art4p =
     @<div>
         <p>Servicio de Colocación de Driza</p>
+    </div>;
+    private RenderFragment art4q =
+    @<div>
+        <p>Servicio Capacitacion</p>
+    </div>;
+
+    private RenderFragment art4r =
+    @<div>
+        <p>Incendio Aereonave</p>
     </div>;
 
 
