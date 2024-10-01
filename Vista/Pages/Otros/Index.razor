@@ -478,6 +478,11 @@
                             <i class="fa-solid fa-person-falling-burst"></i>
                         </button>
                     </Popover>
+                    <Popover ContentTemplate="@art4p" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosColocaciónDriza"); })">
+                            <i class="fa-duotone fa-solid fa-signature"></i>
+                        </button>
+                    </Popover>
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; width: 100%;">
@@ -673,6 +678,11 @@
     private RenderFragment art4o =
     @<div>
         <p>Rescate animal</p>
+    </div>;
+
+    private RenderFragment art4p =
+    @<div>
+        <p>Servicio de Colocación de Driza</p>
     </div>;
 
 

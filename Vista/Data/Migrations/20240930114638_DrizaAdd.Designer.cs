@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vista.Data;
 
@@ -11,9 +12,11 @@ using Vista.Data;
 namespace Vista.Data.Migrations
 {
     [DbContext(typeof(BomberosDbContext))]
-    partial class BomberosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240930114638_DrizaAdd")]
+    partial class DrizaAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1768,30 +1771,10 @@ namespace Vista.Data.Migrations
                 {
                     b.HasBaseType("Vista.Data.Models.Salidas.Planillas.ServicioEspecial");
 
-                    b.Property<string>("Detalles")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("NombreEstablecimiento")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("TipoLugar")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
                     b.ToTable("Salidas", t =>
                         {
                             t.Property("Tipo")
                                 .HasColumnName("ServicioEspecial_Tipo");
-
-                            t.Property("NombreEstablecimiento")
-                                .HasColumnName("ServicioEspecialColocaciónDriza_NombreEstablecimiento");
-
-                            t.Property("TipoLugar")
-                                .HasColumnName("ServicioEspecialColocaciónDriza_TipoLugar");
                         });
 
                     b.HasDiscriminator().HasValue(19);
