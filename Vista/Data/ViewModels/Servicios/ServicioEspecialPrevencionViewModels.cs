@@ -7,8 +7,6 @@ namespace Vista.Data.ViewModels.Servicios
     public class ServicioEspecialPrevencionViewModels : SalidasViewModels
     {
         [StringLength(255)]
-        public TipoServiciosEspeciales Tipo { get; set; }
-        [StringLength(255)]
         public TipoOrganizacionBeneficiada TipoOrganizacion { get; set; }
         [StringLength(255)]
         public TipoServicioPrevencion TipoPrevencion { get; set; }
