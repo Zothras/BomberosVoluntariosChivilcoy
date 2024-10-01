@@ -478,6 +478,19 @@
                             <i class="fa-solid fa-person-falling-burst"></i>
                         </button>
                     </Popover>
+
+                    <Popover ContentTemplate="@art4q" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-Aereonaves"); })">
+                            <i class="fa-brands fa-avianex"></i>
+                        </button>
+                    </Popover>
+
+                    <Popover ContentTemplate="@art4p" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/ServiciosCapacitacion"); })">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </button>
+                    </Popover>
+
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; width: 100%;">
@@ -674,7 +687,14 @@
     @<div>
         <p>Rescate animal</p>
     </div>;
-
+    private RenderFragment art4p =
+    @<div>
+        <p>Servicio Capacitacion</p>
+    </div>;
+    private RenderFragment art4q =
+    @<div>
+        <p>Incendio Aereonave</p>
+    </div>;
 
     // art 5
     private RenderFragment art5a =
