@@ -506,6 +506,11 @@
                             <i class="fa-solid fa-bell"></i>
                         </button>
                     </Popover>
+                    <Popover ContentTemplate="@art4t" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRetiradoDeObito"); })">
+                            <i class="fa-solid fa-person-falling"></i>
+                        </button>
+                    </Popover>
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-start; width: 100%;">
@@ -725,6 +730,10 @@
     private RenderFragment art4v =
     @<div>
         <p>Falsa Alarma</p>
+    </div>;
+    private RenderFragment art4t =
+    @<div>
+        <p>Retirado de Obito</p>
     </div>;
 
 
