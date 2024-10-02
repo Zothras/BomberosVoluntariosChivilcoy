@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Vista.Data.Models.Salidas.Planillas.Servicios;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
