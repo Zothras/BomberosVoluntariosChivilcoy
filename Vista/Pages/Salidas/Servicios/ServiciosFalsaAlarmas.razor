@@ -1,6 +1,6 @@
 ﻿@inject IMessageService message
 @inject NavigationManager navigationManager
-@page "/salidas/serviciosRetiradoDeObito"
+@page "/salidas/serviciosFalsaAlarmas"
 
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.Enums;
@@ -13,8 +13,9 @@
 
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
+@using Vista.Data.Models.Salidas.Planillas.Servicios;
 
-<Form Model="@RetiradoDeObito"
+<Form Model="@FalsaAlarmaViewModel"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
@@ -24,7 +25,7 @@
     <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
 
         <div style="text-align: center; margin-bottom: 20px;">
-            <h2>RETIRADO DE OBITO </h2>
+            <h2>FALSA ALARMA</h2>
         </div>
 
         <Steps Current="current">
@@ -39,46 +40,38 @@
                 @if (current == 0)
                 {
                     @*General*@
-                    <DatosGenerales Model="@RetiradoDeObito"
+                    <DatosGenerales Model="@FalsaAlarmaViewModel"
                                     animationClass="@animationClass" />
                 }
                 else if (current == 1)
                 {
                     @*Solicitante | Receptor | Damnificado*@
-                    <Participantes Model="@RetiradoDeObito"
+                    <Participantes Model="@FalsaAlarmaViewModel"
                                    animationClass="@animationClass" />
                 }
                 else if (current == 2)
                 {
                     @*Chofer y Moviles*@
-                    <Vehiculos Model="@RetiradoDeObito"
+                    <Vehiculos Model="@FalsaAlarmaViewModel"
                                animationClass="@animationClass" />
                 }
                 else if (current == 3)
                 {
                     @*Bomberos*@
-                    <Personal Model="@RetiradoDeObito"
-                              animationClass="@animationClass" />
+                    <Personal Model="@FalsaAlarmaViewModel"
+                    animationClass="@animationClass" />
                 }
                 else if (current == 4)
                 {
-                    @*Tipo servicio*@
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Tipo Servicio Salida</label>
-                        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@RetiradoDeObito.TipoServicio" />
-                    </div>
+                    <label class="inpt-cont--lbl">Detalles de la falsa alarma</label>
+                    <textarea class="ant-input" 
+                            placeholder="Detalles" 
+                            id="ant-blazor-b6465f2c-86ae-4512-ae23-1434fb9259f7"
+                            rows="2" name="Model.Descripcion" 
+                            _bl_35968b19-a5b4-486f-9ea7-dca1d2d9f3aa=""
+                             @bind="@FalsaAlarmaViewModel.Detalles">
+                    </textarea>
                 }
-                else if (current == 5)
-                {
-                    <label class="inpt-cont--lbl">Detalles</label>
-                    <textarea class="ant-input"
-                              placeholder="Detalles"
-                              id="ant-blazor-b6465f2c-86ae-4512-ae23-1434fb9259f7"
-                              rows="2" name="Model.Descripcion"
-                              _bl_35968b19-a5b4-486f-9ea7-dca1d2d9f3aa=""
-                              @bind="@RetiradoDeObito.DetallesObito">
-                        </textarea>
-                }              
             </div>
         </Flex>
         <div class="steps-action">
@@ -107,7 +100,7 @@
 </Form>
 
 @code {
-    private ServicioEspecialRetiradoDeObitoViewModel RetiradoDeObito = new();
+    private ServicioEspecialFalsaAlarmaViewModel FalsaAlarmaViewModel = new();
 
     @*Steps*@
 
@@ -158,12 +151,12 @@
 
         try
         {
-            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(RetiradoDeObito.LegajoEncargado);
-            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(RetiradoDeObito.LegajoLLenoPlanilla);
+            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(FalsaAlarmaViewModel.LegajoEncargado);
+            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(FalsaAlarmaViewModel.LegajoLLenoPlanilla);
 
             var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<ServicioEspecialRepresentacion>(
-                 RetiradoDeObito.NumeroParte,
-                m => m.NumeroParte == RetiradoDeObito.NumeroParte
+                FalsaAlarmaViewModel.NumeroParte,
+                m => m.NumeroParte == FalsaAlarmaViewModel.NumeroParte
             );
 
             if (numeroParteRescate != null)
@@ -172,25 +165,25 @@
                 return;
             }
 
-            ServicioEspecialRetiradoDeObito Retirado = new()
+            ServicioEspecialFalsaAlarma falsaAlarma = new()
                 {
-                    NumeroParte = RetiradoDeObito.NumeroParte,
-                    AnioNumeroParte = RetiradoDeObito.AnioNumeroParte,
-                    HoraSalida = RetiradoDeObito.HoraSalida,
-                    HoraLlegada = RetiradoDeObito.HoraLLegada,
-                    Descripcion = RetiradoDeObito.Descripcion,
-                    CalleORuta = RetiradoDeObito.CalleORuta,
-                    NumeroOKilometro = RetiradoDeObito.NumeroOKilometro,
-                    EntreCalles = RetiradoDeObito.EntreCalles,
-                    PisoNumero = RetiradoDeObito.PisoNumero,
-                    Depto = RetiradoDeObito.Depto,
-                    NombreYApellidoReceptor = RetiradoDeObito.NombreYApellidoReceptor,
-                    TipoZona = RetiradoDeObito.TipoZona,
-                    NombreSolicitante = RetiradoDeObito.NombreSolicitante,
-                    ApellidoSolicitante = RetiradoDeObito.ApellidoSolicitante,
-                    DniSolicitante = RetiradoDeObito.DniSolicitante,
-                    TelefonoSolicitante = RetiradoDeObito.TelefonoSolicitante,
-                    DetallesObito = RetiradoDeObito.DetallesObito,
+                    NumeroParte = FalsaAlarmaViewModel.NumeroParte,
+                    AnioNumeroParte = FalsaAlarmaViewModel.AnioNumeroParte,
+                    HoraSalida = FalsaAlarmaViewModel.HoraSalida,
+                    HoraLlegada = FalsaAlarmaViewModel.HoraLLegada,
+                    Descripcion = FalsaAlarmaViewModel.Descripcion,
+                    CalleORuta = FalsaAlarmaViewModel.CalleORuta,
+                    NumeroOKilometro = FalsaAlarmaViewModel.NumeroOKilometro,
+                    EntreCalles = FalsaAlarmaViewModel.EntreCalles,
+                    PisoNumero = FalsaAlarmaViewModel.PisoNumero,
+                    Depto = FalsaAlarmaViewModel.Depto,
+                    NombreYApellidoReceptor = FalsaAlarmaViewModel.NombreYApellidoReceptor,
+                    TipoZona = FalsaAlarmaViewModel.TipoZona,
+                    NombreSolicitante = FalsaAlarmaViewModel.NombreSolicitante,
+                    ApellidoSolicitante = FalsaAlarmaViewModel.ApellidoSolicitante,
+                    DniSolicitante = FalsaAlarmaViewModel.DniSolicitante,
+                    TelefonoSolicitante = FalsaAlarmaViewModel.TelefonoSolicitante,
+                    Detalles = FalsaAlarmaViewModel.Detalles,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
                     //Carga propio de rescates
@@ -211,25 +204,25 @@
 
 
             //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
-            if (RetiradoDeObito.CuerpoParticipante != null && RetiradoDeObito.CuerpoParticipante.Any())
+            if (FalsaAlarmaViewModel.CuerpoParticipante != null && FalsaAlarmaViewModel.CuerpoParticipante.Any())
             {
-                Retirado.CuerpoParticipante = RetiradoDeObito.CuerpoParticipante.ToList();
+                falsaAlarma.CuerpoParticipante = FalsaAlarmaViewModel.CuerpoParticipante.ToList();
             }
 
             //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
-            if (RetiradoDeObito.Moviles != null && RetiradoDeObito.Moviles.Any())
+            if (FalsaAlarmaViewModel.Moviles != null && FalsaAlarmaViewModel.Moviles.Any())
             {
-                Retirado.Moviles = RetiradoDeObito.Moviles.ToList();
+                falsaAlarma.Moviles = FalsaAlarmaViewModel.Moviles.ToList();
             }
 
             //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
-            if (RetiradoDeObito.Damnificados != null && RetiradoDeObito.Damnificados.Any())
+            if (FalsaAlarmaViewModel.Damnificados != null && FalsaAlarmaViewModel.Damnificados.Any())
             {
-                Retirado.Damnificados = RetiradoDeObito.Damnificados.ToList();
+                falsaAlarma.Damnificados = FalsaAlarmaViewModel.Damnificados.ToList();
             }
 
-            await SalidaService.GuardarSalida(Retirado);
-            HandleOk1(Retirado.AnioNumeroParte, Retirado.NumeroParte);
+            await SalidaService.GuardarSalida(falsaAlarma);
+            HandleOk1(falsaAlarma.AnioNumeroParte, falsaAlarma.NumeroParte);
             Init();
             StateHasChanged();
         }
@@ -251,14 +244,14 @@
 
     private void Init()
     {
-        RetiradoDeObito = new();
+        FalsaAlarmaViewModel = new();
     }
 
     @*Finish Failed*@
     private void OnFinishFailed(EditContext editContext)
     {
         message.Error("Error al cargar, posible información ausente");
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(RetiradoDeObito)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(FalsaAlarmaViewModel)}");
     }
 
     @*Impresión*@

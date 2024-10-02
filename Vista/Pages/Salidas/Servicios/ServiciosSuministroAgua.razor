@@ -1,6 +1,6 @@
 ﻿@inject IMessageService message
 @inject NavigationManager navigationManager
-@page "/salidas/serviciosColocaciónDriza"
+@page "/salidas/serviciosSuministroAgua"
 
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.Enums;
@@ -13,8 +13,9 @@
 
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
+@using Vista.Data.Models.Salidas.Planillas.Servicios;
 
-<Form Model="@ColocaciónDrizaViewModel"
+<Form Model="@SuministroAguaViewModel"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
@@ -24,7 +25,7 @@
     <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
 
         <div style="text-align: center; margin-bottom: 20px;">
-            <h2>SERVICIO DE COLOCACIÓN DE DRIZA</h2>
+            <h2>SERVICIO DE SUMINISTRO DE AGUA</h2>
         </div>
 
         <Steps Current="current">
@@ -39,49 +40,43 @@
                 @if (current == 0)
                 {
                     @*General*@
-                    <DatosGenerales Model="@ColocaciónDrizaViewModel"
+                    <DatosGenerales Model="@SuministroAguaViewModel"
                                     animationClass="@animationClass" />
                 }
                 else if (current == 1)
                 {
                     @*Solicitante | Receptor | Damnificado*@
-                    <Participantes Model="@ColocaciónDrizaViewModel"
+                    <Participantes Model="@SuministroAguaViewModel"
                                    animationClass="@animationClass" />
                 }
                 else if (current == 2)
                 {
 		    @*Seguro del Lugar*@
-                    <Seguro Model="@ColocaciónDrizaViewModel"
+                    <Seguro Model="@SuministroAguaViewModel"
                                animationClass="@animationClass" />
                 }
                 else if (current == 3)
                 {
                     @*Chofer y Moviles*@
-                    <Vehiculos Model="@ColocaciónDrizaViewModel"
+                    <Vehiculos Model="@SuministroAguaViewModel"
                                animationClass="@animationClass" />
                 }
                 else if (current == 4)
                 {
                     @*Bomberos*@
-                    <Personal Model="@ColocaciónDrizaViewModel"
+                    <Personal Model="@SuministroAguaViewModel"
                               animationClass="@animationClass" />
                 }
                 else if (current == 5)
                 {
                     <h6>Datos Especificos</h6>
-		    <div class="inpt-cont-inline">
-    			<div class="inpt-cont">
-        		    <label class="inpt-cont--lbl">Tipo de Lugar</label>
-        		    <input @bind="@ColocaciónDrizaViewModel.TipoLugar" />
-    			</div>
-    			<div class="inpt-cont">
-    			    <label class="inpt-cont--lbl">Nombre Establecimiento</label>
-    			    <input @bind="@ColocaciónDrizaViewModel.NombreEstablecimiento" />
-		    	</div>
+    		    <div class="inpt-cont">
+    			<label class="inpt-cont--lbl">Nombre Establecimiento</label>
+    			<input @bind="@SuministroAguaViewModel.NombreEstablecimientoSuministroAgua" />
 		    </div>
 		    <div class="inpt-cont">
     			<label class="inpt-cont--lbl">Detalles</label>
-                        <TextArea Placeholder="Detalles" @bind-Value="ColocaciónDrizaViewModel.Detalles" />
+                        <TextArea Placeholder="Detalles" @bind-Value="SuministroAguaViewModel.DetallesSuministroAgua" />
 		    </div>
                 }
             </div>
@@ -112,7 +107,7 @@
 </Form>
 
 @code {
-    private ServicioEspecialColocaciónDrizaViewModels ColocaciónDrizaViewModel = new();
+    private ServicioEspecialSuministroAguaViewModels SuministroAguaViewModel = new();
 
     @*Steps*@
 
@@ -164,12 +159,12 @@
 
         try
         {
-            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(ColocaciónDrizaViewModel.LegajoEncargado);
-            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(ColocaciónDrizaViewModel.LegajoLLenoPlanilla);
+            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(SuministroAguaViewModel.LegajoEncargado);
+            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(SuministroAguaViewModel.LegajoLLenoPlanilla);
 
-            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<ServicioEspecialColocaciónDriza>(
-                ColocaciónDrizaViewModel.NumeroParte,
-                m => m.NumeroParte == ColocaciónDrizaViewModel.NumeroParte
+            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<ServicioEspecialSuministroAgua>(
+                SuministroAguaViewModel.NumeroParte,
+                m => m.NumeroParte == SuministroAguaViewModel.NumeroParte
             );
 
             if (numeroParteRescate != null)
@@ -178,31 +173,30 @@
                 return;
             }
 
-            ServicioEspecialColocaciónDriza colocacióndriza = new()
+            ServicioEspecialSuministroAgua suministroagua = new()
                 {
-                    NumeroParte = ColocaciónDrizaViewModel.NumeroParte,
-                    AnioNumeroParte = ColocaciónDrizaViewModel.AnioNumeroParte,
-                    HoraSalida = ColocaciónDrizaViewModel.HoraSalida,
-                    HoraLlegada = ColocaciónDrizaViewModel.HoraLLegada,
-                    Descripcion = ColocaciónDrizaViewModel.Descripcion,
-                    CalleORuta = ColocaciónDrizaViewModel.CalleORuta,
-                    NumeroOKilometro = ColocaciónDrizaViewModel.NumeroOKilometro,
-                    EntreCalles = ColocaciónDrizaViewModel.EntreCalles,
-                    PisoNumero = ColocaciónDrizaViewModel.PisoNumero,
-                    Depto = ColocaciónDrizaViewModel.Depto,
-                    NombreYApellidoReceptor = ColocaciónDrizaViewModel.NombreYApellidoReceptor,
-                    TipoZona = ColocaciónDrizaViewModel.TipoZona,
-                    NombreSolicitante = ColocaciónDrizaViewModel.NombreSolicitante,
-                    ApellidoSolicitante = ColocaciónDrizaViewModel.ApellidoSolicitante,
-                    DniSolicitante = ColocaciónDrizaViewModel.DniSolicitante,
-                    TelefonoSolicitante = ColocaciónDrizaViewModel.TelefonoSolicitante,
+                    NumeroParte = SuministroAguaViewModel.NumeroParte,
+                    AnioNumeroParte = SuministroAguaViewModel.AnioNumeroParte,
+                    HoraSalida = SuministroAguaViewModel.HoraSalida,
+                    HoraLlegada = SuministroAguaViewModel.HoraLLegada,
+                    Descripcion = SuministroAguaViewModel.Descripcion,
+                    CalleORuta = SuministroAguaViewModel.CalleORuta,
+                    NumeroOKilometro = SuministroAguaViewModel.NumeroOKilometro,
+                    EntreCalles = SuministroAguaViewModel.EntreCalles,
+                    PisoNumero = SuministroAguaViewModel.PisoNumero,
+                    Depto = SuministroAguaViewModel.Depto,
+                    NombreYApellidoReceptor = SuministroAguaViewModel.NombreYApellidoReceptor,
+                    TipoZona = SuministroAguaViewModel.TipoZona,
+                    NombreSolicitante = SuministroAguaViewModel.NombreSolicitante,
+                    ApellidoSolicitante = SuministroAguaViewModel.ApellidoSolicitante,
+                    DniSolicitante = SuministroAguaViewModel.DniSolicitante,
+                    TelefonoSolicitante = SuministroAguaViewModel.TelefonoSolicitante,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
 
-                    //Carga propia de Colocación de Driza
-                    TipoLugar = ColocaciónDrizaViewModel.TipoLugar,
-                    NombreEstablecimiento = ColocaciónDrizaViewModel.NombreEstablecimiento,
-                    Detalles = ColocaciónDrizaViewModel.Detalles,
+                    //Carga propia de Suministro de Agua
+                    NombreEstablecimientoSuministroAgua = SuministroAguaViewModel.NombreEstablecimientoSuministroAgua,
+                    DetallesSuministroAgua = SuministroAguaViewModel.DetallesSuministroAgua,
 
                     //Seguro = new() <-- Consultar si es requerido
                     //{
@@ -220,25 +214,25 @@
            
 
             //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
-            if (ColocaciónDrizaViewModel.CuerpoParticipante != null && ColocaciónDrizaViewModel.CuerpoParticipante.Any())
+            if (SuministroAguaViewModel.CuerpoParticipante != null && SuministroAguaViewModel.CuerpoParticipante.Any())
             {
-                colocacióndriza.CuerpoParticipante = ColocaciónDrizaViewModel.CuerpoParticipante.ToList();
+                suministroagua.CuerpoParticipante = SuministroAguaViewModel.CuerpoParticipante.ToList();
             }
 
             //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
-            if (ColocaciónDrizaViewModel.Moviles != null && ColocaciónDrizaViewModel.Moviles.Any())
+            if (SuministroAguaViewModel.Moviles != null && SuministroAguaViewModel.Moviles.Any())
             {
-                colocacióndriza.Moviles = ColocaciónDrizaViewModel.Moviles.ToList();
+                suministroagua.Moviles = SuministroAguaViewModel.Moviles.ToList();
             }
 
             //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
-            if (ColocaciónDrizaViewModel.Damnificados != null && ColocaciónDrizaViewModel.Damnificados.Any())
+            if (SuministroAguaViewModel.Damnificados != null && SuministroAguaViewModel.Damnificados.Any())
             {
-                colocacióndriza.Damnificados = ColocaciónDrizaViewModel.Damnificados.ToList();
+                suministroagua.Damnificados = SuministroAguaViewModel.Damnificados.ToList();
             }
 
-            await SalidaService.GuardarSalida(colocacióndriza);
-            HandleOk1(colocacióndriza.AnioNumeroParte, colocacióndriza.NumeroParte);
+            await SalidaService.GuardarSalida(suministroagua);
+            HandleOk1(suministroagua.AnioNumeroParte, suministroagua.NumeroParte);
             Init();
             StateHasChanged();
         }
@@ -260,14 +254,14 @@
 
     private void Init()
     {
-        ColocaciónDrizaViewModel = new();
+        SuministroAguaViewModel = new();
     }
 
     @*Finish Failed*@
     private void OnFinishFailed(EditContext editContext)
     {
         message.Error("Error al cargar, posible información ausente");
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(ColocaciónDrizaViewModel)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(SuministroAguaViewModel)}");
     }
 
     @*Impresión*@

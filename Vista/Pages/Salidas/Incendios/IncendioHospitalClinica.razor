@@ -13,6 +13,7 @@
 
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
+@using Vista.Data.Models.Salidas.Planillas.Incendios;
 
 <Form Model="@HospitalClinicaViewModel"
       LabelColSpan="8"
@@ -216,7 +217,7 @@
 
             if (HospitalClinicaViewModel is not null)
             {
-                Vista.Data.Models.Salidas.Planillas.IncendioHospitalesYClinicas? numeroParte = await Context.IncendiosHospitalesYClinicas.Where(m => m.NumeroParte == HospitalClinicaViewModel.NumeroParte).SingleOrDefaultAsync();
+                IncendioHospitalesYClinicas? numeroParte = await Context.IncendiosHospitalesYClinicas.Where(m => m.NumeroParte == HospitalClinicaViewModel.NumeroParte).SingleOrDefaultAsync();
                 if (numeroParte != null)
                 {
                     message.Warning("Numero parte ya existente.");

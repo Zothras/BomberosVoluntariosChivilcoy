@@ -2,7 +2,7 @@
 using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
 
-namespace Vista.Data.Models.Salidas.Planillas
+namespace Vista.Data.Models.Salidas.Planillas.Incendios
 {
     public class Incendio : Salida
     {

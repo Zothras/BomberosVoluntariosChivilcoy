@@ -1,6 +1,6 @@
 ﻿@inject IMessageService message
 @inject NavigationManager navigationManager
-@page "/salidas/serviciosSuministroAgua"
+@page "/salidas/serviciosRetiradoDeObito"
 
 @using Vista.Data.ViewModels.Personal;
 @using Vista.Data.Enums;
@@ -13,8 +13,9 @@
 
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
+@using Vista.Data.Models.Salidas.Planillas.Servicios;
 
-<Form Model="@SuministroAguaViewModel"
+<Form Model="@RetiradoDeObito"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
@@ -24,7 +25,7 @@
     <div class="contenedor" style="max-width: 100%;margin-top: 2em;">
 
         <div style="text-align: center; margin-bottom: 20px;">
-            <h2>SERVICIO DE SUMINISTRO DE AGUA</h2>
+            <h2>RETIRADO DE OBITO </h2>
         </div>
 
         <Steps Current="current">
@@ -39,45 +40,46 @@
                 @if (current == 0)
                 {
                     @*General*@
-                    <DatosGenerales Model="@SuministroAguaViewModel"
+                    <DatosGenerales Model="@RetiradoDeObito"
                                     animationClass="@animationClass" />
                 }
                 else if (current == 1)
                 {
                     @*Solicitante | Receptor | Damnificado*@
-                    <Participantes Model="@SuministroAguaViewModel"
+                    <Participantes Model="@RetiradoDeObito"
                                    animationClass="@animationClass" />
                 }
                 else if (current == 2)
                 {
-		    @*Seguro del Lugar*@
-                    <Seguro Model="@SuministroAguaViewModel"
+                    @*Chofer y Moviles*@
+                    <Vehiculos Model="@RetiradoDeObito"
                                animationClass="@animationClass" />
                 }
                 else if (current == 3)
                 {
-                    @*Chofer y Moviles*@
-                    <Vehiculos Model="@SuministroAguaViewModel"
-                               animationClass="@animationClass" />
+                    @*Bomberos*@
+                    <Personal Model="@RetiradoDeObito"
+                              animationClass="@animationClass" />
                 }
                 else if (current == 4)
                 {
-                    @*Bomberos*@
-                    <Personal Model="@SuministroAguaViewModel"
-                              animationClass="@animationClass" />
-                }
-                else if (current == 5)
-                {
-                    <h6>Datos Especificos</h6>
-    		    <div class="inpt-cont">
-    			<label class="inpt-cont--lbl">Nombre Establecimiento</label>
-    			<input @bind="@SuministroAguaViewModel.NombreEstablecimientoSuministroAgua" />
-		    </div>
-		    <div class="inpt-cont">
-    			<label class="inpt-cont--lbl">Detalles</label>
-                        <TextArea Placeholder="Detalles" @bind-Value="SuministroAguaViewModel.DetallesSuministroAgua" />
-		    </div>
-                }
+                    @*Tipo servicio*@
+                    <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Tipo Servicio Salida</label>
+                        <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@RetiradoDeObito.TipoServicio" />
+                    </div>
+                   <div class="inpt-cont">
+                        <label class="inpt-cont--lbl">Detalles</label>
+                        <textarea class="ant-input"
+                                  placeholder="Detalles"
+                                  id="ant-blazor-b6465f2c-86ae-4512-ae23-1434fb9259f7"
+                                  rows="2" name="Model.Descripcion"
+                                  _bl_35968b19-a5b4-486f-9ea7-dca1d2d9f3aa=""
+                                  @bind="@RetiradoDeObito.DetallesObito">
+                                </textarea>
+                   </div>
+                  
+                }          
             </div>
         </Flex>
         <div class="steps-action">
@@ -106,7 +108,7 @@
 </Form>
 
 @code {
-    private ServicioEspecialSuministroAguaViewModels SuministroAguaViewModel = new();
+    private ServicioEspecialRetiradoDeObitoViewModel RetiradoDeObito = new();
 
     @*Steps*@
 
@@ -123,10 +125,9 @@
     {
         new StepItem {Title = " ", Content = ""}, /* Datos generales */
         new StepItem {Title = " ", Content = ""}, /* Solicitante / Receptor / Damnificado */
-        new StepItem {Title = " ", Content = ""}, /* Seguro del Lugar */
         new StepItem {Title = " ", Content = ""}, /* Vehiculos */
         new StepItem {Title = " ", Content = ""}, /* Personal */
-        new StepItem {Title = " ", Content = ""}  /* Salida */
+        new StepItem {Title = " ", Content = ""},  /* Salida */
     };
 
     private void ToggleAnimationD()
@@ -158,12 +159,12 @@
 
         try
         {
-            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(SuministroAguaViewModel.LegajoEncargado);
-            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(SuministroAguaViewModel.LegajoLLenoPlanilla);
+            Bombero? bomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(RetiradoDeObito.LegajoEncargado);
+            Bombero? BomberoLlenoPlanilla = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(RetiradoDeObito.LegajoLLenoPlanilla);
 
-            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<ServicioEspecialSuministroAgua>(
-                SuministroAguaViewModel.NumeroParte,
-                m => m.NumeroParte == SuministroAguaViewModel.NumeroParte
+            var numeroParteRescate = await SalidaService.ObtenerSalidaPorNumeroParteAsync<ServicioEspecialRepresentacion>(
+                 RetiradoDeObito.NumeroParte,
+                m => m.NumeroParte == RetiradoDeObito.NumeroParte
             );
 
             if (numeroParteRescate != null)
@@ -172,30 +173,28 @@
                 return;
             }
 
-            ServicioEspecialSuministroAgua suministroagua = new()
+            ServicioEspecialRetiradoDeObito Retirado = new()
                 {
-                    NumeroParte = SuministroAguaViewModel.NumeroParte,
-                    AnioNumeroParte = SuministroAguaViewModel.AnioNumeroParte,
-                    HoraSalida = SuministroAguaViewModel.HoraSalida,
-                    HoraLlegada = SuministroAguaViewModel.HoraLLegada,
-                    Descripcion = SuministroAguaViewModel.Descripcion,
-                    CalleORuta = SuministroAguaViewModel.CalleORuta,
-                    NumeroOKilometro = SuministroAguaViewModel.NumeroOKilometro,
-                    EntreCalles = SuministroAguaViewModel.EntreCalles,
-                    PisoNumero = SuministroAguaViewModel.PisoNumero,
-                    Depto = SuministroAguaViewModel.Depto,
-                    NombreYApellidoReceptor = SuministroAguaViewModel.NombreYApellidoReceptor,
-                    TipoZona = SuministroAguaViewModel.TipoZona,
-                    NombreSolicitante = SuministroAguaViewModel.NombreSolicitante,
-                    ApellidoSolicitante = SuministroAguaViewModel.ApellidoSolicitante,
-                    DniSolicitante = SuministroAguaViewModel.DniSolicitante,
-                    TelefonoSolicitante = SuministroAguaViewModel.TelefonoSolicitante,
+                    NumeroParte = RetiradoDeObito.NumeroParte,
+                    AnioNumeroParte = RetiradoDeObito.AnioNumeroParte,
+                    HoraSalida = RetiradoDeObito.HoraSalida,
+                    HoraLlegada = RetiradoDeObito.HoraLLegada,
+                    Descripcion = RetiradoDeObito.Descripcion,
+                    CalleORuta = RetiradoDeObito.CalleORuta,
+                    NumeroOKilometro = RetiradoDeObito.NumeroOKilometro,
+                    EntreCalles = RetiradoDeObito.EntreCalles,
+                    PisoNumero = RetiradoDeObito.PisoNumero,
+                    Depto = RetiradoDeObito.Depto,
+                    NombreYApellidoReceptor = RetiradoDeObito.NombreYApellidoReceptor,
+                    TipoZona = RetiradoDeObito.TipoZona,
+                    NombreSolicitante = RetiradoDeObito.NombreSolicitante,
+                    ApellidoSolicitante = RetiradoDeObito.ApellidoSolicitante,
+                    DniSolicitante = RetiradoDeObito.DniSolicitante,
+                    TelefonoSolicitante = RetiradoDeObito.TelefonoSolicitante,
+                    DetallesObito = RetiradoDeObito.DetallesObito,
                     QuienLleno = BomberoLlenoPlanilla,
                     Encargado = bomberoEncargado,
-
-                    //Carga propia de Suministro de Agua
-                    NombreEstablecimientoSuministroAgua = SuministroAguaViewModel.NombreEstablecimientoSuministroAgua,
-                    DetallesSuministroAgua = SuministroAguaViewModel.DetallesSuministroAgua,
+                    //Carga propio de rescates
 
                     //Seguro = new() <-- Consultar si es requerido
                     //{
@@ -210,28 +209,28 @@
                     CuerpoParticipante = new()
 
                 };
-           
+
 
             //Verifica si hay Bomberos en la Salida y los carga a el modelo de la salida.
-            if (SuministroAguaViewModel.CuerpoParticipante != null && SuministroAguaViewModel.CuerpoParticipante.Any())
+            if (RetiradoDeObito.CuerpoParticipante != null && RetiradoDeObito.CuerpoParticipante.Any())
             {
-                suministroagua.CuerpoParticipante = SuministroAguaViewModel.CuerpoParticipante.ToList();
+                Retirado.CuerpoParticipante = RetiradoDeObito.CuerpoParticipante.ToList();
             }
 
             //Verifica si hay Moviles en la Salida y los carga a el modelo de la salida.
-            if (SuministroAguaViewModel.Moviles != null && SuministroAguaViewModel.Moviles.Any())
+            if (RetiradoDeObito.Moviles != null && RetiradoDeObito.Moviles.Any())
             {
-                suministroagua.Moviles = SuministroAguaViewModel.Moviles.ToList();
+                Retirado.Moviles = RetiradoDeObito.Moviles.ToList();
             }
 
             //Verifica si hay Damnificados en la Salida y los carga a el modelo de la salida.
-            if (SuministroAguaViewModel.Damnificados != null && SuministroAguaViewModel.Damnificados.Any())
+            if (RetiradoDeObito.Damnificados != null && RetiradoDeObito.Damnificados.Any())
             {
-                suministroagua.Damnificados = SuministroAguaViewModel.Damnificados.ToList();
+                Retirado.Damnificados = RetiradoDeObito.Damnificados.ToList();
             }
 
-            await SalidaService.GuardarSalida(suministroagua);
-            HandleOk1(suministroagua.AnioNumeroParte, suministroagua.NumeroParte);
+            await SalidaService.GuardarSalida(Retirado);
+            HandleOk1(Retirado.AnioNumeroParte, Retirado.NumeroParte);
             Init();
             StateHasChanged();
         }
@@ -253,14 +252,14 @@
 
     private void Init()
     {
-        SuministroAguaViewModel = new();
+        RetiradoDeObito = new();
     }
 
     @*Finish Failed*@
     private void OnFinishFailed(EditContext editContext)
     {
         message.Error("Error al cargar, posible información ausente");
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(SuministroAguaViewModel)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(RetiradoDeObito)}");
     }
 
     @*Impresión*@

@@ -2,10 +2,10 @@
 using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
 
-namespace Vista.Data.Models.Salidas.Planillas
+namespace Vista.Data.Models.Salidas.Planillas.Servicios
 {
     public class ServicioEspecial : Salida
     {
-        public TipoOrganizacionBeneficiada TipoOrganizacion { get; set; }        
+        public TipoOrganizacionBeneficiada TipoOrganizacion { get; set; }
     }
 }

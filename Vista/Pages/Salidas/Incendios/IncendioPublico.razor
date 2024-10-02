@@ -13,6 +13,7 @@
 
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
+@using Vista.Data.Models.Salidas.Planillas.Incendios;
 
 <Form Model="@IncendioPublicoModel"
       LabelColSpan="8"
@@ -218,7 +219,7 @@
 
             if (IncendioPublicoModel is not null)
             {
-                Vista.Data.Models.Salidas.Planillas.IncendioEstablecimientoPublico? numeroParte = await Context.IncendiosEstablecimientosPublicos.Where(m => m.NumeroParte == IncendioPublicoModel.NumeroParte).SingleOrDefaultAsync();
+                IncendioEstablecimientoPublico? numeroParte = await Context.IncendiosEstablecimientosPublicos.Where(m => m.NumeroParte == IncendioPublicoModel.NumeroParte).SingleOrDefaultAsync();
                 if (numeroParte != null)
                 {
                     message.Warning("Numero parte ya existente.");
@@ -227,7 +228,7 @@
                 if (IncendioPublicoModel is not null)
                 {
                     //Informacion de salida
-                    Vista.Data.Models.Salidas.Planillas.IncendioEstablecimientoPublico salidaIncendioEstabPublico = new()
+                    IncendioEstablecimientoPublico salidaIncendioEstabPublico = new()
                         {
                             
                             Descripcion = IncendioPublicoModel.Descripcion,

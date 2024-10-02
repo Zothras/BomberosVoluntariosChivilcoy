@@ -3,6 +3,8 @@ using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Models.Salidas.Planillas;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using Vista.Data.Models.Salidas.Planillas.Incendios;
+using Vista.Data.Models.Salidas.Planillas.Servicios;
 
 namespace Vista.Data
 {

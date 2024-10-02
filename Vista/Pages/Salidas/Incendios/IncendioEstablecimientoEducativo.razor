@@ -218,7 +218,7 @@
 
             if (incendioEducativoModel is not null)
             {
-                Vista.Data.Models.Salidas.Planillas.IncendioEstablecimientoEducativo? numeroParte = await Context.IncendiosEstablecimientosEducativos.Where(m => m.NumeroParte == incendioEducativoModel.NumeroParte).SingleOrDefaultAsync();
+                Data.Models.Salidas.Planillas.Incendios.IncendioEstablecimientoEducativo? numeroParte = await Context.IncendiosEstablecimientosEducativos.Where(m => m.NumeroParte == incendioEducativoModel.NumeroParte).SingleOrDefaultAsync();
                 if (numeroParte != null)
                 {
                     message.Warning("Numero parte ya existente.");
@@ -227,7 +227,7 @@
                 if (incendioEducativoModel is not null)
                 {
                     //Informacion de salida
-                    Vista.Data.Models.Salidas.Planillas.IncendioEstablecimientoEducativo salidaIncendioEducativo = new()
+                    Data.Models.Salidas.Planillas.Incendios.IncendioEstablecimientoEducativo salidaIncendioEducativo = new()
                         {
                            // Tipo = incendioEducativoModel.Tipo,
                             Descripcion = incendioEducativoModel.Descripcion,

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Vista.Data.Models.Salidas.Planillas
+namespace Vista.Data.Models.Salidas.Planillas.Servicios
 {
     public class ServicioEspecialColocaciónDriza : ServicioEspecial
     {

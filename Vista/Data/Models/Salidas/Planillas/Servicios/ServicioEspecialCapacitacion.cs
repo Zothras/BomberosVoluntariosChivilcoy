@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Vista.Data.Enums;
 
-namespace Vista.Data.Models.Salidas.Planillas
+namespace Vista.Data.Models.Salidas.Planillas.Servicios
 {
     public class ServicioEspecialCapacitacion : ServicioEspecial
     {
@@ -11,7 +11,7 @@ namespace Vista.Data.Models.Salidas.Planillas
         [Required, StringLength(255)]
         public string TipoCapacitacionOtra { get; set; }
         [Required, StringLength(255)]
-        public string NivelDeCapacitacionOtro {  get; set; }
-        
+        public string NivelDeCapacitacionOtro { get; set; }
+
     }
 }
