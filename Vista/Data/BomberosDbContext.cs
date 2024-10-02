@@ -43,6 +43,7 @@ namespace Vista.Data
         public DbSet<ServicioEspecialColocaciónDriza> ServicioEspecialColocaciónDriza { get; set; }
         public DbSet<ServicioEspecialSuministroAgua> ServicioEspecialSuministroAgua { get; set; }
         public DbSet<ServicioEspecialFalsaAlarma> ServicioEspecialFalsaAlarma { get; set; }
+        public DbSet<ServicioEspecialColaboraciónFuerzasSeguridad> ServicioEspecialColaboraciónFuerzasSeguridad { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<MovilSalida> MovilesSalida { get; set; }
@@ -172,7 +173,8 @@ namespace Vista.Data
                 .HasValue<ServicioEspecialColocaciónDriza>(19)
                 .HasValue<ServicioEspecialSuministroAgua>(20)
                 .HasValue<ServicioEspecialFalsaAlarma>(21)
-                .HasValue<ServicioEspecialRetiradoDeObito>(22);
+                .HasValue<ServicioEspecialRetiradoDeObito>(22)
+                .HasValue<ServicioEspecialColaboraciónFuerzasSeguridad>(23);
             modelBuilder.Entity<Salida>()
                 .ToTable("Salidas");
 

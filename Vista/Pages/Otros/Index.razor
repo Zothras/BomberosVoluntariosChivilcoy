@@ -456,6 +456,11 @@
                             <i class="fa-sharp fa-solid fa-cloud-bolt"></i>
                         </button>
                     </Popover>
+                    <Popover ContentTemplate="@art4u" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosColaboraciónFuerzasSeguridad"); })">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </button>
+                    </Popover>
                 </div>
                 <div>
                     @* Rescates *@
@@ -734,6 +739,11 @@
     private RenderFragment art4t =
     @<div>
         <p>Retirado de Obito</p>
+    </div>;
+
+    private RenderFragment art4u =
+    @<div>
+        <p>Servicio de Colaboración con Fuerzas de Seguridad</p>
     </div>;
 
 
