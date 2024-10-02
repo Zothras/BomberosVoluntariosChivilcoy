@@ -10,11 +10,11 @@ public enum TipoServiciosEspeciales
     [Display(Name = "Prevención")]
     Prevencion,
     [Display(Name = "Falsa Alarma")]
-    FalsaAlarma, // TODO: Agregar
+    FalsaAlarma,
     [Display(Name = "Representación")]
     Representacion,
     [Display(Name = "Suministro de Agua")]
-    SuministroDeAgua, // TODO: Agregar
+    SuministroDeAgua, 
     [Display(Name = "Retirado de Obito")]
     RetiradoDeObito, // TODO: Agregar
     [Display(Name = "Colaboración con Fuerzas de Seguridad")]
