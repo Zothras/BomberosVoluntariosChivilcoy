@@ -181,7 +181,7 @@
                     {
                         <div class="lista bombero" draggable="false" cursor="pointer">
                             @bombero.Apellido @bombero.Nombre
-                            <Button Type="submit" @onclick="() => RemoveBomberoFromBrigada(bombero.NumeroLegajo)" Style="margin-left: 10px; color:red">
+                            <Button Type="submit" @onclick="() => RemoveBomberoFromBrigada(bombero.NumeroLegajo)" Style="margin-left: 10px; color: white; background-color: #FF0000; border-color:#FF0000">
                                 Eliminar
                             </Button>
                         </div>
@@ -584,8 +584,11 @@
             db.Bomberos.Update(bombero);
             await db.SaveChangesAsync();
 
-            // Actualizar las listas locales
-            await UpdateLocalListsAfterRemoval(bomberoId);
+            // Remover el bombero de la lista local por Id (si no es el mismo objeto)
+            PagedBomberosEnBrigada = PagedBomberosEnBrigada.Where(b => b.NumeroLegajo != bomberoId).ToList();
+
+            // Llamar a StateHasChanged() para actualizar la vista
+            StateHasChanged();
 
             Console.WriteLine($"Bombero {bombero.Nombre} eliminado de la brigada correctamente.");
         }
