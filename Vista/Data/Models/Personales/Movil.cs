@@ -15,6 +15,8 @@ namespace Vista.Data.Models.Personales
         public string? ModeloBomba { get; set; }
         [StringLength(255)]
         public string? NumeroChasis { get; set; }
+        [StringLength(255)]
+        public string? CantidadLitros { get; set; }
         public int Kilometraje { get; set; }
         public List<MovilSalida> Salidas { get; set; } = new();
         public int? EquipoId { get; set; }

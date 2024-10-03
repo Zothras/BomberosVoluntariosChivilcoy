@@ -158,6 +158,9 @@
                             <div class="inpt-container">
                                 <input type="text" @bind="movilView.ModeloBomba" placeholder="Modelo de bomba:" />
                             </div>
+                            <div class="inpt-container">
+                                <input type="text" @bind="movilView.CantidadLitros" placeholder="Cantidad de litros:" />
+                            </div>
                         }
                         <div class="inpt-container">
                             <select @bind="vehiculoView.Estado" class="select-estadoMovil">
@@ -266,6 +269,7 @@
         public string? NumeroMotor { get; set; }
         public string? NumeroChasis { get; set; }
         public string? ModeloBomba { get; set; }
+        public string? CantidadLitros { get; set; }
     }
     public class ImagenViewModel
     {
