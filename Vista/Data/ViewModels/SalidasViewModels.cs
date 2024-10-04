@@ -19,6 +19,7 @@ namespace Vista.Data.ViewModels
         {
             get
             {
+                // Si TimeLlegada es menor que TimeSalida, se añade un día a la fecha de salida.
                 return TimeLlegada < TimeSalida ? FechaSalida.AddDays(1) : FechaSalida;
             }
         }
