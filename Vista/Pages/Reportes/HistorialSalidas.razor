@@ -49,10 +49,10 @@
 </style>
 
 <div class="template">
-    <Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1" Responsive PageSize="6">
+    <Table DataSource="salidasViewModel" OnChange="OnChange" TItem="SalidasViewModel1" Responsive PageSize="5">
         <TitleTemplate>
             <GridRow>
-                <GridCol Span="8" Offset="12">
+                <GridCol Span="12" Offset="7">
                     <Search Placeholder="Buscar el bombero " @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
                     <Title Level="2">Registro Salidas</Title>
                 </GridCol>
@@ -66,7 +66,7 @@
                             DefaultSortOrder="@SortDirection.Descending"
                              />
              <TableFilter MatchMode="MatchMode.Contains" FilterCallback="OnFilterChanged" />
-            <PropertyColumn Title="Tipo Salida" Property="c=>c.Discriminador"
+            <PropertyColumn Title="Tipo de Salida" Property="c=>c.Discriminador"
                             SortDirections="new[] { SortDirection.Descending }"
                             Filters="DiscriminadorFilter"
                             OnFilter="((value,name)=>Enum.GetName(typeof(TipoSalida), name).StartsWith(Enum.GetName(typeof(TipoSalida), value)))" />
@@ -82,7 +82,7 @@
                             <MenuItem>
                                 <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button>
                             </MenuItem>
-                        </Menu>;
+                        </Menu>
                     </Overlay>
                     <ChildContent>
                         <Button class="boton_p">Acciones<Icon Type="down" /></Button>
