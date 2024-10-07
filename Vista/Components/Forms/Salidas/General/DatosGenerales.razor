@@ -21,38 +21,25 @@
         }
     </div>
     <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Registrar Salida y Llegada</label>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Hora de Salida</label>
-            <TimePicker TValue="TimeOnly" @bind="@Model.TimeSalida" />
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Hora de Llegada</label>
-            <TimePicker TValue="TimeOnly" @bind="@Model.TimeLlegada" />
-        </div>
-        <div class="inpt-cont">
-            @if (Model.TimeLlegada < Model.TimeSalida)
-            {
-                <label class="inpt-cont--lbl">Fechas (Salida y Llegada)</label>
-                <RangePicker TValue="DateTime[]"
-                             Disabled="new bool[] { false, true }"
+        <label class="inpt-cont--lbl"></label>
+        @if (Model.TimeLlegada < Model.TimeSalida)
+        {
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Fechas (salida y llegada)</label>
+                <RangePicker TValue="DateTime[]" Disabled="new bool[] { false, true }"
                              @bind-Value="@FechaRange" />
-            }
-            else
-            {
-                <label class="inpt-cont--lbl">Fecha de Salida</label>
-                <DatePicker TValue="DateTime"
-                            Picker="@DatePickerType.Date"
-                            @bind-Value="@Model.FechaSalida" />
-            }
-            <label class="inpt-cont--lbl">Fecha de Llegada:</label>
-            <label>@Model.FechaLlegada.ToShortDateString()</label>
-
-
-        </div>
- 
+            </div>
+        }
+        else
+        {
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Fecha</label>
+                <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@Model.FechaSalida" />
+            </div>
+        }
     </div>
-
+ 
+  
 
     <div class="inpt-cont">
         <label class="inpt-cont--lbl">Tipo zona</label>

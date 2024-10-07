@@ -377,6 +377,12 @@
         <div class="art4-cont">
             <div>
                 <div>
+                    @* Incendio Maquina Agricola*@
+                    <Popover ContentTemplate="@art4x" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                        <button @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-MaquinasAgricola"); })">
+                            <i class="fa-solid fa-tractor"></i>
+                        </button>
+                    </Popover>
 
                     @* Incendio Aereonave*@
                     <Popover ContentTemplate="@art4r" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
@@ -744,6 +750,10 @@
     private RenderFragment art4u =
     @<div>
         <p>Servicio de Colaboración con Fuerzas de Seguridad</p>
+    </div>;
+    private RenderFragment art4x =
+    @<div>
+        <p>Incendio Maquina Agricola</p>
     </div>;
 
 
