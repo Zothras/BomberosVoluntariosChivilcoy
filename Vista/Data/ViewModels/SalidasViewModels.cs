@@ -110,6 +110,7 @@ namespace Vista.Data.ViewModels
         public TipoServicioSalida TipoServicio { get; set; }
 
         public TipoServicioRepresentaciones TipoRepresentacion { get; set; }
+        public Guardia GuardiaSelecionada { get; set; }
 
         public double? Latitud { get; set; }
         public double? Longitud { get; set; }

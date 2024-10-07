@@ -18,7 +18,7 @@ namespace Vista.Data.ViewModels
 
         public int? SeguroId { get; set; }
         public SeguroSalida? Seguro { get; set; }
-
+       
 
         public int EncargadoId { get; set; }
         public Bombero Encargado { get; set; }

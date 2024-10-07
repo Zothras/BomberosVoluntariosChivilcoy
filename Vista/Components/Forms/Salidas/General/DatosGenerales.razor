@@ -112,6 +112,18 @@
             </div>
         </div>
     }
+    <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
+        <label class="inpt-cont--lbl">¿Se convoca a la guardia ?</label>
+        <Switch @bind-Checked="@SeConvocoGuardia" Style="width: 10px!important;" />
+    </div>
+
+    @if (SeConvocoGuardia)
+    {
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Selecione la Guardia</label>
+            <EnumSelect TEnum="Guardia" @bind-Value="@Model.GuardiaSelecionada" />
+        </div>
+    }
 </div>
 
 @code {
@@ -123,7 +135,8 @@
     private bool isApiAvailable;
     private int anio = DateTime.Now.Year;
     private bool esDepartamento;
-    
+    private bool SeConvocoGuardia;
+
 
 
     //Timers para la API
