@@ -16,7 +16,7 @@ namespace Vista.Data.Models.Personales
         public string? Patente { get; set; }
         [StringLength(255)]
         public string? Tipo { get; set; }
-
+        public string Color { get; set; }
         public int? SeguroId { get; set; }
         public SeguroVehiculo? Seguro { get; set; }
     }
