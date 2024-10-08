@@ -4,7 +4,9 @@
 @inject IMessageService message
 
 <div class="slick-contenedor @animationClass">
+
     <h6>Seguro del Vehiculo</h6>
+
     <div class="inpt-cont">
         <label class="inpt-cont--lbl">Compañía aseguradora </label>
         <Input @bind-Value="@vehiculo.CompañiaAseguradora" />
@@ -18,64 +20,71 @@
     <DatePicker TValue="DateTime" ShowTime="@true" @bind-Value="@vehiculo.FechaDeVencimineto" />
     </div>*@
 
-<h6>Datos vehículos</h6>
-    <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
-        <label class="inpt-cont--lbl">Agregar otro</label>
-        <Button OnClick="()=>visibleVehiculos = true">
-            <i class="fa-solid fa-car"></i> <i class="fa-solid fa-plus"></i>
-        </Button>
+    <div class="slick-contenedor @animationClass">
+        <h6>Datos de Vehículos</h6>
+
+        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
+            <label class="inpt-cont--lbl">Agregar vehículo</label>
+            <Button OnClick="()=>visibleVehiculos = true">
+                <i class="fa-solid fa-car"></i> <i class="fa-solid fa-plus"></i>
+            </Button>
+        </div>
+        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
+            <label class="inpt-cont--lbl">Ver vehículos</label>
+            <Button OnClick="()=>visibleVerVehiculos = true">
+                <i class="fa-solid fa-car"></i> <i class="fa-solid fa-car"></i> <i class="fa-solid fa-car"></i>
+            </Button>
+        </div>
     </div>
-    <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
-        <label class="inpt-cont--lbl">Ver vehiculos</label>
-        <Button OnClick="()=>visibleVerVehiculos = true">
-            <i class="fa-solid fa-car"></i> <i class="fa-solid fa-car"></i> <i class="fa-solid fa-car"></i>
-        </Button>
-    </div>
-@if (DamnificadosSalida != null && DamnificadosSalida.Any())
-{
-    <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Elija el damnificado</label>
-        <Select TItem="DamnificadoViewModels"
-        TItemValue="string"
-        DataSource="@DamnificadosSalida"
-        Value="@damnificadoVehiculoId"
-        ValueChanged="@UpdateDamnificadoVehiculo"
-        LabelName="@nameof(DamnificadoViewModels.NombreYApellido)"
-        ValueName="@nameof(DamnificadoViewModels.NombreYApellido)"
-        Placeholder="Selecione a un damnificado"
-        DefaultActiveFirstOption="false"
-        AllowClear="true"
-        EnableSearch>
-        </Select>
-    </div>
-}
+
+    @if (DamnificadosSalida != null && DamnificadosSalida.Any())
+    {
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Elija el damnificado</label>
+                <Select TItem="DamnificadoViewModels"
+                TItemValue="string"
+                DataSource="@DamnificadosSalida"
+                Value="@damnificadoVehiculoId"
+                ValueChanged="@UpdateDamnificadoVehiculo"
+                LabelName="@nameof(DamnificadoViewModels.NombreYApellido)"
+                ValueName="@nameof(DamnificadoViewModels.NombreYApellido)"
+                Placeholder="Selecione a un damnificado"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                EnableSearch>
+                </Select>
+            </div>
+    }
 
     <Modal Footer="null" Title="@("Vehiculos")"
-           Visible="@visibleVerVehiculos"
-           OnOk="@HandleOkD"
-           OnCancel="@HandleCancelVD">
-        <div class="inpt-cont">
-            <Table Context="Vehiculos" DataSource="Model.VehiculosAfectadosIncendios" Bordered>
-                <PropertyColumn Property="v => v.Patente"></PropertyColumn>
-                <PropertyColumn Property="v => v.Marca"></PropertyColumn>
-                <PropertyColumn Property="v => v.Modelo"></PropertyColumn>
-                <PropertyColumn Property="v => v.Tipo"></PropertyColumn>
-                <PropertyColumn Property="v => v.Año"></PropertyColumn>
-                <PropertyColumn Property="v => v.Color"></PropertyColumn>
-                <ActionColumn Title="Acciones">
-                    <Popconfirm Title="¿Quieres borrar este vehiculo?"
-                                OnConfirm="@(() => deleteRowVehiculos(Vehiculos.Patente))"
-                                OkText="Si"
-                                CancelText="No"
-                                Style="display: flex; justify-content: center; align-items: center;">
-                        <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
-                    </Popconfirm>
-                </ActionColumn>
-            </Table>
+       Visible="@visibleVerVehiculos"
+       OnOk="@HandleOkD"
+       OnCancel="@HandleCancelVD">
+        <div class="inpt-cont" style="max-width: 100%; overflow-x: auto;">
+            <div style="max-width: 100%; overflow-x: auto;">
+                <Table Size="TableSize.Default" PageSize="4" Context="Vehiculos" DataSource="Model.VehiculosAfectadosIncendios" Bordered
+                       Style="width: 100%; table-layout: auto;">
+                    <PropertyColumn Property="v => v.Patente"></PropertyColumn>
+                    <PropertyColumn Property="v => v.Marca"></PropertyColumn>
+                    <PropertyColumn Property="v => v.Modelo"></PropertyColumn>
+                    <PropertyColumn Property="v => v.Tipo"></PropertyColumn>
+                    <PropertyColumn Property="v => v.Año"></PropertyColumn>
+                    <PropertyColumn Property="v => v.Color"></PropertyColumn>
+                    <ActionColumn Title="Acciones">
+                        <Popconfirm Title="¿Quieres borrar este vehiculo?"
+                                    OnConfirm="@(() => deleteRowVehiculos(Vehiculos.Patente))"
+                                    OkText="Si"
+                                    CancelText="No"
+                                    Style="display: flex; justify-content: center; align-items: center;">
+                            <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
+                        </Popconfirm>
+                    </ActionColumn>
+                </Table>
+            </div>
         </div>
     </Modal>
 
-    <Modal Footer="null" Title="@("Datos del vehiculo")"
+    <Modal Footer="null" Title="@("Datos del Vehículo")"
            Visible="@visibleVehiculos"
            OnOk="@HandleOkD"
            OnCancel="@HandleCancelD">
