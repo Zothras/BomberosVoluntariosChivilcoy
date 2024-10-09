@@ -61,7 +61,7 @@
         <ColumnDefinitions>
             <PropertyColumn Title="N° Parte" Property="c=>c.NumeroParte"
                             DefaultSortOrder="@SortDirection.Descending"
-                            SorterCompare="@((a,b)=> a - b)" />
+                            SorterCompare="@((int a,int b) => a - b)" />
             <PropertyColumn Title="Direccion" Property="c=>c.EntreCalles"
                             DefaultSortOrder="@SortDirection.Descending"
                              />
@@ -77,7 +77,7 @@
                     <Overlay>
                         <Menu>
                             <MenuItem>
-                                <Button Class="boton_p">Editar</Button>
+                                <Button Class="boton_p" OnClick="()=> EditarSalida(context)">Editar</Button> 
                             </MenuItem>
                             <MenuItem>
                                 <Button Class="boton_p" OnClick="()=>ShowModalDetalle(context.SalidaId)">Detalles</Button>
@@ -97,6 +97,32 @@
 
 @*-----------------------------------------------------------Modal Detalles-----------------------------------------------------------------------------------------*@
 
+@if (mostrarEdicion)
+{
+    <EditForm Model="salidaEdicion" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>N° Parte:</label>
+            <InputText @bind-value="salidaEdicion.NumeroParte" />
+        </div>
+        <div>
+            <label>Descripción:</label>
+            <InputText @bind-Value="salidaEdicion.Descripcion" />
+        </div>
+        <div>
+            <label>Dirección:</label>
+            <InputText @bind-Value="salidaEdicion.EntreCalles" />
+        </div>
+        <div>
+            <label>Fecha Salida:</label>
+            <InputDate @bind-Value="salidaEdicion.FechaSalida" />
+        </div>
+        <button type="submit">Guardar</button>
+        <button type="button" @onclick="() => mostrarEdicion = false">Cancelar</button>
+    </EditForm>
+}
 
 @if (mostrarDetalle is true)
 {
@@ -120,6 +146,9 @@
     Bombero[] TodosBomberos;
     Movil[] Moviles;
     public List<BomberoViweModel> bomberoChoferes = new();
+    private bool mostrarEdicion = false; // Estado para controlar la visibilidad del formulario de edición
+    private SalidasViewModel1 salidaEdicion = new SalidasViewModel1(); // Modelo para almacenar los datos de la salida en edición
+
 
 
     protected override async Task OnInitializedAsync()
@@ -177,6 +206,35 @@
     {
         Console.WriteLine($"row {row.Data.SalidaId} was clicked");
     }
+    private void EditarSalida(SalidasViewModel1 salida) // Método para iniciar la edición de una salida
+    {
+        salidaEdicion = new SalidasViewModel1(); 
+                                                 // Cargar los datos de la salida seleccionada
+        salidaEdicion.SalidaId = salida.SalidaId;
+        salidaEdicion.NumeroParte = salida.NumeroParte;
+        salidaEdicion.Descripcion = salida.Descripcion;
+        salidaEdicion.EntreCalles = salida.EntreCalles;
+        salidaEdicion.FechaSalida = salida.FechaSalida;
+        mostrarEdicion = true; // Mostrar el formulario de edición
+    }
+    private async Task HandleValidSubmit() // Manejo del envío del formulario de edición
+    {
+        using var context = DbFactory.CreateDbContext();
+        var salida = await context.Set<Salida>().FindAsync(salidaEdicion.SalidaId); // Buscar la salida por ID
+        if (salida != null)
+        {
+            // Actualizar los campos de la salida con los nuevos valores
+            salida.NumeroParte = salidaEdicion.NumeroParte;
+            salida.Descripcion = salidaEdicion.Descripcion;
+            salida.EntreCalles = salidaEdicion.EntreCalles;
+            salida.HoraSalida = salidaEdicion.FechaSalida; // Ajusta según tu lógica
+
+            await context.SaveChangesAsync(); // Guardar los cambios en la base de datos
+            mostrarEdicion = false; // Ocultar el formulario de edición
+            StateHasChanged(); // Actualizar la vista
+        }
+    }
+
 
     private async void Delete(int id)
     {
