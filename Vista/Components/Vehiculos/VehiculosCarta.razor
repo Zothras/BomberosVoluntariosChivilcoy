@@ -36,7 +36,7 @@
                         OnConfirm="()=>CambiarEstado(Vehiculo.VehiculoId,TipoEstadoMovil.Inactivo)"
                         OnCancel="Cancel">
                     <Button class="botonCarta" Style="width: 100%!important;height: 100%;border-radius: 0 0 3px 0;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;">
-                        <Icon Type="down" Theme="outline" />
+                        <i class="fa fa-trash" aria-hidden="true"></i>
                     </Button>
                 </Popconfirm>
             }
@@ -61,7 +61,7 @@
 }
 
 @if (DetallesVisible == true){
-    <Modal Footer="null" Title="Detalles" OnCancel="()=> DetallesVisible = false" Visible="@DetallesVisible" Style="width: 35%!important;">
+    <Modal Footer="null" Title="Detalles" OnCancel="()=> DetallesVisible = false" Visible="@DetallesVisible" Style="width: 65%!important;">
         <VehiculoDetalles vehiculoId="@VehiculoId" />
     </Modal>
 }

@@ -8,9 +8,19 @@
         height: 25em;
         max-height: 25em;
         min-height: 25em;
+        width: 40%;
+        max-width: 40%;
+        min-width: 40%;
+        object-fit: cover;
+        overflow: hidden;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .table-container {
+        overflow-x: auto;
         width: 100%;
-        max-width: 100%;
-        min-width: 100%;
+        margin-bottom: 1em;
     }
 
     .ant-table-pagination.ant-pagination {
@@ -23,7 +33,7 @@
         <img id="ImagenMovil" src="@CargarImage()" />
     </div>
     <br>
-    <div>
+    <div class="table-container">
         <Table TItem="VehiculoView" DataSource="@(new[] { vehiculoView })" Responsive>
             <PropertyColumn Property="c => c.Tipo">@vehiculoView.Tipo</PropertyColumn>
             <PropertyColumn Property="c => c.Encargado">@vehiculoView.Encargado</PropertyColumn>
