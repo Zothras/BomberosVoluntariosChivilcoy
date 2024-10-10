@@ -363,14 +363,19 @@
         background-color: #732D2D !important;
         color: white !important;
     }
-    .boton_c{
-        background-color: #732D2D !important;
-        color: white !important;
-        margin-left:15px;
-        line-height: 30px;
-        text-align: center;
-        padding: 10px 20px;
-    }
+    .boton_c {
+    background-color: #732D2D !important;
+    color: white !important;
+    margin-left: 15px;
+    display: flex;              
+    justify-content: center;     
+    align-items: center;        
+    height: 50px;                
+    padding: 0 20px;             
+    text-align: center;          
+    border: none;               
+}
+
 </style>
 
 <div class="gridContainer">
@@ -437,7 +442,7 @@
 
                                     <MenuItem>
                                         <Button Class="boton_p" @onclick="@(() => toggleMenu("servicios"))">
-                                            <strong>Servicios</strong>
+                                            <strong>Servicios Especiales</strong>
                                         </Button>
                                         @if (showServicios)
                                         {
