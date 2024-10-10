@@ -363,6 +363,19 @@
         left: 17px; /* Ajusta la posición horizontal */
         top: 53px; /* Ajusta la posición vertical */
     }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+    }
+    .boton_c{
+        background-color: #732D2D !important;
+        color: white !important;
+        margin-left:15px;
+        line-height: 30px;
+        text-align: center;
+        padding: 10px 20px;
+    }
 </style>
 
 <div class="gridContainer">
@@ -388,55 +401,89 @@
     <article class="art4">
         <div>
             <div>
-                <div @onclick="ToggleDropdown">
-                        <h1>
-                            SALIDAS
-                        </h1>      
+                <div>
+                    <h1>SALIDAS</h1>
+                      
+               
+                    <Dropdown>
+                        <Overlay>
+                                <Menu>
+                                    <MenuItem>
+                                        <Button Class="boton_p" @onclick="@(() => toggleMenu("incendios"))">
+                                            <strong>Incendios</strong>
+                                        </Button>
+                                        @if (showIncendios)
+                                        {
+                                            <div style="padding-left: 10px;display: flex; flex-direction: column;">
+                                                @foreach (var item in new[]
+                                               {
+                                                    new { Text = "Incendio Maquina Agricola", Url = "/salidas/incendios-MaquinasAgricola" },
+                                                    new { Text = "Incendio Aereonave", Url = "/salidas/incendios-Aereonaves" },
+                                                    new { Text = "Incendios en comercio", Url = "/salidas/incendios-comercio" },
+                                                    new { Text = "Incendio Forestal", Url = "/salidas/incendios-forestales" },
+                                                    new { Text = "Incendio Industrial", Url = "/salidas/incendios-industriales" },
+                                                    new { Text = "Incendio Vehicular", Url = "/salidas/incendios-vehiculares" },
+                                                    new { Text = "Incendio Establecimiento Educativo", Url = "/salidas/incendios-establecimientoEducativo" },
+                                                    new { Text = "Incendios Hospitales/Clinicas", Url = "/salidas/incendios-HospitalesClinicas" },
+                                                    new { Text = "Incendio Establecimiento Publico", Url = "/salidas/incendios-establecimientoPublico" },
+                                                    new { Text = "Incendio Viviendas", Url = "/salidas/incendios-viviendas" },
+                                                    new { Text = "Factores Climáticos", Url = "/salidas/factores-climaticos" }
+                                               })
+                                               {
+                                                    <Popover Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                                                        <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
+                                                            @item.Text
+                                                        </Button>
+                                                    </Popover>
+                                               }
+                                            </div>
+                                        }
+                                    </MenuItem>
+
+                                    <MenuItem>
+                                        <Button Class="boton_p" @onclick="@(() => toggleMenu("servicios"))">
+                                            <strong>Servicios</strong>
+                                        </Button>
+                                        @if (showServicios)
+                                        {
+                                            <div style="padding-left: 10px;display: flex; flex-direction: column;">
+                                                @foreach (var item in new[]
+                                               {
+                                                    new { Text = "Servicio Colaboracion Fuerzas Seguridad", Url = "/salidas/serviciosColaboraciónFuerzasSeguridad" },
+                                                    new { Text = "Rescate Persona", Url = "/salidas/rescates-persona" },
+                                                    new { Text = "Rescate animal", Url = "/salidas/rescates-animal" },
+                                                    new { Text = "Servicio Representacion", Url = "/salidas/serviciosRepresentacion" },
+                                                    new { Text = "Servicio Prevencion", Url = "/salidas/serviciosPrevencion" },
+                                                    new { Text = "Accidentes", Url = "/salidas/accidentes" },
+                                                    new { Text = "Servicio Suministro Agua", Url = "/salidas/serviciosSuministroAgua" },
+                                                    new { Text = "Servicio Colocacion Driza", Url = "/salidas/serviciosColocaciónDriza" },
+                                                    new { Text = "Servicio Capacitacion", Url = "/salidas/serviciosCapacitacion" },
+                                                    new { Text = "Falsa Alarma", Url = "/salidas/serviciosFalsaAlarmas" },
+                                                    new { Text = "Servicio Retirado de Obito", Url = "/salidas/serviciosRetiradoDeObito" }
+                                               })
+                                               {
+                                                    <Popover Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                                                        <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
+                                                            @item.Text
+                                                        </Button>
+                                                    </Popover>
+                                               }
+                                            </div>
+                                        }
+                                    </MenuItem>
+                                </Menu>
+                        </Overlay>
+                            <ChildContent>
+                                <Button class="boton_c" @onclick="ToggleDropdown">
+                                  <strong>
+                                        Cargar Salidas
+                                  </strong>
+                                </Button>
+                            </ChildContent>
+                    </Dropdown>
                 </div>
-                @if (isOpen)
-                {
-                    <div style="display: flex; flex-direction: column; position: absolute; background-color: rgba(0, 0, 0, 0.8); border-radius: 5px; padding: 10px; z-index: 100; max-height: 300px; overflow-y: auto;">
-                        @* Incendios *@
-                        @foreach (var item in new[]
-                        {
-                                new { Text = "Incendio Maquina Agricola", Url = "/salidas/incendios-MaquinasAgricola" },
-                                new { Text = "Incendio Aereonave", Url = "/salidas/incendios-Aereonaves" },
-                                new { Text = "Incendios en comercio", Url = "/salidas/incendios-comercio" },
-                                new { Text = "Incendio Forestal", Url = "/salidas/incendios-forestales" },
-                                new { Text = "Incendio Industrial", Url = "/salidas/incendios-industriales" },
-                                new { Text = "Incendio Vehicular", Url = "/salidas/incendios-vehiculares" },
-                                new { Text = "Material Peligroso", Url = "/salidas/materiales-peligrosos" },
-                                new { Text = "Incendio Establecimiento Educativo", Url = "/salidas/incendios-establecimientoEducativo" },
-                                new { Text = "Incendios Hospitales/Clinicas", Url = "/salidas/incendios-HospitalesClinicas" },
-                                new { Text = "Incendio Establecimiento Publico", Url = "/salidas/incendios-establecimientoPublico" },
-                                new { Text = "Incendio Viviendas", Url = "/salidas/incendios-viviendas" },
-                                new { Text = "Factores Climáticos", Url = "/salidas/factores-climaticos" },
-                                new { Text = "Servicio Colaboracion Fuerzas Seguridad", Url = "/salidas/serviciosColaboraciónFuerzasSeguridad" },
-                                new { Text = "Rescate Persona", Url = "/salidas/rescates-persona" },
-                                new { Text = "Rescate animal", Url = "/salidas/rescates-animal" },
-                                new { Text = "Servicio Representacion", Url = "/salidas/serviciosRepresentacion" },
-                                new { Text = "Servicio Prevencion", Url = "/salidas/serviciosPrevencion" },
-                                new { Text = "Accidentes", Url = "/salidas/accidentes" },
-                                new { Text = "Servicio Suministro Agua", Url = "/salidas/serviciosSuministroAgua" },
-                                new { Text = "Servicio Colocacion Driza", Url = "/salidas/serviciosColocaciónDriza" },
-                                new { Text = "Servicio Capacitacion", Url = "/salidas/serviciosCapacitacion" },
-                                new { Text = "Falsa Alarma", Url = "/salidas/serviciosFalsaAlarmas" },
-                                new { Text = "Servicio Retirado de Obito", Url = "/salidas/serviciosRetiradoDeObito" },
-                        })
-                        {
-                            <Popover Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                                <button @onclick="@(() => {navigationManager.NavigateTo(item.Url); })"   
-                                        style="background: none; border: none; color: white; cursor: pointer; padding: 0; text-align: left;">
-                                    @item.Text
-                                </button>
-                            </Popover>
-                        }
-                    </div>
-                }
             </div>
-        </div>
-            <i class="fa-solid fa-file-signature" @onclick="ToggleDropdown" style="color: white;padding-right: 6px; margin-left:15px"></i>
-            <span @onclick="ToggleDropdown">Cargar salidas</span>
+        </div>   
     </article>
     </a>
     @* DEPARTAMENTOS *@
@@ -598,10 +645,26 @@
     </div>;
 }
 @code {
-    private bool isOpen = false;
+    private bool isOpen = false; //  inicializar aquí
+    private bool showIncendios = false; // Inicializar aquí
+    private bool showServicios = false; // Inicializar aquí
 
     private void ToggleDropdown()
     {
         isOpen = !isOpen;
+    }
+
+    private void toggleMenu(string menu)
+    {
+        if (menu == "incendios")
+        {
+            showIncendios = !showIncendios;
+            showServicios = false; // Asegúrate de cerrar el otro menú
+        }
+        else if (menu == "servicios")
+        {
+            showServicios = !showServicios;
+            showIncendios = false; // Asegúrate de cerrar el otro menú
+        }
     }
 }

@@ -8,5 +8,9 @@ namespace Vista.Data.Enums
         guardia1,
         [Display(Name = "guardia 2")]
         guardia2,
+        [Display(Name = "guardia 3")]
+        guardia3,
+        [Display(Name = "guardia 4")]
+        guardia4,
     }
 }
