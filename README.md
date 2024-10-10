@@ -1,7 +1,7 @@
 <img align="right" width="100" height="100" src="https://i.imgur.com/FfLsdB7.png">
 
 ### Proyecto Bomberos Voluntarios de Chivilcoy 🚒
-###### Institución: Escuela Técnica N°1 Chivilcoy</h6>
+###### Institución: Escuela de Educación Secundaria Técnica Nº1 "Mariano Moreno" de Chivilcoy
 
 ---
 
@@ -28,5 +28,7 @@
 ***Editores de Codigo y Visualizacion de Base de datos***
 - ![Visual Studio](https://img.shields.io/badge/Visual_Studio-5C2D91?style=for-the-badge&logo=visual%20studio&logoColor=white)
 - ![DBeaver](https://img.shields.io/badge/DBeaver-1f425f?style=for-the-badge&logo=dbeaver&logoColor=white)
+
+---
 
 #### Para más información, consulte la documentación en la wiki del proyecto: 👉🏼 [Wiki Bomberos](https://github.com/EEST1Chivilcoy/BomberosVoluntariosChivilcoy/wiki "Wiki Bomberos")

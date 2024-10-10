@@ -20,8 +20,7 @@
             "img img img"
             "n0 n1 n2"
             "n0 n3 n3"
-            "n4 n3 n3"
-            "n5 n5 n6"
+            "n4 n5 n5" 
             "n7 n8 n6"
             "n9 n9 n10"
             "n9 n9 n10";
@@ -146,14 +145,14 @@
 
     .art5 {
         grid-area: n4;
-        display: flex;
-        background: #a44e33;
-        position: relative;
+        background-color: #D5955C !important;
     }
 
     .art6 {
         grid-area: n5;
-        background-color: #D5955C !important;
+        display: flex;
+        background: #a44e33;
+        position: relative;
     }
 
     .art7 {
@@ -199,8 +198,8 @@
 
         .art11 button {
             border-radius: 50%;
-            width: 2.5vw;
-            height: 2.5vw;
+            height: 40px;
+            width: 40px;
             font-size: 1vw;
         }
 
@@ -271,8 +270,8 @@
 
     .art6 button {
         border-radius: 50%;
-        width: 2.5vw;
-        height: 2.5vw;
+        height: 40px;
+        width: 40px;
         font-size: 1vw;
     }
 
@@ -309,12 +308,11 @@
             color: black;
         }
 
-    /* Modulo Departamentos */
+    /* Modulo Reportes */
 
     .btnContA5 {
         display: flex;
         width: 100%;
-        height: 100%;
         justify-content: space-evenly;
         align-items: center;
     }
@@ -328,7 +326,7 @@
             justify-content: center;
             align-items: center;
             background: white;
-            margin-top: 2em;
+            margin-top: 9px;
             height: 3vw;
             width: 3vw;
             font-size: 1vw;
@@ -336,9 +334,6 @@
 
     .art5-Title {
         font-size: 32px;
-        position: absolute;
-        left: 0;
-        top: 0;
         padding: 10px 0 0 16px;
         font-weight: 700;
         font-family: 'Inter', sans-serif;
@@ -486,52 +481,26 @@
         </div>   
     </article>
     </a>
-    @* DEPARTAMENTOS *@
-    <article class="art5">
-        <h1 class="art5-Title" style="padding: 10px 0 0 8px; color:white !important;">DEPARTAMENTOS</h1>
-        <div class="btnContA5">
-            <Popover OverlayClassName="myPopover" ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
-                    <i class="fa-solid fa-users"></i>
-                </button>
-            </Popover>
-            <Popover ContentTemplate="@art5b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
-                    <i class="fa-solid fa-walkie-talkie"></i>
-                </button>
-            </Popover>
-            <Popover ContentTemplate="@art5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
-                    <i class="fa-solid fa-warehouse"></i>
-                </button>
-            </Popover>
-        </div>
-@*         <img src="imagenes/herramientas.png" style="margin-right: -26px;" />
- *@    </article>
-
     @* REPORTES *@
-    <article class="art6" style="background: #2988B4;">
-        <div style="display: flex;padding-top: 0.6%;padding-left:1.46%;align-items: center;justify-content: space-evenly;height: 100%;">
-            <h1 style="color: white;">REPORTES</h1>
-            <style>
-               
-            </style>
-            <Popover ContentTemplate="@art6a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+    <article class="art5">
+        <h1 class="art5-Title" style="color:white !important;">REPORTES</h1>
+        <div class="btnContA5">
+            <Popover ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialSalidas"); })">
                     <i class="fa-solid fa-clock-rotate-left"></i>
                 </button>
             </Popover>
-            <Popover ContentTemplate="@art6b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+            <Popover ContentTemplate="@art5b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
                     <i class="fa-solid fa-user-clock"></i>
                 </button>
             </Popover>
-            <Popover ContentTemplate="@art6c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+            <Popover ContentTemplate="@art5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
                     <i class="fa-solid fa-id-card"></i>
                 </button>
             </Popover>
-            <Popover ContentTemplate="@art6d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+            <Popover ContentTemplate="@art5d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
                     <img src="imagenes/icons/fire_truck.svg"
                          alt="Camión de Bomberos"
@@ -539,7 +508,34 @@
                 </button>
             </Popover>
         </div>
+        @*<img src="imagenes/herramientas.png" style="margin-right: -26px;" />*@
     </article>
+
+    @* DEPARTAMENTOS *@
+    <article class="art6" style="background: #-2988B4;">
+        <div style="display: flex; padding-left:1.46%; align-items: center; justify-content: space-evenly; width: 100%; height: 100%;">
+            <h1 style="color: white;">DEPARTAMENTOS</h1>
+            <style>
+
+            </style>
+            <Popover ContentTemplate="@art6a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
+                    <i class="fa-solid fa-users"></i>
+                </button>
+            </Popover>
+            <Popover ContentTemplate="@art6b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
+                    <i class="fa-solid fa-walkie-talkie"></i>
+                </button>
+            </Popover>
+            <Popover ContentTemplate="@art6c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
+                    <i class="fa-solid fa-warehouse"></i>
+                </button>
+            </Popover>
+        </div>
+    </article>
+
     @* PERSONAL/BOMBEROS *@
         <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })" style="border-radius: 10px;">
         <article class="art3-PERSONAL">
@@ -595,35 +591,33 @@
     // art 5
     private RenderFragment art5a =
     @<div>
-        <p>Brigadas</p>
+        <p>Salidas</p>
     </div>;
-
     private RenderFragment art5b =
     @<div>
-        <p>Comunicacion</p>
+        <p>Bomberos</p>
     </div>;
-
     private RenderFragment art5c =
     @<div>
-        <p>Deposito</p>
+        <p>Choferes</p>
+    </div>;
+    private RenderFragment art5d =
+    @<div>
+        <p>Moviles</p>
     </div>;
 
     // art 6
     private RenderFragment art6a =
     @<div>
-        <p>Salidas</p>
+        <p>Brigadas</p>
     </div>;
     private RenderFragment art6b =
     @<div>
-        <p>Bomberos</p>
+        <p>Comunicacion</p>
     </div>;
     private RenderFragment art6c =
     @<div>
-        <p>Choferes</p>
-    </div>;
-    private RenderFragment art6d =
-    @<div>
-        <p>Moviles</p>
+        <p>Deposito</p>
     </div>;
 
     // art 7
