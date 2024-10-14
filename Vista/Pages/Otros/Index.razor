@@ -363,19 +363,13 @@
         background-color: #732D2D !important;
         color: white !important;
     }
+
     .boton_c {
     background-color: #732D2D !important;
     color: white !important;
     margin-left: 15px;
-    display: flex;              
-    justify-content: center;     
-    align-items: center;        
-    height: 50px;                
-    padding: 0 20px;             
-    text-align: center;          
-    border: none;               
-}
-
+    margin-top: 5px;
+    }
 </style>
 
 <div class="gridContainer">
@@ -474,10 +468,10 @@
                                 </Menu>
                         </Overlay>
                             <ChildContent>
-                                <Button class="boton_c" @onclick="ToggleDropdown">
-                                  <strong>
-                                        Cargar Salidas
-                                  </strong>
+                                <Button class="boton_c" @onclick="ToggleDropdown" style="line-height: 1;">
+                                    <div style="margin-top: -8px;">
+                                        <strong>Cargar Salidas</strong>
+                                    </div>
                                 </Button>
                             </ChildContent>
                     </Dropdown>
