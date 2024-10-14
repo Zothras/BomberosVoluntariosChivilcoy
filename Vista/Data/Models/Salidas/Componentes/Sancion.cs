@@ -10,8 +10,8 @@ namespace Vista.Data.Models.Salidas.Componentes
     {
         public int SancionId { get; set; }
 
-        public DateTime FechaDesde { get; set; }
-        public DateTime FechaHasta { get; set; }
+        public DateOnly FechaDesde { get; set; }
+        public DateOnly FechaHasta { get; set; }
 
         public int PersonaId { get; set; }
         [ForeignKey ("PersonaId")]
