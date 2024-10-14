@@ -67,7 +67,7 @@
         </Select>
     </FormItem>
     <FormItem Label="Fecha de emision">
-        <DatePicker AllowClear="false" @bind-Value="AscensoVM.FechaEmision" />
+        <DatePicker AllowClear="false" @bind-Value="AscensoVM.FechaAscenso" />
     </FormItem>
     <FormItem Label="Descripción">
         <Input @bind-Value="AscensoVM.Descripcion" />
@@ -77,6 +77,12 @@
     </FormItem>
     <FormItem Label="Grado ascenso">
         <EnumSelect TEnum="@EscalafonJerarquico" @bind-Value="@AscensoVM.GradoAscenso" />
+    </FormItem>
+    <FormItem Label="Numero de libro">
+        <Input @bind-Value="AscensoVM.NumeroLibro" />
+    </FormItem>
+     <FormItem Label="Numero de Acta">
+        <Input @bind-Value="AscensoVM.NumeroActa" />
     </FormItem>
     <FormItem Style="width: 100% !important;
             display: flex !important;
@@ -110,10 +116,12 @@
     public class AscensoViewModel
     {
         public Bombero PersonalAfectado { get; set; }
-        public DateTime FechaEmision { get; set; } = DateTime.Now;
+        public DateOnly FechaAscenso { get; set; }
         public string Descripcion { get; set; }
         public EscalafonJerarquico GradoAntiguo { get; set; }
         public EscalafonJerarquico GradoAscenso { get; set; }
+        public int NumeroLibro{ get; set; }
+        public int NumeroActa { get; set; }
     }
 
     // OnFinish
@@ -125,11 +133,13 @@
             Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
             Vista.Data.Models.Salidas.Componentes.AscensoBombero ascenso = new()
                 {
-                    FechaEmision = AscensoVM.FechaEmision,
+                    FechaAscenso = AscensoVM.FechaAscenso,
                     Descripcion = AscensoVM.Descripcion,
                     GradoAntiguo = AscensoVM.GradoAntiguo,
                     GradoAscenso = AscensoVM.GradoAscenso,
-                    PersonalAfectado = BomberoAfectado
+                    PersonalAfectado = BomberoAfectado,
+                    NumeroActa = AscensoVM.NumeroActa,
+                    NumeroLibero = AscensoVM.NumeroLibro
                 };
             await BomberoService.AscenderBombero(ascenso);
             await Init();
