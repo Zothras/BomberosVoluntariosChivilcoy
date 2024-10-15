@@ -403,6 +403,26 @@
                         <Overlay>
                                 <Menu>
                                     <MenuItem>
+                                        <Button Class="boton_p" @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
+                                            <strong>Factores Climaticos</strong>
+                                        </Button>
+                                    </MenuItem>
+
+                                    <MenuItem>
+                                        <div style="display: flex; flex-direction: column;">
+                                            <Button Class="boton_p" @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                                                <strong>Materiales Peligrosos</strong>
+                                            </Button>
+                                        </div>
+                                    </MenuItem>
+
+                                    <MenuItem>
+                                        <Button Class="boton_p" @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
+                                            <strong>Accidentes</strong>
+                                        </Button>
+                                    </MenuItem>
+
+                                    <MenuItem>
                                         <Button Class="boton_p" @onclick="@(() => toggleMenu("incendios"))">
                                             <strong>Incendios</strong>
                                         </Button>
@@ -420,8 +440,7 @@
                                                     new { Text = "Incendio Establecimiento Educativo", Url = "/salidas/incendios-establecimientoEducativo" },
                                                     new { Text = "Incendios Hospitales/Clinicas", Url = "/salidas/incendios-HospitalesClinicas" },
                                                     new { Text = "Incendio Establecimiento Publico", Url = "/salidas/incendios-establecimientoPublico" },
-                                                    new { Text = "Incendio Viviendas", Url = "/salidas/incendios-viviendas" },
-                                                    new { Text = "Factores Climáticos", Url = "/salidas/factores-climaticos" }
+                                                    new { Text = "Incendio Viviendas", Url = "/salidas/incendios-viviendas" }
                                                })
                                                {
                                                     <Popover Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
@@ -448,7 +467,6 @@
                                                     new { Text = "Rescate animal", Url = "/salidas/rescates-animal" },
                                                     new { Text = "Servicio Representacion", Url = "/salidas/serviciosRepresentacion" },
                                                     new { Text = "Servicio Prevencion", Url = "/salidas/serviciosPrevencion" },
-                                                    new { Text = "Accidentes", Url = "/salidas/accidentes" },
                                                     new { Text = "Servicio Suministro Agua", Url = "/salidas/serviciosSuministroAgua" },
                                                     new { Text = "Servicio Colocacion Driza", Url = "/salidas/serviciosColocaciónDriza" },
                                                     new { Text = "Servicio Capacitacion", Url = "/salidas/serviciosCapacitacion" },
