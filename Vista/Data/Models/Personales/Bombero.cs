@@ -22,6 +22,8 @@ namespace Vista.Data.Models.Personales
 
         public List<Firma>? Firmas { get; set; }
 
+        public List<BomberoBrigada> BomberoBrigadas { get; set; } = new();
+
         public int? BrigadaId { get; set; }
         public Brigada? Brigada { get; set; }
         public int? ImagenId { get; set; }

@@ -46,6 +46,7 @@ namespace Vista.Data
         public DbSet<ServicioEspecialColaboraciónFuerzasSeguridad> ServicioEspecialColaboraciónFuerzasSeguridad { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
+        public DbSet<BomberoBrigada> bomberoBrigadas { get; set; }
         public DbSet<MovilSalida> MovilesSalida { get; set; }
         public DbSet<BomberoSalida> BomberosSalida { get; set; }
         public DbSet<Limpieza> Limpiezas { get; set; }
@@ -75,6 +76,19 @@ namespace Vista.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BomberoBrigada>()
+            .HasKey(bb => new { bb.BomberoId, bb.BrigadaId }); // Configura la clave primaria compuesta
+
+            modelBuilder.Entity<BomberoBrigada>()
+                .HasOne(bb => bb.Bombero)
+                .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Bombero tienes una colección de BomberoBrigada
+                .HasForeignKey(bb => bb.BomberoId);
+
+            modelBuilder.Entity<BomberoBrigada>()
+                .HasOne(bb => bb.Brigada)
+                .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Brigada tienes una colección de BomberoBrigada
+                .HasForeignKey(bb => bb.BrigadaId);
+
             modelBuilder.Entity<Brigada>()
                 .HasIndex(b => b.Nombre)
                 .IsUnique();
