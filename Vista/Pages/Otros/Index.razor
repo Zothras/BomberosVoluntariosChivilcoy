@@ -48,12 +48,7 @@
         outline: none;
     }
 
-    .ant-popover-arrow {
-        display: none !important;
-    }
-
     .ant-popover-inner {
-        display: none !important;
         border-radius: 6px !important;
     }
 
@@ -367,13 +362,15 @@
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
+        text-align: center;
+        margin: 1px 0; 
     }
 
     .boton_c {
-    background-color: #732D2D !important;
-    color: white !important;
-    margin-left: 15px;
-    margin-top: 5px;
+        background-color: #732D2D !important;
+        color: white !important;
+        margin-left: 15px;
+        margin-top: 5px;
     }
 </style>
 
@@ -436,24 +433,22 @@
                                             <div style="padding-left: 10px;display: flex; flex-direction: column;">
                                                 @foreach (var item in new[]
                                                {
-                                                    new { Text = "Incendio Maquina Agricola", Url = "/salidas/incendios-MaquinasAgricola" },
-                                                    new { Text = "Incendio Aereonave", Url = "/salidas/incendios-Aereonaves" },
-                                                    new { Text = "Incendios en comercio", Url = "/salidas/incendios-comercio" },
-                                                    new { Text = "Incendio Forestal", Url = "/salidas/incendios-forestales" },
-                                                    new { Text = "Incendio Industrial", Url = "/salidas/incendios-industriales" },
-                                                    new { Text = "Incendio Vehicular", Url = "/salidas/incendios-vehiculares" },
-                                                    new { Text = "Incendio Establecimiento Educativo", Url = "/salidas/incendios-establecimientoEducativo" },
-                                                    new { Text = "Incendios Hospitales/Clinicas", Url = "/salidas/incendios-HospitalesClinicas" },
-                                                    new { Text = "Incendio Establecimiento Publico", Url = "/salidas/incendios-establecimientoPublico" },
-                                                    new { Text = "Incendio Viviendas", Url = "/salidas/incendios-viviendas" }
+                                                    new { Text = "Maquina Agricola", Url = "/salidas/incendios-MaquinasAgricola" },
+                                                    new { Text = "Aereonave", Url = "/salidas/incendios-Aereonaves" },
+                                                    new { Text = "Comercio", Url = "/salidas/incendios-comercio" },
+                                                    new { Text = "Establecimiento Educativo", Url = "/salidas/incendios-establecimientoEducativo" },
+                                                    new { Text = "Forestal", Url = "/salidas/incendios-forestales" },
+                                                    new { Text = "Industrial", Url = "/salidas/incendios-industriales" },
+                                                    new { Text = "Vehicular", Url = "/salidas/incendios-vehiculares" },
+                                                    new { Text = "Hospitales/Clinicas", Url = "/salidas/incendios-HospitalesClinicas" },
+                                                    new { Text = "Establecimiento Publico", Url = "/salidas/incendios-establecimientoPublico" },
+                                                    new { Text = "Viviendas", Url = "/salidas/incendios-viviendas" }
                                                })
-                                               {
-                                                    <Popover Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                                                        <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
-                                                            @item.Text
-                                                        </Button>
-                                                    </Popover>
-                                               }
+                                                {
+                                                    <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
+                                                        @item.Text
+                                                    </Button>
+                                                }
                                             </div>
                                         }
                                     </MenuItem>
@@ -467,23 +462,21 @@
                                             <div style="padding-left: 10px;display: flex; flex-direction: column;">
                                                 @foreach (var item in new[]
                                                {
-                                                    new { Text = "Servicio Colaboracion Fuerzas Seguridad", Url = "/salidas/serviciosColaboraciónFuerzasSeguridad" },
                                                     new { Text = "Rescate Persona", Url = "/salidas/rescates-persona" },
                                                     new { Text = "Rescate animal", Url = "/salidas/rescates-animal" },
-                                                    new { Text = "Servicio Representacion", Url = "/salidas/serviciosRepresentacion" },
-                                                    new { Text = "Servicio Prevencion", Url = "/salidas/serviciosPrevencion" },
-                                                    new { Text = "Servicio Suministro Agua", Url = "/salidas/serviciosSuministroAgua" },
-                                                    new { Text = "Servicio Colocacion Driza", Url = "/salidas/serviciosColocaciónDriza" },
-                                                    new { Text = "Servicio Capacitacion", Url = "/salidas/serviciosCapacitacion" },
+                                                    new { Text = "Representacion", Url = "/salidas/serviciosRepresentacion" },
+                                                    new { Text = "Prevencion", Url = "/salidas/serviciosPrevencion" },
+                                                    new { Text = "Suministro Agua", Url = "/salidas/serviciosSuministroAgua" },
+                                                    new { Text = "Colaboracion Fuerzas Seguridad", Url = "/salidas/serviciosColaboraciónFuerzasSeguridad" },
+                                                    new { Text = "Colocacion Driza", Url = "/salidas/serviciosColocaciónDriza" },
+                                                    new { Text = "Capacitacion", Url = "/salidas/serviciosCapacitacion" },
                                                     new { Text = "Falsa Alarma", Url = "/salidas/serviciosFalsaAlarmas" },
-                                                    new { Text = "Servicio Retirado de Obito", Url = "/salidas/serviciosRetiradoDeObito" }
+                                                    new { Text = "Retirado de Obito", Url = "/salidas/serviciosRetiradoDeObito" }
                                                })
                                                {
-                                                    <Popover Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                                                        <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
-                                                            @item.Text
-                                                        </Button>
-                                                    </Popover>
+                                                    <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
+                                                        @item.Text
+                                                    </Button>
                                                }
                                             </div>
                                         }
@@ -534,12 +527,9 @@
     </article>
 
     @* DEPARTAMENTOS *@
-    <article class="art6" style="background: #-2988B4;">
+    <article class="art6" style="background: #d6774b;">
         <div style="display: flex; padding-left:1.46%; align-items: center; justify-content: space-evenly; width: 100%; height: 100%;">
             <h1 style="color: white;">DEPARTAMENTOS</h1>
-            <style>
-
-            </style>
             <Popover ContentTemplate="@art6a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
                 <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
                     <i class="fa-solid fa-users"></i>
