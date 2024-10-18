@@ -223,7 +223,28 @@
              <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
              <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
              <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-             <PropertyColumn Title="Duración en Días" Property="c=>c.DuracionEnDias" Sortable></PropertyColumn>
+            <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias" Sortable>
+                <Template>
+                    @{
+                        string color;
+
+                        // Determinar el color según el estado de la licencia
+                        if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
+                        {
+                            color = "#FF4C4C"; // Rojo claro para estado rechazado
+                        }
+                        else if (muestra.EstadoLicencia == TipoEstadoLicencia.Aprobada)
+                        {
+                            color = "#99FF99"; // Verde claro para estado aprobado
+                        }
+                        else
+                        {
+                            color = "#FFCC99"; // Naranja claro para estado pendiente
+                        }
+                    }
+                    <span style="background-color:@color; padding: 24px;">@muestra.DuracionEnDias</span>
+                </Template>
+            </PropertyColumn>
              <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
              <PropertyColumn Title="Estado" Property="c => c.EstadoLicencia" Sortable Filterable>
                 <Template>
