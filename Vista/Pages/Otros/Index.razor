@@ -403,7 +403,7 @@
                
                     <Dropdown>
                         <Overlay>
-                                <Menu>
+                                <Menu Style="overflow-y: auto; height: 275px;">
                                     <MenuItem>
                                         <Button Class="boton_p" @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
                                             <strong>Factores Climaticos</strong>
@@ -433,8 +433,8 @@
                                             <div style="padding-left: 10px;display: flex; flex-direction: column;">
                                                 @foreach (var item in new[]
                                                {
-                                            new { Text = "Rescate Persona", Url = "/salidas/rescates-persona" },
-                                            new { Text = "Rescate Animal", Url = "/salidas/rescates-animal" },
+                                            new { Text = "Persona", Url = "/salidas/rescates-persona" },
+                                            new { Text = "Animal", Url = "/salidas/rescates-animal" },
                                             })
                                                 {
                                                     <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
@@ -461,9 +461,9 @@
                                                     new { Text = "Forestal", Url = "/salidas/incendios-forestales" },
                                                     new { Text = "Industrial", Url = "/salidas/incendios-industriales" },
                                                     new { Text = "Vehicular", Url = "/salidas/incendios-vehiculares" },
-                                                    new { Text = "Hospitales/Clinicas", Url = "/salidas/incendios-HospitalesClinicas" },
+                                                    new { Text = "Hospital/Clinica", Url = "/salidas/incendios-HospitalesClinicas" },
                                                     new { Text = "Establecimiento Publico", Url = "/salidas/incendios-establecimientoPublico" },
-                                                    new { Text = "Viviendas", Url = "/salidas/incendios-viviendas" }
+                                                    new { Text = "Vivienda", Url = "/salidas/incendios-viviendas" }
                                                })
                                                 {
                                                     <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
@@ -485,9 +485,9 @@
                                                {
                                                     new { Text = "Representacion", Url = "/salidas/serviciosRepresentacion" },
                                                     new { Text = "Prevencion", Url = "/salidas/serviciosPrevencion" },
-                                                    new { Text = "Suministro Agua", Url = "/salidas/serviciosSuministroAgua" },
-                                                    new { Text = "Colaboracion Fuerzas Seguridad", Url = "/salidas/serviciosColaboraciónFuerzasSeguridad" },
-                                                    new { Text = "Colocacion Driza", Url = "/salidas/serviciosColocaciónDriza" },
+                                                    new { Text = "Suministro de Agua", Url = "/salidas/serviciosSuministroAgua" },
+                                                    new { Text = "Colaboracion con Fuerzas de Seguridad", Url = "/salidas/serviciosColaboraciónFuerzasSeguridad" },
+                                                    new { Text = "Colocacion de Driza", Url = "/salidas/serviciosColocaciónDriza" },
                                                     new { Text = "Capacitacion", Url = "/salidas/serviciosCapacitacion" },
                                                     new { Text = "Falsa Alarma", Url = "/salidas/serviciosFalsaAlarmas" },
                                                     new { Text = "Retirado de Obito", Url = "/salidas/serviciosRetiradoDeObito" }
