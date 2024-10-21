@@ -231,7 +231,7 @@
                         // Determinar el color según el estado de la licencia
                         if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
                         {
-                            color = "#FF4C4C"; // Rojo claro para estado rechazado
+                            color = "#D32F2F"; // Rojo claro para estado rechazado
                         }
                         else if (muestra.EstadoLicencia == TipoEstadoLicencia.Aprobada)
                         {
@@ -242,7 +242,7 @@
                             color = "#FFCC99"; // Naranja claro para estado pendiente
                         }
                     }
-                    <span style="background-color:@color; padding: 24px;">@muestra.DuracionEnDias</span>
+                    <span style="background-color:@color; padding: 0 24px; width: 100px; display: inline-block; text-align: center;">@muestra.DuracionEnDias</span>
                 </Template>
             </PropertyColumn>
              <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
@@ -251,15 +251,17 @@
                     @{
                         if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
                         {
-                            <p>@TipoEstadoLicencia.Rechazada</p>
+                            <span style="text-align: center;">@TipoEstadoLicencia.Rechazada</span>
+
                         }
                         else if (muestra.EstadoLicencia == TipoEstadoLicencia.Aprobada)
                         {
-                            <p>@TipoEstadoLicencia.Aprobada</p>
+                            <span style="text-align: center;">@TipoEstadoLicencia.Aprobada</span>
+
                         }
                         else
                         {
-                            <p>@TipoEstadoLicencia.Pendiente</p>
+                            <span style="text-align: center;">@TipoEstadoLicencia.Pendiente</span>
                         }
                     }
                 </Template>
