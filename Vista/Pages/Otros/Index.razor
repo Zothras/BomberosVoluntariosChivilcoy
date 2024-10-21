@@ -425,6 +425,27 @@
                                     </MenuItem>
 
                                     <MenuItem>
+                                        <Button Class="boton_p" @onclick="@(() => toggleMenu("rescates"))">
+                                            <strong>Rescates</strong>
+                                        </Button>
+                                        @if (showRescates)
+                                        {
+                                            <div style="padding-left: 10px;display: flex; flex-direction: column;">
+                                                @foreach (var item in new[]
+                                               {
+                                            new { Text = "Rescate Persona", Url = "/salidas/rescates-persona" },
+                                            new { Text = "Rescate Animal", Url = "/salidas/rescates-animal" },
+                                            })
+                                                {
+                                                    <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
+                                                        @item.Text
+                                                    </Button>
+                                                }
+                                            </div>
+                                        }
+                                    </MenuItem>
+
+                                    <MenuItem>
                                         <Button Class="boton_p" @onclick="@(() => toggleMenu("incendios"))">
                                             <strong>Incendios</strong>
                                         </Button>
@@ -462,8 +483,6 @@
                                             <div style="padding-left: 10px;display: flex; flex-direction: column;">
                                                 @foreach (var item in new[]
                                                {
-                                                    new { Text = "Rescate Persona", Url = "/salidas/rescates-persona" },
-                                                    new { Text = "Rescate animal", Url = "/salidas/rescates-animal" },
                                                     new { Text = "Representacion", Url = "/salidas/serviciosRepresentacion" },
                                                     new { Text = "Prevencion", Url = "/salidas/serviciosPrevencion" },
                                                     new { Text = "Suministro Agua", Url = "/salidas/serviciosSuministroAgua" },
@@ -654,6 +673,7 @@
     private bool isOpen = false; //  inicializar aquí
     private bool showIncendios = false; // Inicializar aquí
     private bool showServicios = false; // Inicializar aquí
+    private bool showRescates = false; 
 
     private void ToggleDropdown()
     {
@@ -666,11 +686,19 @@
         {
             showIncendios = !showIncendios;
             showServicios = false; // Asegúrate de cerrar el otro menú
+            showRescates = false;
         }
         else if (menu == "servicios")
         {
             showServicios = !showServicios;
             showIncendios = false; // Asegúrate de cerrar el otro menú
+            showRescates = false;
         }
+        else if (menu == "rescates")
+        {
+            showRescates = !showRescates;
+            showIncendios = false; // Asegúrate de cerrar el otro menú
+            showServicios = false;
+    }
     }
 }
