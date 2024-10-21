@@ -319,9 +319,8 @@
         if (brigada != null)
         {
             selectedBrigadaName = brigada.Nombre;
-            // Aquí deberías cargar los bomberos de la brigada seleccionada
-            // Esto es un ejemplo, deberás adaptarlo a tu lógica de carga de datos
             LoadBomberosEnBrigada(brigadaId);
+           
         }
     }
 
@@ -415,11 +414,11 @@
 
     private async Task UpdateLocalLists(int bomberoId, int brigadaId)
     {
-        // Solo actualiza la relación en la base de datos
+        //  actualiza la relación en la base de datos
         var bombero = bomberos.FirstOrDefault(b => b.NumeroLegajo == bomberoId);
         if (bombero != null)
         {
-            // No remuevas el bombero de la lista de sin brigada
+           
             bombero.BrigadaId = brigadaId;
 
             // Actualiza la lista de brigadas si es necesario
@@ -439,7 +438,7 @@
         using (var db = DbFactory.CreateDbContext())
         {
             var bombero = await db.Bomberos
-              .Include(b => b.BomberoBrigadas) // Asegúrate de incluir la navegación a BomberoBrigadas
+              .Include(b => b.BomberoBrigadas) // navegación a BomberoBrigadas
               .FirstOrDefaultAsync(b => b.NumeroLegajo == bomberoId);
             if (bombero == null)
             {
@@ -460,14 +459,15 @@
 
             if (!exists)
             {
-                // Crear una nueva instancia de BomberoBrigada
+                // Crea una nueva instancia de BomberoBrigada
                 var bomberoBrigada = new BomberoBrigada
-                    {
+                {
                         BomberoId = bombero.NumeroLegajo,
                         BrigadaId = brigadaId
-                    };
+                   
+                };
 
-                // Añadir la relación a la tabla intermedia
+                // Añade la relación a la tabla intermedia
                 db.bomberoBrigadas.Add(bomberoBrigada);
                 await db.SaveChangesAsync();
             }
@@ -486,7 +486,7 @@
 
             var brigada = await db.Brigadas
                 .Include(b => b.BomberoBrigadas)
-                .ThenInclude(bb => bb.Bombero) // Asegúrate de incluir el bombero
+                .ThenInclude(bb => bb.Bombero) // incluir el bombero
                 .FirstOrDefaultAsync(b => b.BrigadaId == brigadaId);
 
             if (brigada != null)
