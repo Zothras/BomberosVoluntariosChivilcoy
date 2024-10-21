@@ -5,7 +5,7 @@
         public int BrigadaId { get; set; }
         public string Nombre { get; set; }
         public List<Bombero> Bomberos { get; set; }
-        public List<BomberoBrigada> BomberoBrigadas { get; set; } = new();
+        public ICollection<BomberoBrigada> BomberoBrigadas { get; set; } = new List<BomberoBrigada>();
 
     }
 }

@@ -61,9 +61,18 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
-        bomberos = await db.Bomberos.Where(b => b.BrigadaId == BrigadaId).ToArrayAsync();
+        // Obtener los IDs de los bomberos en la brigada
+        var bomberoIds = await db.bomberoBrigadas
+            .Where(bb => bb.BrigadaId == BrigadaId)
+            .Select(bb => bb.BomberoId)
+            .ToListAsync();
 
-        //rellena el viewModel con el parametro que le llega de la otra pag
+        // Cargar los bomberos basados en los IDs obtenidos
+        bomberos = await db.Bomberos
+            .Where(b => bomberoIds.Contains(b.NumeroLegajo))
+            .ToArrayAsync();
+
+        // Rellenar el viewModel con el nombre de la brigada
         Brigada? b = await db.Brigadas.Where(b => b.BrigadaId == BrigadaId).SingleOrDefaultAsync();
 
         if (b is not null)

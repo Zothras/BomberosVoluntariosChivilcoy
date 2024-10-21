@@ -412,44 +412,17 @@
         StateHasChanged();
     }
 
-    private async Task LoadBomberosEnBrigada(int brigadaId)
-    {
-        try
-        {
-            using var db = await DbFactory.CreateDbContextAsync();
-            // Obtener los IDs de los bomberos asignados a la brigada
-            var bomberosBrigadaIds = await db.bomberoBrigadas
-                .Where(bb => bb.BrigadaId == brigadaId)
-                .Select(bb => bb.BomberoId)
-                .ToListAsync();
-
-            // Filtrar los bomberos en la brigada seleccionada
-            BomberosEnBrigadaSeleccionada = bomberos.Where(b => bomberosBrigadaIds.Contains(b.NumeroLegajo)).ToList();
-            totalBomberosEnBrigada = BomberosEnBrigadaSeleccionada.Count;
-
-            // Reiniciar la paginación
-            currentPageBomberos = 1;
-
-            // Actualizar la lista paginada
-            UpdatePagedBomberosEnBrigada();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al cargar bomberos de la brigada: {ex.Message}");
-        }
-    }
-
 
     private async Task UpdateLocalLists(int bomberoId, int brigadaId)
     {
-        // Remover el bombero de la lista de bomberos sin brigada
-        var bombero = bomberosSinBrigada.FirstOrDefault(b => b.NumeroLegajo == bomberoId);
+        // Solo actualiza la relación en la base de datos
+        var bombero = bomberos.FirstOrDefault(b => b.NumeroLegajo == bomberoId);
         if (bombero != null)
         {
-            bomberosSinBrigada.Remove(bombero);
+            // No remuevas el bombero de la lista de sin brigada
             bombero.BrigadaId = brigadaId;
 
-            // Actualizar la lista de brigadas si es necesario
+            // Actualiza la lista de brigadas si es necesario
             var brigada = brigadas.FirstOrDefault(b => b.BrigadaId == brigadaId);
             if (brigada != null && brigada.Bomberos != null)
             {
@@ -485,23 +458,19 @@
             bool exists = await db.bomberoBrigadas
                 .AnyAsync(bb => bb.BomberoId == bombero.NumeroLegajo && bb.BrigadaId == brigadaId);
 
-            if (exists)
+            if (!exists)
             {
-                Console.WriteLine($"El bombero {bombero.Nombre} ya está asignado a la brigada {brigada.Nombre}.");
-                return bombero;
+                // Crear una nueva instancia de BomberoBrigada
+                var bomberoBrigada = new BomberoBrigada
+                    {
+                        BomberoId = bombero.NumeroLegajo,
+                        BrigadaId = brigadaId
+                    };
+
+                // Añadir la relación a la tabla intermedia
+                db.bomberoBrigadas.Add(bomberoBrigada);
+                await db.SaveChangesAsync();
             }
-
-
-            // Crear una nueva instancia de BomberoBrigada
-            var bomberoBrigada = new BomberoBrigada
-                {
-                    BomberoId = bombero.NumeroLegajo,
-                    BrigadaId = brigadaId
-                };
-
-            // Añadir la relación a la tabla intermedia
-            db.bomberoBrigadas.Add(bomberoBrigada);
-            await db.SaveChangesAsync();
 
             Console.WriteLine($"Bombero {bombero.Nombre} asignado a la brigada {brigada.Nombre} correctamente.");
             return bombero;
@@ -509,7 +478,41 @@
 
     }
 
- 
+    private async Task LoadBomberosEnBrigada(int brigadaId)
+    {
+        try
+        {
+            using var db = DbFactory.CreateDbContext();
+
+            var brigada = await db.Brigadas
+                .Include(b => b.BomberoBrigadas)
+                .ThenInclude(bb => bb.Bombero) // Asegúrate de incluir el bombero
+                .FirstOrDefaultAsync(b => b.BrigadaId == brigadaId);
+
+            if (brigada != null)
+            {
+                BomberosEnBrigadaSeleccionada = brigada.BomberoBrigadas.Select(bb => bb.Bombero).ToList();
+            }
+            else
+            {
+                BomberosEnBrigadaSeleccionada = new List<Bombero>();
+            }
+
+            totalBomberosEnBrigada = BomberosEnBrigadaSeleccionada.Count;
+
+            // Reiniciar la paginación
+            currentPageBomberos = 1;
+
+            // Actualizar la lista paginada
+            UpdatePagedBomberosEnBrigada();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar bomberos de la brigada: {ex.Message}");
+        }
+
+    }
+
     
     public async void CrearBrigada()
     {
