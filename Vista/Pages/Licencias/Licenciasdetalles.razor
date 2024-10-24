@@ -221,8 +221,8 @@
          </TitleTemplate>
          <ColumnDefinitions Context="muestra">
              <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
-             <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-             <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
             <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias" Sortable>
                 <Template>
                     @{
