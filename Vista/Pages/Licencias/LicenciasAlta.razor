@@ -50,7 +50,8 @@
         <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@LicencasVM.Desde" />
     </FormItem>
     <FormItem Label="Fecha finalizacion">
-        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@LicencasVM.Hasta" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@LicencasVM.Hasta"
+                    DisabledDate="@(date => date < LicencasVM.Desde)" />
     </FormItem>
     <FormItem Label="Duración en días">
         <span>@LicencasVM.DuracionEnDias</span>
