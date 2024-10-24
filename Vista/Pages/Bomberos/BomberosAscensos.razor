@@ -129,6 +129,7 @@
 
     public async Task CargarAscenso()
     {
+        ascensos.Clear(); // Limpia la lista de ascensos antes de cargar nuevos datos
         var ascenso = await Context.AscensoBomberos.ToListAsync();
 
         foreach (var a in ascenso)
