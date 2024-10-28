@@ -126,7 +126,7 @@
             @if (totalItems > 5)
             {
                 <div>
-                    <Pagination Total="@totalItems" PageSize="5" CurrentPageIndex="@currentPage" OnChange="@OnPageChange" />
+                    <Pagination Total="@totalItems" PageSize="5" CurrentPageIndex="@currentPageBrigadas" OnChange="@OnPageChangeBrigadas" />
                 </div>
             }
             else
@@ -195,11 +195,11 @@
         </div>
         <div class="footer-brigadas">
             @if (selectedBrigadaId == null){
-                <Pagination Total="@totalBomberosSinBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChange" />
+                <Pagination Total="@totalBomberosSinBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChangeBomberos" />
             }
             else
             {
-                <Pagination Total="@totalBomberosEnBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChange" />
+                <Pagination Total="@totalBomberosEnBrigada" PageSize="@pageSizeBomberos" CurrentPageIndex="@currentPageBomberos" OnChange="@OnPageChangeBomberos" />
                 <Button Type="@ButtonType.Link" OnClick="@ClearSelectedBrigada" Style="color:white; font-weight:bold;">Volver a Bomberos sin Brigada</Button>
             }
             
@@ -351,14 +351,14 @@
 
 
     // Paginacion
-    private int currentPage = 1;
+    private int currentPageBrigadas = 1;
     private int pageSize = 5;
     private int totalItems => brigadas?.Count() ?? 0;
-    private List<Brigada> PagedBrigadas => brigadas?.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList() ?? new List<Brigada>();
+    private List<Brigada> PagedBrigadas => brigadas?.Skip((currentPageBrigadas - 1) * pageSize).Take(pageSize).ToList() ?? new List<Brigada>();
 
-    private void OnPageChange(PaginationEventArgs args)
+    private void OnPageChangeBrigadas(PaginationEventArgs args)
     {
-        currentPage = args.Page;
+        currentPageBrigadas = args.Page;
     }
 
     // Paginacion Bomberos
@@ -371,6 +371,11 @@
     private int currentPageBomberos = 1;
     private int pageSizeBomberos = 5; // Ajusta este valor según tus necesidades
     private int totalBomberosSinBrigada => bomberosSinBrigada?.Count ?? 0;
+
+    private void OnPageChangeBomberos(PaginationEventArgs args)
+    {
+        currentPageBomberos = args.Page;
+    }
 
     private void OnDragLeave()
     {
