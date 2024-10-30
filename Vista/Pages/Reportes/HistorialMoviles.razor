@@ -88,11 +88,11 @@
                 </TitleTemplate>
     
                 <ColumnDefinitions Context="muestra">
-                    <PropertyColumn Property="c=>c.NumeroMovil" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.NumeroMovil" Title="Numero de Movil" Sortable></PropertyColumn>
                     <PropertyColumn Property="c=>c.Kilometraje" Sortable></PropertyColumn>
-                    <PropertyColumn Property="c=>c.NumeroParte" Sortable></PropertyColumn>
-                    <PropertyColumn Property="c=>c.Hrllegada" Sortable></PropertyColumn>
-                    <PropertyColumn Property="c=>c.CargoCombustibleTexto" Sortable> cargo </PropertyColumn>
+                <PropertyColumn Property="c=>c.NumeroParte" Title="Numero de Parte" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.Hrllegada" Title="Hora de Llegada" Sortable></PropertyColumn>
+                <PropertyColumn Property="c=>c.CargoCombustibleTexto" Title="Cargo Combustible" Sortable> cargo </PropertyColumn>
                 </ColumnDefinitions> 
             </Table>
             <div style="display: flex;justify-content: flex-end;margin-top: -3.5em;">

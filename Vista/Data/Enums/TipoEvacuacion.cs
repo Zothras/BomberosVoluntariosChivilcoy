@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 public enum TipoEvacuacion
 {
-    [Display(Name = "No evacuó")]
+    [Display(Name = "No se evacuo")]
     NoEvacuo,
     [Display(Name = "Evacuación Parcial")]
     EvacuacionParcial,
