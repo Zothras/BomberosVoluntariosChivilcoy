@@ -75,11 +75,20 @@
                     </SpaceItem>
                 </Space>
             </TitleTemplate>
-            <ColumnDefinitions>
+            <ColumnDefinitions Context="muestra">
                 <PropertyColumn Property="c=>c.Encargado"></PropertyColumn>
                 <PropertyColumn Property="c=>c.Sancionado"></PropertyColumn>
                 <PropertyColumn Property="c=>c.FechaDesde" Title="Fecha Desde"></PropertyColumn>
                 <PropertyColumn Property="c=>c.FechaHasta" Title="Fecha Hasta"></PropertyColumn>
+                <PropertyColumn Title="Duración de Sancion" Property="c => c.DiasSancion" Sortable>
+                    <Template>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <span style="background-color: #D3D3D3; padding: 0 24px; width: 100px; display: flex; justify-content: center; align-items: center; text-align: center;">
+                                @muestra.DiasSancion
+                            </span>
+                        </div>
+                    </Template>
+                </PropertyColumn>
                 <PropertyColumn Property="c=>c.TipoSancion" Title="Tipo"></PropertyColumn>
                 <PropertyColumn Property="c=>c.SancionArea" Title="Sanción Area"></PropertyColumn>
                 <PropertyColumn Property="c=>c.Observaciones"></PropertyColumn>
@@ -116,6 +125,8 @@
         public string Sancionado { get; set; }
         public string Encargado { get; set; }
         public string Observaciones { get; set; }
+
+        public int DiasSancion => (FechaHasta.ToDateTime(TimeOnly.MinValue) - FechaDesde.ToDateTime(TimeOnly.MinValue)).Days + 1;
     }
 
     // Init y Carga de datos
