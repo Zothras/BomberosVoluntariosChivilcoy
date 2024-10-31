@@ -95,7 +95,7 @@
     @if (!esSoloDireccion && MostrarOpcionDepartamento)
     {
         <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
-            <label class="inpt-cont--lbl">¿Este lugar es un departamento?</label>
+            <label class="inpt-cont--lbl">¿Se encuentra en un departamento?</label>
             <Switch @bind-Checked="@esDepartamento" Style="width: 10px!important;" />
         </div>
     }
@@ -103,11 +103,11 @@
     {
         <div class="inpt-cont-inline">
             <div class="inpt-cont">
-                <label class="inpt-cont--lbl">PisoNumero</label>
+                <label class="inpt-cont--lbl">Numero de Piso</label>
                 <Input @bind-Value="@Model.PisoNumero" />
             </div>
             <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Depto</label>
+                <label class="inpt-cont--lbl">Departamento</label>
                 <Input @bind-Value="@Model.Depto" />
             </div>
         </div>
