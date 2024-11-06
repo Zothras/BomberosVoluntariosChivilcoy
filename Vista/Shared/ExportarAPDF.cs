@@ -15,7 +15,7 @@ namespace Vista.Shared
                 PdfPage pagina = documento.AddPage();
                 XGraphics gfx = XGraphics.FromPdfPage(pagina);
 
-                DibujarTabla(gfx, datos, 50, 50, pagina.Width - 100, pagina.Height - 100);
+                DibujarTabla(gfx, datos, 50, 50, pagina.Width - 150, pagina.Height - 100);
 
                 documento.Save(ms);
                 return ms.ToArray();

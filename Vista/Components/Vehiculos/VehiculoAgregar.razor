@@ -131,6 +131,9 @@
                             <input type="text" @bind="vehiculoView.Tipo" placeholder="Tipo:" />
                         </div>
                         <div class="inpt-container">
+                            <input type="text" @bind="vehiculoView.Color" placeholder="Color:" />
+                        </div>
+                        <div class="inpt-container">
                             <label class="lblInputFile" for="fotoMovil"><Icon Type="cloud-upload" Theme="outline" Style="height: 14px;width: 14px;" />Cargar foto del móvil</label>
                             <InputFile OnChange="SubirFoto" id="fotoMovil" style="display: none;" />
                             <h3 id="path" style="display: inline-block;font-size:12px;">@imagenView.Nombre</h3>
@@ -256,6 +259,7 @@
     public class VehiculoViewModel
     {
         public string? Marca { get; set; }
+        public string? Color { get; set; }
         public string? Modelo { get; set; }
         public int? Año { get; set; }
         public string? Patente { get; set; }
@@ -319,6 +323,7 @@
                 Embarcacion vehiculo = new Embarcacion()
                     {
                         Marca = vehiculoView.Marca,
+                        Color = vehiculoView.Color,
                         Modelo = vehiculoView.Modelo,
                         Año = vehiculoView.Año,
                         Patente = vehiculoView.Patente,
