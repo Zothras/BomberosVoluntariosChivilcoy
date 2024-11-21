@@ -26,6 +26,7 @@
         <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre"></PropertyColumn>
             <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy"></PropertyColumn>
             <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy"></PropertyColumn>
+        <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias"></PropertyColumn>
         <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia"></PropertyColumn>
         <PropertyColumn Title="Estado" Property="c=>c.EstadoLicencia"></PropertyColumn>
         <ActionColumn Title="Acciones" Style="display:flex;justify-content:space-around;">
@@ -49,15 +50,32 @@
     public class LicencasVm
     {
         public int LicenciaId { get; set; }
+
         [Required]
         public TipoLicencia TipoLicencia { get; set; }
+
         public string Descripcion { get; set; }
+
         public DateTime Desde { get; set; }
+
         public DateTime Hasta { get; set; }
+
         public TipoEstadoLicencia EstadoLicencia { get; set; }
+
         public int PersonaId { get; set; }
+
         public Bombero? PersonalAfectado { get; set; }
+
         public string? ApellidoYNombre { get; set; }
+
+        // Propiedad calculada para la duración en días
+        public int DuracionEnDias
+        {
+            get
+            {
+                return (Hasta - Desde).Days + 1;
+            }
+        }
     }
 
 
@@ -78,9 +96,18 @@
     private async Task LicenciasPendientes()
     {
         LicenciasActivasVM = new();
-        var Licencias = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).Include(b => b.PersonalAfectado).ToListAsync();
+        var Licencias = await Context.Licencias
+            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente)
+            .Include(b => b.PersonalAfectado)
+            .ToListAsync();
+
         foreach (var l in Licencias)
         {
+            if (l.Desde == DateTime.MinValue || l.Hasta == DateTime.MinValue)
+            {
+                Console.WriteLine($"Licencia con ID {l.LicenciaId} tiene fechas inválidas.");
+                continue;
+            }
 
             LicencasVm LicVm = new()
                 {
@@ -92,6 +119,10 @@
                     EstadoLicencia = l.EstadoLicencia,
                     ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
                 };
+
+            // Verifica que DuracionEnDias se calcule correctamente.
+            Console.WriteLine($"Duración calculada para licencia {l.LicenciaId}: {LicVm.DuracionEnDias} días");
+
             LicenciasActivasVM.Add(LicVm);
         }
     }
