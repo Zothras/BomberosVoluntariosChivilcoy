@@ -3,6 +3,140 @@
 @inject NavigationManager navigationManager
 @page "/"
 
+<style>
+    /* Dashboard Container */
+    .dashboard-container {
+        padding: 24px;
+        background-color: #f0f2f5;
+        min-height: 100vh;
+    }
+
+    /* Banner Section */
+    .banner-section {
+        margin-bottom: 24px;
+    }
+
+    .banner-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        height: 300px;
+    }
+
+    .banner-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .banner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+
+        .banner-overlay h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-align: center;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+        margin-top: 24px;
+    }
+
+    /* Cards */
+    .dashboard-card {
+        height: 200px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+    .card-icon {
+        font-size: 32px;
+        margin-bottom: 16px;
+    }
+
+    .dashboard-card h2 {
+        margin: 12px 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .dashboard-card p {
+        color: rgba(0,0,0,0.65);
+        margin: 0;
+    }
+
+    /* Specific Cards */
+    .legajo-card {
+        background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+        color: white;
+    }
+
+    .licencias-card {
+        background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+        color: white;
+    }
+
+    .salidas-card {
+        background: linear-gradient(135deg, #f5222d 0%, #cf1322 100%);
+        color: white;
+    }
+
+    /* Dropdown Menu */
+    .salidas-menu {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .salidas-button {
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    /* Responsive Adjustments */
+    @@media (max-width: 768px) {
+        .banner-overlay h1 {
+            font-size: 1.8rem;
+        }
+
+        .dashboard-card {
+            height: 180px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .dashboard-card h2 {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+
 <div class="dashboard-container">
     @*Banner Section*@
     <Row Class="banner-section">
