@@ -1,704 +1,348 @@
-﻿@*Este es el Index*@
-@using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal;
 @using Vista.Helpers;
 @inject NavigationManager navigationManager
 @page "/"
 
-<style>
-    /* Grid Container
-            Las demas clases y elementos se encuentran dentro de este
-            Por tanto tener en cuenta al cambiar alguna propiedad relacionada con tamaño o posicion */
-
-    .gridContainer {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        /* grid-template-rows: repeat(6, 1fr); */
-        grid-auto-rows: minmax(17%, auto);
-        grid-template-areas:
-            "img img img"
-            "img img img"
-            "img img img"
-            "n0 n1 n2"
-            "n0 n3 n3"
-            "n4 n5 n5" 
-            "n7 n8 n6"
-            "n9 n9 n10"
-            "n9 n9 n10";
-        max-width: 75.27%;
-        min-width: 44.06%;
-        gap: 0.73%;
-        height: 100vh;
-        margin-left: 0.73%;
-        margin-top: 1.3%;
-       
-    }
-
-    /* Componentes */
-
-    article {
-        border-radius: 1vw;
-        background: white;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-        overflow: hidden;
-    }
-
-
-    button {
-        border: none;
-        outline: none;
-    }
-
-    .ant-popover-inner {
-        border-radius: 6px !important;
-    }
-
-    .ant-popover-inner-content {
-        padding: 3px !important;
-    }
-
-        .ant-popover-inner-content p {
-            font-weight: 600 !important;
-            font-family: 'Inter', sans-serif !important;
-        }
-
-    /* Clases de imagenes */
-
-    .imgCont {
-        grid-area: img;
-        min-width: 300px;
-    }
-
-    .imgBomberos {
-        width: 100%;
-        object-fit: cover;
-        min-width: 300px;
-        border-radius: 10px;
-        height: 100%;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-    }
-
-    .imgBomberos2 {
-        filter: brightness(0.5);
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-    }
-
-    /* Clases de Buttons */
-
-    .btnCont {
-        position: absolute;
-        left: 1em;
-        top: 7.5em;
-        display: flex;
-        width: 100%;
-        gap: 10px;
-    }
-
-    /* Clases Art */
-
-    .art1 {
-        grid-area: n0;
-    }
-
-    .art2 {
-        grid-area: n1;
-        background: #3b509f;
-        padding: 18px;
-        margin-left: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 1vw;
-        color: white;
-    }
-
-    .art3 {
-        grid-area: n2;
-        background: #663737;
-        padding: 18px;
-        margin-left: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 1vw;
-    }
-
-    .art3-PERSONAL {
-        grid-area: n2;
-        background: #663737;
-        padding: 18px;
-        margin-left: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 1vw;
-    }
-
-    .art4 {
-/*         background-image: url('https://i.imgur.com/ZN7adhk.jpeg'); */        
-/*         background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat; */
-        grid-area: n3;
-        width: 100%;
-        height: 100%;
-        background-color:#A63636
-    }
-
-    .art5 {
-        grid-area: n4;
-        background-color: #D5955C !important;
-    }
-
-    .art6 {
-        grid-area: n5;
-        display: flex;
-        background: #a44e33;
-        position: relative;
-    }
-
-    .art7 {
-        grid-area: n6;
-    }
-
-    .art8 {
-        grid-area: n7;
-        background: #121111;
-        padding: 18px;
-        margin-left: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 1vw;
-        color: white !important;
-        
-    }
-
-    .art8 h1 {
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        font-size: 32px;
-    }
-
-    .art8 span {
-        margin-top: 10px;
-        font-family: 'Inter', sans-serif;
-        font-size: 1vw;
-    }
-
-
-    .art9 {
-        width: 100%;
-        height: 100%;
-    }
-
-    .art11 {
-        width: 100%;
-        max-height: 50%;
-        grid-area: n9;
-        background-color: #5e2626 !important
-    }
-
-        .art11 button {
-            border-radius: 50%;
-            height: 40px;
-            width: 40px;
-            font-size: 1vw;
-        }
-
-    /* Componentes dentro de Art */
-
-    .art2 h1 {
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        font-size: 32px;
-    }
-
-    .art2 span {
-        margin-top: 10px;
-        font-family: 'Inter', sans-serif;
-        font-size: 1vw;
-    }
-
-    .art3 h1 {
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        color: white;
-        font-size: 32px;
-    }
-
-    .art3 span {
-        margin-top: 10px;
-        font-family: 'Inter', sans-serif;
-        font-size: 15px;
-        color: white;
-        font-size: 1vw;
-    }
-
-    .art3-PERSONAL h1 {
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        color: white;
-        font-size: 32px;
-    }
-
-    .art3-PERSONAL span {
-        margin-top: 10px;
-        font-family: 'Inter', sans-serif;
-        font-size: 15px;
-        color: white;
-        font-size: 1vw;
-    }
-
-    .art4 h1 {
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        color: white;
-        font-size: 32px;
-        margin-top:15px;
-        margin-left:15px;
-    }
-        
-    .art4 span {
-            margin-top: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            color: white;
-            font-size: 1vw;
-    }
-
-    .art6 h1 {
-        font-size: 32px;
-    }
-
-    .art6 button {
-        border-radius: 50%;
-        height: 40px;
-        width: 40px;
-        font-size: 1vw;
-    }
-
-    /* Modulo Bomberos */
-
-    .bomberosArt {
-        height: 100%;
-        position: relative;
-        font-size: 1vw;
-    }
-
-        .bomberosArt h1 {
-            position: absolute;
-            left: 0;
-            top: 0;
-            padding: 15px;
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-        }
-
-        .bomberosArt button {
-            border-radius: 50%;
-            padding: .3em;
-            height: 30px;
-            width: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .bomberosArt i {
-            color: black;
-        }
-
-    /* Modulo Reportes */
-
-    .btnContA5 {
-        display: flex;
-        width: 100%;
-        justify-content: space-evenly;
-        align-items: center;
-    }
-
-        .btnContA5 button {
-            border-radius: 50%;
-            padding: .3em;
-            height: 40px;
-            width: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            margin-top: 9px;
-            height: 3vw;
-            width: 3vw;
-            font-size: 1vw;
-        }
-
-    .art5-Title {
-        font-size: 32px;
-        padding: 10px 0 0 16px;
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-    }
-
-    /* Otros */
-
-    #mapDiv div:focus-visible {
-        border: none !important;
-        outline: none !important;
-    }
-
-    .custom-icon {
-        font-size: 15.75px; /* Ajusta el tamaño del ícono */
-        line-height: 14px; /* Asegura que el ícono esté centrado verticalmente */
-        display: inline-block; /* Permite especificar dimensiones */
-        width: 15.75px; /* Ajusta el ancho del contenedor del ícono */
-        height: 14px; /* Ajusta la altura del contenedor del ícono */
-        text-align: center; /* Centra el ícono horizontalmente */
-        color: white; /* Cambia el color del ícono según tus necesidades */
-        position: absolute; /* Mantiene la posición */
-        left: 17px; /* Ajusta la posición horizontal */
-        top: 53px; /* Ajusta la posición vertical */
-    }
-
-    .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
-        text-align: center;
-        margin: 1px 0; 
-    }
-
-    .boton_c {
-        background-color: #732D2D !important;
-        color: white !important;
-        margin-left: 15px;
-        margin-top: 5px;
-    }
-</style>
-
-<div class="gridContainer">
-    <div class="imgCont">
-            <img class="imgBomberos" src="imagenes/bombeross.jpg" />
-    </div>
-    @* BOMBEROS *@ 
-    <a @onclick="@(() => { navigationManager.NavigateTo("/Bomberos/Legajo"); })" style="border-radius: 10px;">
-        <article class="art2">
-            <h1 style="color: white;">LEGAJO</h1>
-            <i class="fa-solid fa-user icoSelected" style="color: white;padding-right: 6px;"></i>
-            <span>Visite su legajo</span>
-        </article>
-    </a>
-    <a @onclick="@(() => { navigationManager.NavigateTo("/Licencias-Detalles"); })" style="border-radius: 10px;">
-        <article class="art3">
-            <h1>LICENCIAS</h1>
-            <i class="fa-solid fa-file-signature" style="color: white;padding-right: 6px;"></i>
-            <span>Ver las licencias</span>
-        </article>
-    </a>
-    <a style="border-radius: 10px">
-    <article class="art4">
-        <div>
-            <div>
-                <div>
-                    <h1>SALIDAS</h1>
-                      
-               
-                    <Dropdown>
-                        <Overlay>
-                                <Menu Style="overflow-y: auto; height: 275px;">
-                                    <MenuItem>
-                                        <Button Class="boton_p" @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
-                                            <strong>Factores Climaticos</strong>
-                                        </Button>
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <div style="display: flex; flex-direction: column;">
-                                            <Button Class="boton_p" @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
-                                                <strong>Materiales Peligrosos</strong>
-                                            </Button>
-                                        </div>
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <Button Class="boton_p" @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
-                                            <strong>Accidentes</strong>
-                                        </Button>
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <Button Class="boton_p" @onclick="@(() => toggleMenu("rescates"))">
-                                            <strong>Rescates</strong>
-                                        </Button>
-                                        @if (showRescates)
-                                        {
-                                            <div style="padding-left: 10px;display: flex; flex-direction: column;">
-                                                @foreach (var item in new[]
-                                               {
-                                            new { Text = "Persona", Url = "/salidas/rescates-persona" },
-                                            new { Text = "Animal", Url = "/salidas/rescates-animal" },
-                                            })
-                                                {
-                                                    <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
-                                                        @item.Text
-                                                    </Button>
-                                                }
-                                            </div>
-                                        }
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <Button Class="boton_p" @onclick="@(() => toggleMenu("incendios"))">
-                                            <strong>Incendios</strong>
-                                        </Button>
-                                        @if (showIncendios)
-                                        {
-                                            <div style="padding-left: 10px;display: flex; flex-direction: column;">
-                                                @foreach (var item in new[]
-                                               {
-                                                    new { Text = "Maquina Agricola", Url = "/salidas/incendios-MaquinasAgricola" },
-                                                    new { Text = "Aereonave", Url = "/salidas/incendios-Aereonaves" },
-                                                    new { Text = "Comercio", Url = "/salidas/incendios-comercio" },
-                                                    new { Text = "Establecimiento Educativo", Url = "/salidas/incendios-establecimientoEducativo" },
-                                                    new { Text = "Forestal", Url = "/salidas/incendios-forestales" },
-                                                    new { Text = "Industrial", Url = "/salidas/incendios-industriales" },
-                                                    new { Text = "Vehicular", Url = "/salidas/incendios-vehiculares" },
-                                                    new { Text = "Hospital/Clinica", Url = "/salidas/incendios-HospitalesClinicas" },
-                                                    new { Text = "Establecimiento Publico", Url = "/salidas/incendios-establecimientoPublico" },
-                                                    new { Text = "Vivienda", Url = "/salidas/incendios-viviendas" }
-                                               })
-                                                {
-                                                    <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
-                                                        @item.Text
-                                                    </Button>
-                                                }
-                                            </div>
-                                        }
-                                    </MenuItem>
-
-                                    <MenuItem>
-                                        <Button Class="boton_p" @onclick="@(() => toggleMenu("servicios"))">
-                                            <strong>Servicios Especiales</strong>
-                                        </Button>
-                                        @if (showServicios)
-                                        {
-                                            <div style="padding-left: 10px;display: flex; flex-direction: column;">
-                                                @foreach (var item in new[]
-                                               {
-                                                    new { Text = "Representacion", Url = "/salidas/serviciosRepresentacion" },
-                                                    new { Text = "Prevencion", Url = "/salidas/serviciosPrevencion" },
-                                                    new { Text = "Suministro de Agua", Url = "/salidas/serviciosSuministroAgua" },
-                                                    new { Text = "Colaboracion con Fuerzas de Seguridad", Url = "/salidas/serviciosColaboraciónFuerzasSeguridad" },
-                                                    new { Text = "Colocacion de Driza", Url = "/salidas/serviciosColocaciónDriza" },
-                                                    new { Text = "Capacitacion", Url = "/salidas/serviciosCapacitacion" },
-                                                    new { Text = "Falsa Alarma", Url = "/salidas/serviciosFalsaAlarmas" },
-                                                    new { Text = "Retirado de Obito", Url = "/salidas/serviciosRetiradoDeObito" }
-                                               })
-                                               {
-                                                    <Button @onclick="@(() => { navigationManager.NavigateTo(item.Url); })" class="boton_p">
-                                                        @item.Text
-                                                    </Button>
-                                               }
-                                            </div>
-                                        }
-                                    </MenuItem>
-                                </Menu>
-                        </Overlay>
-                            <ChildContent>
-                                <Button class="boton_c" @onclick="ToggleDropdown" style="line-height: 1;">
-                                    <div style="margin-top: -8px;">
-                                        <strong>Cargar Salidas</strong>
-                                    </div>
-                                </Button>
-                            </ChildContent>
-                    </Dropdown>
-                </div>
+<div class="dashboard-container">
+    @*Banner Section*@
+    <Row Class="banner-section">
+        <Col Span="24">
+        <Card Bordered="false" Class="banner-card">
+            <img src="imagenes/bombeross.jpg" class="banner-image" alt="Banner Bomberos" />
+            <div class="banner-overlay">
+                <h1>SISTEMA DE GESTIÓN DE BOMBEROS</h1>
             </div>
-        </div>   
-    </article>
-    </a>
-    @* REPORTES *@
-    <article class="art5">
-        <h1 class="art5-Title" style="color:white !important;">REPORTES</h1>
-        <div class="btnContA5">
-            <Popover ContentTemplate="@art5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialSalidas"); })">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                </button>
-            </Popover>
-            <Popover ContentTemplate="@art5b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
-                    <i class="fa-solid fa-user-clock"></i>
-                </button>
-            </Popover>
-            <Popover ContentTemplate="@art5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
-                    <i class="fa-solid fa-id-card"></i>
-                </button>
-            </Popover>
-            <Popover ContentTemplate="@art5d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
-                    <img src="imagenes/icons/fire_truck.svg"
-                         alt="Camión de Bomberos"
-                         style="width: 1.5em; height: 1.5em; vertical-align: middle; filter: invert(0) sepia(0) saturate(0) hue-rotate(0deg) brightness(0) contrast(1);" />
-                </button>
-            </Popover>
-        </div>
-        @*<img src="imagenes/herramientas.png" style="margin-right: -26px;" />*@
-    </article>
+        </Card>
+        </Col>
+    </Row>
 
-    @* DEPARTAMENTOS *@
-    <article class="art6" style="background: #d6774b;">
-        <div style="display: flex; padding-left:1.46%; align-items: center; justify-content: space-evenly; width: 100%; height: 100%;">
-            <h1 style="color: white;">DEPARTAMENTOS</h1>
-            <Popover ContentTemplate="@art6a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
+    @*Main Grid Section*@
+    <Row Gutter="24" Class="dashboard-grid">
+
+        @*Legajo Section*@
+        <Col Xs="24" Sm="12" Lg="8">
+        <div @onclick="@(() => { navigationManager.NavigateTo("/Bomberos/Legajo"); })" style="cursor: pointer;">
+            <Card Class="dashboard-card legajo-card">
+                <i class="fa-solid fa-user card-icon"></i>
+                <h2>Legajo</h2>
+                <p>Visite su legajo personal</p>
+            </Card>
+        </div>
+        </Col>
+
+        @*Licencias Section*@
+        <Col Xs="24" Sm="12" Lg="8">
+        <div @onclick="@(() => { navigationManager.NavigateTo("/Licencias-Detalles"); })" style="cursor: pointer;">
+            <Card Class="dashboard-card licencias-card">
+                <i class="fa-solid fa-file-signature card-icon"></i>
+                <h2>Licencias</h2>
+                <p>Gestión de licencias</p>
+            </Card>
+        </div>
+        </Col>
+
+        @*Salidas Section*@
+        <Col Xs="24" Sm="12" Lg="8">
+        <Card Class="dashboard-card salidas-card">
+            <i class="fa-solid fa-door-open card-icon"></i>
+            <h2>Salidas</h2>
+            <Dropdown Visible="@isOpen" OnVisibleChange="@(visible => isOpen = visible)">
+                <Overlay>
+                    <Menu Class="salidas-menu">
+                        <MenuItemGroup Title="Tipos de Salidas">
+                            <MenuItem @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
+                                <i class="fa-solid fa-cloud-sun-rain menu-icon"></i>
+                                <span>Factores Climáticos</span>
+                            </MenuItem>
+                            <MenuItem @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
+                                <i class="fa-solid fa-triangle-exclamation menu-icon"></i>
+                                <span>Materiales Peligrosos</span>
+                            </MenuItem>
+                            <MenuItem @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
+                                <i class="fa-solid fa-car-crash menu-icon"></i>
+                                <span>Accidente</span>
+                            </MenuItem>
+                            <SubMenu Title="Incendios">
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-MaquinasAgricola"); })">
+                                        <i class="fa-solid fa-tractor menu-icon"></i>
+                                        <span>Máquina Agrícola</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-Aereonaves"); })">
+                                        <i class="fa-solid fa-plane menu-icon"></i>
+                                        <span>Aeronave</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
+                                        <i class="fa-solid fa-store menu-icon"></i>
+                                        <span>Comercio</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
+                                        <i class="fa-solid fa-school menu-icon"></i>
+                                        <span>Establecimiento Educativo</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
+                                        <i class="fa-solid fa-tree menu-icon"></i>
+                                        <span>Forestal</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
+                                        <i class="fa-solid fa-industry menu-icon"></i>
+                                        <span>Industrial</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
+                                        <i class="fa-solid fa-car menu-icon"></i>
+                                        <span>Vehicular</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
+                                        <i class="fa-solid fa-hospital menu-icon"></i>
+                                        <span>Hospital/Clínica</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
+                                        <i class="fa-solid fa-building menu-icon"></i>
+                                        <span>Establecimiento Público</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
+                                        <i class="fa-solid fa-house menu-icon"></i>
+                                        <span>Vivienda</span>
+                                    </Button>
+                                </MenuItem>
+                            </SubMenu>
+                            <SubMenu Title="Servicios Especiales">
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
+                                        <i class="fa-solid fa-people-arrows menu-icon"></i>
+                                        <span>Representación</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
+                                        <i class="fa-solid fa-shield-alt menu-icon"></i>
+                                        <span>Prevención</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosSuministroAgua"); })">
+                                        <i class="fa-solid fa-water menu-icon"></i>
+                                        <span>Suministro de Agua</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosColaboraciónFuerzasSeguridad"); })">
+                                        <i class="fa-solid fa-handshake menu-icon"></i>
+                                        <span>Colaboración con Fuerzas de Seguridad</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosColocaciónDriza"); })">
+                                        <i class="fa-solid fa-anchor menu-icon"></i>
+                                        <span>Colocación de Driza</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosCapacitacion"); })">
+                                        <i class="fa-solid fa-chalkboard-teacher menu-icon"></i>
+                                        <span>Capacitación</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosFalsaAlarmas"); })">
+                                        <i class="fa-solid fa-exclamation-triangle menu-icon"></i>
+                                        <span>Falsa Alarma</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRetiradoDeObito"); })">
+                                        <i class="fa-solid fa-procedures menu-icon"></i>
+                                        <span>Retirado de Óbito</span>
+                                    </Button>
+                                </MenuItem>
+                            </SubMenu>
+                            <SubMenu Title="Rescates">
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
+                                        <i class="fa-solid fa-user menu-icon"></i>
+                                        <span>Persona</span>
+                                    </Button>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
+                                        <i class="fa-solid fa-paw menu-icon"></i>
+                                        <span>Animal</span>
+                                    </Button>
+                                </MenuItem>
+                            </SubMenu>
+                        </MenuItemGroup>
+                    </Menu>
+                </Overlay>
+                <ChildContent>
+                    <Button Type="primary" Class="salidas-button">
+                        Cargar Salidas <i class="fa-solid fa-arrow-down"></i>
+                    </Button>
+                </ChildContent>
+            </Dropdown>
+        </Card>
+        </Col>
+
+        @* Personal/Bomberos Section *@
+        <Col Xs="24" Sm="12" Lg="8">
+        <div @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })" style="cursor: pointer;">
+            <Card Class="dashboard-card personal-card">
+                <i class="fa-solid fa-people-group card-icon"></i>
+                <h2>PERSONAL</h2>
+                <p>Ver el personal</p>
+            </Card>
+        </div>
+        </Col>
+
+
+        @* Unidades Section *@
+        <Col Xs="24" Sm="12" Lg="8">
+        <div @onclick="@(() => { navigationManager.NavigateTo("/unidades"); })" style="cursor: pointer;">
+            <Card Class="dashboard-card unidades-card">
+                <i class="fa-solid fa-truck card-icon"></i>
+                <h2>UNIDADES</h2>
+                <p>Ver las unidades</p>
+            </Card>
+        </div>
+        </Col>
+
+        @* Firmas Section *@
+        <Col Xs="24" Sm="12" Lg="8">
+        <div @onclick="@(() => { navigationManager.NavigateTo("/incidentes-vehiculos"); })" style="cursor: pointer;">
+            <Card Class="dashboard-card firmas-card">
+                <i class="fa-solid fa-scroll card-icon"></i>
+                <h2>FIRMAS</h2>
+                <p>Ver firmas</p>
+            </Card>
+        </div>
+        </Col>
+
+        @* Reportes Section *@
+        <Col Xs="24" Sm="12" Lg="8">
+        <Card Class="dashboard-card reportes-card">
+            <h2>REPORTES</h2>
+            <div class="btnContA5">
+                <Popover ContentTemplate="@rpt5a" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialSalidas"); })">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                </Popover>
+                <Popover ContentTemplate="@rpt5b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
+                        <i class="fa-solid fa-user-clock"></i>
+                    </button>
+                </Popover>
+                <Popover ContentTemplate="@rpt5c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
+                        <i class="fa-solid fa-id-card"></i>
+                    </button>
+                </Popover>
+                <Popover ContentTemplate="@rpt5d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
+                    <button @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
+                        <img src="imagenes/icons/fire_truck.svg"
+                             alt="Camión de Bomberos"
+                             style="width: 1.5em; height: 1.5em; vertical-align: middle; filter: invert(0) sepia(0) saturate(0) hue-rotate(0deg) brightness(0) contrast(1);" />
+                    </button>
+                </Popover>
+            </div>
+        </Card>
+        </Col>
+
+        @* Departamentos Section *@
+        <Col Xs="24" Sm="12" Lg="8">
+        <Card Class="dashboard-card departamentos-card">
+            <h2 style="color: white;">DEPARTAMENTOS</h2>
+            <div style="display: flex; padding-left:1.46%; align-items: center; justify-content: space-evenly; width: 100%; height: 100%;">
+                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Brigadas"); })">
                     <i class="fa-solid fa-users"></i>
-                </button>
-            </Popover>
-            <Popover ContentTemplate="@art6b" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
+                </Button>
+                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Comunicacion"); })">
                     <i class="fa-solid fa-walkie-talkie"></i>
-                </button>
-            </Popover>
-            <Popover ContentTemplate="@art6c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                <button @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
+                </Button>
+                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Herramientas/Deposito"); })">
                     <i class="fa-solid fa-warehouse"></i>
-                </button>
-            </Popover>
-        </div>
-    </article>
-
-    @* PERSONAL/BOMBEROS *@
-        <a @onclick="@(() => { navigationManager.NavigateTo("/bomberos"); })" style="border-radius: 10px;">
-        <article class="art3-PERSONAL">
-            <h1>PERSONAL</h1>
-            <i class="fa-solid fa-people-group" style="color: white;padding-right: 6px;"></i>
-            <span>Ver el personal</span>
-        </article>
-        </a>    
-        @* UNIDADES *@
-    <a @onclick="@(() => { navigationManager.NavigateTo("/unidades"); })" style="border-radius: 10px;">
-        <article class="art8">
-            <h1 style="color: white">UNIDADES</h1>
-            <i class="fa-solid fa-file-signature" style="color: white;padding-right: 6px;"></i>
-            <span>Ver las unidades</span>
-        </article>
-    </a>
-
-    @* FIRMAS *@
-    <a @onclick="@(() => { navigationManager.NavigateTo("/incidentes-vehiculos"); })" style="border-radius: 10px;">
-        <article class="art9" style="background-color:#2b4f7d">
-            <div class="bomberosArt">
-                <h1>FIRMAS</h1>
-                <i style="position: absolute;left: 5%;top: 50%;color: white;" class="fa-solid fa-scroll"></i>
-                <p style="position: absolute;left: 13%;top: 45%;color: white;font-family: 'Inter', sans-serif;font-size: 1.2vw;">Ver firmas</p>
+                </Button>
             </div>
-        </article>
-    </a>
+        </Card>
+        </Col>
 
-    @* ETICA *@
-    <article class="art11" style="background-color:#952929;margin-bottom: 15% !important;margin-top: -21% !important">
-        <div style="display: flex;padding: 5%;align-items: center; justify-content: space-evenly;height: 100%;">
-            <h1 style="color: white; font-size: 32px;">ÉTICA</h1>
-            <div style="gap: 10px;justify-content: center;display: flex;margin-top: 3% !important;">
-                <Popover ContentTemplate="@art7c" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
-                        <i class="fa-solid fa-user-xmark"></i>
-                    </button>
-                </Popover>
-                <Popover ContentTemplate="@art7d" Placement="@Placement.Bottom" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Hover})">
-                    <button @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </button>
-                </Popover>
+
+        @* Ética Section *@
+        <Col Xs="24" Sm="12" Lg="8">
+        <Card Class="dashboard-card etica-card">
+            <h2>ÉTICA</h2>
+            <div style="gap: 10px; justify-content: center; display: flex; margin-top: 3% !important;">
+                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
+                    <i class="fa-solid fa-user-xmark"></i>
+                </Button>
+                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
+                    <i class="fa-solid fa-user-plus"></i>
+                </Button>
             </div>
-        </div>
-    </article>
+        </Card>
+        </Col>
+    </Row>
 </div>
 
 @code {
-   
+    private bool isOpen;
+    private bool showIncendios;
+    private bool showServicios;
+    private bool showRescates;
 
-
-    // art 5
-    private RenderFragment art5a =
-    @<div>
-        <p>Salidas</p>
-    </div>;
-    private RenderFragment art5b =
-    @<div>
-        <p>Bomberos</p>
-    </div>;
-    private RenderFragment art5c =
-    @<div>
-        <p>Choferes</p>
-    </div>;
-    private RenderFragment art5d =
-    @<div>
-        <p>Moviles</p>
-    </div>;
-
-    // art 6
-    private RenderFragment art6a =
-    @<div>
-        <p>Brigadas</p>
-    </div>;
-    private RenderFragment art6b =
-    @<div>
-        <p>Comunicacion</p>
-    </div>;
-    private RenderFragment art6c =
-    @<div>
-        <p>Deposito</p>
-    </div>;
-
-    // art 7
-    private RenderFragment art7a =
-    @<div>
-        <p>Activos</p>
-    </div>;
-    private RenderFragment art7b =
-    @<div>
-        <p>Inactivos</p>
-    </div>;
-    private RenderFragment art7c =
-    @<div>
-        <p>Sancionados</p>
-    </div>;
-    private RenderFragment art7d =
-    @<div>
-        <p>Ascensos</p>
-    </div>;
-}
-@code {
-    private bool isOpen = false; //  inicializar aquí
-    private bool showIncendios = false; // Inicializar aquí
-    private bool showServicios = false; // Inicializar aquí
-    private bool showRescates = false; 
-
-    private void ToggleDropdown()
-    {
-        isOpen = !isOpen;
-    }
+    private void ToggleDropdown() => isOpen = !isOpen;
 
     private void toggleMenu(string menu)
     {
-        if (menu == "incendios")
+        switch (menu)
         {
-            showIncendios = !showIncendios;
-            showServicios = false; // Asegúrate de cerrar el otro menú
-            showRescates = false;
+            case "incendios":
+                showIncendios = !showIncendios;
+                showServicios = showRescates = false;
+                break;
+            case "servicios":
+                showServicios = !showServicios;
+                showIncendios = showRescates = false;
+                break;
+            case "rescates":
+                showRescates = !showRescates;
+                showIncendios = showServicios = false;
+                break;
         }
-        else if (menu == "servicios")
-        {
-            showServicios = !showServicios;
-            showIncendios = false; // Asegúrate de cerrar el otro menú
-            showRescates = false;
-        }
-        else if (menu == "rescates")
-        {
-            showRescates = !showRescates;
-            showIncendios = false; // Asegúrate de cerrar el otro menú
-            showServicios = false;
     }
-    }
+
+    // Reportes Section
+    private RenderFragment rpt5a =
+    @<div>
+        <p>Salidas</p>
+    </div>;
+    private RenderFragment rpt5b =
+    @<div>
+        <p>Bomberos</p>
+    </div>;
+    private RenderFragment rpt5c =
+    @<div>
+        <p>Choferes</p>
+    </div>;
+    private RenderFragment rpt5d =
+    @<div>
+        <p>Moviles</p>
+    </div>;
 }
