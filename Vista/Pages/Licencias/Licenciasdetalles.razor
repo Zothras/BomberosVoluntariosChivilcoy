@@ -24,7 +24,7 @@
 
     .ant-badge {
         padding: 0 5px !important;
-        font-size: 22px!important;
+        font-size: 22px !important;
     }
 
     .inpt-cont--lbl {
@@ -65,11 +65,11 @@
     .ant-badge {
         margin: 0 !important;
         padding: 0 10px !important;
-        height: 100%!important;
-        width: 100%!important;
-        display: flex!important;
-        align-items: center!important;
-        justify-content: center!important;
+        height: 100% !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
     @@media (max-width: 960px) {
@@ -126,10 +126,10 @@
         align-items: center;
         margin: 1em;
         padding: 0;
-        overflow: auto; 
+        overflow: auto;
     }
 
-    .ant-table-wrapper{
+    .ant-table-wrapper {
         width: 100%;
         height: 100%;
         padding: 0 25px;
@@ -137,29 +137,30 @@
 
     /* sacamos borde superior */
     .ant-table.ant-table-bordered > .ant-table-title {
-        border: none!important;
+        border: none !important;
     }
 
     .template::-webkit-scrollbar {
-        width: 5px!important;
+        width: 5px !important;
     }
+
     .template::-webkit-scrollbar-thumb {
         background: #888;
-        border-radius: 10px!important;
+        border-radius: 10px !important;
     }
 
     .ant-table-title {
-        padding: 16px 0!important;
+        padding: 16px 0 !important;
     }
 
-    .ant-spin-container{
-        padding: 5px 0!important;
+    .ant-spin-container {
+        padding: 5px 0 !important;
     }
 
-    .ant-dropdown-trigger{
+    .ant-dropdown-trigger {
         height: 32px !important;
     }
-    
+
     .ant-table-tbody > tr.ant-table-row.Aprobada > td {
         background-color: rgb(209, 255, 207) !important;
     }
@@ -176,7 +177,7 @@
 
 <div class="template">
     <Table Class="Tabla" DataSource="LicenciasActivasVM" PageSize="20" Responsive Style="border: none;width: 100%;"
-    RowClassName="@(c => c.Data.EstadoLicencia.ToString())">
+           RowClassName="@(c => c.Data.EstadoLicencia.ToString())">
         <TitleTemplate>
             <div class="botonesCont">
                 <div class="inpt-cont-inline">
@@ -216,11 +217,11 @@
                             </div>
                         </ChildContent>
                     </Dropdown>
-                 </div>
-             </div>
-         </TitleTemplate>
-         <ColumnDefinitions Context="muestra">
-             <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
+                </div>
+            </div>
+        </TitleTemplate>
+        <ColumnDefinitions Context="muestra">
+            <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
             <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
             <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias" Sortable>
@@ -245,8 +246,12 @@
                     <span style="background-color:@color; padding: 0 24px; width: 100px; display: inline-block; text-align: center;">@muestra.DuracionEnDias</span>
                 </Template>
             </PropertyColumn>
-             <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia" Sortable></PropertyColumn>
-             <PropertyColumn Title="Estado" Property="c => c.EstadoLicencia" Sortable Filterable>
+
+            <PropertyColumn Title="Tipo"
+                            Property="@(c => c.TipoLicencia.GetDisplayName())"
+                            Sortable="true" />
+
+            <PropertyColumn Title="Estado" Property="c => c.EstadoLicencia" Sortable Filterable>
                 <Template>
                     @{
                         if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
@@ -422,7 +427,7 @@
         _visibleAgregar = true;
         await Init();
     }
-    
+
     public void Dispose()
     {
         Context?.Dispose();

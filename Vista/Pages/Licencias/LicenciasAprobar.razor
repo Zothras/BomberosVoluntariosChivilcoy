@@ -13,36 +13,43 @@
 
     .ant-table-row:hover > td {
         background-color: white !important;
-
     }
 
-    .delete
-    {
-        text-align:right;
+    .delete {
+        text-align: right;
     }
 </style>
 <div>
     <Table DataSource="LicenciasActivasVM" Bordered Responsive Size="TableSize.Small">
+
         <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy"></PropertyColumn>
-            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy"></PropertyColumn>
+
+        <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy"></PropertyColumn>
+
+        <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy"></PropertyColumn>
+
         <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias"></PropertyColumn>
-        <PropertyColumn Title="Tipo" Property="c=>c.TipoLicencia"></PropertyColumn>
+
+        <PropertyColumn Title="Tipo"
+                        Property="@(c => c.TipoLicencia.GetDisplayName())" />
+
         <PropertyColumn Title="Estado" Property="c=>c.EstadoLicencia"></PropertyColumn>
+
         <ActionColumn Title="Acciones" Style="display:flex;justify-content:space-around;">
             <Popconfirm Title="¿Quiere aprobar esta licencia?"
-                OnConfirm="()=> AprobarLicencia(context.LicenciaId)"
-                OkText="Si"
-                CancelText="No">
-                    <i class="fa-solid fa-check" style="color: #40c011;cursor: pointer;"></i>  
+                        OnConfirm="()=> AprobarLicencia(context.LicenciaId)"
+                        OkText="Si"
+                        CancelText="No">
+                <i class="fa-solid fa-check" style="color: #40c011;cursor: pointer;"></i>
             </Popconfirm>
             <Popconfirm Title="Desea Rechazar Licencia?"
                         OnConfirm="()=> RechazarLicencia(context.LicenciaId)"
                         OkText="Si"
                         CancelText="No">
-                    <i class="fa-solid fa-trash" style="color: red ;cursor: pointer;"></i>
+                <i class="fa-solid fa-trash" style="color: red ;cursor: pointer;"></i>
             </Popconfirm>
         </ActionColumn>
+
     </Table>
 </div>
 
@@ -139,7 +146,7 @@
         StateHasChanged();
         await message.Success("Licencia Aprobada!");
     }
-    //Elimina la licencia que esta en pendiente 
+    //Elimina la licencia que esta en pendiente
     private async Task RechazarLicencia(int IdLicencia)
     {
         var licenciaARechazar = await Context.Licencias.SingleOrDefaultAsync(l => l.LicenciaId == IdLicencia);
