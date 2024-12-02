@@ -1,5 +1,4 @@
-﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal;
-@using Vista.Helpers;
+﻿@using Vista.Helpers;
 @inject NavigationManager navigationManager
 @page "/"
 
@@ -286,7 +285,7 @@
         <Card Class="dashboard-card salidas-card">
             <i class="fa-solid fa-handshake-angle card-icon"></i>
             <h2>Salidas</h2>
-            <Dropdown Visible="@isOpen" OnVisibleChange="@(visible => isOpen = visible)">
+            <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                 <Overlay>
                     <Menu Class="salidas-menu">
                         <MenuItemGroup Title="Tipos de Salidas">
