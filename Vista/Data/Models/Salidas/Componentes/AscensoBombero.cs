@@ -8,8 +8,8 @@ namespace Vista.Data.Models.Salidas.Componentes
     public class AscensoBombero
     {
         public int AscensoId { get; set; }
-        
-        public DateOnly FechaAscenso { get; set; }
+
+        public DateOnly FechaAscenso { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
         [StringLength(255)]
         public string? Descripcion { get; set; }
