@@ -110,11 +110,18 @@
     {
         public Bombero PersonalAfectado { get; set; }
         public string NombreYApellido { get; set; }
+
+        [Required(ErrorMessage = "La fecha de ascenso es obligatoria.")]
         public DateOnly FechaAscenso { get; set; }
+
         public string Descripcion { get; set; }
         public EscalafonJerarquico GradoAntiguo { get; set; }
         public EscalafonJerarquico GradoAscenso { get; set; }
+
+        [Required(ErrorMessage = "El número de libro es obligatorio.")]
         public int NumeroLibro { get; set; }
+
+        [Required(ErrorMessage = "El número de acta es obligatorio.")]
         public int NumeroActa { get; set; }
     }
 
