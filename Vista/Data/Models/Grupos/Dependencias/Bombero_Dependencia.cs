@@ -1,11 +1,12 @@
 ﻿using Vista.Data.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using Vista.Data.Models.Personales;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Grupos.Dependencias
 {
-    public class BomberoDependencia
+    public class Bombero_Dependencia
     {
-        public int BomberoDependenciaId { get; set; }
+        public int Bombero_DependenciaId { get; set; }
         public int? PersonaId { get; set; }
         [ForeignKey(nameof(PersonaId))]
         public Bombero? Bombero { get; set; }

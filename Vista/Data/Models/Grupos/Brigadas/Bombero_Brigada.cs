@@ -1,6 +1,8 @@
-﻿namespace Vista.Data.Models.Personales
+﻿using Vista.Data.Models.Personales;
+
+namespace Vista.Data.Models.Grupos.Brigadas
 {
-    public class BomberoBrigada
+    public class Bombero_Brigada
     {
         public int BomberoId { get; set; }
         public Bombero Bombero { get; set; }

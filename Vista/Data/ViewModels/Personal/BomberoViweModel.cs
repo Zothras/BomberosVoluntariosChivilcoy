@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Vista.Data.Enums;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Grupos.Brigadas;
 
 namespace Vista.Data.ViewModels.Personal
 {
@@ -36,8 +36,8 @@ namespace Vista.Data.ViewModels.Personal
         public string? Direccion { get; set; }
         [StringLength(255)]
         public string? LugarNacimiento { get; set; }
-        [StringLength(255)]
-        public string? Documento { get; set; }
+        [Required]
+        public int Documento { get; set; }
         [StringLength(255)]
         public string? Observaciones { get; set; }
         [StringLength(255)]

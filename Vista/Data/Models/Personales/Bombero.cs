@@ -4,6 +4,9 @@ using Vista.Data.Models.Salidas.Planillas;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Vista.Data.Models.Grupos.Dependencias;
+using Vista.Data.Models.Grupos.Brigadas;
+using Vista.Data.Models.Imagenes;
 
 namespace Vista.Data.Models.Personales
 {
@@ -22,7 +25,7 @@ namespace Vista.Data.Models.Personales
 
         public List<Firma>? Firmas { get; set; }
 
-        public ICollection<BomberoBrigada> BomberoBrigadas { get; set; } = new List<BomberoBrigada>();
+        public ICollection<Bombero_Brigada> BomberoBrigadas { get; set; } = new List<Bombero_Brigada>();
 
         public int? BrigadaId { get; set; }
         public Brigada? Brigada { get; set; }
@@ -34,7 +37,7 @@ namespace Vista.Data.Models.Personales
 
         public List<VehiculoSalida>? VehiculosEncargado { get; set; }
 
-        public BomberoDependencia? Dependencia { get; set; }
+        public Bombero_Dependencia? Dependencia { get; set; }
 
         public List<Incidente> Incidentes { get; set; } = new();
 

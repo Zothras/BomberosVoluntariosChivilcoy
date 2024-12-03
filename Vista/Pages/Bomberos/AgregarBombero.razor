@@ -9,7 +9,10 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 @using System.ComponentModel
+@using Vista.Data.Models.Grupos.Brigadas
+
 @page "/bomberos/agregar"
+
 <style>
     /* tile uploaded pictures */
     .upload-list-inline .ant-upload-list-item {
@@ -69,6 +72,7 @@
         border-radius: 4px 4px !important;
         border-color: #1890ff !important;
     }
+
     .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
         text-decoration: none;
         background: #40a9ff !important;
@@ -80,8 +84,8 @@
         background: #40a9ff !important;
     }
 
-    
-    
+
+
 
     #textoLabel {
         color: black;
@@ -379,8 +383,8 @@
         public string? Direccion { get; set; }
         [StringLength(255)]
         public string? LugarNacimiento { get; set; }
-        [StringLength(255)]
-        public string? Documento { get; set; }
+        [Required]
+        public int Documento { get; set; }
         [StringLength(255)]
         public string? Observaciones { get; set; }
         [StringLength(255)]

@@ -15,6 +15,10 @@
 @using Vista.Components.Forms.Salidas.General;
 @using Vista.Data.Models.Salidas.Planillas.Servicios;
 
+<head>
+    <link href="css/salida.css" rel="stylesheet" />
+</head>
+
 <Form Model="@FalsaAlarmaViewModel"
       LabelColSpan="8"
       WrapperColSpan="16"
@@ -59,18 +63,18 @@
                 {
                     @*Bomberos*@
                     <Personal Model="@FalsaAlarmaViewModel"
-                    animationClass="@animationClass" />
+                              animationClass="@animationClass" />
                 }
                 else if (current == 4)
                 {
                     <label class="inpt-cont--lbl">Detalles de la falsa alarma</label>
-                    <textarea class="ant-input" 
-                            placeholder="Detalles" 
-                            id="ant-blazor-b6465f2c-86ae-4512-ae23-1434fb9259f7"
-                            rows="2" name="Model.Descripcion" 
-                            _bl_35968b19-a5b4-486f-9ea7-dca1d2d9f3aa=""
-                             @bind="@FalsaAlarmaViewModel.Detalles">
-                    </textarea>
+                    <textarea class="ant-input"
+                              placeholder="Detalles"
+                              id="ant-blazor-b6465f2c-86ae-4512-ae23-1434fb9259f7"
+                              rows="2" name="Model.Descripcion"
+                              _bl_35968b19-a5b4-486f-9ea7-dca1d2d9f3aa=""
+                              @bind="@FalsaAlarmaViewModel.Detalles">
+                        </textarea>
                 }
             </div>
         </Flex>

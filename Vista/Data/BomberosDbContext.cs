@@ -5,16 +5,31 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using Vista.Data.Models.Salidas.Planillas.Incendios;
 using Vista.Data.Models.Salidas.Planillas.Servicios;
+using Vista.Data.Models.Grupos.Dependencias;
+using Vista.Data.Models.Grupos.Brigadas;
+using Vista.Data.Models.Grupos.FuerzasIntervinientes;
+using Vista.Data.Models.Imagenes;
 
 namespace Vista.Data
 {
     public class BomberosDbContext : DbContext
     {
+        // Personas
         public DbSet<Bombero> Bomberos { get; set; }
+        public DbSet<Damnificado> Damnificados { get; set; }
+
+        // Personas Assets
+        public DbSet<Contacto> Contactos { get; set; }
+
+        // Dependencias (Departamentos)
+        public DbSet<Dependencia> Dependencias { get; set; }
+
+        // Vehiculos
         public DbSet<Movil> Moviles { get; set; }
         public DbSet<VehiculoPersonal> VehiculosPersonales { get; set; }
-        public DbSet<Contacto> Contactos { get; set; }
-        public DbSet<Damnificado> Damnificados { get; set; }
+        
+        // Imagenes
+        
         public DbSet<ImagenBombero> ImagenesBomberos { get; set; }
         public DbSet<ImagenVehiculo> ImagenesVehiculo { get; set; }
         public DbSet<SeguroSalida> SegurosSalidas { get; set; }
@@ -46,7 +61,7 @@ namespace Vista.Data
         public DbSet<ServicioEspecialColaboraciónFuerzasSeguridad> ServicioEspecialColaboraciónFuerzasSeguridad { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
-        public DbSet<BomberoBrigada> bomberoBrigadas { get; set; }
+        public DbSet<Bombero_Brigada> bomberoBrigadas { get; set; }
         public DbSet<MovilSalida> MovilesSalida { get; set; }
         public DbSet<BomberoSalida> BomberosSalida { get; set; }
         public DbSet<Limpieza> Limpiezas { get; set; }
@@ -64,8 +79,8 @@ namespace Vista.Data
 
         //Fuerzas
 
-        public DbSet<Fuerza> Fuerzas { get; set; }
-        public DbSet<FuerzaInterviniente> fuerzaIntervinientes { get; set; }
+        public DbSet<FuerzaInterviniente> Fuerzas { get; set; }
+        public DbSet<Salida_FuerzaInterviniente> fuerzaIntervinientes { get; set; }
 
         //propiedad experimental
         public DbSet<Salida> Salidas { get; set; }
@@ -76,15 +91,15 @@ namespace Vista.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BomberoBrigada>()
+            modelBuilder.Entity<Bombero_Brigada>()
             .HasKey(bb => new { bb.BomberoId, bb.BrigadaId }); // Configura la clave primaria compuesta
 
-            modelBuilder.Entity<BomberoBrigada>()
+            modelBuilder.Entity<Bombero_Brigada>()
                 .HasOne(bb => bb.Bombero)
                 .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Bombero tienes una colección de BomberoBrigada
                 .HasForeignKey(bb => bb.BomberoId);
 
-            modelBuilder.Entity<BomberoBrigada>()
+            modelBuilder.Entity<Bombero_Brigada>()
                 .HasOne(bb => bb.Brigada)
                 .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Brigada tienes una colección de BomberoBrigada
                 .HasForeignKey(bb => bb.BrigadaId);
@@ -114,10 +129,7 @@ namespace Vista.Data
             modelBuilder.Entity<Incidente>()
                 .ToTable("Incidente");
 
-            modelBuilder.Entity<Dependencia>()
-                .ToTable("Dependencia");
-
-            modelBuilder.Entity<BomberoDependencia>()
+            modelBuilder.Entity<Bombero_Dependencia>()
                 .ToTable("BomberoDependencia");
 
             modelBuilder.Entity<Licencia>()

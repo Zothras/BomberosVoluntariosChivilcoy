@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Imagenes
 {
     public abstract class Imagen
     {
