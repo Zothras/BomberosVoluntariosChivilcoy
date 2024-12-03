@@ -1,9 +1,11 @@
 ﻿@page "/Dependencias"
 @using Vista.Data.Models.Dependencias
+@using Vista.Data.ViewModels.Personal
 
 @*Servicios Utilizados*@
 @using Vista.Services
 @inject IDependenciaService DependenciaService
+@inject IBomberoService BomberoService
 
 <style>
     .template {
@@ -147,7 +149,13 @@
            DataSource="@DependenciaViewModels"
            @bind-PageIndex="_pageIndex"
            @bind-PageSize="_pageSize"
+           Title="Dependencias"
            Responsive>
+        <TitleTemplate>
+            <Space>
+                <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">Añadir Dependencia</Button>
+            </Space>
+        </TitleTemplate>
         <ColumnDefinitions>
             <PropertyColumn Title="Número Dependencia" Property="d=>d.Id" Sortable />
             <PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
@@ -159,12 +167,40 @@
                     </SpaceItem>
                 </Space>
             </ActionColumn>
-
         </ColumnDefinitions>
     </Table>
 </div>
 
+@*Modal para Añadir Dependencias*@
+<Modal @bind-Visible="_modalAñadirVisible" Title="Añadir Dependencia" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddDependencia">
+    <Form Model="newDependencia">
+        <FormItem Label="Nombre">
+            <Input @bind-Value="newDependencia.Nombre" />
+        </FormItem>
+        <FormItem Label="Encargado">
+            <Select TItem="BomberoViweModel"
+                    TItemValue="BomberoViweModel"
+                    DataSource="@bomberosTodos"
+                    @bind-Value="newDependencia.Encargado"
+                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                    Placeholder="Seleccione un bombero"
+                    DefaultActiveFirstOption="false"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </FormItem>
+    </Form>
+</Modal>
+
 @code {
+    //Lista con todos los bomberos
+    private List<BomberoViweModel> bomberosTodos = new();
+
+    // Variables
+    private DependenciaViewModelTable newDependencia = new();
+
+    // Modals
+    private bool _modalAñadirVisible = false;
+
     // Lista de Dependencias
     private List<Dependencia> Dependencias = new List<Dependencia>();
 
@@ -179,11 +215,13 @@
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = null!;
-        public string EncargadoApellidoYNombre { get; set; } = null!;
+        public string? EncargadoApellidoYNombre { get; set; }
+        public BomberoViweModel Encargado { get; set; } = null!;
     }
 
     protected override async Task OnInitializedAsync()
     {
+        bomberosTodos = await BomberoService.GetAllBomberosAsync(); // Obtiene todos los Bomberos.
         Dependencias = await DependenciaService.ObtenerTodasLasDependenciasAsync();
         DependenciaViewModels = await MapearDependenciasAsync(Dependencias);
         StateHasChanged();
@@ -197,5 +235,21 @@
                 Nombre = d.NombreDependencia,
                 EncargadoApellidoYNombre = $"{d.Encargado.Apellido}, {d.Encargado.Nombre}"
             }).ToList());
+    }
+
+    private async Task AddDependencia()
+    {
+        Bombero BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(newDependencia.Encargado.NumeroLegajo);
+
+        var dependencia = new Dependencia
+            {
+                NombreDependencia = newDependencia.Nombre,
+                Encargado = BomberoEncargado
+            };
+
+        await DependenciaService.AgregarDependenciaAsync(dependencia);
+        newDependencia = new DependenciaViewModelTable();
+        _modalAñadirVisible = false;
+        await OnInitializedAsync();
     }
 }
