@@ -59,7 +59,7 @@
             max-width: 100% !important;
         }
     }
-    
+
     .boton_p {
         background-color: #732D2D !important;
         color: white !important;
@@ -67,7 +67,7 @@
 
 </style>
 
-<div class="template" >
+<div class="template">
     <Table @ref="table"
            TItem="Bombero"
            DataSource="@bomberos"
@@ -123,15 +123,15 @@
                         <Button class="boton_p">Acciones<Icon Type="down" /></Button>
                     </ChildContent>
                 </Dropdown>
-                    
+
             </ActionColumn>
         </ColumnDefinitions>
         @*--------------------------------------------Modal-----------------------------------------------*@
     </Table>
     <div style="display: flex;justify-content: flex-end;margin-top: -3.5em; gap: 10px;">
-         <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
+        <Button OnClick="@(() => { navigationManager.NavigateTo($"/bomberos/agregar"); })">Agregar Bombero</Button>
     </div>
- </div>
+</div>
 
 <Modal Title="@("Bombero")"
        Visible="@_visible"
@@ -285,7 +285,7 @@
             <Select TItem="Brigada"
                     TItemValue="string"
                     DataSource="@brigadas"
-            @bind-Value="@bomberoVM.NombreBrigada"
+                    @bind-Value="@bomberoVM.NombreBrigada"
                     DefaultValue="@bomberoVM.NombreBrigada"
                     ValueName="@nameof(Brigada.Nombre)"
                     LabelName="@nameof(Brigada.Nombre)"
@@ -455,8 +455,8 @@
         public string Direccion { get; set; }
         [StringLength(255)]
         public string LugarNacimiento { get; set; }
-        [StringLength(255)]
-        public string Documento { get; set; }
+        [Required]
+        public int Documento { get; set; }
         [StringLength(255)]
         public string Observaciones { get; set; }
         [StringLength(255)]
