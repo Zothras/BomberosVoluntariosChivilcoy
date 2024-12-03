@@ -15,6 +15,10 @@
 @using Vista.Components.Forms.Salidas.General;
 @using Vista.Data.Models.Salidas.Planillas.Incendios;
 
+<head>
+    <link href="css/salida.css" rel="stylesheet" />
+</head>
+
 <Form Model="@salidaIncendioViviendaVista"
       LabelColSpan="8"
       WrapperColSpan="16"
@@ -230,7 +234,7 @@
                     //Informacion de salida
                     IncendioVivienda salidaIncendioVivienda = new()
                         {
-                            
+
                             Descripcion = salidaIncendioViviendaVista.Descripcion,
                             HoraSalida = salidaIncendioViviendaVista.HoraSalida,
                             HoraLlegada = salidaIncendioViviendaVista.HoraLLegada,

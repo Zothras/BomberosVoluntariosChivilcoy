@@ -13,6 +13,10 @@
 @*Componentes Generales*@
 @using Vista.Components.Forms.Salidas.General;
 
+<head>
+    <link href="css/salida.css" rel="stylesheet" />
+</head>
+
 <Form Model="@accidenteViewModels"
       LabelColSpan="8"
       WrapperColSpan="16"
@@ -46,7 +50,7 @@
                 {
                     @*Solicitante | Receptor | Damnificado*@
                     <Participantes Model="@accidenteViewModels"
-                    animationClass="@animationClass" />
+                                   animationClass="@animationClass" />
                 }
                 else if (current == 2)
                 {
@@ -160,7 +164,7 @@
     public List<MovilSalidaViewModels> MovilesSalidasL = new();
     public List<AccidenteViewModels> VehiculosAfectdosAcci = new();
     private Form<MovilSalidaViewModels> _form1;
-    
+
 
     AccidenteViewModels _model;
 

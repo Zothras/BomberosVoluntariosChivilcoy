@@ -15,6 +15,10 @@
 @using Vista.Components.Forms.Salidas.General;
 @using Vista.Data.Models.Salidas.Planillas.Servicios;
 
+<head>
+    <link href="css/salida.css" rel="stylesheet" />
+</head>
+
 <Form Model="@modelServicioCapacitacion"
       LabelColSpan="8"
       WrapperColSpan="16"
@@ -77,7 +81,7 @@
                             <!--!-->
                             <!--!-->
                             <textarea class="ant-input" placeholder="Descripcion" id="ant-blazor-b6465f2c-86ae-4512-ae23-1434fb9259f7" rows="2" name="Model.Descripcion" _bl_35968b19-a5b4-486f-9ea7-dca1d2d9f3aa="">
-                                    </textarea>
+                                            </textarea>
                         }
                     </div>
                     <div class="inpt-cont">
@@ -91,7 +95,7 @@
                         <!--!-->
                         <!--!-->
                         <textarea class="ant-input" placeholder="Descripcion" id="ant-blazor-b6465f2c-86ae-4512-ae23-1434fb9259f7" rows="2" name="Model.Descripcion" _bl_35968b19-a5b4-486f-9ea7-dca1d2d9f3aa="">
-                                            </textarea>
+                                                    </textarea>
                     }
                 }
             </div>
@@ -122,7 +126,7 @@
 </Form>
 
 @code {
-    private ServicioEspecialCapacitacionViewModel modelServicioCapacitacion = new ();
+    private ServicioEspecialCapacitacionViewModel modelServicioCapacitacion = new();
 
     @*Steps*@
 
@@ -205,7 +209,7 @@
                     ApellidoSolicitante = modelServicioCapacitacion.ApellidoSolicitante,
                     DniSolicitante = modelServicioCapacitacion.DniSolicitante,
                     TelefonoSolicitante = modelServicioCapacitacion.TelefonoSolicitante,
-                    //Propio de Capacitacion 
+                    //Propio de Capacitacion
                     NivelDeCapacitacion = modelServicioCapacitacion.NivelDeCapacitacion,
                     TipoCapacitacion = modelServicioCapacitacion.TipoCapacitacion,
                     NivelDeCapacitacionOtro = modelServicioCapacitacion.NivelDeCapacitacionOtro,
