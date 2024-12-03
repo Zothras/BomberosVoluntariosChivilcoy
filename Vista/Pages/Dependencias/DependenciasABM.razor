@@ -1,0 +1,201 @@
+﻿@page "/Dependencias"
+@using Vista.Data.Models.Dependencias
+
+@*Servicios Utilizados*@
+@using Vista.Services
+@inject IDependenciaService DependenciaService
+
+<style>
+    .template {
+        width: 100%;
+        height: 100%;
+        max-width: 97%;
+        min-width: 400px;
+        max-height: 100vh;
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1em;
+        padding: 0;
+        overflow: auto;
+    }
+
+    .ant-table {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .ant-table-title {
+        background-color: #A63333
+    }
+
+    .ant-table-thead .ant-table-cell {
+        background-color: #A63333 !important;
+        color: white !important;
+        font-weight: bold;
+    }
+
+    .ant-table-cell {
+        padding: 16px !important;
+    }
+
+    .title-template-container {
+        background-color: #A63333;
+        padding: 16px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .search-input {
+        width: 250px;
+    }
+
+        .search-input input {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+        }
+
+            .search-input input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+    .add-button {
+        background-color: #4CAF50 !important;
+        border-color: #438E46 !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    @@media (max-width: 960px) {
+        .template {
+            padding: 10px;
+        }
+
+        .title-template-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-input,
+        .add-button {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ant-form-horizontal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+
+        .ant-form-horizontal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+        }
+
+    .ant-form-item {
+        box-sizing: border-box;
+        margin: 0;
+        margin-bottom: 0px;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        font-feature-settings: 'tnum';
+        margin-bottom: 8px !important;
+        vertical-align: top;
+        font-weight: bold;
+    }
+
+    .ant-modal-content {
+        position: relative;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 0;
+        border-radius: 2px;
+        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        pointer-events: auto;
+        border: 1px solid red !important;
+    }
+</style>
+
+<div class="template">
+    <Table TItem="DependenciaViewModelTable"
+           DataSource="@DependenciaViewModels"
+           @bind-PageIndex="_pageIndex"
+           @bind-PageSize="_pageSize"
+           Responsive>
+        <ColumnDefinitions>
+            <PropertyColumn Title="Número Dependencia" Property="d=>d.Id" Sortable />
+            <PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
+            <PropertyColumn Title="Encargado" Property="d=>d.EncargadoApellidoYNombre" Sortable />
+
+            <ActionColumn Align=ColumnAlign.Center>
+                <Space>
+                    <SpaceItem>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+
+        </ColumnDefinitions>
+    </Table>
+</div>
+
+@code {
+    // Lista de Dependencias
+    private List<Dependencia> Dependencias = new List<Dependencia>();
+
+    // Variables de Tamaño de la Tabla
+    int _pageIndex = 1;
+    int _pageSize = 6;
+
+    // Lista de ViewModels de Dependencia
+    private List<DependenciaViewModelTable> DependenciaViewModels = new List<DependenciaViewModelTable>();
+
+    public class DependenciaViewModelTable
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = null!;
+        public string EncargadoApellidoYNombre { get; set; } = null!;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Dependencias = await DependenciaService.ObtenerTodasLasDependenciasAsync();
+        DependenciaViewModels = await MapearDependenciasAsync(Dependencias);
+        StateHasChanged();
+    }
+
+    public async Task<List<DependenciaViewModelTable>> MapearDependenciasAsync(List<Dependencia> dependencias)
+    {
+        return await Task.Run(() => dependencias.Select(d => new DependenciaViewModelTable
+            {
+                Id = d.DependenciaId,
+                Nombre = d.NombreDependencia,
+                EncargadoApellidoYNombre = $"{d.Encargado.Apellido}, {d.Encargado.Nombre}"
+            }).ToList());
+    }
+}

@@ -28,12 +28,17 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAntDesign();
 builder.Services.AddHostedService<InitData>();
+
+// Servicios Scoped
 builder.Services.AddScoped<IBomberoService, BomberoService>();
 builder.Services.AddScoped<IBrigadaService, BrigadaService>();
 builder.Services.AddScoped<IDepositoService, DepositoService>();
 builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<ISalidaService, SalidaService>();
 builder.Services.AddScoped<IParteService, ParteService>();
+builder.Services.AddScoped<IDependenciaService, DependenciaService>();
+
+// Servicios HttpClient
 builder.Services.AddHttpClient<GeorefService>();
 
 // Configurar la localización
