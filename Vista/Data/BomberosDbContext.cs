@@ -5,16 +5,28 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using Vista.Data.Models.Salidas.Planillas.Incendios;
 using Vista.Data.Models.Salidas.Planillas.Servicios;
+using Vista.Data.Models.Dependencias;
 
 namespace Vista.Data
 {
     public class BomberosDbContext : DbContext
     {
+        // Personas
         public DbSet<Bombero> Bomberos { get; set; }
+        public DbSet<Damnificado> Damnificados { get; set; }
+
+        // Personas Assets
+        public DbSet<Contacto> Contactos { get; set; }
+
+        // Dependencias (Departamentos)
+        public DbSet<Dependencia> Dependencias { get; set; }
+
+        // Vehiculos
         public DbSet<Movil> Moviles { get; set; }
         public DbSet<VehiculoPersonal> VehiculosPersonales { get; set; }
-        public DbSet<Contacto> Contactos { get; set; }
-        public DbSet<Damnificado> Damnificados { get; set; }
+        
+        // Imagenes
+        
         public DbSet<ImagenBombero> ImagenesBomberos { get; set; }
         public DbSet<ImagenVehiculo> ImagenesVehiculo { get; set; }
         public DbSet<SeguroSalida> SegurosSalidas { get; set; }
@@ -114,10 +126,7 @@ namespace Vista.Data
             modelBuilder.Entity<Incidente>()
                 .ToTable("Incidente");
 
-            modelBuilder.Entity<Dependencia>()
-                .ToTable("Dependencia");
-
-            modelBuilder.Entity<BomberoDependencia>()
+            modelBuilder.Entity<Bombero_Dependencia>()
                 .ToTable("BomberoDependencia");
 
             modelBuilder.Entity<Licencia>()

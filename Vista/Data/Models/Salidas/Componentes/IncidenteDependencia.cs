@@ -1,5 +1,5 @@
-﻿using Vista.Data.Models.Personales;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Vista.Data.Models.Dependencias;
 
 namespace Vista.Data.Models.Salidas.Componentes
 {
