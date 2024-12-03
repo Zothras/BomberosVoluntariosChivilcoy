@@ -2,11 +2,11 @@
 @using Vista.Services;
 @inject IBrigadaService BrigadaService;
 
-
 @using AntDesign
 @using AntDesign.TableModels
 @using System.Linq
 @using Microsoft.AspNetCore.Components.Web
+@using Vista.Data.Models.Grupos.Brigadas
 @inject NavigationManager NavigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 
@@ -465,7 +465,7 @@
             if (!exists)
             {
                 // Crea una nueva instancia de BomberoBrigada
-                var bomberoBrigada = new BomberoBrigada
+                var bomberoBrigada = new Bombero_Brigada
                 {
                         BomberoId = bombero.NumeroLegajo,
                         BrigadaId = brigadaId

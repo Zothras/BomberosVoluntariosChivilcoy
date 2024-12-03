@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using Vista.Data;
-using Vista.Data.Models.Dependencias;
+using Vista.Data.Models.Grupos.Dependencias;
 
 namespace Vista.Services
 {

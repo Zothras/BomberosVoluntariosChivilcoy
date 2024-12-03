@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Vista.Data.Enums;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Grupos.Brigadas;
 
 namespace Vista.Data.ViewModels.Personal
 {

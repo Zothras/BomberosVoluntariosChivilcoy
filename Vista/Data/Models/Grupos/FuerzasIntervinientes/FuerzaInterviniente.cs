@@ -1,6 +1,6 @@
-﻿namespace Vista.Data.Models.Personales
+﻿namespace Vista.Data.Models.Grupos.FuerzasIntervinientes
 {
-    public class Fuerza
+    public class FuerzaInterviniente
     {
         public int Id { get; set; }
         public string? NombreFuerza { get; set; }

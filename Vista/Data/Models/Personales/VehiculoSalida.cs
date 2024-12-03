@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Enums;
+using Vista.Data.Models.Imagenes;
 
 namespace Vista.Data.Models.Personales
 {

@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
+@using Vista.Data.Models.Grupos.Brigadas
 @page "/brigadas/{BrigadaId:int?}"
 
 <h1 class="text-center">Brigada Nº @BrigadaId</h1>

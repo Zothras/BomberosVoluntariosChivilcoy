@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Models.Personales;
 
-namespace Vista.Data.Models.Dependencias
+namespace Vista.Data.Models.Grupos.Dependencias
 {
     public class Dependencia
     {

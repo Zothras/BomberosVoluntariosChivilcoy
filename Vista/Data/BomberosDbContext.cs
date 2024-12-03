@@ -5,7 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using Vista.Data.Models.Salidas.Planillas.Incendios;
 using Vista.Data.Models.Salidas.Planillas.Servicios;
-using Vista.Data.Models.Dependencias;
+using Vista.Data.Models.Grupos.Dependencias;
+using Vista.Data.Models.Grupos.Brigadas;
+using Vista.Data.Models.Grupos.FuerzasIntervinientes;
+using Vista.Data.Models.Imagenes;
 
 namespace Vista.Data
 {
@@ -58,7 +61,7 @@ namespace Vista.Data
         public DbSet<ServicioEspecialColaboraciónFuerzasSeguridad> ServicioEspecialColaboraciónFuerzasSeguridad { get; set; }
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
-        public DbSet<BomberoBrigada> bomberoBrigadas { get; set; }
+        public DbSet<Bombero_Brigada> bomberoBrigadas { get; set; }
         public DbSet<MovilSalida> MovilesSalida { get; set; }
         public DbSet<BomberoSalida> BomberosSalida { get; set; }
         public DbSet<Limpieza> Limpiezas { get; set; }
@@ -76,8 +79,8 @@ namespace Vista.Data
 
         //Fuerzas
 
-        public DbSet<Fuerza> Fuerzas { get; set; }
-        public DbSet<FuerzaInterviniente> fuerzaIntervinientes { get; set; }
+        public DbSet<FuerzaInterviniente> Fuerzas { get; set; }
+        public DbSet<Salida_FuerzaInterviniente> fuerzaIntervinientes { get; set; }
 
         //propiedad experimental
         public DbSet<Salida> Salidas { get; set; }
@@ -88,15 +91,15 @@ namespace Vista.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BomberoBrigada>()
+            modelBuilder.Entity<Bombero_Brigada>()
             .HasKey(bb => new { bb.BomberoId, bb.BrigadaId }); // Configura la clave primaria compuesta
 
-            modelBuilder.Entity<BomberoBrigada>()
+            modelBuilder.Entity<Bombero_Brigada>()
                 .HasOne(bb => bb.Bombero)
                 .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Bombero tienes una colección de BomberoBrigada
                 .HasForeignKey(bb => bb.BomberoId);
 
-            modelBuilder.Entity<BomberoBrigada>()
+            modelBuilder.Entity<Bombero_Brigada>()
                 .HasOne(bb => bb.Brigada)
                 .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Brigada tienes una colección de BomberoBrigada
                 .HasForeignKey(bb => bb.BrigadaId);

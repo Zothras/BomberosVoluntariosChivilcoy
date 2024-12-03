@@ -1,8 +1,8 @@
 ﻿using Vista.Data.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
-using Vista.Data.Models.Dependencias;
+using Vista.Data.Models.Personales;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Grupos.Dependencias
 {
     public class Bombero_Dependencia
     {
