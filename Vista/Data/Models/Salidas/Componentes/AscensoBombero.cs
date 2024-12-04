@@ -9,21 +9,22 @@ namespace Vista.Data.Models.Salidas.Componentes
     {
         public int AscensoId { get; set; }
 
-        public DateOnly FechaAscenso { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly FechaAscenso { get; set; }
+
 
         [StringLength(255)]
         public string? Descripcion { get; set; }
+
         public int NumeroLibero { get; set; }
+
         public int NumeroActa { get; set; }
 
         public EscalafonJerarquico  GradoAntiguo { get; set; }
 
         public EscalafonJerarquico GradoAscenso { get; set; }
+
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]
-        public Bombero PersonalAfectado { get; set; }
-
+        public Bombero PersonalAfectado { get; set; } = null!;
     }
-
-
 }
