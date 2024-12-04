@@ -19,14 +19,13 @@
         background: #fff;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
         margin: 1em;
-        padding: 0;
+        padding: 10px;
         overflow: auto;
     }
 
     .ant-table {
+        width: 100%;
         background-color: white;
         border-radius: 8px;
         overflow: hidden;
@@ -84,26 +83,10 @@
     }
 
     @@media (max-width: 960px) {
-        .template {
-            padding: 10px;
-        }
-
         .title-template-container {
             flex-direction: column;
             align-items: stretch;
         }
-
-        .search-input,
-        .add-button {
-            width: 100%;
-            margin-top: 10px;
-        }
-    }
-
-    .flex-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .ant-form-horizontal .ant-form-item-label {
@@ -161,12 +144,21 @@
             <PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
             <PropertyColumn Title="Encargado" Property="d=>d.EncargadoApellidoYNombre" Sortable />
 
-            <ActionColumn Align=ColumnAlign.Center>
+            <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                 <Space>
                     <SpaceItem>
+                        <Popconfirm Title="¿Eliminar esta dependencia?"
+                                    OnConfirm="() => BorrarDependencia(context.Id)"
+                                    OkText="Si"
+                                    CancelText="No">
+                            <Button Danger>
+                                <Icon Type="delete" />
+                            </Button>
+                        </Popconfirm>
                     </SpaceItem>
                 </Space>
             </ActionColumn>
+
         </ColumnDefinitions>
     </Table>
 </div>
@@ -250,6 +242,12 @@
         await DependenciaService.AgregarDependenciaAsync(dependencia);
         newDependencia = new DependenciaViewModelTable();
         _modalAñadirVisible = false;
+        await OnInitializedAsync();
+    }
+
+    private async Task BorrarDependencia(int id)
+    {
+        await DependenciaService.EliminarDependenciaAsync(id);
         await OnInitializedAsync();
     }
 }
