@@ -10,6 +10,7 @@ namespace Vista.Services
         Task<List<Dependencia>> ObtenerTodasLasDependenciasAsync();
         Task<Dependencia?> ObtenerDependenciaPorIdAsync(int id);
         Task AgregarDependenciaAsync(Dependencia dependencia);
+        Task EditarDependenciaAsync(Dependencia dependencia);
         Task EliminarDependenciaAsync(int id);
     }
 
@@ -36,6 +37,20 @@ namespace Vista.Services
         {
             _context.Dependencias.Add(dependencia);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task EditarDependenciaAsync(Dependencia dependencia)
+        {
+            var dependenciaExistente = await _context.Dependencias.FindAsync(dependencia.DependenciaId);
+
+            if (dependenciaExistente != null)
+            {
+                dependenciaExistente.NombreDependencia = dependencia.NombreDependencia;
+                dependenciaExistente.Encargado = dependencia.Encargado;
+
+                _context.Dependencias.Update(dependenciaExistente);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task EliminarDependenciaAsync(int id)

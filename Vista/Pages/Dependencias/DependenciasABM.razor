@@ -6,6 +6,7 @@
 @using Vista.Services
 @inject IDependenciaService DependenciaService
 @inject IBomberoService BomberoService
+@inject IMessageService MessageService
 
 <style>
     .template {
@@ -147,6 +148,11 @@
             <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                 <Space>
                     <SpaceItem>
+                        <Button OnClick="()=>VerDetalleDependencia(context.Id)">
+                            <Icon Type="team" />
+                        </Button>
+                    </SpaceItem>
+                    <SpaceItem>
                         <Popconfirm Title="¿Eliminar esta dependencia?"
                                     OnConfirm="() => BorrarDependencia(context.Id)"
                                     OkText="Si"
@@ -155,6 +161,11 @@
                                 <Icon Type="delete" />
                             </Button>
                         </Popconfirm>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Type="primary" OnClick="()=>VerEditarDependencia(context.Id)">
+                            <Icon Type="edit" /> Editar
+                        </Button>
                     </SpaceItem>
                 </Space>
             </ActionColumn>
@@ -183,15 +194,44 @@
     </Form>
 </Modal>
 
+@*Modal para Editar Dependencias*@
+<Modal @bind-Visible="_modalEditarVisible" Title="Editar Dependencia" OkText="@("Editar")" CancelText="@("Cancelar")" OnOk="@EditDependencia">
+    <Form Model="selDependencia">
+        <FormItem Label="Nombre">
+            <Input @bind-Value="selDependencia.Nombre" />
+        </FormItem>
+        <FormItem Label="Encargado">
+            <Select TItem="BomberoViweModel"
+                    TItemValue="BomberoViweModel"
+                    DataSource="@bomberosTodos"
+                    @bind-Value="selDependencia.Encargado"
+                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                    Placeholder="Seleccione un bombero"
+                    DefaultActiveFirstOption="false"
+                    AllowClear="true" EnableSearch>
+            </Select>
+        </FormItem>
+    </Form>
+</Modal>
+
+<Modal @bind-Visible="_modalDetallesVisible" Title="@TitleDependenciaSel">
+
+</Modal>
+
 @code {
     //Lista con todos los bomberos
     private List<BomberoViweModel> bomberosTodos = new();
 
     // Variables
     private DependenciaViewModelTable newDependencia = new();
+    private DependenciaViewModelTable selDependencia = new();
+    private string? TitleDependenciaSel;
+    private int IdDependenciaSel;
 
     // Modals
     private bool _modalAñadirVisible = false;
+    private bool _modalDetallesVisible = false;
+    private bool _modalEditarVisible = false;
 
     // Lista de Dependencias
     private List<Dependencia> Dependencias = new List<Dependencia>();
@@ -243,6 +283,74 @@
         newDependencia = new DependenciaViewModelTable();
         _modalAñadirVisible = false;
         await OnInitializedAsync();
+    }
+
+    private async Task EditDependencia()
+    {
+        if (selDependencia.Encargado == null)
+        {
+            await MessageService.Error("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
+            return;
+        }
+
+        var BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(selDependencia.Encargado.NumeroLegajo);
+
+        var dependencia = new Dependencia
+            {
+                DependenciaId = selDependencia.Id,
+                NombreDependencia = selDependencia.Nombre,
+                Encargado = BomberoEncargado
+            };
+
+        await DependenciaService.EditarDependenciaAsync(dependencia);
+        _modalEditarVisible = false;
+        await OnInitializedAsync();
+    }
+
+    private async Task VerEditarDependencia(int id)
+    {
+        if (id <= 0)
+        {
+            await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+            return;
+        }
+
+        var Dependencia = await DependenciaService.ObtenerDependenciaPorIdAsync(id);
+
+        if (Dependencia == null)
+        {
+            await MessageService.Error("Error al intentar editar la dependencia: No se encontró.");
+            return;
+        }
+
+        var encargado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Dependencia.Encargado.NumeroLegajo);
+        if (encargado == null)
+        {
+            await MessageService.Error("Error al intentar editar la dependencia: No se encontró un encargado válido.");
+            return;
+        }
+
+        selDependencia = new DependenciaViewModelTable
+            {
+                Id = Dependencia.DependenciaId,
+                Nombre = Dependencia.NombreDependencia,
+                Encargado = encargado
+            };
+
+        _modalEditarVisible = true;
+    }
+
+    private async Task VerDetalleDependencia(int id)
+    {
+        var Dependencia = await DependenciaService.ObtenerDependenciaPorIdAsync(id);
+        if (Dependencia != null!)
+        {
+            TitleDependenciaSel = Dependencia.NombreDependencia;
+            IdDependenciaSel = Dependencia.DependenciaId;
+            _modalDetallesVisible = true;
+        }
+        else
+            await MessageService.Error("Error al abrir la dependencia: No se encontró.");
     }
 
     private async Task BorrarDependencia(int id)
