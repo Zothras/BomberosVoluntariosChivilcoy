@@ -75,7 +75,7 @@
     </FormItem>
 
     <FormItem Label="Fecha de Ascenso">
-        <DatePicker AllowClear="false" @bind-Value="AscensoVM.FechaAscenso" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@AscensoVM.FechaAscenso" />
     </FormItem>
 
     <FormItem Label="Descripción">
@@ -139,10 +139,12 @@
         public Bombero PersonalAfectado { get; set; }
 
         [Required(ErrorMessage = "La fecha de ascenso es obligatoria.")]
-        public DateOnly FechaAscenso { get; set; }
+        public DateTime FechaAscenso { get; set; }
 
         public string Descripcion { get; set; }
+
         public EscalafonJerarquico GradoAntiguo { get; set; }
+
         public EscalafonJerarquico GradoAscenso { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "El número de libro debe ser mayor que 0.")]
@@ -155,14 +157,14 @@
 
     // OnFinish
 
-    private async void OnFinish (EditContext editContext)
+    private async void OnFinish(EditContext editContext)
     {
         try
         {
             Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
             Vista.Data.Models.Salidas.Componentes.AscensoBombero ascenso = new()
                 {
-                    FechaAscenso = AscensoVM.FechaAscenso,
+                    FechaAscenso = DateOnly.FromDateTime(AscensoVM.FechaAscenso),
                     Descripcion = AscensoVM.Descripcion,
                     GradoAntiguo = AscensoVM.GradoAntiguo,
                     GradoAscenso = AscensoVM.GradoAscenso,
@@ -187,7 +189,7 @@
 
         }
     }
-    private void OnFinishFailed (EditContext editContext)
+    private void OnFinishFailed(EditContext editContext)
     {
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(AscensoVM)}");
     }
