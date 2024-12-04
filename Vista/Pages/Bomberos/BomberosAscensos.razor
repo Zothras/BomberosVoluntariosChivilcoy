@@ -57,11 +57,11 @@
         background: #A63333;
     }
 
-    .ant-modal .ant-form-item-label > label {
-        color: #FFFFFF;
-        padding: 2px 4px;
-        margin-right: 267.2px;
-    }
+        .ant-modal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+            margin-right: 267.2px;
+        }
 </style>
 
 <Flex Class="flex-container" Justify="center" Align="center">
@@ -80,21 +80,32 @@
                     @context.PersonalAfectado.NumeroLegajo
                 </Column>
                 <PropertyColumn Property="b=>b.NombreYApellido" Title="Nombre y Apellido" />
+
                 <PropertyColumn Property="b=>b.FechaAscenso" Title="Fecha de ascenso" />
+
                 <PropertyColumn Property="b=>b.Descripcion" Title="Descripción" />
-                <PropertyColumn Property="b=>b.GradoAntiguo" Title="Grado Anterior" />
-                <PropertyColumn Property="b=>b.GradoAscenso" Title="Grado Ascendido" />
+
+                <PropertyColumn Title="Grado Anterior"
+                                Property="@(c => c.GradoAntiguo.GetDisplayName())"
+                                Sortable="true" />
+
+                <PropertyColumn Title="Grado Ascendido"
+                                Property="@(c => c.GradoAscenso.GetDisplayName())"
+                                Sortable="true" />
+
                 <PropertyColumn Property="b=>b.NumeroLibro" Title="Numero de libro" />
+
                 <PropertyColumn Property="b=>b.NumeroActa" Title="Numero de acta" />
+
             </ColumnDefinitions>
         </Table>
     </div>
 </Flex>
 
-@if(_visibleCargar == true)
+@if (_visibleCargar == true)
 {
     <Modal Footer="null" OnCancel="()=> _visibleCargar = false" Visible="@_visibleCargar" Style="width: 35%!important;">
-        <AgregarAscenso OnClose="OnClose"/>
+        <AgregarAscenso OnClose="OnClose" />
     </Modal>
 }
 
@@ -151,7 +162,7 @@
                     GradoAntiguo = a.GradoAntiguo,
                     GradoAscenso = a.GradoAscenso,
                     NumeroLibro = a.NumeroLibero,
-                    NumeroActa= a.NumeroActa
+                    NumeroActa = a.NumeroActa
                 };
             ascensos.Add(ac);
         }
