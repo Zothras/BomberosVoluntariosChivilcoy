@@ -454,6 +454,7 @@
     private async void HandleOkAgregar(MouseEventArgs e)
     {
         _visibleAgregar = false;
+        await Init();
     }
 
     public async void HandleCancelAgregar(MouseEventArgs e)
