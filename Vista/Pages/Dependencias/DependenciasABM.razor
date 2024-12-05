@@ -136,9 +136,13 @@
            Title="Dependencias"
            Responsive>
         <TitleTemplate>
-            <Space>
-                <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">Añadir Dependencia</Button>
-            </Space>
+            <Flex Justify="flex-end">
+                <Space>
+                    <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+                        <Icon Type="plus" /> Nueva
+                    </Button>
+                </Space>
+            </Flex>
         </TitleTemplate>
         <ColumnDefinitions>
             <PropertyColumn Title="Número Dependencia" Property="d=>d.Id" Sortable />
@@ -163,8 +167,9 @@
                         </Popconfirm>
                     </SpaceItem>
                     <SpaceItem>
-                        <Button Type="primary" OnClick="()=>VerEditarDependencia(context.Id)">
-                            <Icon Type="edit" /> Editar
+                        <Button Type="@ButtonType.Primary" OnClick="()=>
+                            VerEditarDependencia(context.Id)" Ghost>
+                            <Icon Type="edit" />
                         </Button>
                     </SpaceItem>
                 </Space>
@@ -238,7 +243,7 @@
 
     // Variables de Tamaño de la Tabla
     int _pageIndex = 1;
-    int _pageSize = 6;
+    int _pageSize = 5;
 
     // Lista de ViewModels de Dependencia
     private List<DependenciaViewModelTable> DependenciaViewModels = new List<DependenciaViewModelTable>();
