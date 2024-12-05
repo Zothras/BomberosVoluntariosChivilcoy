@@ -323,21 +323,24 @@
     {
         await Init();
     }
+
     private async Task Init()
     {
         LicencasVM = new();
         Context = DbFactory.CreateDbContext();
         await LicenciasActivas();
         await LicenciasPendiente();
+        await BorrarLicenciasDefectuosas();
     }
-
 
     private async Task LicenciasActivas()
     {
         LicenciasActivasVM.Clear();
+        var haceDosSemanas = DateTime.Today.AddDays(-14);
         var Licencias = await Context.Licencias
-        .Include(b => b.PersonalAfectado)
-        .ToListAsync();
+            .Include(b => b.PersonalAfectado)
+            .Where(l => l.Hasta > haceDosSemanas)
+            .ToListAsync();
 
         foreach (var l in Licencias)
         {
@@ -353,8 +356,23 @@
 
             LicenciasActivasVM.Add(LicVm);
         }
-
         StateHasChanged();
+    }
+
+    private async Task BorrarLicenciasDefectuosas()
+    {
+        var añoMinimo = new DateTime(2000, 1, 1);
+
+        var licenciasDefectuosas = await Context.Licencias
+            .Where(l => l.Desde < añoMinimo || l.Hasta < añoMinimo || l.Desde > l.Hasta)
+            .ToListAsync();
+
+        if (licenciasDefectuosas.Any())
+        {
+            Context.Licencias.RemoveRange(licenciasDefectuosas);
+            await Context.SaveChangesAsync();
+            await _message.Error($"{licenciasDefectuosas.Count} licencias defectuosas han sido eliminadas.");
+        }
     }
 
     private async Task LicenciasBuscar()
@@ -389,8 +407,7 @@
         LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
     }
 
-
-    // BuscarLicenciados
+    // Buscar Licenciados
     private async Task BuscarLicenciado()
     {
         LicenciasActivasVM.Clear();
@@ -416,12 +433,14 @@
     {
         _visibleAgregar = false;
     }
+
     public async void HandleCancelAgregar(MouseEventArgs e)
     {
         Console.WriteLine(e);
         _visibleAgregar = false;
         await Init();
     }
+
     private async void ShowModalAgregar()
     {
         _visibleAgregar = true;
