@@ -11,6 +11,14 @@
         background-color: white;
     }
 
+    .boton_nueva {
+        background-color: #007BFF !important;
+        color: white !important;
+        border: 1px solid #007BFF !important;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
     .ant-table-row:hover > td {
         background-color: white !important;
     }
@@ -202,7 +210,7 @@
                     </div>
                 </div>
                 <div style="display: flex;">
-                    <Button Class="boton_p" OnClick="()=>ShowModalAgregar()">Agrega Licencia</Button>
+                    <Button Class="boton_nueva" OnClick="()=>ShowModalAgregar()">Nueva</Button>
                     <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
                         <Overlay>
                             <Menu Style="min-width:520px;max-width:1000px;">

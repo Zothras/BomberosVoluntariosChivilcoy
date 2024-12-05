@@ -6,6 +6,9 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 <style>
+
+
+
     .boton_p {
         background-color: #1890ff !important;
         border-color: currentColor !important;
@@ -90,15 +93,13 @@
         <EnumSelect TEnum="@EscalafonJerarquico" @bind-Value="AscensoVM.GradoAscenso" />
     </FormItem>
 
-    <FormItem Label="Número de libro">
+    <FormItem Label="Número de libro" Class="required-label">
         <Input @bind-Value="AscensoVM.NumeroLibro" />
-        <!-- Muestra el mensaje de validación específico -->
         <ValidationMessage For="() => AscensoVM.NumeroLibro" />
     </FormItem>
 
-    <FormItem Label="Número de acta">
+    <FormItem Label="Número de acta" Class="required-label">
         <Input @bind-Value="AscensoVM.NumeroActa" />
-        <!-- Muestra el mensaje de validación específico -->
         <ValidationMessage For="() => AscensoVM.NumeroActa" />
     </FormItem>
 
