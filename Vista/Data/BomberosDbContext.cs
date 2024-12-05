@@ -27,14 +27,14 @@ namespace Vista.Data
         // Vehiculos
         public DbSet<Movil> Moviles { get; set; }
         public DbSet<VehiculoPersonal> VehiculosPersonales { get; set; }
-        
+
         // Imagenes
-        
+
         public DbSet<ImagenBombero> ImagenesBomberos { get; set; }
         public DbSet<ImagenVehiculo> ImagenesVehiculo { get; set; }
         public DbSet<SeguroSalida> SegurosSalidas { get; set; }
         public DbSet<SeguroVehiculo> SeguroVehiculos { get; set; }
-       
+
         public DbSet<EmbarcacionAfectada> EmbarcacionesAfectadas { get; set; }
         public DbSet<VehiculoAfectadoAccidente> VehiculosAfectadosAccidentes { get; set; }
         public DbSet<VehiculoAfectadoIncendio> VehiculosAfectadoIncendios { get; set; }
@@ -82,6 +82,11 @@ namespace Vista.Data
         public DbSet<FuerzaInterviniente> Fuerzas { get; set; }
         public DbSet<Salida_FuerzaInterviniente> fuerzaIntervinientes { get; set; }
 
+        // Tablas para Relacion Muchos a Muchos
+
+        public DbSet<Bombero_Dependencia> bombero_dependencia { get; set; }
+
+
         //propiedad experimental
         public DbSet<Salida> Salidas { get; set; }
 
@@ -89,8 +94,27 @@ namespace Vista.Data
             : base(options)
         {
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            // Relaciones mucho a muchos
+
+            //Dependencia
+            modelBuilder.Entity<Bombero_Dependencia>()
+                .HasKey(bd => new { bd.PersonaId, bd.DependenciaId });
+
+            modelBuilder.Entity<Bombero_Dependencia>()
+                .HasOne(bd => bd.Bombero)
+                .WithMany(b => b.Dependencias)
+                .HasForeignKey(bd => bd.PersonaId);
+
+            modelBuilder.Entity<Bombero_Dependencia>()
+                .HasOne(bd => bd.Dependencia)
+                .WithMany(d => d.Bomberos)
+                .HasForeignKey(bd => bd.DependenciaId);
+
+
             modelBuilder.Entity<Bombero_Brigada>()
             .HasKey(bb => new { bb.BomberoId, bb.BrigadaId }); // Configura la clave primaria compuesta
 
@@ -358,10 +382,10 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             //modelBuilder
-              //  .Entity<ServicioEspecial>()
-                //.Property(s => s.Tipo)
-                //.HasConversion<string>()
-                //.HasMaxLength(255);
+            //  .Entity<ServicioEspecial>()
+            //.Property(s => s.Tipo)
+            //.HasConversion<string>()
+            //.HasMaxLength(255);
 
             modelBuilder
                 .Entity<ServicioEspecial>()
@@ -480,10 +504,10 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             //modelBuilder
-              //  .Entity<Incendio>()
-                //.Property(i => i.Tipo)
-                //.HasConversion<string>()
-                //.HasMaxLength(255);
+            //  .Entity<Incendio>()
+            //.Property(i => i.Tipo)
+            //.HasConversion<string>()
+            //.HasMaxLength(255);
 
             modelBuilder
                 .Entity<Incendio>()
