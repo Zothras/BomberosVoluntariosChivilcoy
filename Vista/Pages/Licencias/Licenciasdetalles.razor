@@ -183,11 +183,11 @@
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Desde: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@FechaBuscarI" />
+                        <DatePicker TValue="DateTime" DefaultValue="@DateTime.Now.AddDays(-14)" @bind-Value="@FechaBuscarI" />
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Hasta: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@FechaBuscarF" />
+                        <DatePicker TValue="DateTime" DefaultValue="@DateTime.Now" @bind-Value="@FechaBuscarF" />
                     </div>
                     <div class="buton-cont">
                         <Button OnClick="@LicenciasBuscar" Style="margin-bottom: 5px;">
@@ -222,8 +222,8 @@
         </TitleTemplate>
         <ColumnDefinitions Context="muestra">
             <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
             <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias" Sortable>
                 <Template>
                     @{
