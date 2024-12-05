@@ -191,11 +191,11 @@
                 <div class="inpt-cont-inline">
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Desde: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@FechaBuscarI" />
+                        <DatePicker TValue="DateTime" DefaultValue="@DateTime.Now.AddDays(-14)" @bind-Value="@FechaBuscarI" />
                     </div>
                     <div class="inpt-cont">
                         <label class="inpt-cont--lbl">Hasta: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@FechaBuscarF" />
+                        <DatePicker TValue="DateTime" DefaultValue="@DateTime.Now" @bind-Value="@FechaBuscarF" />
                     </div>
                     <div class="buton-cont">
                         <Button OnClick="@LicenciasBuscar" Style="margin-bottom: 5px;">
@@ -230,8 +230,8 @@
         </TitleTemplate>
         <ColumnDefinitions Context="muestra">
             <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy HH:mm" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
+            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
             <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias" Sortable>
                 <Template>
                     @{
@@ -331,21 +331,24 @@
     {
         await Init();
     }
+
     private async Task Init()
     {
         LicencasVM = new();
         Context = DbFactory.CreateDbContext();
         await LicenciasActivas();
         await LicenciasPendiente();
+        await BorrarLicenciasDefectuosas();
     }
-
 
     private async Task LicenciasActivas()
     {
         LicenciasActivasVM.Clear();
+        var haceDosSemanas = DateTime.Today.AddDays(-14);
         var Licencias = await Context.Licencias
-        .Include(b => b.PersonalAfectado)
-        .ToListAsync();
+            .Include(b => b.PersonalAfectado)
+            .Where(l => l.Hasta > haceDosSemanas)
+            .ToListAsync();
 
         foreach (var l in Licencias)
         {
@@ -361,8 +364,23 @@
 
             LicenciasActivasVM.Add(LicVm);
         }
-
         StateHasChanged();
+    }
+
+    private async Task BorrarLicenciasDefectuosas()
+    {
+        var añoMinimo = new DateTime(2000, 1, 1);
+
+        var licenciasDefectuosas = await Context.Licencias
+            .Where(l => l.Desde < añoMinimo || l.Hasta < añoMinimo || l.Desde > l.Hasta)
+            .ToListAsync();
+
+        if (licenciasDefectuosas.Any())
+        {
+            Context.Licencias.RemoveRange(licenciasDefectuosas);
+            await Context.SaveChangesAsync();
+            await _message.Error($"{licenciasDefectuosas.Count} licencias defectuosas han sido eliminadas.");
+        }
     }
 
     private async Task LicenciasBuscar()
@@ -394,11 +412,32 @@
     private async Task LicenciasPendiente()
     {
         LicenciasPendientes = new();
-        LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
+        var fechaActual = DateTime.Now;
+
+        // Filtrar licencias pendientes
+        LicenciasPendientes = await Context.Licencias
+            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente)
+            .ToListAsync();
+
+        // Verificar fechas y actualizar estado
+        foreach (var licencia in LicenciasPendientes)
+        {
+            if (licencia.Desde <= fechaActual)
+            {
+                licencia.EstadoLicencia = TipoEstadoLicencia.Rechazada;
+            }
+        }
+
+        // Guardar cambios en el contexto
+        await Context.SaveChangesAsync();
+
+        // Filtrar nuevamente las licencias pendientes que no hayan pasado su fecha de inicio
+        LicenciasPendientes = LicenciasPendientes
+            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente && l.Desde > fechaActual)
+            .ToList();
     }
 
-
-    // BuscarLicenciados
+    // Buscar Licenciados
     private async Task BuscarLicenciado()
     {
         LicenciasActivasVM.Clear();
@@ -423,13 +462,16 @@
     private async void HandleOkAgregar(MouseEventArgs e)
     {
         _visibleAgregar = false;
+        await Init();
     }
+
     public async void HandleCancelAgregar(MouseEventArgs e)
     {
         Console.WriteLine(e);
         _visibleAgregar = false;
         await Init();
     }
+
     private async void ShowModalAgregar()
     {
         _visibleAgregar = true;
