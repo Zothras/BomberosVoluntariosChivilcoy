@@ -104,12 +104,18 @@
     {
         LicenciasActivasVM = new();
         var Licencias = await Context.Licencias
-            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente && l.Desde >= DateTime.Today)
+            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente)
             .Include(b => b.PersonalAfectado)
             .ToListAsync();
 
         foreach (var l in Licencias)
         {
+            if (l.Desde == DateTime.MinValue || l.Hasta == DateTime.MinValue)
+            {
+                Console.WriteLine($"Licencia con ID {l.LicenciaId} tiene fechas inválidas.");
+                continue;
+            }
+
             LicencasVm LicVm = new()
                 {
                     LicenciaId = l.LicenciaId,
@@ -121,28 +127,25 @@
                     ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
                 };
 
+            // Verifica que DuracionEnDias se calcule correctamente.
+            Console.WriteLine($"Duración calculada para licencia {l.LicenciaId}: {LicVm.DuracionEnDias} días");
+
             LicenciasActivasVM.Add(LicVm);
         }
     }
-private async Task AprobarLicencia(int IdLicencia)
-{
-    var LicenciaAprobar = await Context.Licencias.SingleOrDefaultAsync(l => l.LicenciaId == IdLicencia);
-    if (LicenciaAprobar is not null)
+    private async Task AprobarLicencia(int IdLicencia)
     {
-        if (LicenciaAprobar.Desde < DateTime.Today)
+        var LicenciaAprobar = await Context.Licencias.SingleOrDefaultAsync(l => l.LicenciaId == IdLicencia);
+        if (LicenciaAprobar is not null)
         {
-            await message.Error("No se puede aprobar una licencia con fecha anterior al día de hoy.");
-            return;
+            LicenciaAprobar.EstadoLicencia = TipoEstadoLicencia.Aprobada;
         }
+        await Context.SaveChangesAsync();
 
-        LicenciaAprobar.EstadoLicencia = TipoEstadoLicencia.Aprobada;
+        await Init();
+        StateHasChanged();
+        await message.Success("Licencia Aprobada!");
     }
-    await Context.SaveChangesAsync();
-
-    await Init();
-    StateHasChanged();
-    await message.Success("Licencia Aprobada!");
-}
     //Elimina la licencia que esta en pendiente
     private async Task RechazarLicencia(int IdLicencia)
     {

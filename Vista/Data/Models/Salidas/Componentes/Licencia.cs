@@ -15,8 +15,6 @@ namespace Vista.Data.Models.Salidas.Componentes
         public DateTime Desde { get; set; } //Emision de la Licencia
         public DateTime Hasta { get; set; } //Finalizacion de la Licencia
 
-        public bool FechasValidas => Desde >= DateTime.Today && Hasta >= Desde;
-
         public TipoEstadoLicencia EstadoLicencia { get; set; }
         public int PersonaId { get; set; }
         [ForeignKey("PersonaId")]

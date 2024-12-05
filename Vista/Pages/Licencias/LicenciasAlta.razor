@@ -2,6 +2,7 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
+
 <style>
     .boton_p {
         background-color: #732D2D !important;
@@ -10,17 +11,18 @@
 </style>
 
 
-<Form Model="@LicencasVM"
-    LabelColSpan="8"
-    WrapperColSpan="16"
-    OnFinish="OnFinish"
-    OnFinishFailed="OnFinishFailed"
-    Style="width: 100%;height: 100%;">
+<Form Model="@NuevaLicencia"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%;height: 100%;">
+
     <FormItem Label="Nombre del Bombero">
         <Select TItem="BomberoViweModel"
                 TItemValue="int"
                 DataSource="@ListabomberosVM"
-                @bind-Value="@LicencasVM.NumeroLegajo"
+                @bind-Value="@NuevaLicencia.NumeroLegajo"
                 LabelName="@nameof(BomberoViweModel.NombreYApellido)"
                 ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
                 Placeholder="Selecione el bombero"
@@ -28,37 +30,45 @@
                 AllowClear="true"
                 EnableSearch>
         </Select>
-         
-         
     </FormItem>
+
     <FormItem Label="Numero Legajo">
-        <AntDesign.InputNumber @bind-Value="LicencasVM.NumeroLegajo" Disabled />
+        <AntDesign.InputNumber @bind-Value="NuevaLicencia.NumeroLegajo" Disabled />
     </FormItem>
+
     <FormItem Label="Tipo Licencia">
-        <EnumSelect TEnum="TipoLicencia" @bind-Value="@LicencasVM.TipoLicencia" />
+        <EnumSelect TEnum="TipoLicencia" @bind-Value="@NuevaLicencia.TipoLicencia" />
     </FormItem>
-    @if (LicencasVM.TipoLicencia == TipoLicencia.RazonesDeSalud)
+
+    @if (NuevaLicencia.TipoLicencia == TipoLicencia.RazonesDeSalud)
     {
-    <FormItem Label="Adjuntar Certificado Médico">
-        <InputFile/>
-    </FormItem>
+        <FormItem Label="Adjuntar Certificado Médico">
+            <InputFile />
+        </FormItem>
     }
+
     <FormItem Label="Descripcion">
-        <Input @bind-Value="@LicencasVM.Descripcion" />
+        <Input @bind-Value="@NuevaLicencia.Descripcion" />
     </FormItem>
+
     <FormItem Label="Fecha inicio">
-        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@LicencasVM.Desde" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@NuevaLicencia.Desde"
+                    DisabledDate="@(date => date < DateTime.Today)" />
     </FormItem>
+
     <FormItem Label="Fecha finalizacion">
-        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@LicencasVM.Hasta"
-                    DisabledDate="@(date => date < LicencasVM.Desde)" />
+        <DatePicker TValue="DateTime" DefaultValue="DateTime.Now" @bind-Value="@NuevaLicencia.Hasta"
+                    DisabledDate="@(date => date < NuevaLicencia.Desde)" />
     </FormItem>
+
     <FormItem Label="Duración en días">
-        <span>@LicencasVM.DuracionEnDias</span>
+        <span>@NuevaLicencia.DuracionEnDias</span>
     </FormItem>
+
     <FormItem Label="Tipo estado licencia">
-        <EnumSelect TEnum="TipoEstadoLicencia" @bind-Value="@LicencasVM.EstadoLicencia" Disabled/>
+        <EnumSelect TEnum="TipoEstadoLicencia" @bind-Value="@NuevaLicencia.EstadoLicencia" Disabled />
     </FormItem>
+
     <FormItem Style="width: 100% !important;
             display: flex !important;
             justify-content: flex-end !important;
@@ -66,81 +76,95 @@
         <Button Class="boton_p" HtmlType="submit" Style="margin-right: 60px;">
             Cargar licencia
         </Button>
-    </FormItem>   
+    </FormItem>
+
 </Form>
 
 
 
 @code {
-    public class LicencasVm
+    BomberosDbContext Context { get; set; }
+
+    List<BomberoViweModel> ListabomberosVM = new();
+    LicenciaAltaViewModel NuevaLicencia = null!;
+
+    // ViewModel para el Alta de la Licencia
+    public class LicenciaAltaViewModel
     {
         [Required]
         public TipoLicencia TipoLicencia { get; set; }
+
         public int NumeroLegajo { get; set; }
+
         public string? Descripcion { get; set; }
+
+        [Required]
         public DateTime Desde { get; set; }
+
+        [Required]
         public DateTime Hasta { get; set; }
+
         public TipoEstadoLicencia EstadoLicencia { get; set; }
+
         public Bombero? PersonalAfectado { get; set; }
 
-        public int DuracionEnDias
-        {
-            get
-            {
-                return (Hasta - Desde).Days + 1;
-            }
-        }
-    }
+        public int DuracionEnDias => (Hasta - Desde).Days + 1;
 
-    BomberosDbContext Context { get; set; }
-    public LicencasVm LicencasVM = new();
-    List<BomberoViweModel> ListabomberosVM = new();
+        public bool FechasValidas => Desde >= DateTime.Today && Hasta >= Desde;
+    }
 
     protected override async Task OnInitializedAsync()
     {
-       
         await Init();
     }
+
     private async Task Init()
     {
-        LicencasVM = new();
-        LicencasVM.EstadoLicencia = TipoEstadoLicencia.Pendiente;
+        NuevaLicencia = new();
+        NuevaLicencia.EstadoLicencia = TipoEstadoLicencia.Pendiente;
         Context = DbFactory.CreateDbContext();
         await CargarBomberosView();
     }
+
     private async void OnFinish(EditContext editContext)
     {
-        try
+        if (NuevaLicencia.FechasValidas)
         {
-            Bombero? personalAfectado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == LicencasVM.NumeroLegajo);
-            Licencia licencia = new()
+            try
             {
-                    TipoLicencia = LicencasVM.TipoLicencia,
-                    Descripcion = LicencasVM.Descripcion,
-                    Desde = LicencasVM.Desde,
-                    Hasta = LicencasVM.Hasta,
-                    EstadoLicencia = LicencasVM.EstadoLicencia,
-                    PersonalAfectado = personalAfectado
-                    
-            };
-            Context.Licencias.Add(licencia);
-            await Context.SaveChangesAsync();
+                Bombero? personalAfectado = await Context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == NuevaLicencia.NumeroLegajo);
+                Licencia licencia = new()
+                    {
+                        TipoLicencia = NuevaLicencia.TipoLicencia,
+                        Descripcion = NuevaLicencia.Descripcion,
+                        Desde = NuevaLicencia.Desde,
+                        Hasta = NuevaLicencia.Hasta,
+                        EstadoLicencia = NuevaLicencia.EstadoLicencia,
+                        PersonalAfectado = personalAfectado
 
+                    };
 
-            await Init();
-            StateHasChanged();
-            await message.Success("Licencia cargada correctamente");
+                Context.Licencias.Add(licencia);
+                await Context.SaveChangesAsync();
+
+                await Init();
+                StateHasChanged();
+                await message.Success("Licencia cargada correctamente");
+            }
+            catch (Exception e)
+            {
+                await Init();
+                StateHasChanged();
+                if (e.InnerException != null)
+                    await message.Error(e.InnerException.Message, 5);
+                else
+                    await message.Error(e.Message, 5);
+            }
         }
-        catch (Exception e)
-        {
-            await Init();
-            StateHasChanged();
-            if (e.InnerException != null)
-                await message.Error(e.InnerException.Message, 5);
-            else
-                await message.Error(e.Message, 5);
-        }
+        else
+            await message.Error("Error: La fecha de inicio no puede ser anterior a la fecha de hoy y la fecha de finalización no puede ser anterior a la fecha de inicio.");
     }
+
     private async Task CargarBomberosView()
     {
         ListabomberosVM = new();
@@ -159,10 +183,8 @@
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(LicencasVM)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(NuevaLicencia)}");
     }
-
-    
 
     public void Dispose()
     {
