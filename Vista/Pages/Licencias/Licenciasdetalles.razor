@@ -404,7 +404,29 @@
     private async Task LicenciasPendiente()
     {
         LicenciasPendientes = new();
-        LicenciasPendientes = await Context.Licencias.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente).ToListAsync();
+        var fechaActual = DateTime.Now;
+
+        // Filtrar licencias pendientes
+        LicenciasPendientes = await Context.Licencias
+            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente)
+            .ToListAsync();
+
+        // Verificar fechas y actualizar estado
+        foreach (var licencia in LicenciasPendientes)
+        {
+            if (licencia.Desde <= fechaActual)
+            {
+                licencia.EstadoLicencia = TipoEstadoLicencia.Rechazada;
+            }
+        }
+
+        // Guardar cambios en el contexto
+        await Context.SaveChangesAsync();
+
+        // Filtrar nuevamente las licencias pendientes que no hayan pasado su fecha de inicio
+        LicenciasPendientes = LicenciasPendientes
+            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente && l.Desde > fechaActual)
+            .ToList();
     }
 
     // Buscar Licenciados
