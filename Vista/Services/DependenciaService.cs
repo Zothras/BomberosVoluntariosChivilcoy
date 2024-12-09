@@ -2,6 +2,7 @@
 using System;
 using Vista.Data;
 using Vista.Data.Models.Grupos.Dependencias;
+using Vista.Data.Models.Personales;
 
 namespace Vista.Services
 {
@@ -9,6 +10,7 @@ namespace Vista.Services
     {
         Task<List<Dependencia>> ObtenerTodasLasDependenciasAsync();
         Task<Dependencia?> ObtenerDependenciaPorIdAsync(int id);
+        Task<List<Bombero>> ObtenerBomberosDeDependenciaAsync(int dependenciaId);
         Task AgregarDependenciaAsync(Dependencia dependencia);
         Task EditarDependenciaAsync(Dependencia dependencia);
         Task EliminarDependenciaAsync(int id);
@@ -61,6 +63,17 @@ namespace Vista.Services
                 _context.Dependencias.Remove(dependencia);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<Bombero>> ObtenerBomberosDeDependenciaAsync(int dependenciaId)
+        {
+            var dependencia = await _context.Dependencias
+                .Include(d => d.Bomberos) // Aquí Bomberos es de tipo List<Bombero_Dependencia>
+                .FirstOrDefaultAsync(d => d.DependenciaId == dependenciaId);
+
+            return dependencia?.Bomberos
+                .Select(bd => bd.Bombero) // Proyecta los bomberos reales
+                .ToList() ?? new List<Bombero>();
         }
     }
 }
