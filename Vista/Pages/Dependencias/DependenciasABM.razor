@@ -219,8 +219,8 @@
     </Form>
 </Modal>
 
-<Modal @bind-Visible="_modalDetallesVisible" Title="@TitleDependenciaSel">
-
+<Modal @bind-Visible="_modalDetallesVisible" Title="@TitleDependenciaSel" Maximizable="@true" Centered="@true" DefaultMaximized="@true">
+    <BomberosDependencia DependenciaId="@IdDependenciaSel"></BomberosDependencia>
 </Modal>
 
 @code {

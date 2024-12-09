@@ -1,0 +1,41 @@
+﻿@using Vista.Data.Models.Grupos.Dependencias
+@using Vista.Services
+@inject IDependenciaService DependenciaService
+
+
+
+@code {
+    [Parameter] public int DependenciaId { get; set; }
+    private List<Bombero> DependenciaBomberos = new();
+    public List<BomberoDependenciaViewModel> BomberosViewModel { get; set; } = new();
+
+
+    public class BomberoDependenciaViewModel
+    {
+        public int Id { get; set; }
+        public int NroLeg { get; set; }
+        public string ApellidoYNombre { get; set; } = null!;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        DependenciaBomberos = await DependenciaService.ObtenerBomberosDeDependenciaAsync(DependenciaId);
+        BomberosViewModel = MapearDependencia(DependenciaBomberos);
+    }
+
+    
+
+    public List<BomberoDependenciaViewModel?> MapearDependencia(List<Bombero?> bomberos)
+    {
+        if (bomberos.Any())
+        {
+            return DependenciaBomberos.Select(b => new BomberoDependenciaViewModel
+                {
+                    Id = b.PersonaId,
+                    NroLeg = b.NumeroLegajo,
+                    ApellidoYNombre = $"{b.Apellido}, {b.Nombre}"
+                }).ToList();
+        }
+        return null;
+    }
+}
