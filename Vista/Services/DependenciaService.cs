@@ -15,6 +15,7 @@ namespace Vista.Services
         Task EditarDependenciaAsync(Dependencia dependencia);
         Task EliminarDependenciaAsync(int id);
         Task AgregarBomberoADependenciaAsync(int dependenciaId, int bomberoId);
+        Task QuitarBomberoDeDependenciaAsync(int dependenciaId, int bomberoId);
     }
 
     public class DependenciaService : IDependenciaService
@@ -106,6 +107,20 @@ namespace Vista.Services
             };
 
             _context.Set<Bombero_Dependencia>().Add(relacion);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task QuitarBomberoDeDependenciaAsync(int dependenciaId, int bomberoId)
+        {
+            // Verificar si la relación existe
+            var relacion = await _context.Set<Bombero_Dependencia>()
+                .FirstOrDefaultAsync(bd => bd.DependenciaId == dependenciaId && bd.PersonaId == bomberoId);
+
+            if (relacion == null)
+                throw new Exception("La relación entre el bombero y la dependencia no existe");
+
+            // Eliminar la relación
+            _context.Set<Bombero_Dependencia>().Remove(relacion);
             await _context.SaveChangesAsync();
         }
     }
