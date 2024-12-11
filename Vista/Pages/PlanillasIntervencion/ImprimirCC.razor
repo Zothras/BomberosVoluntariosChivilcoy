@@ -565,7 +565,7 @@
             IntervencionVM.AnioSalida = salida.AnioNumeroParte;
             IntervencionVM.Recepcionista = salida.NombreYApellidoReceptor ?? "No se registro recepcionista.";
             IntervencionVM.TipoServicio = "" + salida.TipoServicio;
-            IntervencionVM.Direccion = $"{salida.CalleORuta ?? "Calle Desconocida"} {salida.NumeroOKilometro ?? "s/n"}";
+            IntervencionVM.Direccion = salida.Direccion ?? "Dirección Desconocida";
             IntervencionVM.DetallesSalida = salida.Descripcion;
 
             if (salida.Seguro != null)

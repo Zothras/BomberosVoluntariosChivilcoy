@@ -45,8 +45,6 @@ namespace Vista.Services
             {
                 Bombero? bomberoEncargado = await _context.Bomberos.Where(b => b.NumeroLegajo == salida.Encargado.NumeroLegajo).SingleOrDefaultAsync();
                 Bombero? BomberoLlenoPlanilla = await _context.Bomberos.Where(b => b.NumeroLegajo == salida.QuienLleno.NumeroLegajo).SingleOrDefaultAsync();
-                Bombero? bomberoReceptor = salida.ReceptorBombero != null ? await _context.Bomberos.Where(b => b.NumeroLegajo == salida.ReceptorBombero.NumeroLegajo).SingleOrDefaultAsync() : null;
-                salida.ReceptorBombero = bomberoReceptor;
                 salida.Encargado = bomberoEncargado;
                 salida.QuienLleno = BomberoLlenoPlanilla;
 

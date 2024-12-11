@@ -3,6 +3,7 @@ using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
@@ -16,52 +17,96 @@ namespace Vista.Data.Models.Salidas.Planillas
         public int AnioNumeroParte { get; set; }
 
         [Required, StringLength(255)]
-        public string Descripcion { get; set; }
+        public string Descripcion { get; set; } = null!;
+
+        //Dirección <-- Apartir de Ahora de Guarda la Dirrecion Entera (No Obligatoria por si es Rural)
+
         [StringLength(255)]
-        public string? CalleORuta { get; set; }
-        [StringLength(255)]
-        public string? NumeroOKilometro { get; set; }
-        [StringLength(255)]
-        public string? EntreCalles { get; set; }
+        public string? Direccion { get; set; }
+
+        // Ubicación (Obligatoria) <-- Esto para hacer estadistica
+
+        [Required]
+        public double Latitud { get; set; }
+        [Required]
+        public double Longitud { get; set; }
+
+        // Departamentos (Nueva Implementación)
+
+
+        /// <summary>
+        /// Número de piso en caso de que la ubicación sea un departamento.
+        /// </summary>
         [StringLength(255)]
         public string? PisoNumero { get; set; }
+
+        /// <summary>
+        /// Identificación o nombre del departamento.
+        /// </summary>
         [StringLength(255)]
         public string? Depto { get; set; }
+
+        /// <summary>
+        /// Indica si la zona es rural o urbana.
+        /// </summary>
         public TipoZona TipoZona { get; set; }
 
-        public string NombreSolicitante { get; set; }
-        public string ApellidoSolicitante { get; set; }
-        public string DniSolicitante { get; set; }
-        public string TelefonoSolicitante { get; set; }
+        // Datos del Solicitante
 
+        /// <summary>
+        /// Nombre de la persona que solicita la asistencia de los bomberos.
+        /// </summary>
+        public string? NombreSolicitante { get; set; }
+
+        /// <summary>
+        /// Apellido de la persona que solicita la asistencia de los bomberos.
+        /// </summary>
+        public string? ApellidoSolicitante { get; set; }
+
+        /// <summary>
+        /// Documento Nacional de Identidad (DNI) de la persona que solicita la asistencia de los bomberos.
+        /// </summary>
+        public string? DniSolicitante { get; set; }
+
+        /// <summary>
+        /// Teléfono de contacto de la persona que solicita la asistencia de los bomberos.
+        /// </summary>
+        public string? TelefonoSolicitante { get; set; }
+
+        // Datos Receptor
+        /// <summary>
+        /// Nombre y apellido de la persona que recibe la solicitud de salida en el cuartel.
+        /// </summary>
         public string? NombreYApellidoReceptor { get; set; }
 
-        public int? ReceptorId { get; set; }
 
-        [ForeignKey("ReceptorId")]
-        public Bombero? ReceptorBombero { get; set; }
 
-        //Si hay damnificados, entonces hay intervinientes
-        public List<Damnificado> Damnificados { get; set; }
+        public List<Damnificado> Damnificados { get; set; } = new();
 
         public int? SeguroId { get; set; }
         public SeguroSalida? Seguro { get; set; }
 
-        //relaciones con bomberos y moviles
-        public List<MovilSalida> Moviles { get; set; }
 
-        public List<BomberoSalida> CuerpoParticipante { get; set; }
+        // Moviles que asistieron al Servicio
+        public List<MovilSalida> Moviles { get; set; } = new();
 
+        // Bomberos que asistieron al Servico
+
+        public List<BomberoSalida> CuerpoParticipante { get; set; } = new();
+
+
+        // Encargado (Obligatorio)
         public int EncargadoId { get; set; }
         [ForeignKey("EncargadoId")]
-        public Bombero Encargado { get; set; }
+        public Bombero Encargado { get; set; } = null!;
 
+
+        // Quien Lleno la Planilla (Obligatorio)
         public int QuienLlenoId { get; set; }
         [ForeignKey("QuienLlenoId")]
-        public Bombero QuienLleno { get; set; }
-        public TipoServicioSalida TipoServicio { get; set; }
+        public Bombero QuienLleno { get; set; } = null!;
 
-        public double? Latitud { get; set; }
-        public double? Longitud { get; set; }
+        // Tipo de Servicio (Servicio Especial - Accidente - Rescate - Incendio)
+        public TipoServicioSalida TipoServicio { get; set; }
     }
 }

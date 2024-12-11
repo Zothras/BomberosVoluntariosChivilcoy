@@ -51,12 +51,8 @@ namespace Vista.Data.ViewModels
 
         [Required, StringLength(255)]
         public string Descripcion { get; set; }
-        [Required, StringLength(255)]
+        [StringLength(255)]
         public string CalleORuta { get; set; }
-        [Required, StringLength(255)]
-        public string NumeroOKilometro { get; set; }
-        [Required, StringLength(255)]
-        public string? EntreCalles { get; set; }
         [StringLength(255)]
         public string? PisoNumero { get; set; }
         [StringLength(255)]
@@ -113,7 +109,9 @@ namespace Vista.Data.ViewModels
         public TipoServicioRepresentaciones TipoRepresentacion { get; set; }
         public Guardia GuardiaSelecionada { get; set; }
 
-        public double? Latitud { get; set; }
-        public double? Longitud { get; set; }
+        [Required]
+        public double Latitud { get; set; }
+        [Required]
+        public double Longitud { get; set; }
     }
 }
