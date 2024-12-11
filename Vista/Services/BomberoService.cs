@@ -167,6 +167,7 @@ namespace Vista.Services
             return await _context.Bomberos
                 .Select(b => new BomberoViweModel
                 {
+                    Id = b.PersonaId,
                     FechaNacimiento = b.FechaNacimiento,
                     Sexo = b.Sexo,
                     Nombre = b.Nombre,

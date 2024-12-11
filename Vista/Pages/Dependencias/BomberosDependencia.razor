@@ -1,6 +1,11 @@
 ﻿@using Vista.Data.Models.Grupos.Dependencias
+@using Vista.Data.ViewModels.Personal
+
+@*Servicios Utilizados*@
 @using Vista.Services
 @inject IDependenciaService DependenciaService
+@inject IBomberoService BomberoService
+@inject IMessageService MessageService
 
 <style>
     .ant-table {
@@ -116,7 +121,7 @@
     <TitleTemplate>
         <Flex Justify="flex-end">
             <Space>
-                <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+                <Button Type="primary" OnClick="@(() => _modalAñadirBomberosVisible = true)">
                     <Icon Type="plus" /> Añadir
                 </Button>
             </Space>
@@ -132,12 +137,12 @@
         <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
             <Space>
                 <SpaceItem>
-                    <Popconfirm Title="¿Eliminar esta dependencia?"
+                    <Popconfirm Title="¿Deseas remover a este bombero de la dependencia?"
                                 OnConfirm="() => QuitarBoberoDependencia(context.Id, DependenciaId)"
                                 OkText="Si"
                                 CancelText="No">
                         <Button Danger>
-                            <Icon Type="delete" />
+                            <Icon Type="close" />
                         </Button>
                     </Popconfirm>
                 </SpaceItem>
@@ -147,18 +152,33 @@
     </ColumnDefinitions>
 </Table>
 
+<Modal @bind-Visible="_modalAñadirBomberosVisible" Title="Añadir Bomberos" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddBomberoToDependencia">
+    <Select Mode="multiple"
+            Placeholder="Elige los bomberos a agregar a la dependencia"
+            DataSource="@BomberosTodos"
+            Values="@BomberosSeleccionados"
+            TItem="BomberoViweModel"
+            TItemValue="int"
+            LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+            ValueName="@nameof(BomberoViweModel.Id)"
+            EnableSearch="true"
+            ValuesChanged="@(async (values) => await HandleValuesChange(values))" />
+    <p>Seleccionados: @String.Join(", ", BomberosSeleccionados)</p>
+</Modal>
+
 @code {
     [Parameter] public int DependenciaId { get; set; }
-    private List<Bombero> DependenciaBomberos = new();
-    public List<BomberoDependenciaViewModel> BomberosViewModel { get; set; } = new();
+    private List<Bombero?> DependenciaBomberos = new();
+    public List<BomberoDependenciaViewModel?> BomberosViewModel { get; set; } = new();
+    private List<int> BomberosSeleccionados = new List<int>();
+    public List<BomberoViweModel> BomberosTodos { get; set; } = new();
 
     // Variables de Tamaño de la Tabla
     int _pageIndex = 1;
     int _pageSize = 5;
 
     // Modals
-    private bool _modalAñadirVisible = false;
-
+    private bool _modalAñadirBomberosVisible = false;
 
     public class BomberoDependenciaViewModel
     {
@@ -172,10 +192,12 @@
         await OnInit();
     }
 
-    public async Task OnInit ()
+    public async Task OnInit()
     {
+        BomberosTodos = await BomberoService.GetAllBomberosAsync();
         DependenciaBomberos = await DependenciaService.ObtenerBomberosDeDependenciaAsync(DependenciaId);
         BomberosViewModel = MapearDependencia(DependenciaBomberos);
+        BomberosSeleccionados = new();
         StateHasChanged();
     }
 
@@ -198,4 +220,32 @@
         await DependenciaService.QuitarBomberoDeDependenciaAsync(DependenciaID, BomberoID);
         await OnInit();
     }
+
+    public async Task AddBomberoToDependencia()
+    {
+        if (BomberosSeleccionados.Any())
+        {
+            foreach (int BomberoSelId in BomberosSeleccionados)
+            {
+                if (BomberoSelId > 0)
+                {
+                    await DependenciaService.AgregarBomberoADependenciaAsync(DependenciaId, BomberoSelId);
+                }
+            }
+
+            await MessageService.Success($"Se añadieron {BomberosSeleccionados.Count} Bomberos a la Dependencia");
+            _modalAñadirBomberosVisible = false;
+            await OnInit();
+        }
+        else
+        {
+            _modalAñadirBomberosVisible = false;
+        }
+    }
+
+    private async Task HandleValuesChange(IEnumerable<int> values)
+    {
+        BomberosSeleccionados = values.ToList();
+    }
+
 }

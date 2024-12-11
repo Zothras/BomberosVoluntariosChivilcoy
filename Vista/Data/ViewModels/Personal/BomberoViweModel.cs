@@ -6,6 +6,7 @@ namespace Vista.Data.ViewModels.Personal
 {
     public class BomberoViweModel
     {
+        public int Id { get; set; }
         public DateTime? FechaNacimiento { get; set; }
         public DateTime? FechaAceptacion { get; set; }
         [Required, StringLength(255)]
@@ -61,6 +62,7 @@ namespace Vista.Data.ViewModels.Personal
         public string? TipoImagen { get; set; }
         [StringLength(255)]
         public string? NombreImagen { get; set; }
+        
         //Brigada-------------------------------
         public int BrigadaId { get; set; }
         public string NombreBrigada { get; set; }
