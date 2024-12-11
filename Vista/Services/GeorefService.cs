@@ -3,21 +3,20 @@ using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Collections.Generic;
 using Vista.Data.Models.Salidas.Componentes;
-using Microsoft.JSInterop; // Para invocar métodos JavaScript desde C#
+using Microsoft.JSInterop;
 
 namespace Vista.Services
 {
     public class GeorefService
     {
         private readonly HttpClient _httpClient;
-        private readonly IJSRuntime _jsRuntime; // Para llamar a la consola del navegador
+        private readonly IJSRuntime _jsRuntime;
 
         public GeorefService(HttpClient httpClient, IJSRuntime jsRuntime)
         {
             _httpClient = httpClient;
             _jsRuntime = jsRuntime;
 
-            // Añadir el encabezado User-Agent
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
         }
 
@@ -45,7 +44,7 @@ namespace Vista.Services
             }
         }
 
-        public async Task<List<string>> GetStreetSuggestionsAsync(string calle)
+        public async Task<List<Direccion>> GetStreetSuggestionsAsync(string calle)
         {
             if (!string.IsNullOrWhiteSpace(calle))
             {
@@ -53,7 +52,7 @@ namespace Vista.Services
                 if (!isConnected)
                 {
                     await LogErrorToConsoleAsync("API connection failed. Street suggestions will not be fetched.");
-                    return new List<string>();
+                    return new List<Direccion>();
                 }
 
                 var calleEscaped = Uri.EscapeDataString(calle.Trim());
@@ -62,23 +61,20 @@ namespace Vista.Services
                 try
                 {
                     var response = await _httpClient.GetFromJsonAsync<GeorefResponse>(url);
-                    return response?.direcciones?.Select(d => d.calle.nombre).Distinct().ToList() ?? new List<string>();
+                    return response?.Direcciones ?? new List<Direccion>();
                 }
                 catch (Exception ex)
                 {
                     await LogErrorToConsoleAsync($"Error fetching street suggestions: {ex.Message}");
-                    return new List<string>();
+                    return new List<Direccion>();
                 }
             }
-            return new List<string>();
+            return new List<Direccion>();
         }
 
         private async Task LogErrorToConsoleAsync(string message)
         {
-            // Escribe el error en la consola del navegador
             await _jsRuntime.InvokeVoidAsync("console.error", message);
-            // También lo escribimos en la consola del servidor
-            Console.WriteLine(message);
         }
     }
 }

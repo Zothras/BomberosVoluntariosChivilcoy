@@ -48,6 +48,8 @@ namespace Vista.Data.ViewModels
         public int KmLlegada { get; set; }
         public int Kilometraje { get; set; }
 
+        public Direccion Direccion { get; set; }
+
 
         [Required, StringLength(255)]
         public string Descripcion { get; set; }

@@ -1,5 +1,6 @@
 ﻿@using Vista.Data.ViewModels
 @using System.Timers
+@using System.Web;
 
 @*Servicios Utilizados*@
 @using Vista.Services
@@ -38,38 +39,50 @@
             </div>
         }
     </div>
- 
-  
 
     <div class="inpt-cont">
         <label class="inpt-cont--lbl">Tipo zona</label>
         <EnumSelect TEnum="TipoZona" @bind-Value="@Model.TipoZona" />
     </div>
-    <div class="inpt-cont-inline">
-        @if (Model.TipoZona == TipoZona.Urbana)
-        {
+
+
+    @if (Model.TipoZona == TipoZona.Urbana)
+    {
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Dirección</label>
+            @if (isApiAvailable)
+            {
+                <Select TItem="Direccion"
+                        TItemValue="Direccion"
+                        DataSource="@direcciones"
+                        @bind-Value="@Model.Direccion"
+                        Placeholder="Seleccione una calle"
+                        LabelName="@nameof(Direccion.NombreYAltura)"
+                        OnSearch="OnSearch"
+                        EnableSearch
+                        OnSelectedItemChanged="OnStreetSelected">
+                </Select>
+            }
+            else
+            {
+                <Input @bind-Value="@Model.CalleORuta" />
+            }
+        </div>
+
+        <div class="inpt-cont-inline">
             <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Calle/Ruta</label>
-                @if (isApiAvailable)
-                {
-                    <Select TItem="string"
-                            TItemValue="string"
-                            DataSource="@streetSuggestions"
-                            @bind-Value="@Model.CalleORuta"
-                            Placeholder="Seleccione una calle"
-                            OnSearch="OnSearch"
-                            EnableSearch
-                            OnSelectedItemChanged="OnStreetSelected">
-                    </Select>
-                }
-                else
-                {
-                    <Input @bind-Value="@Model.CalleORuta" />
-                }
+                <label class="inpt-cont--lbl">Latitud</label>
+                <Input @bind-Value="@Model.Latitud" Disabled="true" />
             </div>
-        }
-        else
-        {
+            <div class="inpt-cont">
+                <label class="inpt-cont--lbl">Longitud</label>
+                <Input @bind-Value="@Model.Longitud" Disabled="true" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="inpt-cont-inline">
             <div class="inpt-cont">
                 <label class="inpt-cont--lbl">Latitud</label>
                 <Input @bind-Value="@Model.Latitud" />
@@ -78,16 +91,24 @@
                 <label class="inpt-cont--lbl">Longitud</label>
                 <Input @bind-Value="@Model.Longitud" />
             </div>
-        }
-    </div>
-    @*<div class="inpt-cont">
-    <label class="inpt-cont--lbl">Entre calles</label>
-    <Input @bind-Value="@Model.EntreCalles" />
-    </div>*@
+        </div>
+    }
+
+    @if (Model.Latitud != 0.0 && Model.Longitud != 0.0)
+    {
+        <iframe width="300"
+                height="300"
+                style="border:0;"
+                src="@GetOpenStreetMapUrl(Model.Latitud, Model.Longitud)"
+                frameborder="0" allowfullscreen></iframe>
+    }
+
+
     <div class="inpt-cont">
         <label class="inpt-cont--lbl">Descripcion</label>
         <TextArea Placeholder="Descripcion" @bind-Value="@Model.Descripcion" />
     </div>
+
     @if (!esSoloDireccion && MostrarOpcionDepartamento)
     {
         <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
@@ -133,15 +154,13 @@
     private bool esDepartamento;
     private bool SeConvocoGuardia;
 
-
-
     //Timers para la API
-    private Timer _debounceTimer;
+    private Timer _debounceTimer = null!;
     private int _debounceTime = 500; // Tiempo de espera en milisegundos
 
-    private string searchValue; // Variable para almacenar temporalmente el valor de búsqueda
+    private string? searchValue; // Variable para almacenar temporalmente el valor de búsqueda
 
-    private List<string> streetSuggestions = new List<string>();
+    private List<Direccion> direcciones = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -151,11 +170,13 @@
         isApiAvailable = await GeorefService.CheckApiConnectionAsync();
     }
 
-    private void OnStreetSelected(string selectedStreet)
+    private void OnStreetSelected(Direccion selectedStreet)
     {
-        if (!string.IsNullOrWhiteSpace(selectedStreet))
+        if (selectedStreet != null)
         {
-            Model.CalleORuta = selectedStreet;
+            Model.CalleORuta = $"{selectedStreet.Calle.Nombre} {selectedStreet.Altura.Valor}";
+            Model.Latitud = selectedStreet.Ubicacion.Lat;
+            Model.Longitud = selectedStreet.Ubicacion.Lon;
             StateHasChanged();
         }
     }
@@ -180,7 +201,7 @@
         {
             if (value.Length == 1)
             {
-                 Model.FechaSalida = value[0];
+                Model.FechaSalida = value[0];
             }
         }
     }
@@ -218,10 +239,44 @@
 
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
-            streetSuggestions = await GeorefService.GetStreetSuggestionsAsync(searchValue);
+            direcciones = await GeorefService.GetStreetSuggestionsAsync(searchValue);
             await InvokeAsync(StateHasChanged);
         }
     }
 
-   
+    private string GetOpenStreetMapUrl(double latitud, double longitud)
+    {
+        // URL base para el embed de OpenStreetMap
+        string baseUrl = "https://www.openstreetmap.org/export/embed.html";
+
+        // Redondear a 5 decimales para las coordenadas
+        string latString = Math.Round(latitud, 5).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        string lonString = Math.Round(longitud, 5).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        // Generar los valores para el parámetro bbox (rango de coordenadas alrededor del punto)
+        double latMin = latitud - 0.005;  // Ajuste más pequeño para un mejor zoom
+        double latMax = latitud + 0.005;
+        double lonMin = longitud - 0.005;
+        double lonMax = longitud + 0.005;
+
+        // Formatear las coordenadas para asegurar que se usen puntos como separadores decimales
+        string latMinString = latMin.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        string latMaxString = latMax.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        string lonMinString = lonMin.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        string lonMaxString = lonMax.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        // Parámetros para el mapa
+        string bbox = $"{lonMinString},{latMinString},{lonMaxString},{latMaxString}";
+        string marker = $"{latString},{lonString}";
+
+        // Codificar las coordenadas para las comas
+        string encodedBbox = HttpUtility.UrlEncode(bbox);  // Codifica las comas
+        string encodedMarker = HttpUtility.UrlEncode(marker);  // Codifica las comas
+
+        // Generar la URL completa con los parámetros codificados
+        string urlParameters = $"?bbox={encodedBbox}&layer=mapnik&marker={encodedMarker}";
+
+        // Combinar la URL base con los parámetros
+        return baseUrl + urlParameters;
+    }
 }
