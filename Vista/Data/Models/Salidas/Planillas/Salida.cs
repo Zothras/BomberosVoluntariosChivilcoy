@@ -4,6 +4,7 @@ using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
+using Vista.Data.Enums.Salidas;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
@@ -33,6 +34,8 @@ namespace Vista.Data.Models.Salidas.Planillas
 
         // Departamentos (Nueva Implementación)
 
+        [Required]
+        public CuartelRegionChivilcoy CuartelRegion { get; set; }
 
         /// <summary>
         /// Número de piso en caso de que la ubicación sea un departamento.

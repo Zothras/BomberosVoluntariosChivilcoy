@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Collections.Generic;
-using Vista.Data.Models.Salidas.Componentes;
 using Microsoft.JSInterop;
+using Vista.Data.ViewModels.APIResponse;
 
 namespace Vista.Services
 {

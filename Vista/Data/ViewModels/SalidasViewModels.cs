@@ -3,6 +3,8 @@ using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Vista.Data.ViewModels.APIResponse;
+using Vista.Data.Enums.Salidas;
 
 namespace Vista.Data.ViewModels
 {
@@ -66,7 +68,8 @@ namespace Vista.Data.ViewModels
         public string DniSolicitante { get; set; }
         public string TelefonoSolicitante { get; set; }
 
-        //Datos del bombero receptor
+        [Required]
+        public CuartelRegionChivilcoy CuartelRegion { get; set; }
 
         public string? NombreYApellidoReceptor
         {

@@ -1,4 +1,4 @@
-﻿namespace Vista.Data.Models.Salidas.Componentes
+﻿namespace Vista.Data.ViewModels.APIResponse
 {
     public class GeorefResponse
     {

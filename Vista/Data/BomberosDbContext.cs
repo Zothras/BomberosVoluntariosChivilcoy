@@ -406,6 +406,11 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
+                .Entity<Salida>()
+                .Property(s => s.CuartelRegion)
+                .HasConversion<int>();
+
+            modelBuilder
                 .Entity<RescatePersona>()
                 .Property(r => r.LugarRescatePersona)
                 .HasConversion<string>()
