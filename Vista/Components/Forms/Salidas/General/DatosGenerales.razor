@@ -97,16 +97,18 @@
 
     @if (Model.Latitud != 0.0 && Model.Longitud != 0.0)
     {
-        <iframe width="300"
-                height="300"
-                style="border:0;"
-                src="@GetOpenStreetMapUrl(Model.Latitud, Model.Longitud)"
-                frameborder="0" allowfullscreen></iframe>
+        <div class="map-container">
+            <iframe width="300"
+                    height="300"
+                    style="border:0;"
+                    src="@GetOpenStreetMapUrl(Model.Latitud, Model.Longitud)"
+                    frameborder="0" allowfullscreen></iframe>
+        </div>
     }
 
     <div class="inpt-cont">
         <label class="inpt-cont--lbl">Región Cuartel</label>
-        <EnumSelect TEnum="CuartelRegionChivilcoy" @bind-Value="@Model.CuartelRegion" DefaultActiveFirstOption="false" />
+        <EnumSelect TEnum="CuartelRegionChivilcoy?" @bind-Value="@Model.CuartelRegion" DefaultActiveFirstOption="false" />
     </div>
 
     <div class="inpt-cont">

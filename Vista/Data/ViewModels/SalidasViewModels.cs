@@ -67,9 +67,7 @@ namespace Vista.Data.ViewModels
         public string ApellidoSolicitante { get; set; }
         public string DniSolicitante { get; set; }
         public string TelefonoSolicitante { get; set; }
-
-        [Required]
-        public CuartelRegionChivilcoy CuartelRegion { get; set; }
+        public CuartelRegionChivilcoy? CuartelRegion { get; set; }
 
         public string? NombreYApellidoReceptor
         {

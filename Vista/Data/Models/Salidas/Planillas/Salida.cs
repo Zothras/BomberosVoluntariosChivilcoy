@@ -32,10 +32,10 @@ namespace Vista.Data.Models.Salidas.Planillas
         [Required]
         public double Longitud { get; set; }
 
-        // Departamentos (Nueva Implementación)
-
-        [Required]
-        public CuartelRegionChivilcoy CuartelRegion { get; set; }
+        /// <summary>
+        /// Representa a una región de Chivilcoy.
+        /// </summary>
+        public CuartelRegionChivilcoy? CuartelRegion { get; set; }
 
         /// <summary>
         /// Número de piso en caso de que la ubicación sea un departamento.
