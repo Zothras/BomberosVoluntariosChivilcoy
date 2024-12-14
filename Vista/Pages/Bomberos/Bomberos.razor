@@ -231,7 +231,10 @@
                                 Property="@(c => c.Grado.GetDisplayName())"
                                 Sortable="true" />
 
-                <PropertyColumn Title="Estado" Property="c=>c.Estado" Sortable />
+                <PropertyColumn Title="Estado" 
+                                Property="@(c=>c.Estado.GetDisplayName())" 
+                                Sortable />
+
                     <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                     <Space>
                         <SpaceItem>
