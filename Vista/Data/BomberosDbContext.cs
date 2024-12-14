@@ -9,6 +9,7 @@ using Vista.Data.Models.Grupos.Dependencias;
 using Vista.Data.Models.Grupos.Brigadas;
 using Vista.Data.Models.Grupos.FuerzasIntervinientes;
 using Vista.Data.Models.Imagenes;
+using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
 
 namespace Vista.Data
 {

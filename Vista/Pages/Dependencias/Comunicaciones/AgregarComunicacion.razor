@@ -1,4 +1,5 @@
-﻿@implements IDisposable
+﻿@using Vista.Data.Models.Grupos.Dependencias.Comunicaciones
+@implements IDisposable
 @inject IMessageService message
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
@@ -159,12 +160,14 @@
         public Movil? Movil { get; set; }
         public string? NumeroMovil = " ";
     }
+
     public class MovilViewModel
     {
         public string Patente { get; set; }
         public string NumeroMovil { get; set; }
         public Comunicacion? HandieMovil { get; set; }
     }
+
     BomberosDbContext Context { get; set; }
 
     ComunicacionViewModel ComunicacionVM { get; set; } = new();
