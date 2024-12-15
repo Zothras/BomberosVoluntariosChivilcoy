@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using Vista.Data.Enums.Salidas;
+using Vista.Data.Models.Vehiculos.Moviles;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
@@ -91,7 +92,7 @@ namespace Vista.Data.Models.Salidas.Planillas
 
 
         // Moviles que asistieron al Servicio
-        public List<MovilSalida> Moviles { get; set; } = new();
+        public List<Movil_Salida> Moviles { get; set; } = new();
 
         // Bomberos que asistieron al Servico
 

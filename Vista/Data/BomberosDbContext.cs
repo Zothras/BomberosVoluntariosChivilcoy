@@ -10,6 +10,7 @@ using Vista.Data.Models.Grupos.Brigadas;
 using Vista.Data.Models.Grupos.FuerzasIntervinientes;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
+using Vista.Data.Models.Vehiculos.Moviles;
 
 namespace Vista.Data
 {
@@ -63,7 +64,7 @@ namespace Vista.Data
         public DbSet<Firma> Firmas { get; set; }
         public DbSet<Brigada> Brigadas { get; set; }
         public DbSet<Bombero_Brigada> bomberoBrigadas { get; set; }
-        public DbSet<MovilSalida> MovilesSalida { get; set; }
+        public DbSet<Movil_Salida> MovilesSalida { get; set; }
         public DbSet<BomberoSalida> BomberosSalida { get; set; }
         public DbSet<Limpieza> Limpiezas { get; set; }
         public DbSet<Material> Materiales { get; set; }
@@ -305,7 +306,7 @@ namespace Vista.Data
 
 
             // Configuración de la relación uno a muchos entre Salida y MovilSalida
-            modelBuilder.Entity<MovilSalida>()
+            modelBuilder.Entity<Movil_Salida>()
                 .HasOne(ms => ms.Salida)
                 .WithMany(s => s.Moviles)
                 .HasForeignKey(ms => ms.SalidaId);
@@ -606,7 +607,7 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-                .Entity<MovilSalida>()
+                .Entity<Movil_Salida>()
                 .Property(d => d.DotacionSalida)
                 .HasConversion<string>()
                 .HasMaxLength(255);

@@ -10,6 +10,7 @@ using Vista.Data.Enums;
 using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Models.Salidas.Planillas;
+using Vista.Data.Models.Vehiculos.Moviles;
 using Vista.Data.ViewModels.Personal;
 
 namespace Vista.Services
@@ -72,15 +73,15 @@ namespace Vista.Services
                 salida.CuerpoParticipante = bomberossalida;
 
                 //Moviles
-                List<MovilSalida> movilessalida = new List<MovilSalida>();
-                foreach (MovilSalida m in salida.Moviles)
+                List<Movil_Salida> movilessalida = new List<Movil_Salida>();
+                foreach (Movil_Salida m in salida.Moviles)
                 {
                     Bombero? bomberoChofer = await _context.Bomberos.SingleOrDefaultAsync(b => b.NumeroLegajo == m.Chofer.NumeroLegajo);
                     Movil? Movilsalida = await _context.Moviles.SingleOrDefaultAsync(mob => mob.NumeroMovil == m.Movil.NumeroMovil);
 
                     if (bomberoChofer == null || Movilsalida == null) break;
                     Movilsalida.Kilometraje = m.KmLlegada;
-                    MovilSalida movilS = new()
+                    Movil_Salida movilS = new()
                     {
                         CargoCombustible = m.CargoCombustible,
                         NumeroFactura = m.NumeroFactura,

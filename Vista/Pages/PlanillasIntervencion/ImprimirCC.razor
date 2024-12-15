@@ -1,10 +1,17 @@
 ﻿@implements IDisposable
-@inject IDbContextFactory<BomberosDbContext> DbFactory
+
 @page "/PlanillasIntervencion/Imprimir/{AnioSalida:int?}/{NumeroParte:int?}/{ConCroquis:bool?}"
+
+@*Layout Vacio*@
 @layout EmptyLayout
+
 @using System;
 @using System.Globalization;
 @using System.Text.RegularExpressions;
+@using Vista.Data.Models.Vehiculos.Moviles;
+
+@*Servicios Utilizados*@
+@inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject NavigationManager navigationManager
 @inject IJSRuntime JSRuntime
 
@@ -465,7 +472,7 @@
 
         public string? Lugar { get; set; }
 
-        public List<MovilSalida>? movilesSalida { get; set; }
+        public List<Movil_Salida>? movilesSalida { get; set; }
 
         public string? Direccion { get; set; }
 
@@ -608,7 +615,7 @@
             }
             else
             {
-                IntervencionVM.movilesSalida = new List<MovilSalida>(); // Asignar una lista vacía si no hay elementos
+                IntervencionVM.movilesSalida = new List<Movil_Salida>(); // Asignar una lista vacía si no hay elementos
             }
 
             if (salida.CuerpoParticipante != null && salida.CuerpoParticipante.Any())

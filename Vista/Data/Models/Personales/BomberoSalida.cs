@@ -2,6 +2,7 @@
 using Vista.Data.Models.Salidas.Planillas;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Permissions;
+using Vista.Data.Models.Vehiculos.Moviles;
 
 namespace Vista.Data.Models.Personales
 {

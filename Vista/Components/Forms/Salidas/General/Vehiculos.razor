@@ -1,11 +1,12 @@
 ﻿@using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Personal;
-@inject IMessageService message
+@using Vista.Data.Models.Vehiculos.Moviles;
 
-@*Servicio Utilizados*@
+@*Servicios Utilizados*@
 @using Vista.Services;
 @inject IBomberoService BomberoService
 @inject IVehiculoService VehiculoService
+@inject IMessageService message
 
 <div class="slick-contenedor @animationClass">
     <h6>Datos del chofer</h6>
@@ -146,7 +147,7 @@
         // Inicializar la lista de moviles si es null
         if (Model.Moviles == null)
         {
-            Model.Moviles = new List<MovilSalida>();
+            Model.Moviles = new List<Movil_Salida>();
         }
 
         // Obtener las listas de bomberos choferes y móviles
@@ -274,7 +275,7 @@
             Moviles.RemoveAll(m => m.NumeroMovil == Movilsalida.NumeroMovil);
 
             // Crea el Objeto Movil Salida
-            MovilSalida m = new()
+            Movil_Salida m = new()
                 {
                     Movil = Movilsalida,
                     CargoCombustible = switchMoviles,

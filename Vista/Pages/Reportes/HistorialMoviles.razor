@@ -9,6 +9,7 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 @using Vista.Data.ViewModels.Personal;
+@using Vista.Data.Models.Vehiculos.Moviles;
 
 <style>
 
@@ -104,7 +105,7 @@
 
 @code {
     BomberosDbContext Context;
-    List<MovilSalida> moviles = new List<MovilSalida>();
+    List<Movil_Salida> moviles = new List<Movil_Salida>();
     List<MovilSalidaViewModel> MovilesSalidas { get; set; } = new();
     private MovilSalidaViewModel MovilSalidaViewModels { get; set; } = new();
 
@@ -183,7 +184,7 @@
     private async Task CargarSalidasMovil()
     {
         MovilesSalidas.Clear();
-        var movilsalidaVM = await Context.Set<MovilSalida>().ToArrayAsync();
+        var movilsalidaVM = await Context.Set<Movil_Salida>().ToArrayAsync();
         foreach (var s in movilsalidaVM)
         {
             var movil = await Context.Moviles.SingleOrDefaultAsync(m => m.VehiculoId == s.MovilId);

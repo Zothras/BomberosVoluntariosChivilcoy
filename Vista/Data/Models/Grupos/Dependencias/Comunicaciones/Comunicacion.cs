@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.InteropServices;
 using Vista.Data.Models.Personales;
+using Vista.Data.Models.Vehiculos.Moviles;
 
 namespace Vista.Data.Models.Grupos.Dependencias.Comunicaciones
 {

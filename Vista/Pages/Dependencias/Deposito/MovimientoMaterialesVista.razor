@@ -1,6 +1,10 @@
 ﻿@implements IDisposable
+
 @using System.ComponentModel.DataAnnotations
 @using Vista.Services;
+@using Vista.Data.Models.Vehiculos.Moviles;
+
+@*Servicios Utilizados*@
 @inject IDepositoService DepositoService
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory

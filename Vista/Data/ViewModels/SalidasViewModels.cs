@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.ViewModels.APIResponse;
 using Vista.Data.Enums.Salidas;
+using Vista.Data.Models.Vehiculos.Moviles;
 
 namespace Vista.Data.ViewModels
 {
@@ -93,7 +94,7 @@ namespace Vista.Data.ViewModels
         public string? NumeroPoliza { get; set; }
         public DateTime? FechaVencimineto { get; set; }
 
-        public List<MovilSalida> Moviles { get; set; }
+        public List<Movil_Salida> Moviles { get; set; }
         public List<BomberoSalida> CuerpoParticipante { get; set; }
         //Bombero encargado
         public string NombreEncargado { get; set; }
