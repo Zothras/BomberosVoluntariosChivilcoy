@@ -11,6 +11,7 @@ using Vista.Data.Models.Grupos.FuerzasIntervinientes;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
 using Vista.Data.Models.Vehiculos.Moviles;
+using Vista.Data.Models.Vehiculos;
 
 namespace Vista.Data
 {

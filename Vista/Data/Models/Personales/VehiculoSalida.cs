@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Enums;
 using Vista.Data.Models.Imagenes;
+using Vista.Data.Models.Vehiculos;
 
 namespace Vista.Data.Models.Personales
 {

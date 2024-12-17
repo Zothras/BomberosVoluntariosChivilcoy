@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Models.Salidas.Planillas;
+using Vista.Data.Models.Vehiculos;
 
 namespace Vista.Data.Models.Grupos.FuerzasIntervinientes
 {

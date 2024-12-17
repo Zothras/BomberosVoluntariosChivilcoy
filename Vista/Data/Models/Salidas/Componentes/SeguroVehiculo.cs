@@ -1,4 +1,4 @@
-﻿using Vista.Data.Models.Personales;
+﻿using Vista.Data.Models.Vehiculos;
 
 namespace Vista.Data.Models.Salidas.Componentes
 {

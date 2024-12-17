@@ -1,6 +1,6 @@
-﻿using Vista.Data.Models.Personales;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Vista.Data.Models.Vehiculos;
 
 namespace Vista.Data.Models.Salidas.Componentes
 {
