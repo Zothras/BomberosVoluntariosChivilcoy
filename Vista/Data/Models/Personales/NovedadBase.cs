@@ -7,7 +7,7 @@ namespace Vista.Data.Models.Personales
 {
     public abstract class NovedadBase
     {
-        public int NovedadId { get; set; }
+        public int NovedadBaseId { get; set; }
         public DateTime? Fecha { get; set; }
         public string? Observacion { get; set; }
 

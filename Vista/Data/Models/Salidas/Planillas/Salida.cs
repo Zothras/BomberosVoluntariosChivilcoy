@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using Vista.Data.Enums.Salidas;
 using Vista.Data.Models.Vehiculos.Moviles;
+using Vista.Data.Enums.Discriminadores;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {
@@ -13,6 +14,7 @@ namespace Vista.Data.Models.Salidas.Planillas
     public abstract class Salida
     {
         public int SalidaId { get; set; }
+        public TipoDeEmergencia TipoEmergencia { get; set; }
         public DateTime HoraSalida { get; set; }
         public DateTime HoraLlegada { get; set; }
         public int NumeroParte { get; set; }

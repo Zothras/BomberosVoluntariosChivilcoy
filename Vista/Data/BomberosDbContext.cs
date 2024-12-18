@@ -182,6 +182,10 @@ namespace Vista.Data
                 .Property(v => v.Discriminador)
                 .HasConversion<int>();
 
+            modelBuilder.Entity<Salida>()
+                .Property(s => s.TipoEmergencia)
+                .HasConversion<int>();
+
             //Discriminacion (Pasada a ENUM)
 
             modelBuilder.Entity<Persona>()
@@ -200,32 +204,30 @@ namespace Vista.Data
                 .HasValue<Imagen_VehiculoSalida>(TipoImagen.ImagenVehiculoSalida);
 
             modelBuilder.Entity<Salida>()
-                .HasDiscriminator<int>("TipoSalida")
-                .HasValue<Accidente>(1)
-                .HasValue<FactorClimatico>(2)
-                .HasValue<MaterialPeligroso>(3)
-                .HasValue<ServicioEspecialRepresentacion>(4)
-                .HasValue<RescateAnimal>(5)
-                .HasValue<RescatePersona>(6)
-                .HasValue<IncendioComercio>(7)
-                .HasValue<IncendioEstablecimientoEducativo>(8)
-                .HasValue<IncendioEstablecimientoPublico>(9)
-                .HasValue<IncendioForestal>(10)
-                .HasValue<IncendioHospitalesYClinicas>(11)
-                .HasValue<IncendioIndustria>(12)
-                .HasValue<IncendioVivienda>(13)
-                .HasValue<ServicioEspecialPrevencion>(14)
-                .HasValue<Incendio>(15)
-                .HasValue<ServicioEspecial>(16)
-                .HasValue<IncendioAeronaves>(17)
-                .HasValue<ServicioEspecialCapacitacion>(18)
-                .HasValue<ServicioEspecialColocaciónDriza>(19)
-                .HasValue<ServicioEspecialSuministroAgua>(20)
-                .HasValue<ServicioEspecialFalsaAlarma>(21)
-                .HasValue<ServicioEspecialRetiradoDeObito>(22)
-                .HasValue<ServicioEspecialColaboraciónFuerzasSeguridad>(23);
-            modelBuilder.Entity<Salida>()
-                .ToTable("Salidas");
+                .HasDiscriminator(s => s.TipoEmergencia)
+                .HasValue<Accidente>(TipoDeEmergencia.Accidente)
+                .HasValue<FactorClimatico>(TipoDeEmergencia.FactorClimatico)
+                .HasValue<MaterialPeligroso>(TipoDeEmergencia.MaterialPeligroso)
+                .HasValue<ServicioEspecialRepresentacion>(TipoDeEmergencia.ServicioEspecialRepresentacion)
+                .HasValue<RescateAnimal>(TipoDeEmergencia.RescateAnimal)
+                .HasValue<RescatePersona>(TipoDeEmergencia.RescatePersona)
+                .HasValue<IncendioComercio>(TipoDeEmergencia.IncendioComercio)
+                .HasValue<IncendioEstablecimientoEducativo>(TipoDeEmergencia.IncendioEstablecimientoEducativo)
+                .HasValue<IncendioEstablecimientoPublico>(TipoDeEmergencia.IncendioEstablecimientoPublico)
+                .HasValue<IncendioForestal>(TipoDeEmergencia.IncendioForestal)
+                .HasValue<IncendioHospitalesYClinicas>(TipoDeEmergencia.IncendioHospitalesYClinicas)
+                .HasValue<IncendioIndustria>(TipoDeEmergencia.IncendioIndustria)
+                .HasValue<IncendioVivienda>(TipoDeEmergencia.IncendioVivienda)
+                .HasValue<ServicioEspecialPrevencion>(TipoDeEmergencia.ServicioEspecialPrevencion)
+                .HasValue<Incendio>(TipoDeEmergencia.Incendio)
+                .HasValue<ServicioEspecial>(TipoDeEmergencia.ServicioEspecial)
+                .HasValue<IncendioAeronaves>(TipoDeEmergencia.IncendioAeronaves)
+                .HasValue<ServicioEspecialCapacitacion>(TipoDeEmergencia.ServicioEspecialCapacitacion)
+                .HasValue<ServicioEspecialColocaciónDriza>(TipoDeEmergencia.ServicioEspecialColocacionDriza)
+                .HasValue<ServicioEspecialSuministroAgua>(TipoDeEmergencia.ServicioEspecialSuministroAgua)
+                .HasValue<ServicioEspecialFalsaAlarma>(TipoDeEmergencia.ServicioEspecialFalsaAlarma)
+                .HasValue<ServicioEspecialRetiradoDeObito>(TipoDeEmergencia.ServicioEspecialRetiradoDeObito)
+                .HasValue<ServicioEspecialColaboraciónFuerzasSeguridad>(TipoDeEmergencia.ServicioEspecialColaboracionFuerzasSeguridad);
 
             modelBuilder.Entity<Vehiculo>()
                 .HasDiscriminator(v => v.Discriminador)

@@ -4,7 +4,7 @@ using Vista.Data.Enums.Discriminadores;
 
 namespace Vista.Data.Models.Personales
 {
-    public class Persona
+    public abstract class Persona
     {
         /// <summary>
         /// Identificador único de la persona.
