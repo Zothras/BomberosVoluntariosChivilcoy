@@ -99,6 +99,7 @@ namespace Vista.Services
                 salida.Moviles = movilessalida;
 
                 //Damnificados
+                /*
                 List<Damnificado> damnificadossalida = new List<Damnificado>();
                 foreach (Damnificado d in salida.Damnificados)
                 {
@@ -115,9 +116,11 @@ namespace Vista.Services
                     damnificadossalida.Add(damn);
                 }
                 salida.Damnificados = damnificadossalida;
-
+                
                 _context.Set<T>().Add(salida);
                 await _context.SaveChangesAsync();
+                
+                */
                 return salida;
             }
             catch (DbUpdateException ex)

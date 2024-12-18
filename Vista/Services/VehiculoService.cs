@@ -75,7 +75,7 @@ namespace Vista.Services
                     }
                     if(ImagenId != null && ImagenId != 0)
                     {
-                        ImagenVehiculo EditarImagen = await _context.ImagenesVehiculo.SingleOrDefaultAsync(i=>i.ImagenId == ImagenId);
+                        Imagen_VehiculoSalida EditarImagen = await _context.ImagenesVehiculo.SingleOrDefaultAsync(i=>i.ImagenId == ImagenId);
                         vehiculo.Imagen = EditarImagen;
                         vehiculo.ImagenId = EditarImagen.ImagenId;
                     }

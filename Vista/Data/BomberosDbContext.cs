@@ -12,6 +12,8 @@ using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
 using Vista.Data.Models.Vehiculos.Moviles;
 using Vista.Data.Models.Vehiculos;
+using Vista.Data.Models.Personales.Componentes;
+using Vista.Data.Enums.Discriminadores;
 
 namespace Vista.Data
 {
@@ -29,12 +31,14 @@ namespace Vista.Data
 
         // Vehiculos
         public DbSet<Movil> Moviles { get; set; }
-        public DbSet<VehiculoPersonal> VehiculosPersonales { get; set; }
+        public DbSet<Vehiculo_Personal> VehiculosPersonales { get; set; }
 
         // Imagenes
 
-        public DbSet<ImagenBombero> ImagenesBomberos { get; set; }
-        public DbSet<ImagenVehiculo> ImagenesVehiculo { get; set; }
+        public DbSet<Imagen_Personal> ImagenesBomberos { get; set; }
+        public DbSet<Imagen_VehiculoSalida> ImagenesVehiculo { get; set; }
+
+        // Seguros
         public DbSet<SeguroSalida> SegurosSalidas { get; set; }
         public DbSet<SeguroVehiculo> SeguroVehiculos { get; set; }
 
@@ -42,6 +46,8 @@ namespace Vista.Data
         public DbSet<VehiculoAfectadoAccidente> VehiculosAfectadosAccidentes { get; set; }
         public DbSet<VehiculoAfectadoIncendio> VehiculosAfectadoIncendios { get; set; }
         public DbSet<VehiculoDamnificado> VehiculosDamnificados { get; set; }
+
+        // Salidas 
         public DbSet<Accidente> Accidentes { get; set; }
         public DbSet<FactorClimatico> FactoresClimaticos { get; set; }
         public DbSet<RescatePersona> RescatePersonas { get; set; }
@@ -75,7 +81,6 @@ namespace Vista.Data
         public DbSet<Comunicacion> Comunicacion { get; set; }
         public DbSet<AscensoBombero> AscensoBomberos { get; set; }
         public DbSet<Licencia> Licencias { get; set; }
-        public DbSet<HorarioBombero> HorariosBomberos { get; set; }
         public DbSet<Sancion> Sanciones { get; set; }
         public DbSet<Novedad> Novedades { get; set; }
         public DbSet<NovedadVehiculo> NovedadesVehiculos { get; set; }
@@ -104,6 +109,7 @@ namespace Vista.Data
             // Relaciones mucho a muchos
 
             //Dependencia
+
             modelBuilder.Entity<Bombero_Dependencia>()
                 .HasKey(bd => new { bd.PersonaId, bd.DependenciaId });
 
@@ -117,6 +123,7 @@ namespace Vista.Data
                 .WithMany(d => d.Bomberos)
                 .HasForeignKey(bd => bd.DependenciaId);
 
+            //Brigadas
 
             modelBuilder.Entity<Bombero_Brigada>()
             .HasKey(bb => new { bb.BomberoId, bb.BrigadaId }); // Configura la clave primaria compuesta
@@ -131,77 +138,66 @@ namespace Vista.Data
                 .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Brigada tienes una colección de BomberoBrigada
                 .HasForeignKey(bb => bb.BrigadaId);
 
+            //Unique
+
+            //Brigadas
+
             modelBuilder.Entity<Brigada>()
                 .HasIndex(b => b.Nombre)
                 .IsUnique();
+
+            //Movil
 
             modelBuilder.Entity<Movil>()
             .HasIndex(m => m.NumeroMovil)
             .IsUnique();
 
+            //Embarcacion
+
             modelBuilder.Entity<Embarcacion>()
             .HasIndex(e => e.NumeroMovil)
             .IsUnique();
+
+            //Bombero
 
             modelBuilder.Entity<Bombero>()
                 .HasIndex(b => b.NumeroLegajo)
                 .IsUnique();
 
-            modelBuilder.Entity<Licencia>()
-             .HasKey(l => l.LicenciaId);
-
-            modelBuilder.Entity<NovedadBase>()
-             .HasKey(n => n.NovedadId);
-
-            modelBuilder.Entity<Incidente>()
-                .ToTable("Incidente");
-
-            modelBuilder.Entity<Bombero_Dependencia>()
-                .ToTable("BomberoDependencia");
-
-            modelBuilder.Entity<Licencia>()
-                .ToTable("Licencias");
-            modelBuilder.Entity<Comunicacion>()
-                .HasKey(c => c.EquipoId);
-            modelBuilder.Entity<Comunicacion>()
-                .ToTable("Comunicacion");
-
-            modelBuilder.Entity<AscensoBombero>()
-              .HasKey(a => a.AscensoId);
-            modelBuilder.Entity<AscensoBombero>()
-                .ToTable("AscensoBombero");
-
-            modelBuilder.Entity<HorarioBombero>()
-              .HasKey(h => h.HorarioId);
-            modelBuilder.Entity<HorarioBombero>()
-                .ToTable("HorariosBomberos");
-
-            modelBuilder.Entity<Sancion>()
-              .HasKey(a => a.SancionId);
-            modelBuilder.Entity<Sancion>()
-                .ToTable("Sanciones");
-
+            // Enum Discriminadores
 
             modelBuilder.Entity<Persona>()
-                .HasDiscriminator<int>("TipoPersona")
-                .HasValue<Bombero>(1)
-                .HasValue<Persona>(2);
+                .Property(p => p.Tipo)
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Seguro>()
+                .Property(s => s.Tipo)
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Imagen>()
+                .Property(i => i.Tipo)
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Vehiculo>()
+                .Property(v => v.Discriminador)
+                .HasConversion<int>();
+
+            //Discriminacion (Pasada a ENUM)
+
             modelBuilder.Entity<Persona>()
-                .ToTable("Personas");
+                .HasDiscriminator(p => p.Tipo)
+                .HasValue<Bombero>(TipoPersona.Bombero)
+                .HasValue<Damnificado>(TipoPersona.Damnificado);
 
             modelBuilder.Entity<Seguro>()
-                .HasDiscriminator<int>("TipoSeguro")
-                .HasValue<SeguroSalida>(1)
-                .HasValue<SeguroVehiculo>(2);
-            modelBuilder.Entity<Seguro>()
-                .ToTable("Seguros");
+                .HasDiscriminator(s => s.Tipo)
+                .HasValue<SeguroSalida>(TipoSeguro.SeguroSalida)
+                .HasValue<SeguroVehiculo>(TipoSeguro.SeguroVehiculo);
 
             modelBuilder.Entity<Imagen>()
-                .HasDiscriminator<int>("TipoImagenDiscriminador")
-                .HasValue<ImagenBombero>(1)
-                .HasValue<ImagenVehiculo>(2);
-            modelBuilder.Entity<Imagen>()
-                .ToTable("Imagenes");
+                .HasDiscriminator(i => i.Tipo)
+                .HasValue<Imagen_Personal>(TipoImagen.ImagenPersonal)
+                .HasValue<Imagen_VehiculoSalida>(TipoImagen.ImagenVehiculoSalida);
 
             modelBuilder.Entity<Salida>()
                 .HasDiscriminator<int>("TipoSalida")
@@ -232,14 +228,16 @@ namespace Vista.Data
                 .ToTable("Salidas");
 
             modelBuilder.Entity<Vehiculo>()
-                .HasDiscriminator<int>("TipoVehiculo")
-                .HasValue<VehiculoAfectadoAccidente>(1)
-                .HasValue<VehiculoAfectadoIncendio>(2)
-                .HasValue<VehiculoDamnificado>(3)
-                .HasValue<VehiculoPersonal>(4)
-                .HasValue<Movil>(5)
-                .HasValue<VehiculoAfectado>(6)
-                .HasValue<Embarcacion>(7);
+                .HasDiscriminator(v => v.Discriminador)
+                .HasValue<VehiculoAfectadoAccidente>(TipoVehiculo.VehiculoAfectadoAccidente)
+                .HasValue<VehiculoAfectadoIncendio>(TipoVehiculo.VehiculoAfectadoIncendio)
+                .HasValue<VehiculoDamnificado>(TipoVehiculo.VehiculoDamnificado)
+                .HasValue<Vehiculo_Personal>(TipoVehiculo.VehiculoPersonal)
+                .HasValue<Movil>(TipoVehiculo.Movil)
+                .HasValue<VehiculoAfectado>(TipoVehiculo.VehiculoAfectado)
+                .HasValue<Embarcacion>(TipoVehiculo.Embarcacion);
+
+            // Configuracion de Realaciones al Borrarse
 
             modelBuilder.Entity<Comunicacion>()
                 .HasOne(c => c.Bombero)
@@ -248,7 +246,7 @@ namespace Vista.Data
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
-            modelBuilder.Entity<ImagenVehiculo>()
+            modelBuilder.Entity<Imagen_VehiculoSalida>()
                 .HasOne(i => i.Vehiculo)
                 .WithOne(v => v.Imagen)
                 .HasForeignKey<VehiculoSalida>(v => v.ImagenId)
@@ -304,8 +302,6 @@ namespace Vista.Data
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 
-
-
             // Configuración de la relación uno a muchos entre Salida y MovilSalida
             modelBuilder.Entity<Movil_Salida>()
                 .HasOne(ms => ms.Salida)
@@ -318,32 +314,25 @@ namespace Vista.Data
                 .WithMany(s => s.CuerpoParticipante) // Asegúrate de que Salida tenga una colección BomberosSalidas
                 .HasForeignKey(bs => bs.SalidaId);
 
-            // Enum
+            // Enum Conversiones a String - INT
             modelBuilder
                 .Entity<Persona>()
                 .Property(p => p.Sexo)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+
             modelBuilder
                .Entity<MovimientoMaterial>()
                .Property(m => m.TipoMovimiento)
                .HasConversion<string>()
                .HasMaxLength(255);
-            modelBuilder
-                .Entity<HorarioBombero>()
-                .Property(h => h.ModoRotativo)
-                .HasConversion<string>()
-                .HasMaxLength(255);
-            modelBuilder
-                .Entity<HorarioBombero>()
-                .Property(h => h.DiaSemana)
-                .HasConversion<string>()
-                .HasMaxLength(255);
+
             modelBuilder
                 .Entity<Bombero>()
                 .Property(b => b.Grado)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+
             modelBuilder
                 .Entity<Licencia>()
                 .Property(p => p.EstadoLicencia)
@@ -361,7 +350,7 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-                .Entity<Persona>()
+                .Entity<Personal>()
                 .Property(b => b.GrupoSanguineo)
                 .HasConversion<string>()
                 .HasMaxLength(255);
@@ -383,12 +372,6 @@ namespace Vista.Data
                 .Property(s => s.TipoPrevencion)
                 .HasConversion<string>()
                 .HasMaxLength(255);
-
-            //modelBuilder
-            //  .Entity<ServicioEspecial>()
-            //.Property(s => s.Tipo)
-            //.HasConversion<string>()
-            //.HasMaxLength(255);
 
             modelBuilder
                 .Entity<ServicioEspecial>()
@@ -511,12 +494,6 @@ namespace Vista.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
-            //modelBuilder
-            //  .Entity<Incendio>()
-            //.Property(i => i.Tipo)
-            //.HasConversion<string>()
-            //.HasMaxLength(255);
-
             modelBuilder
                 .Entity<Incendio>()
                 .Property(i => i.TipoAbertura)
@@ -559,6 +536,7 @@ namespace Vista.Data
                 .Property(b => b.Grado)
                 .HasConversion<string>()
                 .HasMaxLength(255);
+
             modelBuilder
                 .Entity<Limpieza>()
                 .Property(t => t.Incidente)
@@ -574,12 +552,6 @@ namespace Vista.Data
             modelBuilder
                 .Entity<Damnificado>()
                 .Property(d => d.Sexo)
-                .HasConversion<string>()
-                .HasMaxLength(255);
-
-            modelBuilder
-                .Entity<Damnificado>()
-                .Property(d => d.Estado)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 

@@ -7,7 +7,7 @@ namespace Vista.Data.Models.Salidas.Componentes
 {
     public class AscensoBombero
     {
-        public int AscensoId { get; set; }
+        public int AscensoBomberoId { get; set; }
 
         public DateOnly FechaAscenso { get; set; }
 

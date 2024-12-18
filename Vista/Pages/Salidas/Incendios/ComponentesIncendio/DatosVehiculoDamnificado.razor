@@ -156,7 +156,9 @@
         // Lógica relacionada con Damnificados
         if (Model.Damnificados != null)
         {
+            /*
             DamnificadosSalida = ConvertToViewModel(Model.Damnificados);
+            */
         }
         else
         {
@@ -170,6 +172,7 @@
         await damnificadoVehiculoCall.InvokeAsync(value);
     }
 
+    /*
     private List<DamnificadoViewModels> ConvertToViewModel(List<Damnificado> damnificados)
     {
         return damnificados.Select(damnificado => new DamnificadoViewModels
@@ -183,6 +186,7 @@
                 Estado = damnificado.Estado
             }).ToList();
     }
+    */
 
     private void HandleOkD(MouseEventArgs e)
     {

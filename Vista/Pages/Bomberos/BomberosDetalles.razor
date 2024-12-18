@@ -6,6 +6,7 @@
 @using AntDesign.TableModels
 @using System.Text.Json
 @using Vista.Data.Models.Grupos.Brigadas
+@using Vista.Data.Models.Personales.Componentes
 @using Vista.Data.Models.Imagenes
 
 @* Detalles del Bombero *@
@@ -71,7 +72,7 @@
         {
             using var context = DbFactory.CreateDbContext();
             string src = "/";
-            ImagenBombero imagen = context.ImagenesBomberos.Where(i => i.ImagenId == bomberoVM.ImagenId).SingleOrDefault();
+            Imagen_Personal imagen = context.ImagenesBomberos.Where(i => i.ImagenId == bomberoVM.ImagenId).SingleOrDefault();
             if (imagen is not null)
             {
                 src = $"data:{imagen.TipoImagen};base64,{imagen.Base64Imagen}";
@@ -85,7 +86,7 @@
     {
         Context = DbFactory.CreateDbContext();
         bomberoVM = await Context.Bomberos.Where(b => b.PersonaId == BomberoId).SingleOrDefaultAsync();
-        contactoVM = await Context.Contactos.Where(c=>c.PersonaId == BomberoId).SingleOrDefaultAsync();
+        contactoVM = await Context.Contactos.Where(c=>c.PersonalId == BomberoId).SingleOrDefaultAsync();
         brigadaVM = await Context.Brigadas.Where(b=>b.BrigadaId == bomberoVM.BrigadaId).SingleOrDefaultAsync();
 
         StateHasChanged();

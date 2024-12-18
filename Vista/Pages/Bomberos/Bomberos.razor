@@ -379,7 +379,7 @@
 
         string src = "/";
 
-        ImagenBombero? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
+        Imagen_Personal? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
 
         if (imagen is not null)
         {

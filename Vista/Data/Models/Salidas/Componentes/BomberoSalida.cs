@@ -3,8 +3,9 @@ using Vista.Data.Models.Salidas.Planillas;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Permissions;
 using Vista.Data.Models.Vehiculos.Moviles;
+using Vista.Data.Models.Personales;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Salidas.Componentes
 {
     public class BomberoSalida
     {

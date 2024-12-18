@@ -18,7 +18,7 @@ namespace Vista.Data.Models.Personales
         public List<Firma> Firmas { get; set; } = new();
         public List<Incidente> Incidentes { get; set; } = new();
         public int? ImagenId { get; set; }
-        public ImagenVehiculo? Imagen { get; set; }
+        public Imagen_VehiculoSalida? Imagen { get; set; }
         public List<NovedadVehiculo>? Novedades { get; set; }
     }
 }

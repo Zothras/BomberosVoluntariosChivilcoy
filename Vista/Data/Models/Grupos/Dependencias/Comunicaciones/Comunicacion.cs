@@ -16,7 +16,7 @@ namespace Vista.Data.Models.Grupos.Dependencias.Comunicaciones
         /// <summary>
         /// Identificador único del equipo de comunicación.
         /// </summary>
-        public int EquipoId { get; set; }
+        public int ComunicacionId { get; set; }
 
         /// <summary>
         /// Número único del equipo de comunicación (por ejemplo, número de serie o código identificador).

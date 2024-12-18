@@ -158,7 +158,7 @@
         var bomberos = await Context.Bomberos.ToListAsync();
         foreach (var a in bomberos)
         {
-            var contacto = await Context.Contactos.Where(c => c.PersonaId == a.PersonaId).SingleOrDefaultAsync();
+            var contacto = await Context.Contactos.Where(c => c.PersonalId == a.PersonaId).SingleOrDefaultAsync();
             Vista.Data.ViewModels.Personal.BomberoViweModel Bm = new()
             {
                 NumeroLegajo = a.NumeroLegajo,

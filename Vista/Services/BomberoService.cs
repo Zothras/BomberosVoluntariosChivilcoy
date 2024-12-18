@@ -6,6 +6,7 @@ using Vista.Data;
 using Vista.Data.Enums;
 using Vista.Data.Models.Grupos.Brigadas;
 using Vista.Data.Models.Personales;
+using Vista.Data.Models.Personales.Componentes;
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.ViewModels.Personal;
 
@@ -59,7 +60,7 @@ namespace Vista.Services
             try
             {
                 Bombero Editar = await _context.Bomberos.SingleOrDefaultAsync(e => e.PersonaId == bombero.PersonaId);
-                Contacto? contacto = await _context.Contactos.SingleOrDefaultAsync(c => c.PersonaId == bombero.PersonaId);
+                Contacto? contacto = await _context.Contactos.SingleOrDefaultAsync(c => c.PersonalId == bombero.PersonaId);
                 if (contacto != null)
                 {
                     _context.Contactos.Remove(contacto);

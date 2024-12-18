@@ -8,19 +8,22 @@ using Vista.Data.Models.Grupos.Dependencias;
 using Vista.Data.Models.Grupos.Brigadas;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
+using Vista.Data.Models.Personales.Componentes;
 
 namespace Vista.Data.Models.Personales
 {
     [Index(nameof(NumeroLegajo))]
     [Index(nameof(EquipoId), IsUnique = true)]
-    public class Bombero : Persona
+    public class Bombero : Personal
     {
         [Required]
         public int NumeroLegajo { get; set; }
         public EstadoBombero Estado { get; set; }
         public TipoDotaciones Dotacion { get; set; }
-        public DateTime? FechaAceptacion { get; set; }
+
         public EscalafonJerarquico Grado { get; set; }
+        public int? Altura { get; set; }
+        public int? Peso { get; set; }
         public bool Chofer { get; set; }
         public DateTime? VencimientoRegistro { get; set; }
 
@@ -30,11 +33,8 @@ namespace Vista.Data.Models.Personales
 
         public int? BrigadaId { get; set; }
         public Brigada? Brigada { get; set; }
-        public int? ImagenId { get; set; }
-        [ForeignKey("ImagenId")]
-        public ImagenBombero? Imagen { get; set; }
 
-        public List<VehiculoPersonal> Vehiculos { get; set; } = new();
+        
 
         public List<VehiculoSalida>? VehiculosEncargado { get; set; }
 
@@ -48,16 +48,12 @@ namespace Vista.Data.Models.Personales
         public Comunicacion? Handie { get; set; }
 
         public List<AscensoBombero> Ascensos { get; set; } = new();
-        public List<Licencia> Licencias { get; set; } = new();
-
         public List<MovimientoMaterial> DestinoMaterial { get; set; } = new();
 
         [InverseProperty("PersonalSancionado")]
         public List<Sancion> SancionesRecibidas { get; set; } = new();
         [InverseProperty("EncargadoArea")]
         public List<Sancion> SancionesAplicadas { get; set; } = new();
-
-        public List<HorarioBombero> Horarios { get; set; } = new();
         public List<Limpieza> Limpieza { get; set; } = new();
         public List<NovedadBase>? Novedades { get; set; } = new();
 

@@ -1,5 +1,6 @@
 ﻿using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
+using Vista.Data.Enums.Discriminadores;
 
 namespace Vista.Data.Models.Vehiculos
 {
@@ -9,6 +10,8 @@ namespace Vista.Data.Models.Vehiculos
         /// Identificador único del vehículo.
         /// </summary>
         public int VehiculoId { get; set; }
+
+        public TipoVehiculo Discriminador { get; set; }
 
         /// <summary>
         /// Marca del vehículo, con un máximo de 255 caracteres.

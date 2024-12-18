@@ -179,7 +179,8 @@
         List<Bombero> choferes = await context.Bomberos.Where(b => b.Chofer).ToListAsync();//saco la info
         foreach (var chofer in choferes)
         {
-            var contactos = await context.Contactos.Where(c => c.PersonaId == chofer.PersonaId).SingleOrDefaultAsync();
+            var contactos = await context.Contactos.Where(c => c.PersonalId == chofer.PersonaId).SingleOrDefaultAsync();
+
                 ChoferesVM ChoferesPasajeVM = new()
                 {
                     Nombre = chofer.Nombre,
@@ -191,6 +192,7 @@
                     TelefonoFijo = contactos.TelefonoFijo,
                     TelefonoLaboral = contactos.TelefonoLaboral
                 };
+
             b.Add(ChoferesPasajeVM);
         }
         StateHasChanged();

@@ -8,6 +8,7 @@
 @using AntDesign.TableModels
 @using System.Text.Json;
 @using Vista.Data.Models.Grupos.Brigadas;
+@using Vista.Data.Models.Personales.Componentes;
 
 @* Editar bombero *@
 <Form Loading="loading" Model="@bomberoVM"
@@ -175,7 +176,7 @@
                 editarProp.SetValue(bomberoVM, propValor);
             }
         }
-        Contacto? contacto = await Context.Contactos.Where(c => c.PersonaId == BomberoId).SingleOrDefaultAsync();
+        Contacto? contacto = await Context.Contactos.Where(c => c.PersonalId == BomberoId).SingleOrDefaultAsync();
         if (contacto != null)
         {
             contactoVM = new()

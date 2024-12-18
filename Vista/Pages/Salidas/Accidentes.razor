@@ -295,6 +295,7 @@
                 accidente.Moviles = accidenteViewModels.Moviles.ToList();
             }
 
+            /*
             foreach (var d in accidenteViewModels.Damnificados)
             {
 
@@ -326,8 +327,8 @@
 
                     };
                 accidente.Damnificados.Add(damn);
-
             }
+            */
 
             await SalidaService.GuardarSalida(accidente);
             HandleOk1(accidente.AnioNumeroParte, accidente.NumeroParte);
