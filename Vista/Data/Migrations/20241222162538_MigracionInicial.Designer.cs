@@ -12,8 +12,8 @@ using Vista.Data;
 namespace Vista.Data.Migrations
 {
     [DbContext(typeof(BomberosDbContext))]
-    [Migration("20241218183228_DestruirBaseDeDatosConCuidado")]
-    partial class DestruirBaseDeDatosConCuidado
+    [Migration("20241222162538_MigracionInicial")]
+    partial class MigracionInicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
