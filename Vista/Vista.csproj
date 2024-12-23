@@ -23,9 +23,6 @@
     <Compile Remove="Data\Models\Salidas\Componentes\VehículoInterviniente.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\Imagenes\Icons\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AntDesign" Version="1.0.1" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />    
