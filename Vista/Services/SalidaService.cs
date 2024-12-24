@@ -18,9 +18,15 @@ namespace Vista.Services
     public interface ISalidaService
     {
         Task<Salida> GuardarSalida<T>(T entidad) where T : Salida;
+
         Task<T?> ObtenerSalidaPorNumeroParteAsync<T>(int numeroParte,
     Expression<Func<T, bool>> predicate) where T : class;
 
+        Task<List<Salida>> ObtenerTodasLasSalidasAsync();
+
+        Task<Salida?> ObtenerSalidaPorIdAsync(int id);
+
+        Task<bool> BorrarSalidaAsync(int id);
     }
 
     public class SalidaService : ISalidaService
@@ -40,6 +46,7 @@ namespace Vista.Services
                 .Where(predicate)
                 .SingleOrDefaultAsync();
         }
+
         public async Task<Salida> GuardarSalida<T>(T salida) where T : Salida
         {
             try
@@ -135,5 +142,27 @@ namespace Vista.Services
             }
         }
 
+        public async Task<List<Salida>> ObtenerTodasLasSalidasAsync()
+        {
+            return await _context.Salidas.ToListAsync();
+        }
+
+        public async Task<Salida?> ObtenerSalidaPorIdAsync(int id)
+        {
+            return await _context.Salidas.FindAsync(id);
+        }
+
+        public async Task<bool> BorrarSalidaAsync(int id)
+        {
+            var salida = await _context.Salidas.FindAsync(id);
+            if (salida == null)
+            {
+                return false;
+            }
+
+            _context.Salidas.Remove(salida);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

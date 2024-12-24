@@ -181,21 +181,6 @@
         color: white !important;
     }
 
-    /* Dropdown and Buttons */
-    .salidas-menu {
-        max-height: 400px;
-        overflow-y: auto;
-    }
-
-    .salidas-button {
-        width: 100%;
-        margin-top: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
     .department-buttons, .ethics-buttons, .report-buttons {
         display: flex;
         justify-content: center;
@@ -292,161 +277,13 @@
 
         @*Salidas Section*@
         <Col Xs="24" Sm="12" Lg="8">
-        <Card Class="dashboard-card salidas-card">
-            <Icon class="card-icon" Type="alert" Theme="fill" />
-            <h2>Salidas</h2>
-            <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
-                <Overlay>
-                    <Menu Class="salidas-menu">
-                        <MenuItemGroup Title="Tipos de Salidas">
-                            <MenuItem @onclick="@(() => { navigationManager.NavigateTo("/salidas/factores-climaticos"); })">
-                                <i class="fa-solid fa-cloud-sun-rain menu-icon"></i>
-                                <span>Factores Climáticos</span>
-                            </MenuItem>
-                            <MenuItem @onclick="@(() => { navigationManager.NavigateTo("/salidas/materiales-peligrosos"); })">
-                                <i class="fa-solid fa-triangle-exclamation menu-icon"></i>
-                                <span>Materiales Peligrosos</span>
-                            </MenuItem>
-                            <MenuItem @onclick="@(() => { navigationManager.NavigateTo("/salidas/accidentes"); })">
-                                <i class="fa-solid fa-car-crash menu-icon"></i>
-                                <span>Accidente</span>
-                            </MenuItem>
-                            <SubMenu Title="Incendios">
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-MaquinasAgricola"); })">
-                                        <i class="fa-solid fa-tractor menu-icon"></i>
-                                        <span>Máquina Agrícola</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-Aereonaves"); })">
-                                        <i class="fa-solid fa-plane menu-icon"></i>
-                                        <span>Aeronave</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-comercio"); })">
-                                        <i class="fa-solid fa-store menu-icon"></i>
-                                        <span>Comercio</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoEducativo"); })">
-                                        <i class="fa-solid fa-school menu-icon"></i>
-                                        <span>Establecimiento Educativo</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-forestales"); })">
-                                        <i class="fa-solid fa-tree menu-icon"></i>
-                                        <span>Forestal</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-industriales"); })">
-                                        <i class="fa-solid fa-industry menu-icon"></i>
-                                        <span>Industrial</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-vehiculares"); })">
-                                        <i class="fa-solid fa-car menu-icon"></i>
-                                        <span>Vehicular</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-HospitalesClinicas"); })">
-                                        <i class="fa-solid fa-hospital menu-icon"></i>
-                                        <span>Hospital/Clínica</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-establecimientoPublico"); })">
-                                        <i class="fa-solid fa-building menu-icon"></i>
-                                        <span>Establecimiento Público</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/incendios-viviendas"); })">
-                                        <i class="fa-solid fa-house menu-icon"></i>
-                                        <span>Vivienda</span>
-                                    </Button>
-                                </MenuItem>
-                            </SubMenu>
-                            <SubMenu Title="Servicios Especiales">
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRepresentacion"); })">
-                                        <i class="fa-solid fa-people-arrows menu-icon"></i>
-                                        <span>Representación</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosPrevencion"); })">
-                                        <i class="fa-solid fa-shield-alt menu-icon"></i>
-                                        <span>Prevención</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosSuministroAgua"); })">
-                                        <i class="fa-solid fa-water menu-icon"></i>
-                                        <span>Suministro de Agua</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosColaboraciónFuerzasSeguridad"); })">
-                                        <i class="fa-solid fa-handshake menu-icon"></i>
-                                        <span>Colaboración con Fuerzas de Seguridad</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosColocaciónDriza"); })">
-                                        <i class="fa-solid fa-anchor menu-icon"></i>
-                                        <span>Colocación de Driza</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosCapacitacion"); })">
-                                        <i class="fa-solid fa-chalkboard-teacher menu-icon"></i>
-                                        <span>Capacitación</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosFalsaAlarmas"); })">
-                                        <i class="fa-solid fa-exclamation-triangle menu-icon"></i>
-                                        <span>Falsa Alarma</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/serviciosRetiradoDeObito"); })">
-                                        <i class="fa-solid fa-procedures menu-icon"></i>
-                                        <span>Retirado de Óbito</span>
-                                    </Button>
-                                </MenuItem>
-                            </SubMenu>
-                            <SubMenu Title="Rescates">
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-persona"); })">
-                                        <i class="fa-solid fa-user menu-icon"></i>
-                                        <span>Persona</span>
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button Class="menu-button" @onclick="@(() => { navigationManager.NavigateTo("/salidas/rescates-animal"); })">
-                                        <i class="fa-solid fa-paw menu-icon"></i>
-                                        <span>Animal</span>
-                                    </Button>
-                                </MenuItem>
-                            </SubMenu>
-                        </MenuItemGroup>
-                    </Menu>
-                </Overlay>
-                <ChildContent>
-                    <Button Type="primary" Class="salidas-button">
-                        Cargar Salidas <i class="fa-solid fa-arrow-down"></i>
-                    </Button>
-                </ChildContent>
-            </Dropdown>
-        </Card>
+        <div @onclick="@(() => { navigationManager.NavigateTo("/Salidas"); })" style="cursor: pointer;">
+            <Card Class="dashboard-card salidas-card">
+                <Icon class="card-icon" Type="alert" Theme="fill" />
+                <h2>Salidas</h2>
+                <p>Gestión de salidas</p>
+            </Card>
+        </div>
         </Col>
 
         @* Personal/Bomberos Section *@
