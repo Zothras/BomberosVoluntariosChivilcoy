@@ -80,14 +80,8 @@ namespace Vista.Data.Models.Personales
         public List<Licencia> Licencias { get; set; } = new();
 
         /// <summary>
-        /// Identificador único de la imagen asociada. Puede ser nulo.
-        /// </summary>
-        public int? ImagenId { get; set; }
-
-        /// <summary>
         /// Relación con la entidad Imagen_Personal, que representa la imagen asociada a este objeto.
         /// </summary>
-        [ForeignKey("ImagenId")]
         public Imagen_Personal? Imagen { get; set; }
 
         /// <summary>

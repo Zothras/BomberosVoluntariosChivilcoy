@@ -953,7 +953,8 @@ namespace Vista.Data.Migrations
                     b.Property<int>("PersonalId")
                         .HasColumnType("int");
 
-                    b.HasIndex("PersonalId");
+                    b.HasIndex("PersonalId")
+                        .IsUnique();
 
                     b.HasDiscriminator().HasValue(1);
                 });
@@ -1014,9 +1015,6 @@ namespace Vista.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("ImagenId")
-                        .HasColumnType("int");
-
                     b.Property<string>("LugarNacimiento")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
@@ -1035,9 +1033,6 @@ namespace Vista.Data.Migrations
                     b.Property<string>("Profesion")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
-
-                    b.HasIndex("ImagenId")
-                        .IsUnique();
                 });
 
             modelBuilder.Entity("Vista.Data.Models.Salidas.Componentes.IncidenteDependencia", b =>
@@ -2091,8 +2086,8 @@ namespace Vista.Data.Migrations
             modelBuilder.Entity("Vista.Data.Models.Imagenes.Imagen_Personal", b =>
                 {
                     b.HasOne("Vista.Data.Models.Personales.Personal", "Personal")
-                        .WithMany()
-                        .HasForeignKey("PersonalId")
+                        .WithOne("Imagen")
+                        .HasForeignKey("Vista.Data.Models.Imagenes.Imagen_Personal", "PersonalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2114,15 +2109,6 @@ namespace Vista.Data.Migrations
                     b.HasOne("Vista.Data.Models.Salidas.Planillas.Salida", null)
                         .WithMany("Damnificados")
                         .HasForeignKey("SalidaId");
-                });
-
-            modelBuilder.Entity("Vista.Data.Models.Personales.Personal", b =>
-                {
-                    b.HasOne("Vista.Data.Models.Imagenes.Imagen_Personal", "Imagen")
-                        .WithOne()
-                        .HasForeignKey("Vista.Data.Models.Personales.Personal", "ImagenId");
-
-                    b.Navigation("Imagen");
                 });
 
             modelBuilder.Entity("Vista.Data.Models.Salidas.Componentes.IncidenteDependencia", b =>
@@ -2261,6 +2247,8 @@ namespace Vista.Data.Migrations
             modelBuilder.Entity("Vista.Data.Models.Personales.Personal", b =>
                 {
                     b.Navigation("Contacto");
+
+                    b.Navigation("Imagen");
 
                     b.Navigation("Licencias");
 

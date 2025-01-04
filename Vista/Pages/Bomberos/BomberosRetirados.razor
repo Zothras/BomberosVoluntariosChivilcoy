@@ -672,15 +672,11 @@
 
     public string CargarImage(Bombero bombero)
     {
-        using var db = DbFactory.CreateDbContext();
-
         string src = "/";
 
-        Imagen? imagen = db.Set<Imagen>().Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
-
-        if (imagen is not null)
+        if (bombero.Imagen is not null)
         {
-            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
+            src = $"data:{bombero.Imagen.TipoImagen}; base64,{bombero.Imagen.Base64Imagen}";
         }
 
         return src;

@@ -128,6 +128,7 @@
         vertical-align: top;
         font-weight: bold;
     }
+
     .ant-modal-title {
         margin: 0;
         color: rgba(0, 0, 0, 0.85);
@@ -155,6 +156,7 @@
         min-width: 0;
         padding-left: 5px;
     }
+
     .ant-form-item-control-input {
         position: relative;
         display: flex;
@@ -163,7 +165,7 @@
         border: black 1px solid !important;
     }
     /* Modal de Detalles ------------------------------- */
-    
+
     /* Ambos Modales ------------------------------- */
     .ant-modal-content {
         position: relative;
@@ -201,7 +203,7 @@
                 <Space Size="@("large")" Style="width: 100%; justify-content: flex-end;">
                     <f Style="font-weight: bold; color: white; font-size: 14px; margin-right: 5px !important;">Filtrar por: </f>
                     <SpaceItem>
-                      <EnumSelect DefaultValue="EstadoBombero.CuerpoActivo" ValueChanged="(EstadoBombero estado) => search(searchString, estado)" TEnum="EstadoBombero" />
+                        <EnumSelect DefaultValue="EstadoBombero.CuerpoActivo" ValueChanged="(EstadoBombero estado) => search(searchString, estado)" TEnum="EstadoBombero" />
                     </SpaceItem>
                     <SpaceItem>
                         <Search Placeholder="Buscar Numerario"
@@ -231,11 +233,11 @@
                                 Property="@(c => c.Grado.GetDisplayName())"
                                 Sortable="true" />
 
-                <PropertyColumn Title="Estado" 
-                                Property="@(c=>c.Estado.GetDisplayName())" 
+                <PropertyColumn Title="Estado"
+                                Property="@(c=>c.Estado.GetDisplayName())"
                                 Sortable />
 
-                    <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
+                <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                     <Space>
                         <SpaceItem>
                             <Button Type="primary" OnClick="()=>DetalleBombero(context.PersonaId)">
@@ -303,7 +305,7 @@
     List<Bombero>? bomberos = new List<Bombero>();
     List<Bombero>? SinFiltrar = new List<Bombero>();
     public EstadoBombero Estado = EstadoBombero.CuerpoActivo;
-  
+
     private TableFilter<EscalafonJerarquico>[] EscalafonJerarquicoFilter;
 
     int _pageIndex = 1;
@@ -346,7 +348,7 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         search(searchString, Estado);
-        SinFiltrar = await db.Bomberos.ToListAsync();
+        SinFiltrar = await db.Bomberos.Include(b => b.Imagen).ToListAsync();
 
         EscalafonJerarquicoFilter = new TableFilter<EscalafonJerarquico>[Enum.GetValues(typeof(EscalafonJerarquico)).Length];
         int i = 0;
@@ -375,16 +377,13 @@
 
     public string CargarImage(Bombero bombero)
     {
-        var Context = DbFactory.CreateDbContext();
-
         string src = "/";
 
-        Imagen_Personal? imagen = Context.ImagenesBomberos.Where(i => i.ImagenId == bombero.ImagenId).SingleOrDefault();
-
-        if (imagen is not null)
+        if (bombero.Imagen is not null)
         {
-            src = $"data:{imagen.TipoImagen}; base64,{imagen.Base64Imagen}";
+            src = $"data:{bombero.Imagen.TipoImagen}; base64,{bombero.Imagen.Base64Imagen}";
         }
+
         return src;
     }
 

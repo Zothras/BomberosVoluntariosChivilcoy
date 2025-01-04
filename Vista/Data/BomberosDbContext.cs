@@ -105,6 +105,12 @@ namespace Vista.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Foreaneas 1:1 (Imagenes)
+
+            modelBuilder.Entity<Personal>()
+                .HasOne(p => p.Imagen)
+                .WithOne(pi => pi.Personal)
+                .HasForeignKey<Imagen_Personal>(pi => pi.PersonalId); // Clave foránea en ProfileImage
 
             // Relaciones mucho a muchos
 

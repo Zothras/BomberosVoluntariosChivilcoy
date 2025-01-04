@@ -71,12 +71,17 @@
         get
         {
             using var context = DbFactory.CreateDbContext();
+
             string src = "/";
-            Imagen_Personal imagen = context.ImagenesBomberos.Where(i => i.ImagenId == bomberoVM.ImagenId).SingleOrDefault();
+
+            var imagen = context.ImagenesBomberos
+                                .SingleOrDefault(i => i.ImagenId == bomberoVM.Imagen.ImagenId);
+
             if (imagen is not null)
             {
                 src = $"data:{imagen.TipoImagen};base64,{imagen.Base64Imagen}";
             }
+
             return src;
         }
     }

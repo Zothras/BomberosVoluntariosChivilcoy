@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vista.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class MigracionInicial : Migration
+    public partial class MigracionInicial2025 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -489,7 +489,6 @@ namespace Vista.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NumeroIoma = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImagenId = table.Column<int>(type: "int", nullable: true),
                     FechaAceptacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     NumeroLegajo = table.Column<int>(type: "int", nullable: true),
                     Estado = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
@@ -520,11 +519,6 @@ namespace Vista.Data.Migrations
                         principalTable: "Comunicacion",
                         principalColumn: "ComunicacionId",
                         onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Persona_Imagen_ImagenId",
-                        column: x => x.ImagenId,
-                        principalTable: "Imagen",
-                        principalColumn: "ImagenId");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -918,7 +912,8 @@ namespace Vista.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Imagen_PersonalId",
                 table: "Imagen",
-                column: "PersonalId");
+                column: "PersonalId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Incidente_DependenciaId",
@@ -999,12 +994,6 @@ namespace Vista.Data.Migrations
                 name: "IX_Persona_EquipoId",
                 table: "Persona",
                 column: "EquipoId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Persona_ImagenId",
-                table: "Persona",
-                column: "ImagenId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1325,10 +1314,6 @@ namespace Vista.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Imagen_Persona_PersonalId",
-                table: "Imagen");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Salidas_Persona_EncargadoId",
                 table: "Salidas");
 
@@ -1394,6 +1379,9 @@ namespace Vista.Data.Migrations
                 name: "Vehiculo");
 
             migrationBuilder.DropTable(
+                name: "Imagen");
+
+            migrationBuilder.DropTable(
                 name: "Persona");
 
             migrationBuilder.DropTable(
@@ -1401,9 +1389,6 @@ namespace Vista.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comunicacion");
-
-            migrationBuilder.DropTable(
-                name: "Imagen");
 
             migrationBuilder.DropTable(
                 name: "Salidas");
