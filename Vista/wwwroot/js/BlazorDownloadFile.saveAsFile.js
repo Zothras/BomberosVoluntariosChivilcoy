@@ -23,3 +23,14 @@ function base64toBlob(base64) {
     }
     return new Blob([ab], { type: 'application/pdf' });
 }
+
+async function readBlobAsBase64(blobUrl) {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]); // Base64 sin prefijo
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}

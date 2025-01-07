@@ -1,273 +1,303 @@
 ﻿@using Vista.Services
 @using System.Reflection
 @using Vista.Data.Models.Vehiculos.Moviles
+
 @inject IVehiculoService VehiculoService
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
+@inject IJSRuntime jsRuntime
 
 <style>
+    /* Variables CSS para consistencia */
+    :root {
+        --primary-color: #732D2D;
+        --primary-hover: #8B3737;
+        --secondary-color: #1890ff;
+        --secondary-hover: #40a9ff;
+        --border-radius: 8px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+    }
+
+    .modal-content-container {
+        padding: var(--spacing-md);
+    }
+
     .steps-content {
-    border: none !important;
+        border: none !important;
+        margin-bottom: var(--spacing-lg);
+        min-height: 400px;
+    }
+
+    .form-section {
+        display: grid;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md) 0;
     }
 
     .inpt-container {
-    position: relative;
-    padding: .8em 0;
+        margin-bottom: var(--spacing-md);
     }
 
-    input[type=text], input[type=number] {
-    border: none;
-    background: none;
-    border-bottom: 1px solid #bdb8b8;
-    outline: none;
-    padding: 1em;
-    width: 100%;
-    height: .6em;
+    /* Estilos mejorados para el upload */
+    .upload-container {
+        border: 2px dashed #d9d9d9;
+        border-radius: var(--border-radius);
+        background-color: #fafafa;
+        transition: border-color 0.3s;
     }
 
-    .inpt-label {
-    position: absolute;
-    top: 0;
-    left: 5px;
-    transform: translateY(10px);
-    color: #bdb8b8;
-    transition: transform .5s, color .3s;
+        .upload-container:hover {
+            border-color: var(--secondary-color);
+        }
+
+    .ant-upload.ant-upload-select-picture-card {
+        width: 100%;
+        max-width: 300px;
+        height: 200px;
+        margin: 0 auto;
+        background-color: #fafafa;
+        border: 2px dashed #d9d9d9;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: all 0.3s;
     }
 
-    input[type=text]:focus, input[type=number]:focus, input[type=file]:focus, input[type=date]:focus {
-    border-bottom: 1px solid rgb(62, 24, 24);
-    transition: 1s;
+        .ant-upload.ant-upload-select-picture-card:hover {
+            border-color: var(--secondary-color);
+            background-color: #f0f0f0;
+        }
+
+    /* Estilos para los botones */
+    .steps-action {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
     }
 
-    input[type = text]:focus + .inpt-label, input[type = text]:not(:placeholder-shown) + .inpt-label {
-    transform: translateY(-4px) scale(.9);
-    transform-origin: left top;
-    color: rgb(62, 24, 24);
+    .ant-btn.boton_p {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 24px;
+        border-radius: var(--border-radius);
+        transition: background-color 0.3s;
     }
 
-    .select-estadoMovil {
-    padding: .8em 0;
-    width: 100%;
-    border: 1px solid #bdb8b8;
-    outline: none;
-    box-shadow: none;
+        .ant-btn.boton_p:hover {
+            background-color: var(--primary-hover);
+        }
+
+    .ant-btn.boton_guardar {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 8px 24px;
+        border-radius: var(--border-radius);
+        transition: background-color 0.3s;
     }
 
-    .select-estadoMovil option {
-    border: 1px solid #bdb8b8;
+        .ant-btn.boton_guardar:hover {
+            background-color: var(--secondary-hover);
+        }
+
+    /* Estilos responsivos */
+    @@media (max-width: 768px) {
+        .modal-content-container {
+            padding: var(--spacing-sm);
+        }
+
+        .steps-action {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .ant-btn {
+            width: 100%;
+            margin-bottom: var(--spacing-sm);
+        }
     }
 
-    .ant-carousel .slick-dots li {
-    display: none !important;
-    }
-
-    .lblInputFile {
-    border: 1px solid #403F3F;
-    color: #403F3F;
-    padding: .5em .8em;
-    border-radius: 50px;
-    background: #eee;
-    cursor: pointer;
-    font-family: unset;
-    font-size: 14px;
-    width: 60%;
-    transform: translate(50% -50%);
-    text-align: center;
-    }
-
-    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
-    text-decoration: none;
-    background: #40a9ff;
-    }
-
-    .ant-btn:hover, .ant-btn:focus {
-    color: white;
-    border-color: #40a9ff;
-    background: #40a9ff;
-    }
-
-    .boton_p {
-    background-color: #732D2D;
-    color: white;
-    border-radius: 4px 4px;
-    }
-
-    .boton_guardar {
-    background-color: #1890ff;
-    color: white;
-    border-radius: 4px 4px;
-    }
-
-    .raro {
-    padding: 6em 0;
+    /* Estilos para el preview de imagen */
+    .image-preview {
+        max-width: 100%;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 </style>
+
 @if (movilView is not null)
 {
-    <div style="width: 100%;">
+    <div class="modal-content-container">
 
         <Steps Current="current">
             @foreach (var item in steps)
             {
-                <Step Title="@item.Title" Subtitle="@item.Content" />
+                <Step Title="@item.Title" Description="@item.Content" />
             }
         </Steps>
 
-        <div class="steps-content" style="height: 100%;width: 100%;padding-top: 0;">
+        <div class="steps-content">
+            @if (current == 0)
+            {
+                <div class="form-section">
+                    <div class="inpt-container">
+                        <Input Size="large" Placeholder="Marca" @bind-Value="@vehiculoView.Marca"
+                               AllowClear />
+                    </div>
 
-            <div style="width: 100%;height: 100%; background: #fff;">
+                    <div class="inpt-container">
+                        <Input Size="large" Placeholder="Modelo" @bind-Value="@vehiculoView.Modelo"
+                               AllowClear />
+                    </div>
 
-                @if (current == 0)
-                {
-                    <div style="height: 22em;">
+                    <div class="inpt-container">
+                        <AntDesign.InputNumber Size="InputSize.Large" Placeholder="Año" @bind-Value="@vehiculoView.Año"
+                                               Min="1900" Max="@DateTime.Now.Year"></AntDesign.InputNumber>
+                    </div>
 
-                        <div class="inpt-container">
-                            <Input Placeholder="Marca" @bind-Value="@vehiculoView.Marca" />
-                        </div>
+                    <div class="inpt-container">
+                        <Input Size="large" Placeholder="Patente" @bind-Value="@vehiculoView.Patente"
+                               AllowClear />
+                    </div>
 
-                        <div class="inpt-container">
-                            <Input Placeholder="Modelo" @bind-Value="@vehiculoView.Modelo" />
-                        </div>
+                    <div class="inpt-container">
+                        <Input Size="large" Placeholder="Tipo" @bind-Value="@vehiculoView.Tipo"
+                               AllowClear />
+                    </div>
 
-                        <div class="inpt-container">
-                            <Input Placeholder="Año" @bind-Value="@vehiculoView.Año" />
-                        </div>
+                    <div class="inpt-container">
+                        <Input Size="large" Placeholder="Color" @bind-Value="@vehiculoView.Color"
+                               AllowClear />
+                    </div>
 
-                        <div class="inpt-container">
-                            <Input Placeholder="Patente" @bind-Value="@vehiculoView.Patente" />
-                        </div>
-
-                        <div class="inpt-container">
-                            <Input Placeholder="Tipo" @bind-Value="@vehiculoView.Tipo" />
-                        </div>
-
-                        <div class="inpt-container">
-                            <Input Placeholder="Color" @bind-Value="@vehiculoView.Color" />
-                        </div>
-
-                        <div class="inpt-container">
-                            <Upload Action=""
-                            Name="foto"
-                            ShowUploadList="true"
-                            ShowPreviewIcon="true"
-                            ShowRemoveIcon="true"
-                            @bind-FileList="fileList"
-                            ShowButton="fileList?.Count < 1"
-                            ListType="UploadListType.PictureCard"
-                            BeforeUpload="OnBeforeUpload"
-                            OnRemove="OnRemove"
-                            OnPreview="(file)=> {
-                           previewVisible = true;
-                           previewTitle = file.FileName;
-                           imgUrl = file.Url;
-                       }">
-                                <div>
-                                    <Icon Type="@IconType.Outline.Plus" />
-                                    <div className="ant-upload-text">Cargar foto</div>
+                    <div class="upload-container">
+                        <Upload Name="vehiculo-foto"
+                                Accept=".jpg,.jpeg,.png"
+                                ShowUploadList="true"
+                                ShowPreviewIcon="true"
+                                ShowRemoveIcon="true"
+                                @bind-FileList="fileList"
+                                ShowButton="fileList?.Count < 1"
+                                ListType="UploadListType.PictureCard"
+                                BeforeUpload="OnBeforeUpload"
+                                OnRemove="OnRemove"
+                                OnPreview="HandlePreview">
+                            <div>
+                                <Icon Type="upload" Theme="outline" />
+                                <div style="margin-top: 8px;">Cargar foto del vehículo</div>
+                                <div style="margin-top: 4px; color: #888;">
+                                    (JPG, JPEG o PNG)
                                 </div>
-                            </Upload>
-
-                            <Modal Visible="previewVisible"
-                            Title="@previewTitle"
-                            OnCancel="()=> previewVisible=false">
-                                <img style="width: 100%" src="@imgUrl" />
-                            </Modal>
-                        </div>
-
+                            </div>
+                        </Upload>
                     </div>
-                }
-                else if (current == 1)
-                {
-                    <div style="height: 30em;width: 100%;padding: 10px;">
-
-                        <div class="inpt-container">
-                            <Input Placeholder="Nº Móvil" @bind-Value="@vehiculoView.NumeroMovil" />
-                        </div>
-
-                        <div class="inpt-container">
-                            Es un movil: <Switch @bind-Checked="@EsMovil" />
-                        </div>
-
-                        @if (EsMovil == true)
-                        {
-                            <div class="inpt-container">
-                                <Input Placeholder="Nº Motor" @bind-Value="@movilView.NumeroMotor" />
-                            </div>
-
-                            <div class="inpt-container">
-                                <Input Placeholder="Nº Chasis" @bind-Value="@movilView.NumeroChasis" />
-                            </div>
-
-                            <div class="inpt-container">
-                                <Input Placeholder="Modelo de bomba" @bind-Value="@movilView.ModeloBomba" />
-                            </div>
-
-                            <div class="inpt-container">
-                                <Input Placeholder="Cantidad de litros" @bind-Value="@movilView.CantidadLitros" />
-                            </div>
-                        }
-                        <div class="inpt-container">
-                            <EnumSelect TEnum="TipoEstadoMovil" @bind-Value="vehiculoView.Estado" Placeholder="Seleccione estado del vehículo" />
-                        </div>
-
-                        <div class="inpt-container">
-                            <Select TItem="BomberoViewModel"
-                            TItemValue="int"
-                            DataSource="@ListaBomberos"
-                            @bind-Value="@vehiculoView.EncargadoId"
-                            LabelName="@nameof(BomberoViewModel.NombreYApellido)"
-                            ValueName="@nameof(BomberoViewModel.PersonaId)"
-                            Placeholder="Selecione el bombero"
-                            DefaultActiveFirstOption="false"
-                            AllowClear="true"
-                            EnableSearch>
-                            </Select>
-                        </div>
-
+                </div>
+            }
+            else if (current == 1)
+            {
+                <div class="form-section">
+                    <div class="inpt-container">
+                        <Input Size="large" Placeholder="Nº Móvil" @bind-Value="@vehiculoView.NumeroMovil"
+                               AllowClear />
                     </div>
-                }
-            </div>
 
+                    <div class="inpt-container">
+                        <Space>
+                            <SpaceItem>Es un móvil:</SpaceItem>
+                            <SpaceItem>
+                                <Switch @bind-Checked="@EsMovil"
+                                        CheckedChildren="Sí"
+                                        UnCheckedChildren="No" />
+                            </SpaceItem>
+                        </Space>
+                    </div>
+
+                    @if (EsMovil)
+                    {
+                        <div class="inpt-container">
+                            <Input Size="large" Placeholder="Nº Motor" @bind-Value="@movilView.NumeroMotor"
+                                   AllowClear />
+                        </div>
+
+                        <div class="inpt-container">
+                            <Input Size="large" Placeholder="Nº Chasis" @bind-Value="@movilView.NumeroChasis"
+                                   AllowClear />
+                        </div>
+
+                        <div class="inpt-container">
+                            <Input Size="large" Placeholder="Modelo de bomba" @bind-Value="@movilView.ModeloBomba"
+                                   AllowClear />
+                        </div>
+
+                        <div class="inpt-container">
+
+                            <AntDesign.InputNumber Size="InputSize.Large"
+                                                   Placeholder="Cantidad de litros"
+                                                   @bind-Value="@movilView.CantidadLitros"
+                                                   Min="0"></AntDesign.InputNumber>
+
+                        </div>
+                    }
+
+                    <div class="inpt-container">
+                        <EnumSelect TEnum="TipoEstadoMovil"
+                                    @bind-Value="vehiculoView.Estado"
+                                    Size="large"
+                                    Placeholder="Seleccione estado del vehículo" />
+                    </div>
+
+                    <div class="inpt-container">
+                        <Select TItem="BomberoViewModel"
+                                TItemValue="int"
+                                DataSource="@ListaBomberos"
+                                @bind-Value="@vehiculoView.EncargadoId"
+                                LabelName="@nameof(BomberoViewModel.NombreYApellido)"
+                                ValueName="@nameof(BomberoViewModel.PersonaId)"
+                                Placeholder="Seleccione el bombero encargado"
+                                Size="large"
+                                DefaultActiveFirstOption="false"
+                                AllowClear
+                                EnableSearch>
+                        </Select>
+                    </div>
+                </div>
+            }
         </div>
 
         <div class="steps-action">
-
             @if (current > 0)
             {
-                <Button Class="boton_p" OnClick="OnPreClick">Anterior</Button>
+                <Button Class="boton_p" OnClick="OnPreClick">
+                    <Icon Type="left" /> Anterior
+                </Button>
             }
 
             @if (current < steps.Length - 1)
             {
-                <Button Class="boton_p" OnClick="OnNextClick">Siguiente</Button>
+                <Button Class="boton_p" OnClick="OnNextClick">
+                    Siguiente <Icon Type="right" />
+                </Button>
             }
 
             @if (current == steps.Length - 1)
             {
-                <Button Class="boton_guardar" @onclick="SubirVehiculo">
-                    Agregar unidad
+                <Button Class="boton_guardar" OnClick="SubirVehiculo"
+                        Loading="@isLoading">
+                    <Icon Type="save" /> Guardar Vehículo
                 </Button>
             }
-
         </div>
-
-        <style>
-            .steps-content {
-            margin-top: 16px;
-            border: 1px dashed #e9e9e9;
-            border-radius: 6px;
-            background-color: #fafafa;
-            min-height: 200px;
-            text-align: center;
-            padding-top: 80px;
-            }
-
-            .steps-action {
-            margin-top: 24px;
-            }
-        </style>
-
     </div>
+
+    <Modal Visible="previewVisible"
+           Title="@previewTitle"
+           OnCancel="() => previewVisible = false"
+           Footer="null">
+        <img alt="preview" class="image-preview" src="@imgUrl" />
+    </Modal>
 }
 
 @code {
@@ -280,6 +310,14 @@
     public bool EsMovil = false;
 
     // Cosa Nueva para Usar Ant Desing Blazor para Cargar la Imagen
+    private bool isLoading = false;
+
+    private async Task HandlePreview(UploadFileItem file)
+    {
+        previewVisible = true;
+        previewTitle = file.FileName;
+        imgUrl = file.Url;
+    }
 
     bool previewVisible = false;
     string previewTitle = string.Empty;
@@ -291,33 +329,49 @@
         if (fileInfo.State == UploadState.Success)
         {
             try
-            {
-                // Envolvemos todo el código asíncrono en una tarea y esperamos su resultado
-                Task.Run(async () =>
+            {       
+                // Validar el tamaño del archivo (ejemplo: máximo 5MB)
+                if (fileInfo.Size > 5 * 1024 * 1024)
                 {
-                    imagenView.Base64 = await Base64Helper.ConvertObjectURLToBase64(fileInfo.ObjectURL);
-                    imagenView.TipoImagen = fileInfo.Type;
-                    imagenView.Nombre = fileInfo.FileName;
-                    fileInfo.Url = fileInfo.ObjectURL;
-                    await message.Success("Imagen cargada exitosamente");
-                    StateHasChanged();
-                }).Wait();
+                    message.Error("El archivo no debe superar los 5MB").Wait(); // Manejo síncrono
+                    return false;
+                }
+
+                // Validar el tipo de archivo
+                string[] allowedTypes = { ".jpg", ".jpeg", ".png" };
+                string extension = Path.GetExtension(fileInfo.FileName).ToLower();
+                if (!allowedTypes.Contains(extension))
+                {
+                    message.Error("Solo se permiten archivos JPG, JPEG o PNG").Wait(); // Manejo síncrono
+                    return false;
+                }
+
+                // Obtener Base64 desde el ObjectURL utilizando JavaScript
+                var base64 = Task.Run(async () =>
+                {
+                    return await jsRuntime.InvokeAsync<string>("readBlobAsBase64", fileInfo.ObjectURL);
+                }).Result;
+
+                imagenView.Base64 = base64;
+                imagenView.TipoImagen = fileInfo.Type;
+                imagenView.Nombre = fileInfo.FileName;
+                fileInfo.Url = fileInfo.ObjectURL;
+
+                message.Success("Imagen cargada exitosamente").Wait();
+                StateHasChanged();
 
                 return true;
             }
             catch (Exception ex)
             {
-                Task.Run(async () =>
-                {
-                    await message.Error($"Error al procesar la imagen: {ex.Message}");
-                }).Wait();
-
+                message.Error($"Error al procesar la imagen: {ex.Message}").Wait();
                 fileInfo.State = UploadState.Fail;
                 return false;
             }
         }
         return false;
     }
+
 
     private async Task<bool> OnRemove(UploadFileItem file)
     {
@@ -382,7 +436,7 @@
 
         public string? ModeloBomba { get; set; }
 
-        public string? CantidadLitros { get; set; }
+        public int? CantidadLitros { get; set; }
     }
 
     public class ImagenViewModel
