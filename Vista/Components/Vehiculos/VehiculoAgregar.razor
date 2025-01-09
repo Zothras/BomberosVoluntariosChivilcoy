@@ -41,33 +41,61 @@
     }
 
     /* Estilos mejorados para el upload */
+    /* Estilos mejorados para el contenedor de carga */
     .upload-container {
-        border: 2px dashed #d9d9d9;
-        border-radius: var(--border-radius);
-        background-color: #fafafa;
-        transition: border-color 0.3s;
+        border: 2px dashed var(--primary-color, #d9d9d9);
+        border-radius: var(--border-radius, 8px);
+        background-color: #f9f9f9;
+        text-align: center;
+        padding: 16px;
+        transition: border-color 0.3s, background-color 0.3s;
+        cursor: pointer;
+        max-width: 300px;
+        margin: 0 auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
         .upload-container:hover {
-            border-color: var(--secondary-color);
+            border-color: var(--secondary-color, #1890ff);
+            background-color: #f0f8ff;
         }
 
-    .ant-upload.ant-upload-select-picture-card {
-        width: 100%;
-        max-width: 300px;
-        height: 200px;
-        margin: 0 auto;
-        background-color: #fafafa;
-        border: 2px dashed #d9d9d9;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        transition: all 0.3s;
+    .lblInputFile {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-color, #333);
+        padding: 8px 16px;
+        border: 1px solid var(--primary-color, #d9d9d9);
+        border-radius: var(--border-radius, 8px);
+        background-color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
     }
 
-        .ant-upload.ant-upload-select-picture-card:hover {
-            border-color: var(--secondary-color);
-            background-color: #f0f0f0;
+        .lblInputFile:hover {
+            background-color: var(--secondary-color-light, #e6f7ff);
+            color: var(--secondary-color, #1890ff);
+            border-color: var(--secondary-color, #1890ff);
         }
+
+        .lblInputFile Icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+        }
+
+    #path {
+        display: inline-block;
+        font-size: 12px;
+        color: #666;
+        margin-top: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 180px;
+    }
 
     /* Estilos para los botones */
     .steps-action {
@@ -119,13 +147,6 @@
             margin-bottom: var(--spacing-sm);
         }
     }
-
-    /* Estilos para el preview de imagen */
-    .image-preview {
-        max-width: 100%;
-        border-radius: var(--border-radius);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
 </style>
 
 @if (movilView is not null)
@@ -174,25 +195,12 @@
                     </div>
 
                     <div class="upload-container">
-                        <Upload Name="vehiculo-foto"
-                                Accept=".jpg,.jpeg,.png"
-                                ShowUploadList="true"
-                                ShowPreviewIcon="true"
-                                ShowRemoveIcon="true"
-                                @bind-FileList="fileList"
-                                ShowButton="fileList?.Count < 1"
-                                ListType="UploadListType.PictureCard"
-                                BeforeUpload="OnBeforeUpload"
-                                OnRemove="OnRemove"
-                                OnPreview="HandlePreview">
-                            <div>
-                                <Icon Type="upload" Theme="outline" />
-                                <div style="margin-top: 8px;">Cargar foto del vehículo</div>
-                                <div style="margin-top: 4px; color: #888;">
-                                    (JPG, JPEG o PNG)
-                                </div>
-                            </div>
-                        </Upload>
+                        <label class="lblInputFile" for="fotoMovil">
+                            <Icon Type="cloud-upload" Theme="outline" Style="width: 16px; height: 16px;" />
+                            Cargar foto del móvil
+                        </label>
+                        <InputFile OnChange="SubirFoto" id="fotoMovil" accept=".jpg,.jpeg,.png" style="display: none;" />
+                        <h3 id="path">@imagenView.Nombre</h3>
                     </div>
                 </div>
             }
@@ -291,13 +299,6 @@
             }
         </div>
     </div>
-
-    <Modal Visible="previewVisible"
-           Title="@previewTitle"
-           OnCancel="() => previewVisible = false"
-           Footer="null">
-        <img alt="preview" class="image-preview" src="@imgUrl" />
-    </Modal>
 }
 
 @code {
@@ -309,77 +310,7 @@
     public List<BomberoViewModel> ListaBomberos = new();
     public bool EsMovil = false;
 
-    // Cosa Nueva para Usar Ant Desing Blazor para Cargar la Imagen
     private bool isLoading = false;
-
-    private async Task HandlePreview(UploadFileItem file)
-    {
-        previewVisible = true;
-        previewTitle = file.FileName;
-        imgUrl = file.Url;
-    }
-
-    bool previewVisible = false;
-    string previewTitle = string.Empty;
-    string imgUrl = string.Empty;
-    List<UploadFileItem> fileList = new();
-
-    private bool OnBeforeUpload(UploadFileItem fileInfo)
-    {
-        if (fileInfo.State == UploadState.Success)
-        {
-            try
-            {       
-                // Validar el tamaño del archivo (ejemplo: máximo 5MB)
-                if (fileInfo.Size > 5 * 1024 * 1024)
-                {
-                    message.Error("El archivo no debe superar los 5MB").Wait(); // Manejo síncrono
-                    return false;
-                }
-
-                // Validar el tipo de archivo
-                string[] allowedTypes = { ".jpg", ".jpeg", ".png" };
-                string extension = Path.GetExtension(fileInfo.FileName).ToLower();
-                if (!allowedTypes.Contains(extension))
-                {
-                    message.Error("Solo se permiten archivos JPG, JPEG o PNG").Wait(); // Manejo síncrono
-                    return false;
-                }
-
-                // Obtener Base64 desde el ObjectURL utilizando JavaScript
-                var base64 = Task.Run(async () =>
-                {
-                    return await jsRuntime.InvokeAsync<string>("readBlobAsBase64", fileInfo.ObjectURL);
-                }).Result;
-
-                imagenView.Base64 = base64;
-                imagenView.TipoImagen = fileInfo.Type;
-                imagenView.Nombre = fileInfo.FileName;
-                fileInfo.Url = fileInfo.ObjectURL;
-
-                message.Success("Imagen cargada exitosamente").Wait();
-                StateHasChanged();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                message.Error($"Error al procesar la imagen: {ex.Message}").Wait();
-                fileInfo.State = UploadState.Fail;
-                return false;
-            }
-        }
-        return false;
-    }
-
-
-    private async Task<bool> OnRemove(UploadFileItem file)
-    {
-        imagenView = new ImagenViewModel();
-        await message.Info("Imagen eliminada");
-        return true;
-    }
-
     // Funciones Steps
     public class StepItem
     {
@@ -460,6 +391,50 @@
     }
 
     // Carga de datos
+
+    private async Task SubirFoto(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var archivo = e.File;
+
+            // Validar el tamaño del archivo (máximo 5MB)
+            const long maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+            if (archivo.Size > maxSizeInBytes)
+            {
+                await message.Error("El archivo no debe superar los 5MB");
+                return;
+            }
+
+            // Validar el tipo de archivo permitido
+            string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+            string extension = Path.GetExtension(archivo.Name).ToLower();
+            if (!allowedExtensions.Contains(extension))
+            {
+                await message.Error("Solo se permiten archivos JPG, JPEG o PNG");
+                return;
+            }
+
+            // Convertir el archivo a Base64
+            string imagenBase64 = await Base64Helper.StreamToBase64(archivo.OpenReadStream());
+
+            // Asignar los valores a la vista de la imagen
+            imagenView.Base64 = imagenBase64;
+            imagenView.TipoImagen = archivo.ContentType;
+            imagenView.Nombre = archivo.Name;
+
+            // Mostrar mensaje de éxito
+            await message.Success("Imagen cargada exitosamente");
+
+            // Actualizar el estado del componente
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // Manejar errores y mostrar un mensaje
+            await message.Error($"Error al procesar la imagen: {ex.Message}");
+        }
+    }
 
     private async void SubirVehiculo()
     {
