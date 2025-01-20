@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Vehiculos.Flota;
 
 namespace Vista.Data.Models.Imagenes
 {

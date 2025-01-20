@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personas.Personal;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Personas.Personal.Componentes
 {
     public class Sancion
     {
@@ -14,8 +14,8 @@ namespace Vista.Data.Models.Salidas.Componentes
         public DateOnly FechaHasta { get; set; }
 
         public int PersonaId { get; set; }
-        [ForeignKey ("PersonaId")]
-       
+        [ForeignKey("PersonaId")]
+
         public Bombero PersonalSancionado { get; set; }
 
         public TipoSancion TipoSancion { get; set; }

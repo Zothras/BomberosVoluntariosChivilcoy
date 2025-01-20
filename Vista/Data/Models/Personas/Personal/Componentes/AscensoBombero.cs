@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personas.Personal;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Personas.Personal.Componentes
 {
     public class AscensoBombero
     {
@@ -19,7 +19,7 @@ namespace Vista.Data.Models.Salidas.Componentes
 
         public int NumeroActa { get; set; }
 
-        public EscalafonJerarquico  GradoAntiguo { get; set; }
+        public EscalafonJerarquico GradoAntiguo { get; set; }
 
         public EscalafonJerarquico GradoAscenso { get; set; }
 

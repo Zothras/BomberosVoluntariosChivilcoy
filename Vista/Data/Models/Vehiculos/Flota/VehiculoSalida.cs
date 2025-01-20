@@ -5,10 +5,12 @@ using Vista.Data.Enums;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Vehiculos;
 using Vista.Data.Models.Personas.Personal;
+using Vista.Data.Models.Personas.Personal.Componentes;
+using Vista.Data.Models.Vehiculos.Flota.Componentes;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Vehiculos.Flota
 {
-    public abstract class VehiculoSalida:Vehiculo
+    public abstract class VehiculoSalida : Vehiculo
     {
         [StringLength(255)]
         public string? NumeroMovil { get; set; }

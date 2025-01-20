@@ -4,6 +4,9 @@ using Vista.Data.Enums.Discriminadores;
 
 namespace Vista.Data.Models.Vehiculos
 {
+    /// <summary>
+    /// Clase abstracta que representa un vehículo.
+    /// </summary>
     public abstract class Vehiculo
     {
         /// <summary>

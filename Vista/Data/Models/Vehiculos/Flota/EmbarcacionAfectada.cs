@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Models.Salidas.Planillas.Incendios;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Vehiculos.Flota
 {
     public class EmbarcacionAfectada
     {

@@ -1,5 +1,5 @@
 ﻿using Vista.Data.Models.Personas.Personal;
-using Vista.Data.Models.Vehiculos.Moviles;
+using Vista.Data.Models.Vehiculos.Flota;
 
 namespace Vista.Data.ViewModels.Personal
 {

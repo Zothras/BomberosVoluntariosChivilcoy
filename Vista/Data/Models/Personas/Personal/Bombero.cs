@@ -10,6 +10,8 @@ using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
 using Vista.Data.Models.Personales;
 using Vista.Data.Models.Personas.Personal.Componentes;
+using Vista.Data.Models.Vehiculos.Flota;
+using Vista.Data.Models.Vehiculos.Flota.Componentes;
 
 namespace Vista.Data.Models.Personas.Personal
 {

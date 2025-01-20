@@ -2,8 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
+using Vista.Data.Models.Vehiculos.Flota;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Vehiculos.Flota.Componentes
 {
     public class NovedadVehiculo : NovedadBase
     {

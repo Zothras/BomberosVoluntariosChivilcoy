@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.ViewModels.APIResponse;
 using Vista.Data.Enums.Salidas;
-using Vista.Data.Models.Vehiculos.Moviles;
 using Vista.Data.Models.Personas;
 
 namespace Vista.Data.ViewModels

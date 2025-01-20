@@ -2,9 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
-using Vista.Data.Models.Personales;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Vehiculos.Flota
 {
     public class Embarcacion : VehiculoSalida
     {

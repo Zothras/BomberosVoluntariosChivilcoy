@@ -1,6 +1,7 @@
 ﻿@implements IDisposable
 @using System.ComponentModel.DataAnnotations
 @using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
 @using Vista.Services
 @inject IBomberoService BomberoService
 @inject NavigationManager navigationManager
@@ -164,7 +165,7 @@
         try
         {
             Bombero? BomberoAfectado = await Context.Bomberos.Where(b => b.NumeroLegajo == Bombero).SingleOrDefaultAsync();
-            Vista.Data.Models.Salidas.Componentes.AscensoBombero ascenso = new()
+            AscensoBombero ascenso = new()
                 {
                     FechaAscenso = DateOnly.FromDateTime(AscensoVM.FechaAscenso),
                     Descripcion = AscensoVM.Descripcion,

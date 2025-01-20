@@ -1,10 +1,10 @@
 ﻿using Vista.Data.Models.Salidas.Planillas;
 using System.ComponentModel.DataAnnotations.Schema;
-using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personas.Personal;
+using Vista.Data.Models.Vehiculos.Flota;
 
-namespace Vista.Data.Models.Vehiculos.Moviles
+namespace Vista.Data.Models.Salidas.Componentes
 {
     public class Movil_Salida
     {

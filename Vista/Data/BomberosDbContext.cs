@@ -10,12 +10,13 @@ using Vista.Data.Models.Grupos.Brigadas;
 using Vista.Data.Models.Grupos.FuerzasIntervinientes;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
-using Vista.Data.Models.Vehiculos.Moviles;
 using Vista.Data.Models.Vehiculos;
 using Vista.Data.Enums.Discriminadores;
 using Vista.Data.Models.Personas;
 using Vista.Data.Models.Personas.Personal;
 using Vista.Data.Models.Personas.Personal.Componentes;
+using Vista.Data.Models.Vehiculos.Flota;
+using Vista.Data.Models.Vehiculos.Flota.Componentes;
 
 namespace Vista.Data
 {

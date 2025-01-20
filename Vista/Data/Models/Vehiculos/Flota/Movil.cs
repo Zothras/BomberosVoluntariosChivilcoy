@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
-using Vista.Data.Models.Personales;
 
-namespace Vista.Data.Models.Vehiculos.Moviles
+namespace Vista.Data.Models.Vehiculos.Flota
 {
+    /// <summary>
+    /// Clase que representa un vehículo móvil de la institución.
+    /// </summary>
     [Index(nameof(NumeroMovil))]
     public class Movil : VehiculoSalida
     {

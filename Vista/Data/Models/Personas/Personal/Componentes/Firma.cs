@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Models.Personas.Personal;
-using Vista.Data.Models.Vehiculos.Moviles;
+using Vista.Data.Models.Vehiculos.Flota;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Personas.Personal.Componentes
 {
     public class Firma
     {
@@ -17,6 +17,6 @@ namespace Vista.Data.Models.Salidas.Componentes
         public int VehiculoId { get; set; }
         [ForeignKey("VehiculoId")]
         public Movil Movil { get; set; }
-     
+
     }
 }

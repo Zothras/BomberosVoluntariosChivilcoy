@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personas.Personal;
-using Vista.Data.Models.Vehiculos.Moviles;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Vehiculos.Flota.Componentes
 {
     public class Limpieza
     {

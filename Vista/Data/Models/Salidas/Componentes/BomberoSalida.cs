@@ -2,8 +2,8 @@
 using Vista.Data.Models.Salidas.Planillas;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Permissions;
-using Vista.Data.Models.Vehiculos.Moviles;
 using Vista.Data.Models.Personas.Personal;
+using Vista.Data.Models.Vehiculos.Flota;
 
 namespace Vista.Data.Models.Salidas.Componentes
 {

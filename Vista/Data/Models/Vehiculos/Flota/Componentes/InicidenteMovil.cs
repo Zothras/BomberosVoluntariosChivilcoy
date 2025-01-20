@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Policy;
-using Vista.Data.Models.Vehiculos.Moviles;
+using Vista.Data.Models.Salidas.Componentes;
+using Vista.Data.Models.Vehiculos.Flota;
 
-namespace Vista.Data.Models.Salidas.Componentes
+namespace Vista.Data.Models.Vehiculos.Flota.Componentes
 {
     public class InicidenteMovil : Incidente
     {
