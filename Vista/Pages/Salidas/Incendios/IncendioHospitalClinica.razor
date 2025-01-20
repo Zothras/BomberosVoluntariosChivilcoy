@@ -3,18 +3,20 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/incendios-HospitalesClinicas"
-@using Vista.Services;
-@inject ISalidaService SalidaService;
-@using System.ComponentModel.DataAnnotations;
-@using Vista.Data.ViewModels.Incendios;
-@using Vista.Data.ViewModels.Personal;
-@using System.Text.Json;
-@using Vista.Pages.Salidas.Incendios.ComponentesIncendio;
+@using Vista.Services
+@inject ISalidaService SalidaService
+@using System.ComponentModel.DataAnnotations
+@using Vista.Data.ViewModels.Incendios
+@using Vista.Data.ViewModels.Personal
+@using System.Text.Json
+@using Vista.Pages.Salidas.Incendios.ComponentesIncendio
+@using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
 
 @*Componentes Generales*@
-@using Vista.Components.Forms.Salidas.General;
-@using Vista.Data.Models.Salidas.Planillas.Incendios;
-@using Vista.Data.Models.Vehiculos.Moviles;
+@using Vista.Components.Forms.Salidas.General
+@using Vista.Data.Models.Salidas.Planillas.Incendios
+@using Vista.Data.Models.Vehiculos.Moviles
 
 <head>
     <link href="css/salida.css" rel="stylesheet" />

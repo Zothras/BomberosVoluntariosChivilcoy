@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using System.Text.Json;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Personas.Personal;
 using Vista.Data.Models.Salidas.Planillas;
 using Vista.Data.ViewModels.Rescates;
 

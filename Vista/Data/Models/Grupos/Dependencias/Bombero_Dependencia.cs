@@ -1,6 +1,6 @@
 ﻿using Vista.Data.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Personas.Personal;
 
 namespace Vista.Data.Models.Grupos.Dependencias
 {

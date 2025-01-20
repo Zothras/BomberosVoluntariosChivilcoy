@@ -2,7 +2,7 @@
 using System;
 using Vista.Data;
 using Vista.Data.Models.Grupos.Dependencias;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Personas.Personal;
 
 namespace Vista.Services
 {

@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using Vista.Data;
 using Vista.Data.Enums;
 using Vista.Data.Models.Grupos.Brigadas;
-using Vista.Data.Models.Personales;
-using Vista.Data.Models.Personales.Componentes;
+using Vista.Data.Models.Personas.Personal;
+using Vista.Data.Models.Personas.Personal.Componentes;
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.ViewModels.Personal;
 

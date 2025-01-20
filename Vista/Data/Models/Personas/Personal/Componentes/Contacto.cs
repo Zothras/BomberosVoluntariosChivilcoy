@@ -1,7 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Vista.Data.Models.Personas.Personal;
 
-namespace Vista.Data.Models.Personales.Componentes
+namespace Vista.Data.Models.Personas.Personal.Componentes
 {
+    /// <summary>
+    /// Representa los datos de contacto de una persona.
+    /// </summary>
     public class Contacto
     {
         /// <summary>

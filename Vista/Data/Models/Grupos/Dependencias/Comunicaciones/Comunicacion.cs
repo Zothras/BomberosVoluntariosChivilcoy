@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.InteropServices;
-using Vista.Data.Models.Personales;
 using Vista.Data.Models.Vehiculos.Moviles;
+using Vista.Data.Models.Personas.Personal;
 
 namespace Vista.Data.Models.Grupos.Dependencias.Comunicaciones
 {

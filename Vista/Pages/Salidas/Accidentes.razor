@@ -3,15 +3,17 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/accidentes"
-@using Vista.Data.ViewModels.Accidente;
-@using Vista.Pages.PlanillasIntervencion;
+@using Vista.Data.ViewModels.Accidente
+@using Vista.Pages.PlanillasIntervencion
+@using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
 
 @*Servicios Utilizados*@
-@using Vista.Services;
-@inject ISalidaService SalidaService;
+@using Vista.Services
+@inject ISalidaService SalidaService
 
 @*Componentes Generales*@
-@using Vista.Components.Forms.Salidas.General;
+@using Vista.Components.Forms.Salidas.General
 
 <head>
     <link href="css/salida.css" rel="stylesheet" />

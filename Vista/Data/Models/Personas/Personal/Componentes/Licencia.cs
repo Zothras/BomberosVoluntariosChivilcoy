@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Personas.Personal;
 
-namespace Vista.Data.Models.Personales.Componentes
+namespace Vista.Data.Models.Personas.Personal.Componentes
 {
+    /// <summary>
+    /// Representa una licencia asociada a alguien del personal.
+    /// </summary>
     public class Licencia
     {
         /// <summary>
@@ -45,7 +48,7 @@ namespace Vista.Data.Models.Personales.Componentes
         [ForeignKey("PersonalId")]
 
         /// <summary>
-        /// Información del bombero al que está asignada la licencia. Es una relación foránea.
+        /// Información del personal al que está asignada la licencia. Es una relación foránea.
         /// </summary>
         public Personal PersonalAfectado { get; set; } = null!;
     }

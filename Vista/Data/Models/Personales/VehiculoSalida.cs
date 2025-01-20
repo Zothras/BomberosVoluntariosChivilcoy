@@ -4,6 +4,7 @@ using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Enums;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Vehiculos;
+using Vista.Data.Models.Personas.Personal;
 
 namespace Vista.Data.Models.Personales
 {

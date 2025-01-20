@@ -1,4 +1,4 @@
-﻿using Vista.Data.Models.Personales;
+﻿using Vista.Data.Models.Personas.Personal;
 
 namespace Vista.Data.Models.Grupos.Brigadas
 {

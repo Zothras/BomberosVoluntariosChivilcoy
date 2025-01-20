@@ -12,8 +12,10 @@ using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
 using Vista.Data.Models.Vehiculos.Moviles;
 using Vista.Data.Models.Vehiculos;
-using Vista.Data.Models.Personales.Componentes;
 using Vista.Data.Enums.Discriminadores;
+using Vista.Data.Models.Personas;
+using Vista.Data.Models.Personas.Personal;
+using Vista.Data.Models.Personas.Personal.Componentes;
 
 namespace Vista.Data
 {

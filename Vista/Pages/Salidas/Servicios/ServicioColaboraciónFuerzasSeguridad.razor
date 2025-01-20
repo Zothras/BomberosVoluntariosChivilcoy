@@ -2,17 +2,19 @@
 @inject NavigationManager navigationManager
 @page "/salidas/serviciosColaboraciónFuerzasSeguridad"
 
-@using Vista.Data.ViewModels.Personal;
-@using Vista.Data.Enums;
+@using Vista.Data.ViewModels.Personal
+@using Vista.Data.Enums
+@using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
 
 @*Servicios Utilizados*@
 @using Vista.Data.ViewModels.Servicios
-@using Vista.Services;
+@using Vista.Services
 @inject ISalidaService SalidaService
 @inject IBomberoService BomberoService
 
 @*Componentes Generales*@
-@using Vista.Components.Forms.Salidas.General;
+@using Vista.Components.Forms.Salidas.General
 
 <head>
     <link href="css/salida.css" rel="stylesheet" />

@@ -1,5 +1,4 @@
 ﻿using Vista.Data.Enums;
-using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +6,8 @@ using System.Runtime.CompilerServices;
 using Vista.Data.Enums.Salidas;
 using Vista.Data.Models.Vehiculos.Moviles;
 using Vista.Data.Enums.Discriminadores;
+using Vista.Data.Models.Personas;
+using Vista.Data.Models.Personas.Personal;
 
 namespace Vista.Data.Models.Salidas.Planillas
 {

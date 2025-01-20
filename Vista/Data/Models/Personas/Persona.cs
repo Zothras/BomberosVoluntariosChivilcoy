@@ -2,8 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using Vista.Data.Enums.Discriminadores;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Personas
 {
+    /// <summary>
+    /// Clase base abstracta que representa a una persona.  
+    /// Proporciona una estructura común para clases derivadas que necesiten atributos y comportamientos relacionados con una persona.
+    /// </summary>
     public abstract class Persona
     {
         /// <summary>

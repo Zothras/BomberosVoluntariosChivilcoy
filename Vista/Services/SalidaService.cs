@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using Vista.Data;
 using Vista.Data.Enums;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Personas.Personal;
 using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Models.Salidas.Planillas;
 using Vista.Data.Models.Vehiculos.Moviles;

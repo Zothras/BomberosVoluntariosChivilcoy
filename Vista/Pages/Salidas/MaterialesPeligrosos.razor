@@ -3,16 +3,18 @@
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
 @page "/salidas/materiales-peligrosos"
-@using Vista.Data.ViewModels.MaterialesPeligrosos;
+@using Vista.Data.ViewModels.MaterialesPeligrosos
+@using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
 
 @*Servicio Utilizados*@
-@using Vista.Services;
+@using Vista.Services
 @inject IBomberoService BomberoService
-@inject ISalidaService SalidaService;
+@inject ISalidaService SalidaService
 
 @*Componentes Generales*@
-@using Vista.Components.Forms.Salidas.General;
-@using Vista.Data.Models.Vehiculos.Moviles;
+@using Vista.Components.Forms.Salidas.General
+@using Vista.Data.Models.Vehiculos.Moviles
 
 <head>
     <link href="css/salida.css" rel="stylesheet" />

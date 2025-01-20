@@ -3,18 +3,20 @@
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @page "/salidas/factores-climaticos"
-@using System.ComponentModel.DataAnnotations;
-@using System.Text.Json;
-@using Vista.Data.ViewModels.FactorClimatico;
-@using Vista.Data.ViewModels.Personal;
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using Vista.Data.ViewModels.FactorClimatico
+@using Vista.Data.ViewModels.Personal
+@using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
 
 @*Servicio Utilizados*@
-@using Vista.Services;
+@using Vista.Services
 @inject IBomberoService BomberoService
-@inject ISalidaService SalidaService;
+@inject ISalidaService SalidaService
 
 @*Componentes Generales*@
-@using Vista.Components.Forms.Salidas.General;
+@using Vista.Components.Forms.Salidas.General
 
 <head>
     <link href="css/salida.css" rel="stylesheet" />

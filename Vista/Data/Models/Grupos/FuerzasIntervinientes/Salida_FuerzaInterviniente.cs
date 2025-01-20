@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Vista.Data.Models.Personales;
+using Vista.Data.Models.Personas;
 using Vista.Data.Models.Salidas.Planillas;
 using Vista.Data.Models.Vehiculos;
 

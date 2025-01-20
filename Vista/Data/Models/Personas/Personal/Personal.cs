@@ -2,11 +2,15 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
 using Vista.Data.Models.Imagenes;
-using Vista.Data.Models.Personales.Componentes;
+using Vista.Data.Models.Personas;
+using Vista.Data.Models.Personas.Personal.Componentes;
 using Vista.Data.Models.Vehiculos;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Personas.Personal
 {
+    /// <summary>
+    /// Clase abstracta que representa a una persona que es parte del personal de la institución.
+    /// </summary>
     public abstract class Personal : Persona
     {
         /// <summary>

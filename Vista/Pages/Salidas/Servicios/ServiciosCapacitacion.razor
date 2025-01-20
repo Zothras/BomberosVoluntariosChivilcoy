@@ -2,18 +2,20 @@
 @inject NavigationManager navigationManager
 @page "/salidas/serviciosCapacitacion"
 
-@using Vista.Data.ViewModels.Personal;
-@using Vista.Data.Enums;
+@using Vista.Data.ViewModels.Personal
+@using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
+@using Vista.Data.Enums
 
 @*Servicios Utilizados*@
 @using Vista.Data.ViewModels.Servicios
-@using Vista.Services;
+@using Vista.Services
 @inject ISalidaService SalidaService
 @inject IBomberoService BomberoService
 
 @*Componentes Generales*@
-@using Vista.Components.Forms.Salidas.General;
-@using Vista.Data.Models.Salidas.Planillas.Servicios;
+@using Vista.Components.Forms.Salidas.General
+@using Vista.Data.Models.Salidas.Planillas.Servicios
 
 <head>
     <link href="css/salida.css" rel="stylesheet" />
