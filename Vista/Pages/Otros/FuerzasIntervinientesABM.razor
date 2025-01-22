@@ -1,0 +1,296 @@
+﻿@page "/FuerzasIntervinientes"
+@using Vista.Data.Models.Grupos.FuerzasIntervinientes
+@using Vista.Data.ViewModels.Personal
+@using Vista.Data.Models.Personas.Personal
+@using Vista.Data.Models.Personas.Personal.Componentes
+
+@*Servicios Utilizados*@
+@using Vista.Services
+@inject IFuerzaIntervinienteService FuerzaIntervinienteService
+@inject IMessageService MessageService
+
+<style>
+    .template {
+        width: 100%;
+        height: 100%;
+        max-width: 97%;
+        min-width: 400px;
+        max-height: 100vh;
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        margin: 1em;
+        padding: 10px;
+        overflow: auto;
+    }
+
+    .ant-table {
+        width: 100%;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .ant-table-title {
+        background-color: #A63333
+    }
+
+    .ant-table-thead .ant-table-cell {
+        background-color: #A63333 !important;
+        color: white !important;
+        font-weight: bold;
+    }
+
+    .ant-table-cell {
+        padding: 16px !important;
+    }
+
+    .title-template-container {
+        background-color: #A63333;
+        padding: 16px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .search-input {
+        width: 250px;
+    }
+
+        .search-input input {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+        }
+
+            .search-input input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+    .add-button {
+        background-color: #4CAF50 !important;
+        border-color: #438E46 !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .boton_p {
+        background-color: #732D2D !important;
+        color: white !important;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    @@media (max-width: 960px) {
+        .title-template-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    .ant-form-horizontal .ant-form-item-label {
+        flex-grow: 1;
+        background: #A63333;
+    }
+
+        .ant-form-horizontal .ant-form-item-label > label {
+            color: #FFFFFF;
+            padding: 2px 4px;
+        }
+
+    .ant-form-item {
+        box-sizing: border-box;
+        margin: 0;
+        margin-bottom: 0px;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        font-feature-settings: 'tnum';
+        margin-bottom: 8px !important;
+        vertical-align: top;
+        font-weight: bold;
+    }
+
+    .ant-modal-content {
+        position: relative;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 0;
+        border-radius: 2px;
+        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        pointer-events: auto;
+        border: 1px solid red !important;
+    }
+</style>
+
+<div class="template">
+    <Table TItem="FuerzaViewModelTable"
+           DataSource="@FuerzaViewModels"
+           @bind-PageIndex="_pageIndex"
+           @bind-PageSize="_pageSize"
+           Title="Fuerzas Intervinientes"
+           Responsive>
+        <TitleTemplate>
+            <Flex Justify="flex-end">
+                <Space>
+                    <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+                        <Icon Type="plus" /> Nueva
+                    </Button>
+                </Space>
+            </Flex>
+        </TitleTemplate>
+        <ColumnDefinitions>
+            <PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
+
+            <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
+                <Space>
+                    <SpaceItem>
+                        <Popconfirm Title="¿Eliminar esta fuerza?"
+                                    OnConfirm="() => BorrarFuerza(context.Id)"
+                                    OkText="Si"
+                                    CancelText="No">
+                            <Button Danger>
+                                <Icon Type="delete" />
+                            </Button>
+                        </Popconfirm>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="()=>
+                            VerEditarFuerza(context.Id)" Ghost>
+                            <Icon Type="edit" />
+                        </Button>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+
+        </ColumnDefinitions>
+    </Table>
+</div>
+
+@*Modal para Añadir Fuerzas*@
+<Modal @bind-Visible="_modalAñadirVisible" Title="Añadir Fuerza" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddFuerza">
+    <Form Model="nuevaFuerza">
+        <FormItem Label="Nombre">
+            <Input @bind-Value="nuevaFuerza.Nombre" />
+        </FormItem>
+    </Form>
+</Modal>
+
+@*Modal para Editar Fuerza*@
+<Modal @bind-Visible="_modalEditarVisible" Title="Editar Fuerza" OkText="@("Editar")" CancelText="@("Cancelar")" OnOk="@EditarFuerza">
+    <Form Model="selFuerza">
+        <FormItem Label="Nombre">
+            <Input @bind-Value="selFuerza.Nombre" />
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+    // Variables
+    private FuerzaViewModelTable nuevaFuerza = new();
+    private FuerzaViewModelTable selFuerza = new();
+    private string? TitleFuerzaSel;
+    private int IdFuerzaSel;
+
+    // Modals
+    private bool _modalAñadirVisible = false;
+    private bool _modalEditarVisible = false;
+
+    // Lista de Fuerzas
+    private List<FuerzaInterviniente> Fuerzas = new();
+
+    // Variables de Tamaño de la Tabla
+    int _pageIndex = 1;
+    int _pageSize = 5;
+
+    // Lista de ViewModels de Dependencia
+    private List<FuerzaViewModelTable> FuerzaViewModels = new List<FuerzaViewModelTable>();
+
+    public class FuerzaViewModelTable
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = null!;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Fuerzas = await FuerzaIntervinienteService.ObtenerTodasLasFuerzasAsync();
+        FuerzaViewModels = await MapearFuerzasAsync(Fuerzas);
+        StateHasChanged();
+    }
+
+    public async Task<List<FuerzaViewModelTable>> MapearFuerzasAsync(List<FuerzaInterviniente> fuerzas)
+    {
+        return await Task.Run(() => fuerzas.Select(f => new FuerzaViewModelTable
+            {
+                Id = f.Id,
+                Nombre = f.NombreFuerza
+            }).ToList());
+    }
+
+    private async Task AddFuerza()
+    {
+
+        var fuerza = new FuerzaInterviniente
+            {
+                NombreFuerza = nuevaFuerza.Nombre,
+            };
+
+        await FuerzaIntervinienteService.AgregarFuerzaAsync(fuerza);
+        nuevaFuerza = new FuerzaViewModelTable();
+        _modalAñadirVisible = false;
+        await OnInitializedAsync();
+    }
+
+    private async Task EditarFuerza()
+    {
+
+        var fuerza = new FuerzaInterviniente
+            {
+                Id = selFuerza.Id,
+                NombreFuerza = selFuerza.Nombre
+            };
+
+        await FuerzaIntervinienteService.EditarFuerzaAsync(fuerza);
+        _modalEditarVisible = false;
+        await OnInitializedAsync();
+    }
+
+    private async Task VerEditarFuerza(int id)
+    {
+        if (id <= 0)
+        {
+            await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+            return;
+        }
+
+        var Fuerza = await FuerzaIntervinienteService.ObtenerFuerzaPorIdAsync(id);
+
+        if (Fuerza == null)
+        {
+            await MessageService.Error("Error al intentar editar la fuerza: No se encontró.");
+            return;
+        }
+
+        
+        selFuerza = new FuerzaViewModelTable
+            {
+                Id = Fuerza.Id,
+                Nombre = Fuerza.NombreFuerza
+            };
+
+        _modalEditarVisible = true;
+    }
+
+    private async Task BorrarFuerza(int id)
+    {
+        await FuerzaIntervinienteService.EliminarFuerzaAsync(id);
+        await OnInitializedAsync();
+    }
+}
