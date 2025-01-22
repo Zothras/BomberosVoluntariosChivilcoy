@@ -1,5 +1,4 @@
-﻿using Vista.Data.Models.Personales;
-using Vista.Data.Models.Salidas.Planillas;
+﻿using Vista.Data.Models.Salidas.Planillas;
 using System.ComponentModel.DataAnnotations;
 using Vista.Data.Enums.Discriminadores;
 

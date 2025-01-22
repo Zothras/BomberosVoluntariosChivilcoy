@@ -8,10 +8,11 @@ using Vista.Data.Models.Grupos.Dependencias;
 using Vista.Data.Models.Grupos.Brigadas;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Grupos.Dependencias.Comunicaciones;
-using Vista.Data.Models.Personales;
 using Vista.Data.Models.Personas.Personal.Componentes;
 using Vista.Data.Models.Vehiculos.Flota;
 using Vista.Data.Models.Vehiculos.Flota.Componentes;
+using Vista.Data.Models.Otros;
+using Vista.Data.Models.Objetos.Componentes;
 
 namespace Vista.Data.Models.Personas.Personal
 {

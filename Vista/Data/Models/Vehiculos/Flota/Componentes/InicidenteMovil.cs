@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Policy;
-using Vista.Data.Models.Salidas.Componentes;
+using Vista.Data.Models.Otros;
 using Vista.Data.Models.Vehiculos.Flota;
 
 namespace Vista.Data.Models.Vehiculos.Flota.Componentes

@@ -1,5 +1,4 @@
 ﻿using Vista.Data.Enums;
-using Vista.Data.Models.Personales;
 using Vista.Data.Models.Salidas.Componentes;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;

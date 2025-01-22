@@ -1,5 +1,4 @@
-﻿using Vista.Data.Models.Personales;
-using Vista.Data.Models.Salidas.Componentes;
+﻿using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Models.Salidas.Planillas;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
@@ -17,6 +16,9 @@ using Vista.Data.Models.Personas.Personal;
 using Vista.Data.Models.Personas.Personal.Componentes;
 using Vista.Data.Models.Vehiculos.Flota;
 using Vista.Data.Models.Vehiculos.Flota.Componentes;
+using Vista.Data.Models.Otros;
+using Vista.Data.Models.Objetos;
+using Vista.Data.Models.Objetos.Componentes;
 
 namespace Vista.Data
 {

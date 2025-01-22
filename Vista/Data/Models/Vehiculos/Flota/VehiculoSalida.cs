@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Vista.Data.Models.Salidas.Componentes;
 using Vista.Data.Enums;
 using Vista.Data.Models.Imagenes;
 using Vista.Data.Models.Vehiculos;
 using Vista.Data.Models.Personas.Personal;
 using Vista.Data.Models.Personas.Personal.Componentes;
 using Vista.Data.Models.Vehiculos.Flota.Componentes;
+using Vista.Data.Models.Otros;
 
 namespace Vista.Data.Models.Vehiculos.Flota
 {

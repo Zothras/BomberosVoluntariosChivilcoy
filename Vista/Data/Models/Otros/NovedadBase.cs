@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums;
 using Vista.Data.Models.Personas.Personal;
 
-namespace Vista.Data.Models.Personales
+namespace Vista.Data.Models.Otros
 {
     public abstract class NovedadBase
     {

@@ -5,6 +5,8 @@
 @using Vista.Data.Models.Vehiculos.Flota
 @using Vista.Data.Models.Personas.Personal
 @using Vista.Data.Models.Personas.Personal.Componentes
+@using Vista.Data.Models.Objetos
+@using Vista.Data.Models.Objetos.Componentes
 
 @*Servicios Utilizados*@
 @inject IDepositoService DepositoService
@@ -263,7 +265,7 @@
                 await message.Error("No se encontró el material asignado.");
                 return;
             }
-            Vista.Data.Models.Salidas.Componentes.MovimientoMaterial movimiento = new()
+            MovimientoMaterial movimiento = new()
                 {
                     TipoMovimiento = MovimientoVM.TipoMovimiento,
                     DestinoBombero = BomberoDestino,

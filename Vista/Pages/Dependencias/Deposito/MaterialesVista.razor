@@ -1,5 +1,6 @@
 ﻿@implements IDisposable
 @using System.ComponentModel.DataAnnotations
+@using Vista.Data.Models.Objetos
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<BomberosDbContext> DbFactory
 @inject IMessageService message
@@ -74,7 +75,7 @@
         {
 
 
-            Vista.Data.Models.Salidas.Componentes.Material material1 = new()
+            Material material1 = new()
                 {
                     FechaAlta = MaterialesVM.FechaAlta,
                     Descripcion = MaterialesVM.Descripcion,
