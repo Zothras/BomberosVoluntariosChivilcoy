@@ -48,8 +48,6 @@ namespace Vista.Services
             if (fuerzaExistente != null)
             {
                 fuerzaExistente.NombreFuerza = fuerza.NombreFuerza;
-
-                _context.Fuerzas.Update(fuerza);
                 await _context.SaveChangesAsync();
             }
         }

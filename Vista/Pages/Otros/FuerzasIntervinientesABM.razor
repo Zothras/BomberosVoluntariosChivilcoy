@@ -11,131 +11,131 @@
 
 <style>
     .template {
-        width: 100%;
-        height: 100%;
-        max-width: 97%;
-        min-width: 400px;
-        max-height: 100vh;
-        border-radius: 10px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        background: #fff;
-        display: flex;
-        flex-direction: column;
-        margin: 1em;
-        padding: 10px;
-        overflow: auto;
+    width: 100%;
+    height: 100%;
+    max-width: 97%;
+    min-width: 400px;
+    max-height: 100vh;
+    border-radius: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    padding: 10px;
+    overflow: auto;
     }
 
     .ant-table {
-        width: 100%;
-        background-color: white;
-        border-radius: 8px;
-        overflow: hidden;
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
     }
 
     .ant-table-title {
-        background-color: #A63333
+    background-color: #A63333
     }
 
     .ant-table-thead .ant-table-cell {
-        background-color: #A63333 !important;
-        color: white !important;
-        font-weight: bold;
+    background-color: #A63333 !important;
+    color: white !important;
+    font-weight: bold;
     }
 
     .ant-table-cell {
-        padding: 16px !important;
+    padding: 16px !important;
     }
 
     .title-template-container {
-        background-color: #A63333;
-        padding: 16px;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    background-color: #A63333;
+    padding: 16px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     }
 
     .search-input {
-        width: 250px;
+    width: 250px;
     }
 
-        .search-input input {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-        }
+    .search-input input {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    }
 
-            .search-input input::placeholder {
-                color: rgba(255, 255, 255, 0.7);
-            }
+    .search-input input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    }
 
     .add-button {
-        background-color: #4CAF50 !important;
-        border-color: #438E46 !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #4CAF50 !important;
+    border-color: #438E46 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #732D2D !important;
+    color: white !important;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     @@media (max-width: 960px) {
-        .title-template-container {
-            flex-direction: column;
-            align-items: stretch;
-        }
+    .title-template-container {
+    flex-direction: column;
+    align-items: stretch;
+    }
     }
 
     .ant-form-horizontal .ant-form-item-label {
-        flex-grow: 1;
-        background: #A63333;
+    flex-grow: 1;
+    background: #A63333;
     }
 
-        .ant-form-horizontal .ant-form-item-label > label {
-            color: #FFFFFF;
-            padding: 2px 4px;
-        }
+    .ant-form-horizontal .ant-form-item-label > label {
+    color: #FFFFFF;
+    padding: 2px 4px;
+    }
 
     .ant-form-item {
-        box-sizing: border-box;
-        margin: 0;
-        margin-bottom: 0px;
-        padding: 0;
-        color: rgba(0, 0, 0, 0.85);
-        font-size: 14px;
-        font-variant: tabular-nums;
-        line-height: 1.5715;
-        list-style: none;
-        font-feature-settings: 'tnum';
-        margin-bottom: 8px !important;
-        vertical-align: top;
-        font-weight: bold;
+    box-sizing: border-box;
+    margin: 0;
+    margin-bottom: 0px;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: 'tnum';
+    margin-bottom: 8px !important;
+    vertical-align: top;
+    font-weight: bold;
     }
 
     .ant-modal-content {
-        position: relative;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 0;
-        border-radius: 2px;
-        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-        pointer-events: auto;
-        border: 1px solid red !important;
+    position: relative;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    pointer-events: auto;
+    border: 1px solid red !important;
     }
 </style>
 
 <div class="template">
     <Table TItem="FuerzaViewModelTable"
-           DataSource="@FuerzaViewModels"
-           @bind-PageIndex="_pageIndex"
-           @bind-PageSize="_pageSize"
-           Title="Fuerzas Intervinientes"
-           Responsive>
+    DataSource="@FuerzaViewModels"
+    @bind-PageIndex="_pageIndex"
+    @bind-PageSize="_pageSize"
+    Title="Fuerzas Intervinientes"
+    Responsive>
         <TitleTemplate>
             <Flex Justify="flex-end">
                 <Space>
@@ -152,9 +152,9 @@
                 <Space>
                     <SpaceItem>
                         <Popconfirm Title="¿Eliminar esta fuerza?"
-                                    OnConfirm="() => BorrarFuerza(context.Id)"
-                                    OkText="Si"
-                                    CancelText="No">
+                        OnConfirm="() => BorrarFuerza(context.Id)"
+                        OkText="Si"
+                        CancelText="No">
                             <Button Danger>
                                 <Icon Type="delete" />
                             </Button>
@@ -195,7 +195,6 @@
     // Variables
     private FuerzaViewModelTable nuevaFuerza = new();
     private FuerzaViewModelTable selFuerza = new();
-    private string? TitleFuerzaSel;
     private int IdFuerzaSel;
 
     // Modals
@@ -236,7 +235,6 @@
 
     private async Task AddFuerza()
     {
-
         var fuerza = new FuerzaInterviniente
             {
                 NombreFuerza = nuevaFuerza.Nombre,
@@ -250,7 +248,6 @@
 
     private async Task EditarFuerza()
     {
-
         var fuerza = new FuerzaInterviniente
             {
                 Id = selFuerza.Id,
@@ -258,6 +255,7 @@
             };
 
         await FuerzaIntervinienteService.EditarFuerzaAsync(fuerza);
+        selFuerza = new FuerzaViewModelTable();
         _modalEditarVisible = false;
         await OnInitializedAsync();
     }
@@ -278,7 +276,6 @@
             return;
         }
 
-        
         selFuerza = new FuerzaViewModelTable
             {
                 Id = Fuerza.Id,
