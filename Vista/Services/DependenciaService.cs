@@ -39,21 +39,6 @@ namespace Vista.Services
 
         public async Task AgregarDependenciaAsync(Dependencia dependencia)
         {
-            int nuevoId = 1; // Empezamos en 1 por defecto
-            var idsExistentes = await _context.Dependencias
-                .Select(d => d.DependenciaId)
-                .OrderBy(id => id)
-                .ToListAsync();
-
-            foreach (var id in idsExistentes)
-            {
-                if (id == nuevoId)
-                    nuevoId++;
-                else
-                    break; // Encontramos un hueco
-            }
-
-            dependencia.DependenciaId = nuevoId;
             _context.Dependencias.Add(dependencia);
             await _context.SaveChangesAsync();
         }
