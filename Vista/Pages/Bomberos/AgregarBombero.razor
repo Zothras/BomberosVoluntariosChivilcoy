@@ -338,7 +338,7 @@
                                 DataSource="@brigadas"
                                 @bind-Value="@bomberoView.BrigadaId"
                                 Placeholder="Elegir Brigada"
-                                LabelName="@nameof(Brigada.Nombre)"
+                                LabelName="@nameof(Brigada.NombreBrigada)"
                                 ValueName="@nameof(Brigada.BrigadaId)"
                                 OnSelectedItemChanged="OnSelectedItemChangedHandler">
                         </Select>
@@ -531,6 +531,6 @@
 
     private void OnSelectedItemChangedHandler(Brigada value)
     {
-        Console.WriteLine($"selected: ${value?.Nombre}");
+        Console.WriteLine($"selected: ${value?.NombreBrigada}");
     }
 }

@@ -140,7 +140,7 @@
                 DataSource="@brigadas"
                 @bind-Value="@brigadaVM.BrigadaId"
                 DefaultValue="@brigadaVM.BrigadaId"
-                LabelName="@nameof(Brigada.Nombre)"
+                LabelName="@nameof(Brigada.NombreBrigada)"
                 ValueName="@nameof(Brigada.BrigadaId)">
         </Select>
     </FormItem>
@@ -192,7 +192,7 @@
         {
             Brigada? Brigada = await Context.Brigadas.SingleOrDefaultAsync(b => b.BrigadaId == bomberoData.BrigadaId);
             brigadaVM.BrigadaId = Brigada.BrigadaId;
-            brigadaVM.Nombre = Brigada.Nombre;
+            brigadaVM.Nombre = Brigada.NombreBrigada;
         }
     }
 

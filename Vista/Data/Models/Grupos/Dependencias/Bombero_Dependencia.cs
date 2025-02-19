@@ -9,6 +9,7 @@ namespace Vista.Data.Models.Grupos.Dependencias
         public int? PersonaId { get; set; }
         [ForeignKey(nameof(PersonaId))]
         public Bombero? Bombero { get; set; }
+
         public int? DependenciaId { get; set; }
         [ForeignKey(nameof(DependenciaId))]
         public Dependencia? Dependencia { get; set; }

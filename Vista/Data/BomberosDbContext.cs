@@ -74,8 +74,6 @@ namespace Vista.Data
         public DbSet<ServicioEspecialFalsaAlarma> ServicioEspecialFalsaAlarma { get; set; }
         public DbSet<ServicioEspecialColaboraciónFuerzasSeguridad> ServicioEspecialColaboraciónFuerzasSeguridad { get; set; }
         public DbSet<Firma> Firmas { get; set; }
-        public DbSet<Brigada> Brigadas { get; set; }
-        public DbSet<Bombero_Brigada> bomberoBrigadas { get; set; }
         public DbSet<Movil_Salida> MovilesSalida { get; set; }
         public DbSet<BomberoSalida> BomberosSalida { get; set; }
         public DbSet<Limpieza> Limpiezas { get; set; }
@@ -90,17 +88,21 @@ namespace Vista.Data
         public DbSet<Novedad> Novedades { get; set; }
         public DbSet<NovedadVehiculo> NovedadesVehiculos { get; set; }
 
-        //Fuerzas
+        // Fuerzas
 
         public DbSet<FuerzaInterviniente> Fuerzas { get; set; }
         public DbSet<Salida_FuerzaInterviniente> fuerzaIntervinientes { get; set; }
 
+        // Brigada
+
+        public DbSet<Brigada> Brigadas { get; set; }
+        
         // Tablas para Relacion Muchos a Muchos
 
         public DbSet<Bombero_Dependencia> bombero_dependencia { get; set; }
+        public DbSet<Bombero_Brigada> bombero_brigada { get; set; }
 
-
-        //propiedad experimental
+        // Propiedad experimental
         public DbSet<Salida> Salidas { get; set; }
 
         public BomberosDbContext(DbContextOptions<BomberosDbContext> options)
@@ -137,16 +139,16 @@ namespace Vista.Data
             //Brigadas
 
             modelBuilder.Entity<Bombero_Brigada>()
-            .HasKey(bb => new { bb.BomberoId, bb.BrigadaId }); // Configura la clave primaria compuesta
+            .HasKey(bb => new { bb.PersonaId, bb.BrigadaId }); // Configura la clave primaria compuesta
 
             modelBuilder.Entity<Bombero_Brigada>()
                 .HasOne(bb => bb.Bombero)
-                .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Bombero tienes una colección de BomberoBrigada
-                .HasForeignKey(bb => bb.BomberoId);
+                .WithMany(b => b.Brigadas)
+                .HasForeignKey(bb => bb.PersonaId);
 
             modelBuilder.Entity<Bombero_Brigada>()
                 .HasOne(bb => bb.Brigada)
-                .WithMany(b => b.BomberoBrigadas) // Asegúrate de que en Brigada tienes una colección de BomberoBrigada
+                .WithMany(b => b.Bomberos) // Asegúrate de que en Brigada tienes una colección de BomberoBrigada
                 .HasForeignKey(bb => bb.BrigadaId);
 
             //Unique
@@ -154,7 +156,7 @@ namespace Vista.Data
             //Brigadas
 
             modelBuilder.Entity<Brigada>()
-                .HasIndex(b => b.Nombre)
+                .HasIndex(b => b.NombreBrigada)
                 .IsUnique();
 
             //Movil
@@ -263,13 +265,6 @@ namespace Vista.Data
                 .HasOne(i => i.Vehiculo)
                 .WithOne(v => v.Imagen)
                 .HasForeignKey<VehiculoSalida>(v => v.ImagenId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-
-            modelBuilder.Entity<Brigada>()
-                .HasMany(br => br.Bomberos)
-                .WithOne(bo => bo.Brigada)
-                .HasForeignKey(bo => bo.BrigadaId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
 

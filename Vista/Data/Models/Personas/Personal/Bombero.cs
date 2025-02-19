@@ -73,7 +73,7 @@ namespace Vista.Data.Models.Personas.Personal
         /// <summary>
         /// Relación muchos a muchos entre bomberos y brigadas.
         /// </summary>
-        public ICollection<Bombero_Brigada> BomberoBrigadas { get; set; } = new List<Bombero_Brigada>();
+        public List<Bombero_Brigada> Brigadas { get; set; } = new List<Bombero_Brigada>();
 
         /// <summary>
         /// Brigada a la que pertenece el bombero (si aplica).

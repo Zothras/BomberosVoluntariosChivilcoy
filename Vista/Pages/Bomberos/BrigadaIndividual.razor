@@ -65,9 +65,9 @@
         using var db = await DbFactory.CreateDbContextAsync();
 
         // Obtener los IDs de los bomberos en la brigada
-        var bomberoIds = await db.bomberoBrigadas
+        var bomberoIds = await db.bombero_brigada
         .Where(bb => bb.BrigadaId == BrigadaId)
-        .Select(bb => bb.BomberoId)
+        .Select(bb => bb.PersonaId)
         .ToListAsync();
 
         // Cargar todos los bomberos basados en los IDs obtenidos
@@ -80,7 +80,7 @@
 
         if (b is not null)
         {
-            brigadaView.Nombre = b.Nombre;
+            brigadaView.Nombre = b.NombreBrigada;
         }
         else
         {

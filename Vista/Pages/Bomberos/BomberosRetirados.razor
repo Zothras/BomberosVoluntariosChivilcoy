@@ -291,8 +291,8 @@
                     DataSource="@brigadas"
                     @bind-Value="@bomberoVM.NombreBrigada"
                     DefaultValue="@bomberoVM.NombreBrigada"
-                    ValueName="@nameof(Brigada.Nombre)"
-                    LabelName="@nameof(Brigada.Nombre)"
+                    ValueName="@nameof(Brigada.NombreBrigada)"
+                    LabelName="@nameof(Brigada.NombreBrigada)"
                     OnSelectedItemChanged="OnSelectedItemChangedHandler">
             </Select>
         </FormItem>
@@ -603,7 +603,7 @@
 
                 Dotacion = bombero.Dotacion,
 
-                NombreBrigada = brigada.Nombre,
+                NombreBrigada = brigada.NombreBrigada,
 
                 GrupoSanguineo = bombero.GrupoSanguineo,
                 Estado = bombero.Estado,
@@ -652,7 +652,7 @@
         //    Base64Imagen = bomberoVM.Base64
         //},
         bombero.Dotacion = bomberoVM.Dotacion;
-        brigada.Nombre = bomberoVM.NombreBrigada;
+        brigada.NombreBrigada = bomberoVM.NombreBrigada;
         bombero.GrupoSanguineo = bomberoVM.GrupoSanguineo;
         bombero.Estado = bomberoVM.Estado;
         bombero.Chofer = bomberoVM.Chofer;
@@ -686,7 +686,7 @@
 
     private void OnSelectedItemChangedHandler(Brigada value)
     {
-        Console.WriteLine($"selected: ${value?.Nombre}");
+        Console.WriteLine($"selected: ${value?.NombreBrigada}");
     }
 
     private void search(string value)
