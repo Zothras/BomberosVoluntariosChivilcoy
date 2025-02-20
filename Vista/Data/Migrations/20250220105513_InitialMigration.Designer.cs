@@ -12,8 +12,8 @@ using Vista.Data;
 namespace Vista.Data.Migrations
 {
     [DbContext(typeof(BomberosDbContext))]
-    [Migration("20250219070849_BrigadasBomberosRelationFix")]
-    partial class BrigadasBomberosRelationFix
+    [Migration("20250220105513_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

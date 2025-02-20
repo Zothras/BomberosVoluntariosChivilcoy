@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vista.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class MigracionInicial2025 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace Vista.Data.Migrations
                 {
                     BrigadaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(type: "varchar(255)", nullable: false)
+                    NombreBrigada = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -131,6 +131,25 @@ namespace Vista.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "bombero_brigada",
+                columns: table => new
+                {
+                    PersonaId = table.Column<int>(type: "int", nullable: false),
+                    BrigadaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_bombero_brigada", x => new { x.PersonaId, x.BrigadaId });
+                    table.ForeignKey(
+                        name: "FK_bombero_brigada_Brigadas_BrigadaId",
+                        column: x => x.BrigadaId,
+                        principalTable: "Brigadas",
+                        principalColumn: "BrigadaId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "bombero_dependencia",
                 columns: table => new
                 {
@@ -140,25 +159,6 @@ namespace Vista.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_bombero_dependencia", x => new { x.PersonaId, x.DependenciaId });
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "bomberoBrigadas",
-                columns: table => new
-                {
-                    BomberoId = table.Column<int>(type: "int", nullable: false),
-                    BrigadaId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_bomberoBrigadas", x => new { x.BomberoId, x.BrigadaId });
-                    table.ForeignKey(
-                        name: "FK_bomberoBrigadas_Brigadas_BrigadaId",
-                        column: x => x.BrigadaId,
-                        principalTable: "Brigadas",
-                        principalColumn: "BrigadaId",
-                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -511,8 +511,7 @@ namespace Vista.Data.Migrations
                         name: "FK_Persona_Brigadas_BrigadaId",
                         column: x => x.BrigadaId,
                         principalTable: "Brigadas",
-                        principalColumn: "BrigadaId",
-                        onDelete: ReferentialAction.SetNull);
+                        principalColumn: "BrigadaId");
                     table.ForeignKey(
                         name: "FK_Persona_Comunicacion_EquipoId",
                         column: x => x.EquipoId,
@@ -748,6 +747,10 @@ namespace Vista.Data.Migrations
                     Color = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SeguroId = table.Column<int>(type: "int", nullable: true),
+                    VehiculoAfectado_Airbag = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    SalidaId = table.Column<int>(type: "int", nullable: true),
+                    Airbag = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    DamnificadoId = table.Column<int>(type: "int", nullable: true),
                     NumeroMovil = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EncargadoId = table.Column<int>(type: "int", nullable: true),
@@ -764,10 +767,6 @@ namespace Vista.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Kilometraje = table.Column<int>(type: "int", nullable: true),
                     EquipoId = table.Column<int>(type: "int", nullable: true),
-                    VehiculoAfectado_Airbag = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    SalidaId = table.Column<int>(type: "int", nullable: true),
-                    Airbag = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    DamnificadoId = table.Column<int>(type: "int", nullable: true),
                     PersonalId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -822,14 +821,14 @@ namespace Vista.Data.Migrations
                 column: "PersonaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_bombero_brigada_BrigadaId",
+                table: "bombero_brigada",
+                column: "BrigadaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_bombero_dependencia_DependenciaId",
                 table: "bombero_dependencia",
                 column: "DependenciaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_bomberoBrigadas_BrigadaId",
-                table: "bomberoBrigadas",
-                column: "BrigadaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BomberosSalida_MovilId",
@@ -847,9 +846,9 @@ namespace Vista.Data.Migrations
                 column: "SalidaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Brigadas_Nombre",
+                name: "IX_Brigadas_NombreBrigada",
                 table: "Brigadas",
-                column: "Nombre",
+                column: "NombreBrigada",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1086,6 +1085,14 @@ namespace Vista.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_bombero_brigada_Persona_PersonaId",
+                table: "bombero_brigada",
+                column: "PersonaId",
+                principalTable: "Persona",
+                principalColumn: "PersonaId",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_bombero_dependencia_Dependencias_DependenciaId",
                 table: "bombero_dependencia",
                 column: "DependenciaId",
@@ -1097,14 +1104,6 @@ namespace Vista.Data.Migrations
                 name: "FK_bombero_dependencia_Persona_PersonaId",
                 table: "bombero_dependencia",
                 column: "PersonaId",
-                principalTable: "Persona",
-                principalColumn: "PersonaId",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_bomberoBrigadas_Persona_BomberoId",
-                table: "bomberoBrigadas",
-                column: "BomberoId",
                 principalTable: "Persona",
                 principalColumn: "PersonaId",
                 onDelete: ReferentialAction.Cascade);
@@ -1325,10 +1324,10 @@ namespace Vista.Data.Migrations
                 name: "AscensoBomberos");
 
             migrationBuilder.DropTable(
-                name: "bombero_dependencia");
+                name: "bombero_brigada");
 
             migrationBuilder.DropTable(
-                name: "bomberoBrigadas");
+                name: "bombero_dependencia");
 
             migrationBuilder.DropTable(
                 name: "BomberosSalida");
