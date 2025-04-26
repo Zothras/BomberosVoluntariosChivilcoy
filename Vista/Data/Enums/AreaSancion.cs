@@ -6,6 +6,8 @@ namespace Vista.Data.Enums
         [Display(Name = "Jefatura")]
         Jefatura,
         [Display(Name = "Comisión Directiva")]
-        ComisionDirectiva
+        ComisionDirectiva,
+        [Display(Name = "Tribunal de Disciplina")]
+        TribunalDisciplina
     }
 }

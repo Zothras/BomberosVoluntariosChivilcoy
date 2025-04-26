@@ -7,183 +7,175 @@
 @inject IBomberoService BomberoService
 
 
-<style> 
-    .ant-btn:hover, .ant-btn:focus, .ant-btn:active {
-        text-decoration: none;
-        background: #40a9ff !important;
-    }
+<style>
+	.ant-btn:hover, .ant-btn:focus, .ant-btn:active {
+		text-decoration: none;
+		background: #40a9ff !important;
+	}
 
-    .ant-btn:hover, .ant-btn:focus {
-        color: white !important;
-        border-color: #40a9ff !important;
-        background: #40a9ff !important;
-    }
+	.ant-btn:hover, .ant-btn:focus {
+		color: white !important;
+		border-color: #40a9ff !important;
+		background: #40a9ff !important;
+	}
 
-    .ant-form-horizontal .ant-form-item-label {
-        flex-grow: 0;
-        font-weight: bold;
-    }
+	.ant-form-horizontal .ant-form-item-label {
+		flex-grow: 0;
+		font-weight: bold;
+	}
 
-    .ant-modal-header {
-        padding: 0px !important;
-        color: rgba(0, 0, 0, 0.85);
-        background: #fff;
-        border-bottom: 1px solid #f0f0f0;
-        border-radius: 2px 2px 0 0;
-    }
+	.ant-modal-header {
+		padding: 0px !important;
+		color: rgba(0, 0, 0, 0.85);
+		background: #fff;
+		border-bottom: 1px solid #f0f0f0;
+		border-radius: 2px 2px 0 0;
+	}
 
 </style>
 
 <Form Model="@SancionVM"
-      LabelColSpan="8"
-      WrapperColSpan="16"
-      OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed"
-      Style="widthwidth: 100%;height: 100%;">
-    
-    <FormItem Label="Fecha Desde">
-        <DatePicker AllowClear="false" @bind-Value="SancionVM.FechaDesde" />
-    </FormItem>
-    @if(SancionVM.TipoSancion == TipoSancion.Sancion){
-        <FormItem Label="Fecha Hasta">
-            <DatePicker AllowClear="false" @bind-Value="SancionVM.FechaHasta" />
-        </FormItem>
-    }
-    <FormItem Label="Personal Sancionado">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@ListabomberosVM"
-                @bind-Value="@SancionVM.NumeroLegajoSancionado"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Selecione el bombero"
-                DefaultActiveFirstOption="false"
-                AllowClear="true"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    <FormItem Label="Numero Legajo">
-        <AntDesign.InputNumber @bind-Value="SancionVM.NumeroLegajoSancionado" Disabled />
-    </FormItem>
-    <FormItem Label="Tipo Sancion">
-        <EnumSelect TEnum="TipoSancion" @bind-Value="@SancionVM.TipoSancion" />
-    </FormItem>
-    <FormItem Label="Area Sancion">
-        <EnumSelect TEnum="AreaSancion" @bind-Value="@SancionVM.SancionArea" />
-    </FormItem>
-    <FormItem Label="Encargado Area">
-        <Select TItem="BomberoViweModel"
-                TItemValue="int"
-                DataSource="@ListabomberosVM"
-                @bind-Value="@SancionVM.NumeroLegajoEncargado"
-                LabelName="@nameof(BomberoViweModel.NombreYApellido)"
-                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                Placeholder="Seleccione Personal Sancionado"
-                DefaultActiveFirstOption="false"
-                EnableSearch>
-        </Select>
-    </FormItem>
-    <FormItem Label="Observacion">
-        <Input @bind-Value="SancionVM.observaciones" />
-    </FormItem>
-    <FormItem Style="width: 100% !important;
+	  LabelColSpan="8"
+	  WrapperColSpan="16"
+	  OnFinish="OnFinish"
+	  OnFinishFailed="OnFinishFailed"
+	  Style="widthwidth: 100%;height: 100%;">
+
+	<FormItem Label="Fecha Desde">
+		<DatePicker AllowClear="false" @bind-Value="SancionVM.FechaDesde" />
+	</FormItem>
+	@if (SancionVM.TipoSancion == TipoSancion.Sancion)
+	{
+		<FormItem Label="Fecha Hasta">
+			<DatePicker AllowClear="false" @bind-Value="SancionVM.FechaHasta" />
+		</FormItem>
+	}
+	<FormItem Label="Personal Sancionado">
+		<Select TItem="BomberoViweModel"
+				TItemValue="int"
+				DataSource="@ListabomberosVM"
+				@bind-Value="@SancionVM.NumeroLegajoSancionado"
+				LabelName="@nameof(BomberoViweModel.NombreYApellido)"
+				ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+				Placeholder="Selecione el bombero"
+				DefaultActiveFirstOption="false"
+				AllowClear="true"
+				EnableSearch>
+		</Select>
+	</FormItem>
+	<FormItem Label="Numero Legajo">
+		<AntDesign.InputNumber @bind-Value="SancionVM.NumeroLegajoSancionado" Disabled />
+	</FormItem>
+	<FormItem Label="Tipo Sancion">
+		<EnumSelect TEnum="TipoSancion" @bind-Value="@SancionVM.TipoSancion" />
+	</FormItem>
+	<FormItem Label="Area Sancion">
+		<EnumSelect TEnum="AreaSancion" @bind-Value="@SancionVM.SancionArea" />
+	</FormItem>
+	<FormItem Label="Observacion">
+		<TextArea @bind-Value="SancionVM.observaciones" />
+	</FormItem>
+	<FormItem Style="width: 100% !important;
             display: flex !important;
             justify-content: flex-end !important;
             align-items: flex-end !important; height:100% !important; margin-bottom: -32px;" WrapperColOffset="8" WrapperColSpan="16">
-        <Button Style="background-color: #1890ff !important; border-color:currentColor !important; margin-right: 60px; margin-bottom: 17px !important; color: white;" HtmlType="submit">
-            Cargar Sancion
-        </Button>
-    </FormItem>
+		<Button Style="background-color: #1890ff !important; border-color:currentColor !important; margin-right: 60px; margin-bottom: 17px !important; color: white;" HtmlType="submit">
+			Cargar Sancion
+		</Button>
+	</FormItem>
 
 </Form>
 
 @code {
-    [Parameter] public EventCallback OnClose { get; set; }
-    BomberosDbContext Context;
-    public SancionViewModel SancionVM = new();
-    List<BomberoViweModel> ListabomberosVM = new();
+	[Parameter] public EventCallback OnClose { get; set; }
+	BomberosDbContext Context;
+	public SancionViewModel SancionVM = new();
+	List<BomberoViweModel> ListabomberosVM = new();
 
-    //View Model
-    public class SancionViewModel
-    {
-        public DateOnly FechaDesde { get; set; }
-        public DateOnly FechaHasta { get; set; }
-        public Bombero PersonalSancionado { get; set; }
-        public int NumeroLegajoSancionado { get; set; }
-        public TipoSancion TipoSancion { get; set; }
-        public AreaSancion SancionArea { get; set; }
-        public Bombero EncargadoArea { get; set; }
-        public int NumeroLegajoEncargado { get; set; }
-        public string observaciones { get; set; }
-    }
+	//View Model
+	public class SancionViewModel
+	{
+		public DateOnly FechaDesde { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+		public DateOnly FechaHasta { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+		public Bombero PersonalSancionado { get; set; }
+		public int NumeroLegajoSancionado { get; set; }
+		public TipoSancion TipoSancion { get; set; }
+		public AreaSancion SancionArea { get; set; }
+		public Bombero EncargadoArea { get; set; }
+		public int NumeroLegajoEncargado { get; set; }
+		public string observaciones { get; set; }
+	}
 
-    // OnFinish
-    private async void OnFinish(EditContext editContext)
-    {
-        try
-        {
-            Bombero? BomberoSancionado = await Context.Bomberos.Where(b => b.NumeroLegajo == SancionVM.NumeroLegajoSancionado).SingleOrDefaultAsync();
-            Bombero? BomberoEncargado = await Context.Bomberos.Where(b => b.NumeroLegajo == SancionVM.NumeroLegajoEncargado).SingleOrDefaultAsync();
+	// OnFinish
+	private async void OnFinish(EditContext editContext)
+	{
+		try
+		{
+			Bombero? BomberoSancionado = await Context.Bomberos.Where(b => b.NumeroLegajo == SancionVM.NumeroLegajoSancionado).SingleOrDefaultAsync();
 
-            Sancion Sancion = new()
-                {
-                    FechaDesde = SancionVM.FechaDesde,
-                    FechaHasta = SancionVM.FechaHasta,
-                    PersonalSancionado = BomberoSancionado,
-                    TipoSancion = SancionVM.TipoSancion,
-                    SacionArea = SancionVM.SancionArea,
-                    EncargadoArea = BomberoEncargado,
-                    observaciones = SancionVM.observaciones
-                };
-            await BomberoService.SancionarBombero(Sancion);
-            await Init();
-            await OnClose.InvokeAsync();
-            StateHasChanged();
-            await message.Success("Sancion cargada correctamente");
-        }
-        catch (Exception e)
-        {
-            await Init();
-            StateHasChanged();
-            if (e.InnerException != null)
-                await message.Error(e.InnerException.Message, 5);
-            else
-                await message.Error(e.Message, 5);
-        }
-    }
-    private void OnFinishFailed(EditContext editContext)
-    {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(SancionVM)}");
-    }
+			Sancion Sancion = new()
+				{
+					FechaDesde = SancionVM.FechaDesde,
+					FechaHasta = SancionVM.FechaHasta,
+					PersonalSancionado = BomberoSancionado,
+					TipoSancion = SancionVM.TipoSancion,
+					SacionArea = SancionVM.SancionArea,
+					DescripcionSancion = SancionVM.observaciones
+				};
 
-    // Init y Carga de datos
-    private async Task CargarBombero()
-    {
-        ListabomberosVM = new();
-        var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
-        foreach (Bombero b in bomberos)
-        {
-            BomberoViweModel bom = new()
-                {
-                    Nombre = b.Nombre,
-                    Apellido = b.Apellido,
-                    NumeroLegajo = b.NumeroLegajo
-                };
-            ListabomberosVM.Add(bom);
-        }
-    }
-    protected override async Task OnInitializedAsync()
-    {
-        await Init();
-    }
-    private async Task Init()
-    {
-        SancionVM = new();
-        Context = DbFactory.CreateDbContext();
-        await CargarBombero();
-    }
-    public void Dispose()
-    {
-        Context?.Dispose();
-    }
+			await BomberoService.SancionarBombero(Sancion);
+			await Init();
+			await OnClose.InvokeAsync();
+			StateHasChanged();
+			await message.Success("La sanción fue cargada con éxito.");
+		}
+		catch (Exception e)
+		{
+			await Init();
+			StateHasChanged();
+			if (e.InnerException != null)
+				await message.Error(e.InnerException.Message, 5);
+			else
+				await message.Error(e.Message, 5);
+		}
+	}
+
+	private void OnFinishFailed(EditContext editContext)
+	{
+		Console.WriteLine($"Failed:{JsonSerializer.Serialize(SancionVM)}");
+	}
+
+	// Init y Carga de datos
+	private async Task CargarBombero()
+	{
+		ListabomberosVM = new();
+		var bomberos = await Context.Bomberos.OrderBy(b => b.Nombre).ToArrayAsync();
+		foreach (Bombero b in bomberos)
+		{
+			BomberoViweModel bom = new()
+				{
+					Nombre = b.Nombre,
+					Apellido = b.Apellido,
+					NumeroLegajo = b.NumeroLegajo
+				};
+			ListabomberosVM.Add(bom);
+		}
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await Init();
+	}
+
+	private async Task Init()
+	{
+		SancionVM = new();
+		Context = DbFactory.CreateDbContext();
+		await CargarBombero();
+	}
+
+	public void Dispose()
+	{
+		Context?.Dispose();
+	}
 }

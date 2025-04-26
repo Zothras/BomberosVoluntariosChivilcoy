@@ -129,12 +129,6 @@ namespace Vista.Data.Models.Personas.Personal
         public List<Sancion> SancionesRecibidas { get; set; } = new();
 
         /// <summary>
-        /// Sanciones aplicadas por el bombero en su rol de encargado.
-        /// </summary>
-        [InverseProperty("EncargadoArea")]
-        public List<Sancion> SancionesAplicadas { get; set; } = new();
-
-        /// <summary>
         /// Registros de limpieza en los que ha participado el bombero.
         /// </summary>
         public List<Limpieza> Limpieza { get; set; } = new();

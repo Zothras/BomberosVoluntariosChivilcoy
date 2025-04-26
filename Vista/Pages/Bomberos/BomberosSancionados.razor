@@ -78,7 +78,6 @@
                 </Space>
             </TitleTemplate>
             <ColumnDefinitions Context="muestra">
-                <PropertyColumn Property="c=>c.Encargado"></PropertyColumn>
                 <PropertyColumn Property="c=>c.Sancionado"></PropertyColumn>
                 <PropertyColumn Property="c=>c.FechaDesde" Title="Fecha Desde"></PropertyColumn>
                 <PropertyColumn Property="c=>c.FechaHasta" Title="Fecha Hasta"></PropertyColumn>
@@ -120,13 +119,12 @@
         public DateOnly FechaHasta { get; set; }
         public TipoSancion TipoSancion { get; set; }
         public AreaSancion SancionArea { get; set; }
-        public Bombero PersonalSancionado { get; set; }
-        public Bombero EncargadoArea { get; set; }
+        public Bombero? PersonalSancionado { get; set; }
+        public Bombero? EncargadoArea { get; set; }
         public int NumeroLegajoEncargado { get; set; }
         public int NumeroLegajoSancionado { get; set; }
-        public string Sancionado { get; set; }
-        public string Encargado { get; set; }
-        public string Observaciones { get; set; }
+        public string? Sancionado { get; set; }
+        public string? Observaciones { get; set; }
 
         public int DiasSancion => (FechaHasta.ToDateTime(TimeOnly.MinValue) - FechaDesde.ToDateTime(TimeOnly.MinValue)).Days + 1;
     }
@@ -146,7 +144,7 @@
         foreach (Sancion s in sanciones)
         {
             var bombero = await Context.Bomberos.Where(B => B.PersonaId == s.PersonaId).SingleOrDefaultAsync();
-            var bomberoEncargado = await Context.Bomberos.Where(B => B.PersonaId == s.EncargadoAreaId).SingleOrDefaultAsync();
+
             SancionViewModel san = new()
                 {
                     FechaDesde = s.FechaDesde,
@@ -155,9 +153,7 @@
                     Sancionado = bombero.Nombre + " " + bombero.Apellido,
                     TipoSancion = s.TipoSancion,
                     SancionArea = s.SacionArea,
-                    EncargadoArea = bomberoEncargado,
-                    Encargado = bomberoEncargado.Nombre + " " + bomberoEncargado.Apellido,
-                    Observaciones = s.observaciones
+                    Observaciones = s.DescripcionSancion
                 };
             sancionesVM.Add(san);
         }

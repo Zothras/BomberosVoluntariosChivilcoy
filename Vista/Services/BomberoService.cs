@@ -133,15 +133,13 @@ namespace Vista.Services
         public async Task<Sancion> SancionarBombero(Sancion sancion)
         {
             Bombero? BomberoSancionado = await _context.Bomberos.Where(b => b.NumeroLegajo == sancion.PersonalSancionado.NumeroLegajo).SingleOrDefaultAsync();
-            Bombero? BomberoEncargado = await _context.Bomberos.Where(b => b.NumeroLegajo == sancion.EncargadoArea.NumeroLegajo).SingleOrDefaultAsync();
 
-            if (BomberoSancionado == null || BomberoEncargado == null)
+            if (BomberoSancionado == null)
             {
                 throw new InvalidOperationException("No se pudieron encontrar los bomberos.");
             }
 
             sancion.PersonalSancionado = BomberoSancionado;
-            sancion.EncargadoArea = BomberoEncargado;
 
             _context.Sanciones.Add(sancion);
             await _context.SaveChangesAsync();
