@@ -235,6 +235,12 @@
 
     private async Task AddFuerza()
     {
+        if (string.IsNullOrWhiteSpace(nuevaFuerza.Nombre))
+        {
+            await MessageService.Error("El campo 'Nombre' no puede estar vacío.");
+            return;
+        }
+
         var fuerza = new FuerzaInterviniente
             {
                 NombreFuerza = nuevaFuerza.Nombre,
@@ -243,8 +249,11 @@
         await FuerzaIntervinienteService.AgregarFuerzaAsync(fuerza);
         nuevaFuerza = new FuerzaViewModelTable();
         _modalAñadirVisible = false;
+        StateHasChanged();
+		await MessageService.Success("Fuerza añadida correctamente.");
         await OnInitializedAsync();
     }
+
 
     private async Task EditarFuerza()
     {
