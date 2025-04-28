@@ -142,7 +142,7 @@
 					<Title Level="3" Style="color: white;">Dependencias</Title>
 				</GridCol>
 				<GridCol Span="12" Style="text-align: right;">
-					<Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+					<Button Type="primary" OnClick="()=>VerAñadirDependencia()">
 						<Icon Type="plus" /> Nueva
 					</Button>
 				</GridCol>
@@ -280,7 +280,25 @@
 
 	private async Task AddDependencia()
 	{
+		if (newDependencia.Encargado == null)
+		{
+			await MessageService.Error("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(newDependencia.Nombre))
+		{
+			await MessageService.Error("El nombre de la dependencia no puede estar vacío.");
+			return;
+		}
+
 		Bombero BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(newDependencia.Encargado.NumeroLegajo);
+
+		if (BomberoEncargado == null)
+		{
+			await MessageService.Error("El encargado seleccionado no es válido.");
+			return;
+		}
 
 		var dependencia = new Dependencia
 			{
@@ -292,6 +310,7 @@
 		newDependencia = new DependenciaViewModelTable();
 		_modalAñadirVisible = false;
 		await OnInitializedAsync();
+		await MessageService.Success("Dependencia añadida correctamente.");
 	}
 
 	private async Task EditDependencia()
@@ -302,7 +321,25 @@
 			return;
 		}
 
+		if (string.IsNullOrWhiteSpace(selDependencia.Nombre))
+		{
+			await MessageService.Error("El nombre de la dependencia no puede estar vacío.");
+			return;
+		}
+
+		if (selDependencia.Id <= 0)
+		{
+			await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+			return;
+		}
+
 		var BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(selDependencia.Encargado.NumeroLegajo);
+
+		if (BomberoEncargado == null)
+		{
+			await MessageService.Error("El encargado seleccionado no es válido.");
+			return;
+		}
 
 		var dependencia = new Dependencia
 			{
@@ -314,6 +351,19 @@
 		await DependenciaService.EditarDependenciaAsync(dependencia);
 		_modalEditarVisible = false;
 		await OnInitializedAsync();
+		await MessageService.Success("Dependencia editada correctamente.");
+	}
+
+	private async Task VerAñadirDependencia()
+	{
+		if (bomberosTodos.Count == 0)
+		{
+			await MessageService.Error("No hay bomberos disponibles para asignar como encargado.");
+			return;
+		}
+
+		newDependencia = new DependenciaViewModelTable();
+		_modalAñadirVisible = true;
 	}
 
 	private async Task VerEditarDependencia(int id)
@@ -366,5 +416,6 @@
 	{
 		await DependenciaService.EliminarDependenciaAsync(id);
 		await OnInitializedAsync();
+		await MessageService.Success("Dependencia eliminada correctamente.");
 	}
 }
