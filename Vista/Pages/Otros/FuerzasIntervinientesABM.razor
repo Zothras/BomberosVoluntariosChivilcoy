@@ -108,7 +108,6 @@
 		padding: 0;
 		color: rgba(0, 0, 0, 0.85);
 		font-size: 14px;
-		font-variant-numeric: tabular-nums;
 		line-height: 1.5715;
 		list-style: none;
 		font-feature-settings: 'tnum';
@@ -136,15 +135,18 @@
 		   @bind-PageSize="_pageSize"
 		   Title="Fuerzas Intervinientes"
 		   Responsive>
-		<TitleTemplate>
-			<Flex Justify="flex-end">
-				<Space>
-					<Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
-						<Icon Type="plus" /> Nueva
-					</Button>
-				</Space>
-			</Flex>
-		</TitleTemplate>
+        <TitleTemplate>
+           <GridRow>
+               <GridCol Span="12">
+                   <Title Level="3" Style="color: white;">Fuerzas Intervinientes</Title>
+               </GridCol>
+               <GridCol Span="12" Style="text-align: right;">
+                   <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+                       <Icon Type="plus" /> Nueva
+                   </Button>
+               </GridCol>
+           </GridRow>
+        </TitleTemplate>
 		<ColumnDefinitions>
 			<PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
 
