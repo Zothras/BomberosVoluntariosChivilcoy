@@ -11,358 +11,360 @@
 @inject IMessageService MessageService
 
 <style>
-    .template {
-        width: 100%;
-        height: 100%;
-        max-width: 97%;
-        min-width: 400px;
-        max-height: 100vh;
-        border-radius: 10px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        background: #fff;
-        display: flex;
-        flex-direction: column;
-        margin: 1em;
-        padding: 10px;
-        overflow: auto;
-    }
+	.template {
+		width: 100%;
+		height: 100%;
+		max-width: 97%;
+		min-width: 400px;
+		max-height: 100vh;
+		border-radius: 10px;
+		box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
+		margin: 1em;
+		padding: 10px;
+		overflow: auto;
+	}
 
-    .ant-table {
-        width: 100%;
-        background-color: white;
-        border-radius: 8px;
-        overflow: hidden;
-    }
+	.ant-table {
+		width: 100%;
+		background-color: white;
+		border-radius: 8px;
+		overflow: hidden;
+	}
 
-    .ant-table-title {
-        background-color: #A63333
-    }
+	.ant-table-title {
+		background-color: #A63333
+	}
 
-    .ant-table-thead .ant-table-cell {
-        background-color: #A63333 !important;
-        color: white !important;
-        font-weight: bold;
-    }
+	.ant-table-thead .ant-table-cell {
+		background-color: #A63333 !important;
+		color: white !important;
+		font-weight: bold;
+	}
 
-    .ant-table-cell {
-        padding: 16px !important;
-    }
+	.ant-table-cell {
+		padding: 16px !important;
+	}
 
-    .title-template-container {
-        background-color: #A63333;
-        padding: 16px;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+	.title-template-container {
+		background-color: #A63333;
+		padding: 16px;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-    .search-input {
-        width: 250px;
-    }
+	.search-input {
+		width: 250px;
+	}
 
-        .search-input input {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-        }
+		.search-input input {
+			background-color: rgba(255, 255, 255, 0.1);
+			color: white;
+			border: none;
+		}
 
-            .search-input input::placeholder {
-                color: rgba(255, 255, 255, 0.7);
-            }
+			.search-input input::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
 
-    .add-button {
-        background-color: #4CAF50 !important;
-        border-color: #438E46 !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+	.add-button {
+		background-color: #4CAF50 !important;
+		border-color: #438E46 !important;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-    .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+	.boton_p {
+		background-color: #732D2D !important;
+		color: white !important;
+		border: none;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-    @@media (max-width: 960px) {
-        .title-template-container {
-            flex-direction: column;
-            align-items: stretch;
-        }
-    }
+	@@media (max-width: 960px) {
+		.title-template-container {
+			flex-direction: column;
+			align-items: stretch;
+		}
+	}
 
-    .ant-form-horizontal .ant-form-item-label {
-        flex-grow: 1;
-        background: #A63333;
-    }
+	.ant-form-horizontal .ant-form-item-label {
+		flex-grow: 1;
+		background: #A63333;
+	}
 
-        .ant-form-horizontal .ant-form-item-label > label {
-            color: #FFFFFF;
-            padding: 2px 4px;
-        }
+		.ant-form-horizontal .ant-form-item-label > label {
+			color: #FFFFFF;
+			padding: 2px 4px;
+		}
 
-    .ant-form-item {
-        box-sizing: border-box;
-        margin: 0;
-        margin-bottom: 0px;
-        padding: 0;
-        color: rgba(0, 0, 0, 0.85);
-        font-size: 14px;
-        font-variant: tabular-nums;
-        line-height: 1.5715;
-        list-style: none;
-        font-feature-settings: 'tnum';
-        margin-bottom: 8px !important;
-        vertical-align: top;
-        font-weight: bold;
-    }
+	.ant-form-item {
+		box-sizing: border-box;
+		margin: 0;
+		margin-bottom: 0px;
+		padding: 0;
+		color: rgba(0, 0, 0, 0.85);
+		font-size: 14px;
+		line-height: 1.5715;
+		list-style: none;
+		font-feature-settings: 'tnum';
+		margin-bottom: 8px !important;
+		vertical-align: top;
+		font-weight: bold;
+	}
 
-    .ant-modal-content {
-        position: relative;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 0;
-        border-radius: 2px;
-        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-        pointer-events: auto;
-        border: 1px solid red !important;
-    }
+	.ant-modal-content {
+		position: relative;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 0;
+		border-radius: 2px;
+		box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+		pointer-events: auto;
+		border: 1px solid red !important;
+	}
 </style>
 
 <div class="template">
-    <Table TItem="DependenciaViewModelTable"
-           DataSource="@DependenciaViewModels"
-           @bind-PageIndex="_pageIndex"
-           @bind-PageSize="_pageSize"
-           Title="Dependencias"
-           Responsive>
-        <TitleTemplate>
-            <Flex Justify="flex-end">
-                <Space>
-                    <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
-                        <Icon Type="plus" /> Nueva
-                    </Button>
-                </Space>
-            </Flex>
-        </TitleTemplate>
-        <ColumnDefinitions>
-            <PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
+	<Table TItem="DependenciaViewModelTable"
+		   DataSource="@DependenciaViewModels"
+		   @bind-PageIndex="_pageIndex"
+		   @bind-PageSize="_pageSize"
+		   Title="Dependencias"
+		   Responsive>
+		<TitleTemplate>
+			<GridRow>
+				<GridCol Span="12">
+					<Title Level="3" Style="color: white;">Dependencias</Title>
+				</GridCol>
+				<GridCol Span="12" Style="text-align: right;">
+					<Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+						<Icon Type="plus" /> Nueva
+					</Button>
+				</GridCol>
+			</GridRow>
+		</TitleTemplate>
+		<ColumnDefinitions>
+			<PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
 
-            <PropertyColumn Title="Encargado" Property="d=>d.EncargadoApellidoYNombre" Sortable />
+			<PropertyColumn Title="Encargado" Property="d=>d.EncargadoApellidoYNombre" Sortable />
 
-            <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
-                <Space>
-                    <SpaceItem>
-                        <Button OnClick="()=>VerDetalleDependencia(context.Id)">
-                            <Icon Type="team" />
-                        </Button>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Popconfirm Title="¿Eliminar esta dependencia?"
-                                    OnConfirm="() => BorrarDependencia(context.Id)"
-                                    OkText="Si"
-                                    CancelText="No">
-                            <Button Danger>
-                                <Icon Type="delete" />
-                            </Button>
-                        </Popconfirm>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Button Type="@ButtonType.Primary" OnClick="()=>
+			<ActionColumn Title="Acciones" Align=ColumnAlign.Center>
+				<Space>
+					<SpaceItem>
+						<Button OnClick="()=>VerDetalleDependencia(context.Id)">
+							<Icon Type="team" />
+						</Button>
+					</SpaceItem>
+					<SpaceItem>
+						<Popconfirm Title="¿Eliminar esta dependencia?"
+									OnConfirm="() => BorrarDependencia(context.Id)"
+									OkText="Si"
+									CancelText="No">
+							<Button Danger>
+								<Icon Type="delete" />
+							</Button>
+						</Popconfirm>
+					</SpaceItem>
+					<SpaceItem>
+						<Button Type="@ButtonType.Primary" OnClick="()=>
                             VerEditarDependencia(context.Id)" Ghost>
-                            <Icon Type="edit" />
-                        </Button>
-                    </SpaceItem>
-                </Space>
-            </ActionColumn>
+							<Icon Type="edit" />
+						</Button>
+					</SpaceItem>
+				</Space>
+			</ActionColumn>
 
-        </ColumnDefinitions>
-    </Table>
+		</ColumnDefinitions>
+	</Table>
 </div>
 
 @*Modal para Añadir Dependencias*@
 <Modal @bind-Visible="_modalAñadirVisible" Title="Añadir Dependencia" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddDependencia">
-    <Form Model="newDependencia">
-        <FormItem Label="Nombre">
-            <Input @bind-Value="newDependencia.Nombre" />
-        </FormItem>
-        <FormItem Label="Encargado">
-            <Select TItem="BomberoViweModel"
-                    TItemValue="BomberoViweModel"
-                    DataSource="@bomberosTodos"
-                    @bind-Value="newDependencia.Encargado"
-                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                    Placeholder="Seleccione un bombero"
-                    DefaultActiveFirstOption="false"
-                    AllowClear="true" EnableSearch>
-            </Select>
-        </FormItem>
-    </Form>
+	<Form Model="newDependencia">
+		<FormItem Label="Nombre">
+			<Input @bind-Value="newDependencia.Nombre" />
+		</FormItem>
+		<FormItem Label="Encargado">
+			<Select TItem="BomberoViweModel"
+					TItemValue="BomberoViweModel"
+					DataSource="@bomberosTodos"
+					@bind-Value="newDependencia.Encargado"
+					LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+					Placeholder="Seleccione un bombero"
+					DefaultActiveFirstOption="false"
+					AllowClear="true" EnableSearch>
+			</Select>
+		</FormItem>
+	</Form>
 </Modal>
 
 @*Modal para Editar Dependencias*@
 <Modal @bind-Visible="_modalEditarVisible" Title="Editar Dependencia" OkText="@("Editar")" CancelText="@("Cancelar")" OnOk="@EditDependencia">
-    <Form Model="selDependencia">
-        <FormItem Label="Nombre">
-            <Input @bind-Value="selDependencia.Nombre" />
-        </FormItem>
-        <FormItem Label="Encargado">
-            <Select TItem="BomberoViweModel"
-                    TItemValue="BomberoViweModel"
-                    DataSource="@bomberosTodos"
-                    @bind-Value="selDependencia.Encargado"
-                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                    Placeholder="Seleccione un bombero"
-                    DefaultActiveFirstOption="false"
-                    AllowClear="true" EnableSearch>
-            </Select>
-        </FormItem>
-    </Form>
+	<Form Model="selDependencia">
+		<FormItem Label="Nombre">
+			<Input @bind-Value="selDependencia.Nombre" />
+		</FormItem>
+		<FormItem Label="Encargado">
+			<Select TItem="BomberoViweModel"
+					TItemValue="BomberoViweModel"
+					DataSource="@bomberosTodos"
+					@bind-Value="selDependencia.Encargado"
+					LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+					Placeholder="Seleccione un bombero"
+					DefaultActiveFirstOption="false"
+					AllowClear="true" EnableSearch>
+			</Select>
+		</FormItem>
+	</Form>
 </Modal>
 
 <Modal @bind-Visible="_modalDetallesVisible" Title="@TitleDependenciaSel" Maximizable="@true" Centered="@true">
-    <BomberosDependencia DependenciaId="@IdDependenciaSel"></BomberosDependencia>
+	<BomberosDependencia DependenciaId="@IdDependenciaSel"></BomberosDependencia>
 </Modal>
 
 @code {
-    //Lista con todos los bomberos
-    private List<BomberoViweModel> bomberosTodos = new();
+	//Lista con todos los bomberos
+	private List<BomberoViweModel> bomberosTodos = new();
 
-    // Variables
-    private DependenciaViewModelTable newDependencia = new();
-    private DependenciaViewModelTable selDependencia = new();
-    private string? TitleDependenciaSel;
-    private int IdDependenciaSel;
+	// Variables
+	private DependenciaViewModelTable newDependencia = new();
+	private DependenciaViewModelTable selDependencia = new();
+	private string? TitleDependenciaSel;
+	private int IdDependenciaSel;
 
-    // Modals
-    private bool _modalAñadirVisible = false;
-    private bool _modalDetallesVisible = false;
-    private bool _modalEditarVisible = false;
+	// Modals
+	private bool _modalAñadirVisible = false;
+	private bool _modalDetallesVisible = false;
+	private bool _modalEditarVisible = false;
 
-    // Lista de Dependencias
-    private List<Dependencia> Dependencias = new List<Dependencia>();
+	// Lista de Dependencias
+	private List<Dependencia> Dependencias = new List<Dependencia>();
 
-    // Variables de Tamaño de la Tabla
-    int _pageIndex = 1;
-    int _pageSize = 5;
+	// Variables de Tamaño de la Tabla
+	int _pageIndex = 1;
+	int _pageSize = 5;
 
-    // Lista de ViewModels de Dependencia
-    private List<DependenciaViewModelTable> DependenciaViewModels = new List<DependenciaViewModelTable>();
+	// Lista de ViewModels de Dependencia
+	private List<DependenciaViewModelTable> DependenciaViewModels = new List<DependenciaViewModelTable>();
 
-    public class DependenciaViewModelTable
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; } = null!;
-        public string? EncargadoApellidoYNombre { get; set; }
-        public BomberoViweModel Encargado { get; set; } = null!;
-    }
+	public class DependenciaViewModelTable
+	{
+		public int Id { get; set; }
+		public string Nombre { get; set; } = null!;
+		public string? EncargadoApellidoYNombre { get; set; }
+		public BomberoViweModel Encargado { get; set; } = null!;
+	}
 
-    protected override async Task OnInitializedAsync()
-    {
-        bomberosTodos = await BomberoService.GetAllBomberosAsync(); // Obtiene todos los Bomberos.
-        Dependencias = await DependenciaService.ObtenerTodasLasDependenciasAsync();
-        DependenciaViewModels = await MapearDependenciasAsync(Dependencias);
-        StateHasChanged();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		bomberosTodos = await BomberoService.GetAllBomberosAsync(); // Obtiene todos los Bomberos.
+		Dependencias = await DependenciaService.ObtenerTodasLasDependenciasAsync();
+		DependenciaViewModels = await MapearDependenciasAsync(Dependencias);
+		StateHasChanged();
+	}
 
-    public async Task<List<DependenciaViewModelTable>> MapearDependenciasAsync(List<Dependencia> dependencias)
-    {
-        return await Task.Run(() => dependencias.Select(d => new DependenciaViewModelTable
-            {
-                Id = d.DependenciaId,
-                Nombre = d.NombreDependencia,
-                EncargadoApellidoYNombre = $"{d.Encargado.Apellido}, {d.Encargado.Nombre}"
-            }).ToList());
-    }
+	public async Task<List<DependenciaViewModelTable>> MapearDependenciasAsync(List<Dependencia> dependencias)
+	{
+		return await Task.Run(() => dependencias.Select(d => new DependenciaViewModelTable
+			{
+				Id = d.DependenciaId,
+				Nombre = d.NombreDependencia,
+				EncargadoApellidoYNombre = $"{d.Encargado.Apellido}, {d.Encargado.Nombre}"
+			}).ToList());
+	}
 
-    private async Task AddDependencia()
-    {
-        Bombero BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(newDependencia.Encargado.NumeroLegajo);
+	private async Task AddDependencia()
+	{
+		Bombero BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(newDependencia.Encargado.NumeroLegajo);
 
-        var dependencia = new Dependencia
-            {
-                NombreDependencia = newDependencia.Nombre,
-                Encargado = BomberoEncargado
-            };
+		var dependencia = new Dependencia
+			{
+				NombreDependencia = newDependencia.Nombre,
+				Encargado = BomberoEncargado
+			};
 
-        await DependenciaService.AgregarDependenciaAsync(dependencia);
-        newDependencia = new DependenciaViewModelTable();
-        _modalAñadirVisible = false;
-        await OnInitializedAsync();
-    }
+		await DependenciaService.AgregarDependenciaAsync(dependencia);
+		newDependencia = new DependenciaViewModelTable();
+		_modalAñadirVisible = false;
+		await OnInitializedAsync();
+	}
 
-    private async Task EditDependencia()
-    {
-        if (selDependencia.Encargado == null)
-        {
-            await MessageService.Error("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
-            return;
-        }
+	private async Task EditDependencia()
+	{
+		if (selDependencia.Encargado == null)
+		{
+			await MessageService.Error("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
+			return;
+		}
 
-        var BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(selDependencia.Encargado.NumeroLegajo);
+		var BomberoEncargado = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(selDependencia.Encargado.NumeroLegajo);
 
-        var dependencia = new Dependencia
-            {
-                DependenciaId = selDependencia.Id,
-                NombreDependencia = selDependencia.Nombre,
-                Encargado = BomberoEncargado
-            };
+		var dependencia = new Dependencia
+			{
+				DependenciaId = selDependencia.Id,
+				NombreDependencia = selDependencia.Nombre,
+				Encargado = BomberoEncargado
+			};
 
-        await DependenciaService.EditarDependenciaAsync(dependencia);
-        _modalEditarVisible = false;
-        await OnInitializedAsync();
-    }
+		await DependenciaService.EditarDependenciaAsync(dependencia);
+		_modalEditarVisible = false;
+		await OnInitializedAsync();
+	}
 
-    private async Task VerEditarDependencia(int id)
-    {
-        if (id <= 0)
-        {
-            await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
-            return;
-        }
+	private async Task VerEditarDependencia(int id)
+	{
+		if (id <= 0)
+		{
+			await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+			return;
+		}
 
-        var Dependencia = await DependenciaService.ObtenerDependenciaPorIdAsync(id);
+		var Dependencia = await DependenciaService.ObtenerDependenciaPorIdAsync(id);
 
-        if (Dependencia == null)
-        {
-            await MessageService.Error("Error al intentar editar la dependencia: No se encontró.");
-            return;
-        }
+		if (Dependencia == null)
+		{
+			await MessageService.Error("Error al intentar editar la dependencia: No se encontró.");
+			return;
+		}
 
-        var encargado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Dependencia.Encargado.NumeroLegajo);
-        if (encargado == null)
-        {
-            await MessageService.Error("Error al intentar editar la dependencia: No se encontró un encargado válido.");
-            return;
-        }
+		var encargado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Dependencia.Encargado.NumeroLegajo);
+		if (encargado == null)
+		{
+			await MessageService.Error("Error al intentar editar la dependencia: No se encontró un encargado válido.");
+			return;
+		}
 
-        selDependencia = new DependenciaViewModelTable
-            {
-                Id = Dependencia.DependenciaId,
-                Nombre = Dependencia.NombreDependencia,
-                Encargado = encargado
-            };
+		selDependencia = new DependenciaViewModelTable
+			{
+				Id = Dependencia.DependenciaId,
+				Nombre = Dependencia.NombreDependencia,
+				Encargado = encargado
+			};
 
-        _modalEditarVisible = true;
-    }
+		_modalEditarVisible = true;
+	}
 
-    private async Task VerDetalleDependencia(int id)
-    {
-        var Dependencia = await DependenciaService.ObtenerDependenciaPorIdAsync(id);
-        if (Dependencia != null!)
-        {
-            TitleDependenciaSel = Dependencia.NombreDependencia;
-            IdDependenciaSel = Dependencia.DependenciaId;
-            _modalDetallesVisible = true;
-        }
-        else
-            await MessageService.Error("Error al abrir la dependencia: No se encontró.");
-    }
+	private async Task VerDetalleDependencia(int id)
+	{
+		var Dependencia = await DependenciaService.ObtenerDependenciaPorIdAsync(id);
+		if (Dependencia != null!)
+		{
+			TitleDependenciaSel = Dependencia.NombreDependencia;
+			IdDependenciaSel = Dependencia.DependenciaId;
+			_modalDetallesVisible = true;
+		}
+		else
+			await MessageService.Error("Error al abrir la dependencia: No se encontró.");
+	}
 
-    private async Task BorrarDependencia(int id)
-    {
-        await DependenciaService.EliminarDependenciaAsync(id);
-        await OnInitializedAsync();
-    }
+	private async Task BorrarDependencia(int id)
+	{
+		await DependenciaService.EliminarDependenciaAsync(id);
+		await OnInitializedAsync();
+	}
 }

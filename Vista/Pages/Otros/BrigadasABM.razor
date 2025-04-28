@@ -11,312 +11,314 @@
 @inject IMessageService MessageService
 
 <style>
-    .template {
-    width: 100%;
-    height: 100%;
-    max-width: 97%;
-    min-width: 400px;
-    max-height: 100vh;
-    border-radius: 10px;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    margin: 1em;
-    padding: 10px;
-    overflow: auto;
-    }
+	.template {
+		width: 100%;
+		height: 100%;
+		max-width: 97%;
+		min-width: 400px;
+		max-height: 100vh;
+		border-radius: 10px;
+		box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
+		margin: 1em;
+		padding: 10px;
+		overflow: auto;
+	}
 
-    .ant-table {
-    width: 100%;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    }
+	.ant-table {
+		width: 100%;
+		background-color: white;
+		border-radius: 8px;
+		overflow: hidden;
+	}
 
-    .ant-table-title {
-    background-color: #A63333
-    }
+	.ant-table-title {
+		background-color: #A63333
+	}
 
-    .ant-table-thead .ant-table-cell {
-    background-color: #A63333 !important;
-    color: white !important;
-    font-weight: bold;
-    }
+	.ant-table-thead .ant-table-cell {
+		background-color: #A63333 !important;
+		color: white !important;
+		font-weight: bold;
+	}
 
-    .ant-table-cell {
-    padding: 16px !important;
-    }
+	.ant-table-cell {
+		padding: 16px !important;
+	}
 
-    .title-template-container {
-    background-color: #A63333;
-    padding: 16px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    }
+	.title-template-container {
+		background-color: #A63333;
+		padding: 16px;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-    .search-input {
-    width: 250px;
-    }
+	.search-input {
+		width: 250px;
+	}
 
-    .search-input input {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: none;
-    }
+		.search-input input {
+			background-color: rgba(255, 255, 255, 0.1);
+			color: white;
+			border: none;
+		}
 
-    .search-input input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-    }
+			.search-input input::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
 
-    .add-button {
-    background-color: #4CAF50 !important;
-    border-color: #438E46 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+	.add-button {
+		background-color: #4CAF50 !important;
+		border-color: #438E46 !important;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-    .boton_p {
-    background-color: #732D2D !important;
-    color: white !important;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+	.boton_p {
+		background-color: #732D2D !important;
+		color: white !important;
+		border: none;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-    @@media (max-width: 960px) {
-    .title-template-container {
-    flex-direction: column;
-    align-items: stretch;
-    }
-    }
+	@@media (max-width: 960px) {
+		.title-template-container {
+			flex-direction: column;
+			align-items: stretch;
+		}
+	}
 
-    .ant-form-horizontal .ant-form-item-label {
-    flex-grow: 1;
-    background: #A63333;
-    }
+	.ant-form-horizontal .ant-form-item-label {
+		flex-grow: 1;
+		background: #A63333;
+	}
 
-    .ant-form-horizontal .ant-form-item-label > label {
-    color: #FFFFFF;
-    padding: 2px 4px;
-    }
+		.ant-form-horizontal .ant-form-item-label > label {
+			color: #FFFFFF;
+			padding: 2px 4px;
+		}
 
-    .ant-form-item {
-    box-sizing: border-box;
-    margin: 0;
-    margin-bottom: 0px;
-    padding: 0;
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 14px;
-    font-variant: tabular-nums;
-    line-height: 1.5715;
-    list-style: none;
-    font-feature-settings: 'tnum';
-    margin-bottom: 8px !important;
-    vertical-align: top;
-    font-weight: bold;
-    }
+	.ant-form-item {
+		box-sizing: border-box;
+		margin: 0;
+		margin-bottom: 0px;
+		padding: 0;
+		color: rgba(0, 0, 0, 0.85);
+		font-size: 14px;
+		line-height: 1.5715;
+		list-style: none;
+		font-feature-settings: 'tnum';
+		margin-bottom: 8px !important;
+		vertical-align: top;
+		font-weight: bold;
+	}
 
-    .ant-modal-content {
-    position: relative;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 0;
-    border-radius: 2px;
-    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-    pointer-events: auto;
-    border: 1px solid red !important;
-    }
+	.ant-modal-content {
+		position: relative;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 0;
+		border-radius: 2px;
+		box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+		pointer-events: auto;
+		border: 1px solid red !important;
+	}
 </style>
 
 <div class="template">
-    <Table TItem="BrigadaViewModelTable"
-    DataSource="@BrigadaViewModels"
-    @bind-PageIndex="_pageIndex"
-    @bind-PageSize="_pageSize"
-    Title="Brigadas"
-    Responsive>
-        <TitleTemplate>
-            <Flex Justify="flex-end">
-                <Space>
-                    <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
-                        <Icon Type="plus" /> Nueva
-                    </Button>
-                </Space>
-            </Flex>
-        </TitleTemplate>
-        <ColumnDefinitions>
-            <PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
+	<Table TItem="BrigadaViewModelTable"
+		   DataSource="@BrigadaViewModels"
+		   @bind-PageIndex="_pageIndex"
+		   @bind-PageSize="_pageSize"
+		   Title="Brigadas"
+		   Responsive>
+		<TitleTemplate>
+			<GridRow>
+				<GridCol Span="12">
+					<Title Level="3" Style="color: white;">Brigadas</Title>
+				</GridCol>
+				<GridCol Span="12" Style="text-align: right;">
+					<Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+						<Icon Type="plus" /> Nueva
+					</Button>
+				</GridCol>
+			</GridRow>
+		</TitleTemplate>
+		<ColumnDefinitions>
+			<PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
 
-            <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
-                <Space>
-                    <SpaceItem>
-                        <Button OnClick="()=>VerDetalleBrigada(context.Id)">
-                            <Icon Type="team" />
-                        </Button>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Popconfirm Title="¿Eliminar esta brigada?"
-                        OnConfirm="() => BorrarBrigada(context.Id)"
-                        OkText="Si"
-                        CancelText="No">
-                            <Button Danger>
-                                <Icon Type="delete" />
-                            </Button>
-                        </Popconfirm>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Button Type="@ButtonType.Primary" OnClick="()=>
+			<ActionColumn Title="Acciones" Align=ColumnAlign.Center>
+				<Space>
+					<SpaceItem>
+						<Button OnClick="()=>VerDetalleBrigada(context.Id)">
+							<Icon Type="team" />
+						</Button>
+					</SpaceItem>
+					<SpaceItem>
+						<Popconfirm Title="¿Eliminar esta brigada?"
+									OnConfirm="() => BorrarBrigada(context.Id)"
+									OkText="Si"
+									CancelText="No">
+							<Button Danger>
+								<Icon Type="delete" />
+							</Button>
+						</Popconfirm>
+					</SpaceItem>
+					<SpaceItem>
+						<Button Type="@ButtonType.Primary" OnClick="()=>
                             VerEditarBrigada(context.Id)" Ghost>
-                            <Icon Type="edit" />
-                        </Button>
-                    </SpaceItem>
-                </Space>
-            </ActionColumn>
+							<Icon Type="edit" />
+						</Button>
+					</SpaceItem>
+				</Space>
+			</ActionColumn>
 
-        </ColumnDefinitions>
-    </Table>
+		</ColumnDefinitions>
+	</Table>
 </div>
 
 @*Modal para Añadir Brigada*@
 <Modal @bind-Visible="_modalAñadirVisible" Title="Añadir Brigada" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddBrigada">
-    <Form Model="newBrigada">
-        <FormItem Label="Nombre">
-            <Input @bind-Value="newBrigada.Nombre" />
-        </FormItem>
-    </Form>
+	<Form Model="newBrigada">
+		<FormItem Label="Nombre">
+			<Input @bind-Value="newBrigada.Nombre" />
+		</FormItem>
+	</Form>
 </Modal>
 
 @*Modal para Editar Brigada*@
 <Modal @bind-Visible="_modalEditarVisible" Title="Editar Brigada" OkText="@("Editar")" CancelText="@("Cancelar")" OnOk="@EditBrigada">
-    <Form Model="selBrigada">
-        <FormItem Label="Nombre">
-            <Input @bind-Value="selBrigada.Nombre" />
-        </FormItem>
-    </Form>
+	<Form Model="selBrigada">
+		<FormItem Label="Nombre">
+			<Input @bind-Value="selBrigada.Nombre" />
+		</FormItem>
+	</Form>
 </Modal>
 
 <Modal @bind-Visible="_modalDetallesVisible" Title="@TitleBrigadaSel" Maximizable="@true" Centered="@true">
-    <BomberosBrigada BrigadaId="@IdBrigadaSel"></BomberosBrigada>
+	<BomberosBrigada BrigadaId="@IdBrigadaSel"></BomberosBrigada>
 </Modal>
 
 @code {
-    //Lista con todos los bomberos
-    private List<BomberoViweModel> bomberosTodos = new();
+	//Lista con todos los bomberos
+	private List<BomberoViweModel> bomberosTodos = new();
 
-    // Variables
-    private BrigadaViewModelTable newBrigada = new();
-    private BrigadaViewModelTable selBrigada = new();
-    private string? TitleBrigadaSel;
-    private int IdBrigadaSel;
+	// Variables
+	private BrigadaViewModelTable newBrigada = new();
+	private BrigadaViewModelTable selBrigada = new();
+	private string? TitleBrigadaSel;
+	private int IdBrigadaSel;
 
-    // Modals
-    private bool _modalAñadirVisible = false;
-    private bool _modalDetallesVisible = false;
-    private bool _modalEditarVisible = false;
+	// Modals
+	private bool _modalAñadirVisible = false;
+	private bool _modalDetallesVisible = false;
+	private bool _modalEditarVisible = false;
 
-    // Lista de Brigadas
-    private List<Brigada> Brigadas = new List<Brigada>();
+	// Lista de Brigadas
+	private List<Brigada> Brigadas = new List<Brigada>();
 
-    // Variables de Tamaño de la Tabla
-    int _pageIndex = 1;
-    int _pageSize = 5;
+	// Variables de Tamaño de la Tabla
+	int _pageIndex = 1;
+	int _pageSize = 5;
 
-    // Lista de ViewModels de Brigada
-    private List<BrigadaViewModelTable> BrigadaViewModels = new List<BrigadaViewModelTable>();
+	// Lista de ViewModels de Brigada
+	private List<BrigadaViewModelTable> BrigadaViewModels = new List<BrigadaViewModelTable>();
 
-    public class BrigadaViewModelTable
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; } = null!;
-    }
+	public class BrigadaViewModelTable
+	{
+		public int Id { get; set; }
+		public string Nombre { get; set; } = null!;
+	}
 
-    protected override async Task OnInitializedAsync()
-    {
-        bomberosTodos = await BomberoService.GetAllBomberosAsync(); // Obtiene todos los Bomberos.
-        Brigadas = await BrigadaService.ObtenerTodasLasBrigadasAsync();
-        BrigadaViewModels = await MapearBrigadasAsync(Brigadas);
-        StateHasChanged();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		bomberosTodos = await BomberoService.GetAllBomberosAsync(); // Obtiene todos los Bomberos.
+		Brigadas = await BrigadaService.ObtenerTodasLasBrigadasAsync();
+		BrigadaViewModels = await MapearBrigadasAsync(Brigadas);
+		StateHasChanged();
+	}
 
-    public async Task<List<BrigadaViewModelTable>> MapearBrigadasAsync(List<Brigada> brigadas)
-    {
-        return await Task.Run(() => brigadas.Select(b => new BrigadaViewModelTable
-            {
-                Id = b.BrigadaId,
-                Nombre = b.NombreBrigada
-            }).ToList());
-    }
+	public async Task<List<BrigadaViewModelTable>> MapearBrigadasAsync(List<Brigada> brigadas)
+	{
+		return await Task.Run(() => brigadas.Select(b => new BrigadaViewModelTable
+			{
+				Id = b.BrigadaId,
+				Nombre = b.NombreBrigada
+			}).ToList());
+	}
 
-    private async Task AddBrigada()
-    {
-        var brigada = new Brigada
-            {
-                NombreBrigada = newBrigada.Nombre
-            };
+	private async Task AddBrigada()
+	{
+		var brigada = new Brigada
+			{
+				NombreBrigada = newBrigada.Nombre
+			};
 
-        await BrigadaService.AgregarBrigadaAsync(brigada);
-        newBrigada = new BrigadaViewModelTable();
-        _modalAñadirVisible = false;
-        await OnInitializedAsync();
-    }
+		await BrigadaService.AgregarBrigadaAsync(brigada);
+		newBrigada = new BrigadaViewModelTable();
+		_modalAñadirVisible = false;
+		await OnInitializedAsync();
+	}
 
-    private async Task EditBrigada()
-    {
-        var brigada = new Brigada
-            {
-                BrigadaId = selBrigada.Id,
-                NombreBrigada = selBrigada.Nombre
-            };
+	private async Task EditBrigada()
+	{
+		var brigada = new Brigada
+			{
+				BrigadaId = selBrigada.Id,
+				NombreBrigada = selBrigada.Nombre
+			};
 
-        await BrigadaService.EditarBrigadaAsync(brigada);
-        _modalEditarVisible = false;
-        await OnInitializedAsync();
-    }
+		await BrigadaService.EditarBrigadaAsync(brigada);
+		_modalEditarVisible = false;
+		await OnInitializedAsync();
+	}
 
-    private async Task VerEditarBrigada(int id)
-    {
-        if (id <= 0)
-        {
-            await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
-            return;
-        }
+	private async Task VerEditarBrigada(int id)
+	{
+		if (id <= 0)
+		{
+			await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+			return;
+		}
 
-        var brigada = await BrigadaService.ObtenerBrigadaPorIdAsync(id);
+		var brigada = await BrigadaService.ObtenerBrigadaPorIdAsync(id);
 
-        if (brigada == null)
-        {
-            await MessageService.Error("Error al intentar editar la brigada: No se encontró.");
-            return;
-        }
+		if (brigada == null)
+		{
+			await MessageService.Error("Error al intentar editar la brigada: No se encontró.");
+			return;
+		}
 
-        selBrigada = new BrigadaViewModelTable
-            {
-                Id = brigada.BrigadaId,
-                Nombre = brigada.NombreBrigada
-            };
+		selBrigada = new BrigadaViewModelTable
+			{
+				Id = brigada.BrigadaId,
+				Nombre = brigada.NombreBrigada
+			};
 
-        _modalEditarVisible = true;
-    }
+		_modalEditarVisible = true;
+	}
 
-    private async Task VerDetalleBrigada(int id)
-    {
-        var brigada = await BrigadaService.ObtenerBrigadaPorIdAsync(id);
+	private async Task VerDetalleBrigada(int id)
+	{
+		var brigada = await BrigadaService.ObtenerBrigadaPorIdAsync(id);
 
-        if (brigada != null!)
-        {
-            TitleBrigadaSel = brigada.NombreBrigada;
-            IdBrigadaSel = brigada.BrigadaId;
-            _modalDetallesVisible = true;
-        }
-        else
-            await MessageService.Error("Error al abrir la brigada: No se encontró.");
-    }
+		if (brigada != null!)
+		{
+			TitleBrigadaSel = brigada.NombreBrigada;
+			IdBrigadaSel = brigada.BrigadaId;
+			_modalDetallesVisible = true;
+		}
+		else
+			await MessageService.Error("Error al abrir la brigada: No se encontró.");
+	}
 
-    private async Task BorrarBrigada(int id)
-    {
-        await BrigadaService.EliminarBrigadaAsync(id);
-        await OnInitializedAsync();
-    }
+	private async Task BorrarBrigada(int id)
+	{
+		await BrigadaService.EliminarBrigadaAsync(id);
+		await OnInitializedAsync();
+	}
 }
