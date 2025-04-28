@@ -135,18 +135,18 @@
 		   @bind-PageSize="_pageSize"
 		   Title="Fuerzas Intervinientes"
 		   Responsive>
-        <TitleTemplate>
-           <GridRow>
-               <GridCol Span="12">
-                   <Title Level="3" Style="color: white;">Fuerzas Intervinientes</Title>
-               </GridCol>
-               <GridCol Span="12" Style="text-align: right;">
-                   <Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
-                       <Icon Type="plus" /> Nueva
-                   </Button>
-               </GridCol>
-           </GridRow>
-        </TitleTemplate>
+		<TitleTemplate>
+			<GridRow>
+				<GridCol Span="12">
+					<Title Level="3" Style="color: white;">Fuerzas Intervinientes</Title>
+				</GridCol>
+				<GridCol Span="12" Style="text-align: right;">
+					<Button Type="primary" OnClick="@(() => _modalAñadirVisible = true)">
+						<Icon Type="plus" /> Nueva
+					</Button>
+				</GridCol>
+			</GridRow>
+		</TitleTemplate>
 		<ColumnDefinitions>
 			<PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
 
@@ -243,9 +243,9 @@
 		}
 
 		var fuerza = new FuerzaInterviniente
-		{
-			NombreFuerza = nuevaFuerza.Nombre,
-		};
+			{
+				NombreFuerza = nuevaFuerza.Nombre,
+			};
 
 		await FuerzaIntervinienteService.AgregarFuerzaAsync(fuerza);
 		nuevaFuerza = new FuerzaViewModelTable();
@@ -270,10 +270,10 @@
 		}
 
 		var fuerza = new FuerzaInterviniente
-		{
-			Id = selFuerza.Id,
-			NombreFuerza = selFuerza.Nombre
-		};
+			{
+				Id = selFuerza.Id,
+				NombreFuerza = selFuerza.Nombre
+			};
 
 		await FuerzaIntervinienteService.EditarFuerzaAsync(fuerza);
 		selFuerza = new FuerzaViewModelTable();
