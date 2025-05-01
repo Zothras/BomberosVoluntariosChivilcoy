@@ -41,8 +41,8 @@
     </Table>
     <div style="display: flex; justify-content: flex-start; min-width: 320px;">
         
-        <Button Type="primary" OnClick="()=>ShowModalAgregar()" style="margin-right: 10px" >Cargar Material</Button>
-         <Button Type="primary" @onclick="_=>open()">Movimientos de los Materiales</Button>
+        <Button Type="ButtonType.Primary" OnClick="()=>ShowModalAgregar()" style="margin-right: 10px" >Cargar Material</Button>
+         <Button Type="ButtonType.Primary" @onclick="_=>open()">Movimientos de los Materiales</Button>
     </div>
 </div>
     
@@ -58,7 +58,7 @@
 
 <div>
     @if(visibleDrawer == true){
-        <Drawer Closable="true" Visible="visibleDrawer" Width="720" Placement="right" Title='("Movimientos")' OnClose="close">
+        <Drawer Closable="true" Visible="visibleDrawer" Width="720" Placement="DrawerPlacement.Right" Title='("Movimientos")' OnClose="close">
              <MovimientoMaterialesVista />
         </Drawer>
     }

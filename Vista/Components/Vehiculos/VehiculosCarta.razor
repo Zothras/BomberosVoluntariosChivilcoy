@@ -26,13 +26,13 @@
         </div>
         <div style="display: flex; flex-direction: row;height: 50%;background: transparent;">
             <Button class="botonCarta" Style="height: 100%;border-radius: 0 0 0 3px;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;" OnClick="()=>DetallesVisible = true">
-                <Icon Type="Menu" Theme="outline" />
+                <Icon Type="Menu" Theme="IconThemeType.Outline" />
             </Button>
             <Button class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=> FichaVisible = true">
-                <Icon Type="Tool" Theme="outline" />
+                <Icon Type="Tool" Theme="IconThemeType.Outline" />
             </Button>
             <Button Disabled="false" class="botonCarta" Style="height: 100%;border-radius: 0;border-right: 1px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-top: 1px solid #d9d9d9;" OnClick="()=> EditarVisible = true">
-                <Icon Type="edit" Theme="outline" />
+                <Icon Type="edit" Theme="IconThemeType.Outline" />
             </Button>
             @if(Vehiculo.Estado == TipoEstadoMovil.Activo){
                 <Popconfirm Style="width: 33.3%;" Title="¿Estás seguro de dar de baja a este móvil?"
@@ -49,7 +49,7 @@
                             OnConfirm="()=>CambiarEstado(Vehiculo.VehiculoId,TipoEstadoMovil.Activo)"
                             OnCancel="Cancel">
                     <Button class="botonCarta" Style="width: 100%!important;height: 100%;border-radius: 0 0 3px 0;border-right: 0;border-left: 0;border-top: 1px solid #d9d9d9;">
-                        <Icon Type="up" Theme="outline" />
+                        <Icon Type="up" Theme="IconThemeType.Outline" />
                     </Button>
                 </Popconfirm>
             }

@@ -192,7 +192,7 @@
 
 </style>
 
-<Flex Class="flex-container" Justify="center" Align="center">
+<Flex Class="flex-container" Justify="FlexJustify.Center" Align="FlexAlign.Center">
     <div class="template">
         <Table @ref="table"
                TItem="Bombero"
@@ -215,7 +215,7 @@
                                 Style="width: 200px;" />
                     </SpaceItem>
                     <SpaceItem>
-                        <Button Type="primary"
+                        <Button Type="ButtonType.Primary"
                                 OnClick="@(() => { navigationManager.NavigateTo("/bomberos/agregar"); })">
                             <Icon Type="plus" /> Agregar
                         </Button>
@@ -224,7 +224,7 @@
             </TitleTemplate>
             <ColumnDefinitions>
                 <Column TData="Bombero" Title="Foto" Width="100">
-                    <Avatar Size="64" Src="@CargarImage(context)" />
+                    <Avatar Size="AvatarSize.Large" Src="@CargarImage(context)" />
                 </Column>
                 <PropertyColumn Property="@(c => $"{c.Apellido}, {c.Nombre}")" Title="Apellido y Nombre" Sortable />
                 <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo" Sortable
@@ -242,7 +242,7 @@
                 <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                     <Space>
                         <SpaceItem>
-                            <Button Type="primary" OnClick="()=>DetalleBombero(context.PersonaId)">
+                            <Button Type="ButtonType.Primary" OnClick="()=>DetalleBombero(context.PersonaId)">
                                 <Icon Type="eye" /> Detalles
                             </Button>
                         </SpaceItem>

@@ -38,7 +38,7 @@
                 <Step Title="@item.Title" Subtitle="@item.Content" />
             }
         </Steps>
-        <Flex Justify="center">
+        <Flex Justify="FlexJustify.Center">
             <div class="steps-content" style="padding: 10px;min-width: 320px!important;flex-wrap: wrap;">
 
                 @if (current == 0)
@@ -99,7 +99,7 @@
                         </div>
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Acciones sobre materiales</label>
-                            <Select Mode="tags"
+                            <Select Mode="SelectMode.Tags"
                                     Placeholder="Seleccione acciones"
                                     @bind-Values="@_selectedValues"
                                     TItemValue="string"
@@ -121,7 +121,7 @@
                         <div class="inpt-cont">
                             <label class="inpt-cont--lbl">Acciones sobre personas</label>
                             <div class="inpt-cont" style="flex-direction: row;flex-wrap: wrap;">
-                                <Select Mode="tags"
+                                <Select Mode="SelectMode.Tags"
                                         Placeholder="Seleccione acciones"
                                         @bind-Values="@_selectedValues2"
                                         TItemValue="string"

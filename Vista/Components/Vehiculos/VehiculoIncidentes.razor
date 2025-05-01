@@ -77,7 +77,7 @@
                     </div>
                     <div class="buton-cont">
                         <Button Style="margin-bottom: 5px;">
-                            <Icon Type="search" OnClick="@MostrarDatos" Theme="outline" />
+                            <Icon Type="search" OnClick="@MostrarDatos" Theme="IconThemeType.Outline" />
                         </Button>
                     </div>
                 </div>
@@ -134,7 +134,7 @@ else if (!existe)
 </Modal>
 
 @code {
-    RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+    RenderFragment antIcon = @<Icon Type="loading" Theme="IconThemeType.Outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
     [Parameter] public int? VehiculoId { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 

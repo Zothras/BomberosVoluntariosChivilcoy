@@ -279,7 +279,7 @@
         <Col Xs="24" Sm="12" Lg="8">
         <div @onclick="@(() => { navigationManager.NavigateTo("/Salidas"); })" style="cursor: pointer;">
             <Card Class="dashboard-card salidas-card">
-                <Icon class="card-icon" Type="alert" Theme="fill" />
+                <Icon class="card-icon" Type="alert" Theme="IconThemeType.Fill" />
                 <h2>SALIDAS</h2>
                 <p>Gestión de salidas</p>
             </Card>
@@ -325,13 +325,13 @@
         <Card Class="dashboard-card reportes-card">
             <h2>REPORTES</h2>
             <div class="report-buttons">
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialBomberos"); })">
                     <i class="fa-solid fa-user-clock"></i>
                 </Button>
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/Reportes/Reportes_Choferes"); })">
                     <i class="fa-solid fa-id-card"></i>
                 </Button>
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/Reportes/HistorialMoviles"); })">
                     <i class="fa-solid fa-truck"></i>
                 </Button>
             </div>
@@ -343,13 +343,13 @@
         <Card Class="dashboard-card departamentos-card">
             <h2>DEPENDENCIAS</h2>
             <div class="department-buttons">
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Dependencias/Comunicacion"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/Dependencias/Comunicacion"); })">
                     <i class="fa-solid fa-walkie-talkie"></i>
                 </Button>
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Dependencias/Deposito"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/Dependencias/Deposito"); })">
                     <i class="fa-solid fa-warehouse"></i>
                 </Button>
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/Dependencias"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/Dependencias"); })">
                     <i class="fa-solid fa-plus"></i>
                 </Button>
             </div>
@@ -362,10 +362,10 @@
         <Card Class="dashboard-card etica-card">
             <h2>ÉTICA</h2>
             <div class="ethics-buttons">
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/bomberos/sancionados"); })">
                     <i class="fa-solid fa-user-xmark"></i>
                 </Button>
-                <Button Type="link" @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
+                <Button Type="ButtonType.Link" @onclick="@(() => { navigationManager.NavigateTo("/bomberos/ascenso"); })">
                     <i class="fa-solid fa-user-plus"></i>
                 </Button>
             </div>

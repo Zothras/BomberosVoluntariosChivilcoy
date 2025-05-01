@@ -167,12 +167,12 @@
             {
                 <div class="form-section">
                     <div class="inpt-container">
-                        <Input Size="large" Placeholder="Marca" @bind-Value="@vehiculoView.Marca"
+                        <Input Size="InputSize.Large" Placeholder="Marca" @bind-Value="@vehiculoView.Marca"
                                AllowClear />
                     </div>
 
                     <div class="inpt-container">
-                        <Input Size="large" Placeholder="Modelo" @bind-Value="@vehiculoView.Modelo"
+                        <Input Size="InputSize.Large" Placeholder="Modelo" @bind-Value="@vehiculoView.Modelo"
                                AllowClear />
                     </div>
 
@@ -182,23 +182,23 @@
                     </div>
 
                     <div class="inpt-container">
-                        <Input Size="large" Placeholder="Patente" @bind-Value="@vehiculoView.Patente"
+                        <Input Size="InputSize.Large" Placeholder="Patente" @bind-Value="@vehiculoView.Patente"
                                AllowClear />
                     </div>
 
                     <div class="inpt-container">
-                        <Input Size="large" Placeholder="Tipo" @bind-Value="@vehiculoView.Tipo"
+                        <Input Size="InputSize.Large" Placeholder="Tipo" @bind-Value="@vehiculoView.Tipo"
                                AllowClear />
                     </div>
 
                     <div class="inpt-container">
-                        <Input Size="large" Placeholder="Color" @bind-Value="@vehiculoView.Color"
+                        <Input Size="InputSize.Large" Placeholder="Color" @bind-Value="@vehiculoView.Color"
                                AllowClear />
                     </div>
 
                     <div class="upload-container">
                         <label class="lblInputFile" for="fotoMovil">
-                            <Icon Type="cloud-upload" Theme="outline" Style="width: 16px; height: 16px;" />
+                            <Icon Type="cloud-upload" Theme="IconThemeType.Outline" Style="width: 16px; height: 16px;" />
                             Cargar foto del móvil
                         </label>
                         <InputFile OnChange="SubirFoto" id="fotoMovil" accept=".jpg,.jpeg,.png" style="display: none;" />
@@ -210,7 +210,7 @@
             {
                 <div class="form-section">
                     <div class="inpt-container">
-                        <Input Size="large" Placeholder="Nº Móvil" @bind-Value="@vehiculoView.NumeroMovil"
+                        <Input Size="InputSize.Large" Placeholder="Nº Móvil" @bind-Value="@vehiculoView.NumeroMovil"
                                AllowClear />
                     </div>
 
@@ -228,17 +228,17 @@
                     @if (EsMovil)
                     {
                         <div class="inpt-container">
-                            <Input Size="large" Placeholder="Nº Motor" @bind-Value="@movilView.NumeroMotor"
+                            <Input Size="InputSize.Large" Placeholder="Nº Motor" @bind-Value="@movilView.NumeroMotor"
                                    AllowClear />
                         </div>
 
                         <div class="inpt-container">
-                            <Input Size="large" Placeholder="Nº Chasis" @bind-Value="@movilView.NumeroChasis"
+                            <Input Size="InputSize.Large" Placeholder="Nº Chasis" @bind-Value="@movilView.NumeroChasis"
                                    AllowClear />
                         </div>
 
                         <div class="inpt-container">
-                            <Input Size="large" Placeholder="Modelo de bomba" @bind-Value="@movilView.ModeloBomba"
+                            <Input Size="InputSize.Large" Placeholder="Modelo de bomba" @bind-Value="@movilView.ModeloBomba"
                                    AllowClear />
                         </div>
 
@@ -255,7 +255,7 @@
                     <div class="inpt-container">
                         <EnumSelect TEnum="TipoEstadoMovil"
                                     @bind-Value="vehiculoView.Estado"
-                                    Size="large"
+                                    Size="InputSize.Large"
                                     Placeholder="Seleccione estado del vehículo" />
                     </div>
 
@@ -267,7 +267,7 @@
                                 LabelName="@nameof(BomberoViewModel.NombreYApellido)"
                                 ValueName="@nameof(BomberoViewModel.PersonaId)"
                                 Placeholder="Seleccione el bombero encargado"
-                                Size="large"
+                                Size="InputSize.Large"
                                 DefaultActiveFirstOption="false"
                                 AllowClear
                                 EnableSearch>

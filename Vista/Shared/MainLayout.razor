@@ -278,14 +278,14 @@
 <Layout>
     <Header Style="position: fixed;box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;background-color: #820014;height: 5em;width: 100%;z-index: 1000;padding: 0;">
         <div class="head-cont" style="font-family: 'Fjalla One', sans-serif;display: flex;align-items: center; align-content: center;height: 100%;gap:15px;position:relative;">
-            <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
+            <Button Type="ButtonType.Primary" OnClick="ToggleCollapsed" Style="margin-left: 1em; background: none; border: none;">
                 @if (collapsedMenu)
                 {
-                    <Icon Type="menu-unfold" Theme="outline" Style="font-size: 20px;"></Icon>
+                    <Icon Type="menu-unfold" Theme="IconThemeType.Outline" Style="font-size: 20px;"></Icon>
                 }
                 else
                 {
-                    <Icon Type="menu-fold" Theme="outline" Style="font-size: 20px;"></Icon>
+                    <Icon Type="menu-fold" Theme="IconThemeType.Outline" Style="font-size: 20px;"></Icon>
 
                     <i class="fa-solid fa-user-helmet-safety" style="color: #263040;"></i>
                 }
@@ -530,14 +530,14 @@
 
     RenderFragment sub1Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon class="menuSalidas" Type="team" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
+        <Icon class="menuSalidas" Type="team" Theme="IconThemeType.Outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Bomberos</span>
     </span>
     ;
 
     RenderFragment sub2Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon class="menuSalidas" Type="alert" Theme="fill" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
+        <Icon class="menuSalidas" Type="alert" Theme="IconThemeType.Fill" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Salidas</span>
     </span>
     ;
@@ -563,21 +563,21 @@
 
     RenderFragment sub6Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon class="menuSalidas" Type="tool" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
+        <Icon class="menuSalidas" Type="tool" Theme="IconThemeType.Outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Herramientas</span>
     </span>
     ;
 
     RenderFragment sub7Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon Type="history" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
+        <Icon Type="history" Theme="IconThemeType.Outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Reportes</span>
     </span>
     ;
 
     RenderFragment sub8Title =
     @<span class="spanSalidas" style="position: relative;">
-        <Icon class="menuSalidas" Type="book" Theme="outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
+        <Icon class="menuSalidas" Type="book" Theme="IconThemeType.Outline" Style="font-size: 19px;position: absolute;bottom: 2px;left: -1px;color: #263040;" />
         <span class="spanContentSalidas" style="padding-left: 32px!important;">Ética</span>
     </span>
     ;

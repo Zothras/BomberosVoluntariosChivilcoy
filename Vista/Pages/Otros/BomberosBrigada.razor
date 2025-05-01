@@ -121,9 +121,9 @@
        Title="Bomberos de la Brigada"
        Responsive>
     <TitleTemplate>
-        <Flex Justify="flex-end">
+        <Flex Justify="FlexJustify.End">
             <Space>
-                <Button Type="primary" OnClick="@(() => _modalAñadirBomberosVisible = true)">
+                <Button Type="ButtonType.Primary" OnClick="@(() => _modalAñadirBomberosVisible = true)">
                     <Icon Type="plus" /> Añadir
                 </Button>
             </Space>
@@ -155,7 +155,7 @@
 </Table>
 
 <Modal @bind-Visible="_modalAñadirBomberosVisible" Title="Añadir Bomberos" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddBomberoToBrigada">
-    <Select Mode="multiple"
+    <Select Mode="SelectMode.Multiple"
             Placeholder="Elige los bomberos a agregar a la brigada"
             DataSource="@BomberosTodos"
             Values="@BomberosSeleccionados"

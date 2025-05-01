@@ -66,14 +66,14 @@
         }
 </style>
 
-<Flex Class="flex-container" Justify="center" Align="center">
+<Flex Class="flex-container" Justify="FlexJustify.Center" Align="FlexAlign.Center">
     <div class="template">
         <Table DataSource="ascensos" PageSize="6" Bordered Responsive>
             <TitleTemplate>
                 <Space Size="@("large")" Style="width: 100%; justify-content: space-between;">
                     <h4 style="color:white">Ascensos</h4>
                     <SpaceItem>
-                        <Button OnClick="()=>_visibleCargar = true" Type="primary"><Icon Type="plus" /> Cargar</Button>
+                        <Button OnClick="()=>_visibleCargar = true" Type="ButtonType.Primary"><Icon Type="plus" /> Cargar</Button>
                     </SpaceItem>
                 </Space>
             </TitleTemplate>

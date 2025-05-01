@@ -60,7 +60,7 @@
             </FormItem>
 
             <FormItem>
-                <Button Type="primary" HtmlType="submit" Class="boton_p">Grabar</Button>
+                <Button Type="ButtonType.Primary" HtmlType="submit" Class="boton_p">Grabar</Button>
             </FormItem>
         </Form>
     </div>
@@ -72,7 +72,7 @@ else
     </div>
     //Hay que ver si se puede cambiar el contenido despues del delay
     @code {
-    RenderFragment antIcon = @<Icon Type="loading" Theme="outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
+    RenderFragment antIcon = @<Icon Type="loading" Theme="IconThemeType.Outline" Style="font-size: 24px; text-align: center; color: rgb(62, 24, 24);" Spin />;
     }
 }
 

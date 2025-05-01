@@ -17,7 +17,7 @@
                             Style="background: #d32f2f; color: white; border-radius: 8px; font-size: 14px;">
                         Unidades de Baja
                     </Button>
-                    <Button Type="primary"
+                    <Button Type="ButtonType.Primary"
                             OnClick="@(() => AgregarVisible = true)"
                             Style="border-radius: 8px; font-size: 14px;">
                         <Icon Type="plus" /> Nueva
@@ -37,7 +37,7 @@
             else
             {
                 <div class="loading-container">
-                    <Spin Size="large" Indicator="@LoadingIcon" />
+                    <Spin Size="SpinSize.Large" Indicator="@LoadingIcon" />
                 </div>
             }
         </Card>
@@ -53,7 +53,7 @@
 </div>
 
 @code {
-    RenderFragment LoadingIcon => @<Icon Type="loading" Theme="outline" Style="font-size: 24px; color: rgb(62, 24, 24);" Spin />;
+    RenderFragment LoadingIcon => @<Icon Type="loading" Theme="IconThemeType.Outline" Style="font-size: 24px; color: rgb(62, 24, 24);" Spin />;
     List<VehiculoSalida> vehiculos = new();
     bool AgregarVisible { get; set; }
     BomberosDbContext Context { get; set; }

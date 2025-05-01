@@ -120,9 +120,9 @@
 	   Title="Dependencias"
 	   Responsive>
 	<TitleTemplate>
-		<Flex Justify="flex-end">
+		<Flex Justify="FlexJustify.End">
 			<Space>
-				<Button Type="primary" OnClick="() => showAddFirefightersModal()">
+				<Button Type="ButtonType.Primary" OnClick="() => showAddFirefightersModal()">
 					<Icon Type="plus" /> Añadir
 				</Button>
 			</Space>
@@ -154,7 +154,7 @@
 </Table>
 
 <Modal @bind-Visible="_modalAñadirBomberosVisible" Title="Añadir Bomberos" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddFirefighterToDepartmentAsync">
-	<Select Mode="multiple"
+	<Select Mode="SelectMode.Multiple"
 			Placeholder="Elige los bomberos a agregar a la dependencia"
 			DataSource="@BomberosTodos"
 			Values="@BomberosSeleccionados"
