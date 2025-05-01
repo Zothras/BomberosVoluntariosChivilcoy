@@ -16,6 +16,7 @@ namespace Vista.Services
         Task EliminarDependenciaAsync(int id);
         Task AgregarBomberoADependenciaAsync(int dependenciaId, int bomberoId);
         Task QuitarBomberoDeDependenciaAsync(int dependenciaId, int bomberoId);
+        Task<bool> ComprobarBomberoEnDependenciaAsync(int dependenciaId, int bomberoId);
     }
 
     public class DependenciaService : IDependenciaService
@@ -122,6 +123,12 @@ namespace Vista.Services
             // Eliminar la relación
             _context.Set<Bombero_Dependencia>().Remove(relacion);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ComprobarBomberoEnDependenciaAsync(int dependenciaId, int bomberoId)
+        {
+            return await _context.Set<Bombero_Dependencia>()
+                .AnyAsync(bd => bd.DependenciaId == dependenciaId && bd.PersonaId == bomberoId);
         }
     }
 }

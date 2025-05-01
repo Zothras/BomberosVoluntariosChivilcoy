@@ -10,244 +10,267 @@
 @inject IMessageService MessageService
 
 <style>
-    .ant-table {
-        width: 100%;
-        background-color: white;
-        border-radius: 8px;
-        overflow: hidden;
-    }
+	.ant-table {
+		width: 100%;
+		background-color: white;
+		border-radius: 8px;
+		overflow: hidden;
+	}
 
-    .ant-table-title {
-        background-color: #A63333
-    }
+	.ant-table-title {
+		background-color: #A63333
+	}
 
-    .ant-table-thead .ant-table-cell {
-        background-color: #A63333 !important;
-        color: white !important;
-        font-weight: bold;
-    }
+	.ant-table-thead .ant-table-cell {
+		background-color: #A63333 !important;
+		color: white !important;
+		font-weight: bold;
+	}
 
-    .ant-table-cell {
-        padding: 16px !important;
-    }
+	.ant-table-cell {
+		padding: 16px !important;
+	}
 
-    .title-template-container {
-        background-color: #A63333;
-        padding: 16px;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+	.title-template-container {
+		background-color: #A63333;
+		padding: 16px;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-    .search-input {
-        width: 250px;
-    }
+	.search-input {
+		width: 250px;
+	}
 
-        .search-input input {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-        }
+		.search-input input {
+			background-color: rgba(255, 255, 255, 0.1);
+			color: white;
+			border: none;
+		}
 
-            .search-input input::placeholder {
-                color: rgba(255, 255, 255, 0.7);
-            }
+			.search-input input::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
 
-    .add-button {
-        background-color: #4CAF50 !important;
-        border-color: #438E46 !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+	.add-button {
+		background-color: #4CAF50 !important;
+		border-color: #438E46 !important;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-    .boton_p {
-        background-color: #732D2D !important;
-        color: white !important;
-        border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+	.boton_p {
+		background-color: #732D2D !important;
+		color: white !important;
+		border: none;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-    @@media (max-width: 960px) {
-        .title-template-container {
-            flex-direction: column;
-            align-items: stretch;
-        }
-    }
+	@@media (max-width: 960px) {
+		.title-template-container {
+			flex-direction: column;
+			align-items: stretch;
+		}
+	}
 
-    .ant-form-horizontal .ant-form-item-label {
-        flex-grow: 1;
-        background: #A63333;
-    }
+	.ant-form-horizontal .ant-form-item-label {
+		flex-grow: 1;
+		background: #A63333;
+	}
 
-        .ant-form-horizontal .ant-form-item-label > label {
-            color: #FFFFFF;
-            padding: 2px 4px;
-        }
+		.ant-form-horizontal .ant-form-item-label > label {
+			color: #FFFFFF;
+			padding: 2px 4px;
+		}
 
-    .ant-form-item {
-        box-sizing: border-box;
-        margin: 0;
-        margin-bottom: 0px;
-        padding: 0;
-        color: rgba(0, 0, 0, 0.85);
-        font-size: 14px;
-        font-variant: tabular-nums;
-        line-height: 1.5715;
-        list-style: none;
-        font-feature-settings: 'tnum';
-        margin-bottom: 8px !important;
-        vertical-align: top;
-        font-weight: bold;
-    }
+	.ant-form-item {
+		box-sizing: border-box;
+		margin: 0;
+		margin-bottom: 0px;
+		padding: 0;
+		color: rgba(0, 0, 0, 0.85);
+		font-size: 14px;
+		line-height: 1.5715;
+		list-style: none;
+		font-feature-settings: 'tnum';
+		margin-bottom: 8px !important;
+		vertical-align: top;
+		font-weight: bold;
+	}
 
-    .ant-modal-content {
-        position: relative;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 0;
-        border-radius: 2px;
-        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-        pointer-events: auto;
-        border: 1px solid red !important;
-    }
+	.ant-modal-content {
+		position: relative;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 0;
+		border-radius: 2px;
+		box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+		pointer-events: auto;
+		border: 1px solid red !important;
+	}
 </style>
 
 
 <Table TItem="BomberoDependenciaViewModel"
-       DataSource="@BomberosViewModel"
-       @bind-PageIndex="_pageIndex"
-       @bind-PageSize="_pageSize"
-       Title="Dependencias"
-       Responsive>
-    <TitleTemplate>
-        <Flex Justify="flex-end">
-            <Space>
-                <Button Type="primary" OnClick="@(() => _modalAñadirBomberosVisible = true)">
-                    <Icon Type="plus" /> Añadir
-                </Button>
-            </Space>
-        </Flex>
-    </TitleTemplate>
+	   DataSource="@BomberosViewModel"
+	   @bind-PageIndex="_pageIndex"
+	   @bind-PageSize="_pageSize"
+	   Title="Dependencias"
+	   Responsive>
+	<TitleTemplate>
+		<Flex Justify="flex-end">
+			<Space>
+				<Button Type="primary" OnClick="() => showAddFirefightersModal()">
+					<Icon Type="plus" /> Añadir
+				</Button>
+			</Space>
+		</Flex>
+	</TitleTemplate>
 
-    <ColumnDefinitions>
+	<ColumnDefinitions>
 
-        <PropertyColumn Title="N° Legajo" Property="d=>d.NroLeg" Sortable />
+		<PropertyColumn Title="N° Legajo" Property="d=>d.NroLeg" Sortable />
 
-        <PropertyColumn Title="Apellido y Nombre" Property="d=>d.ApellidoYNombre" Sortable />
+		<PropertyColumn Title="Apellido y Nombre" Property="d=>d.ApellidoYNombre" Sortable />
 
-        <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
-            <Space>
-                <SpaceItem>
-                    <Popconfirm Title="¿Deseas remover a este bombero de la dependencia?"
-                                OnConfirm="() => QuitarBoberoDependencia(context.Id, DependenciaId)"
-                                OkText="Si"
-                                CancelText="No">
-                        <Button Danger>
-                            <Icon Type="close" />
-                        </Button>
-                    </Popconfirm>
-                </SpaceItem>
-            </Space>
-        </ActionColumn>
+		<ActionColumn Title="Acciones" Align=ColumnAlign.Center>
+			<Space>
+				<SpaceItem>
+					<Popconfirm Title="¿Deseas remover a este bombero de la dependencia?"
+								OnConfirm="() => RemoveFirefighterFromDepartment(context.Id, DependenciaId)"
+								OkText="Si"
+								CancelText="No">
+						<Button Danger>
+							<Icon Type="close" />
+						</Button>
+					</Popconfirm>
+				</SpaceItem>
+			</Space>
+		</ActionColumn>
 
-    </ColumnDefinitions>
+	</ColumnDefinitions>
 </Table>
 
-<Modal @bind-Visible="_modalAñadirBomberosVisible" Title="Añadir Bomberos" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddBomberoToDependencia">
-    <Select Mode="multiple"
-            Placeholder="Elige los bomberos a agregar a la dependencia"
-            DataSource="@BomberosTodos"
-            Values="@BomberosSeleccionados"
-            TItem="BomberoViweModel"
-            TItemValue="int"
-            LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-            ValueName="@nameof(BomberoViweModel.Id)"
-            EnableSearch="true"
-            ValuesChanged="@(async (values) => await HandleValuesChange(values))" />
-    <p>Seleccionados: @String.Join(", ", BomberosSeleccionados)</p>
+<Modal @bind-Visible="_modalAñadirBomberosVisible" Title="Añadir Bomberos" OkText="@("Guardar")" CancelText="@("Cancelar")" OnOk="@AddFirefighterToDepartmentAsync">
+	<Select Mode="multiple"
+			Placeholder="Elige los bomberos a agregar a la dependencia"
+			DataSource="@BomberosTodos"
+			Values="@BomberosSeleccionados"
+			TItem="BomberoViweModel"
+			TItemValue="int"
+			LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+			ValueName="@nameof(BomberoViweModel.Id)"
+			EnableSearch="true"
+			ValuesChanged="@(async (values) => await HandleValuesChange(values))" />
+	<p>Seleccionados: @String.Join(", ", BomberosSeleccionados)</p>
 </Modal>
 
 @code {
-    [Parameter] public int DependenciaId { get; set; }
-    private List<Bombero?> DependenciaBomberos = new();
-    public List<BomberoDependenciaViewModel?> BomberosViewModel { get; set; } = new();
-    private List<int> BomberosSeleccionados = new List<int>();
-    public List<BomberoViweModel> BomberosTodos { get; set; } = new();
+	[Parameter] public int DependenciaId { get; set; }
+	private List<Bombero?> DependenciaBomberos = new();
+	public List<BomberoDependenciaViewModel?> BomberosViewModel { get; set; } = new();
+	private List<int> BomberosSeleccionados = new List<int>();
+	public List<BomberoViweModel> BomberosTodos { get; set; } = new();
 
-    // Variables de Tamaño de la Tabla
-    int _pageIndex = 1;
-    int _pageSize = 5;
+	// Variables de Tamaño de la Tabla
+	int _pageIndex = 1;
+	int _pageSize = 5;
 
-    // Modals
-    private bool _modalAñadirBomberosVisible = false;
+	// Modals
+	private bool _modalAñadirBomberosVisible = false;
 
-    public class BomberoDependenciaViewModel
-    {
-        public int Id { get; set; }
-        public int NroLeg { get; set; }
-        public string ApellidoYNombre { get; set; } = null!;
-    }
+	public class BomberoDependenciaViewModel
+	{
+		public int Id { get; set; }
+		public int NroLeg { get; set; }
+		public string ApellidoYNombre { get; set; } = null!;
+	}
 
-    protected override async Task OnInitializedAsync()
-    {
-        await OnInit();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		await OnInit();
+	}
 
-    public async Task OnInit()
-    {
-        BomberosTodos = await BomberoService.GetAllBomberosAsync();
-        DependenciaBomberos = await DependenciaService.ObtenerBomberosDeDependenciaAsync(DependenciaId);
-        BomberosViewModel = MapearDependencia(DependenciaBomberos);
-        BomberosSeleccionados = new();
-        StateHasChanged();
-    }
+	public async Task OnInit()
+	{
+		BomberosTodos = await BomberoService.GetAllBomberosAsync();
+		DependenciaBomberos = await DependenciaService.ObtenerBomberosDeDependenciaAsync(DependenciaId);
+		BomberosViewModel = MapFirefightersToDepartmentViewModels(DependenciaBomberos);
+		BomberosSeleccionados = new();
+		StateHasChanged();
+	}
 
-    public List<BomberoDependenciaViewModel?> MapearDependencia(List<Bombero?> bomberos)
-    {
-        if (bomberos.Any())
-        {
-            return DependenciaBomberos.Select(b => new BomberoDependenciaViewModel
-                {
-                    Id = b.PersonaId,
-                    NroLeg = b.NumeroLegajo,
-                    ApellidoYNombre = $"{b.Apellido}, {b.Nombre}"
-                }).ToList();
-        }
-        return null;
-    }
+	public List<BomberoDependenciaViewModel?> MapFirefightersToDepartmentViewModels(List<Bombero?> bomberos)
+	{
+		if (bomberos.Any())
+		{
+			return DependenciaBomberos.Select(b => new BomberoDependenciaViewModel
+				{
+					Id = b.PersonaId,
+					NroLeg = b.NumeroLegajo,
+					ApellidoYNombre = $"{b.Apellido}, {b.Nombre}"
+				}).ToList();
+		}
+		return null;
+	}
 
-    public async Task QuitarBoberoDependencia(int BomberoID, int DependenciaID)
-    {
-        await DependenciaService.QuitarBomberoDeDependenciaAsync(DependenciaID, BomberoID);
-        await OnInit();
-    }
+	public async Task RemoveFirefighterFromDepartment(int BomberoID, int DependenciaID)
+	{
+		if (BomberoID == 0 || DependenciaID == 0)
+		{
+			await MessageService.Error("No se puede eliminar el bombero de la dependencia");
+			return;
+		}
 
-    public async Task AddBomberoToDependencia()
-    {
-        if (BomberosSeleccionados.Any())
-        {
-            foreach (int BomberoSelId in BomberosSeleccionados)
-            {
-                if (BomberoSelId > 0)
-                {
-                    await DependenciaService.AgregarBomberoADependenciaAsync(DependenciaId, BomberoSelId);
-                }
-            }
+		bool isBomberoInDependencia = DependenciaService.ComprobarBomberoEnDependenciaAsync(BomberoID, DependenciaID).Result;
 
-            await MessageService.Success($"Se añadieron {BomberosSeleccionados.Count} Bomberos a la Dependencia");
-            _modalAñadirBomberosVisible = false;
-            await OnInit();
-        }
-        else
-        {
-            _modalAñadirBomberosVisible = false;
-        }
-    }
+		if (!isBomberoInDependencia)
+		{
+			await MessageService.Error("El bombero no pertenece a la dependencia");
+			return;
+		}
 
-    private async Task HandleValuesChange(IEnumerable<int> values)
-    {
-        BomberosSeleccionados = values.ToList();
-    }
+		await DependenciaService.QuitarBomberoDeDependenciaAsync(DependenciaID, BomberoID);
+		await OnInit();
+	}
 
+	public async Task AddFirefighterToDepartmentAsync()
+	{
+		if (BomberosSeleccionados.Any())
+		{
+			foreach (int BomberoSelId in BomberosSeleccionados)
+			{
+				if (BomberoSelId > 0)
+				{
+					await DependenciaService.AgregarBomberoADependenciaAsync(DependenciaId, BomberoSelId);
+				}
+			}
+
+			await MessageService.Success($"Se añadieron {BomberosSeleccionados.Count} Bomberos a la Dependencia");
+			_modalAñadirBomberosVisible = false;
+			await OnInit();
+		}
+		else
+		{
+			_modalAñadirBomberosVisible = false;
+		}
+	}
+
+	public async Task showAddFirefightersModal()
+	{
+		if (BomberosTodos == null || !BomberosTodos.Any())
+		{
+			await MessageService.Error("No hay bomberos disponibles para agregar.");
+			return;
+		}
+
+		_modalAñadirBomberosVisible = true;
+	}
+
+	private async Task HandleValuesChange(IEnumerable<int> values)
+	{
+		BomberosSeleccionados = values.ToList();
+	}
 }
