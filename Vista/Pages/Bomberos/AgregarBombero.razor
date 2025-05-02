@@ -280,8 +280,8 @@
 
 			<Row Gutter="16">
 				<Col Span="12">
-				<FormItem>
-					<Checkbox @bind-Checked="@bomberoView.Chofer">Es chofer</Checkbox>
+				<FormItem Label="¿Es chofer?">
+					<Switch @bind-Checked="@bomberoView.Chofer"></Switch>
 						@if (bomberoView.Chofer)
 						{
 						<div class="conditional-field">
