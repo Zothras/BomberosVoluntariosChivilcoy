@@ -50,6 +50,7 @@ namespace Vista.Services
             if (brigadaExistente != null)
             {
                 brigadaExistente.NombreBrigada = brigada.NombreBrigada;
+                brigadaExistente.Encargado = brigada.Encargado;
 
                 _context.Brigadas.Update(brigadaExistente);
                 await _context.SaveChangesAsync();
