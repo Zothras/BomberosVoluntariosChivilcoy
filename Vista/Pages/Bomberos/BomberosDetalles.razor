@@ -93,7 +93,6 @@
         Context = DbFactory.CreateDbContext();
         bomberoVM = await Context.Bomberos.Where(b => b.PersonaId == BomberoId).SingleOrDefaultAsync();
         contactoVM = await Context.Contactos.Where(c=>c.PersonalId == BomberoId).SingleOrDefaultAsync();
-        brigadaVM = await Context.Brigadas.Where(b=>b.BrigadaId == bomberoVM.BrigadaId).SingleOrDefaultAsync();
 
         StateHasChanged();
     }

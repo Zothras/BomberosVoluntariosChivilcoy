@@ -76,13 +76,6 @@ namespace Vista.Data.Models.Personas.Personal
         public List<Bombero_Brigada> Brigadas { get; set; } = new List<Bombero_Brigada>();
 
         /// <summary>
-        /// Brigada a la que pertenece el bombero (si aplica).
-        /// </summary>
-        public int? BrigadaId { get; set; }
-        public Brigada? Brigada { get; set; }
-
-
-        /// <summary>
         /// Lista de vehículos a cargo del bombero.
         /// </summary>
         public List<VehiculoSalida>? VehiculosEncargado { get; set; }

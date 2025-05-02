@@ -42,13 +42,6 @@ namespace Vista.Services
                 throw new InvalidOperationException("Ya existe un bombero con este ID.");
             }
 
-            Brigada? brigada = _context.Brigadas.Where(b => b.BrigadaId == bombero.BrigadaId).SingleOrDefault();
-            if (brigada != null)
-            {
-                bombero.Brigada = brigada;
-                bombero.BrigadaId = brigada.BrigadaId;
-            }
-
             _context.Bomberos.Add(bombero);
             await _context.SaveChangesAsync();
             return bombero;
@@ -74,12 +67,7 @@ namespace Vista.Services
                         editarProp.SetValue(Editar, propValor);
                     }
                 }
-                if (bombero.Brigada != null)
-                {
-                    Brigada? Brigada = await _context.Brigadas.SingleOrDefaultAsync(b => b.BrigadaId == bombero.Brigada.BrigadaId);
-                    Editar.Brigada = Brigada;
-                    Editar.BrigadaId = Brigada.BrigadaId;
-                }
+
                 await _context.SaveChangesAsync();
                 return bombero;
             }

@@ -25,6 +25,9 @@ namespace Vista.Data.Models.Grupos.Brigadas
         /// </summary>
         public List<Bombero_Brigada> Bomberos { get; set; } = new List<Bombero_Brigada>();
 
-        //public Bombero Encargado { get; set; } = null!;
+        /// <summary>
+        /// Encargado de la brigada. Campo obligatorio.
+        /// </summary>
+        public Bombero Encargado { get; set; } = null!;
     }
 }
