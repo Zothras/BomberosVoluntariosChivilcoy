@@ -6,7 +6,6 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 @using System.ComponentModel
-@using Vista.Data.Models.Grupos.Brigadas
 @using Vista.Data.Models.Personas.Personal
 @using Vista.Data.Models.Personas.Personal.Componentes
 @page "/bomberos/agregar"
@@ -250,19 +249,6 @@
 
 			<Row Gutter="16">
 				<Col Span="8">
-				<FormItem Label="Brigada">
-					<Select TItem="Brigada"
-							TItemValue="int"
-							DataSource="@brigadas"
-							@bind-Value="@bomberoView.BrigadaId"
-							Placeholder="Seleccione brigada"
-							LabelName="@nameof(Brigada.NombreBrigada)"
-							ValueName="@nameof(Brigada.BrigadaId)"
-							OnSelectedItemChanged="OnSelectedItemChangedHandler">
-					</Select>
-				</FormItem>
-				</Col>
-				<Col Span="8">
 				<FormItem Label="Fecha de Aceptación">
 					<DatePicker @bind-Value="@bomberoView.FechaAceptacion"
 								Picker="@DatePickerType.Date"
@@ -386,7 +372,6 @@
 		public TipoGrupoSanguineo GrupoSanguineo { get; set; }
 		public int? Altura { get; set; }
 		public int? Peso { get; set; }
-		public Brigada? Brigada { get; set; }
 		public bool Chofer { get; set; }
 		public DateTime? VencimientoRegistro { get; set; }
 		public TipoSexo Sexo { get; set; }
@@ -419,19 +404,15 @@
 		public string? TipoImagen { get; set; }
 		[StringLength(255)]
 		public string? NombreImagen { get; set; }
-		//Brigada-------------------------------
-		public int BrigadaId { get; set; }
 	}
 
 	BomberosViewModel bomberoView { get; set; } = new();
 	public Bombero[]? bomberos;
-	public Brigada[]? brigadas;
 	public bool existe;
 
 	protected override async Task OnInitializedAsync()
 	{
 		using var db = DbFactory.CreateDbContext();
-		brigadas = await db.Brigadas.ToArrayAsync();
 	}
 
 	private async void SubirFoto(InputFileChangeEventArgs e)
@@ -471,9 +452,16 @@
 		{
 			//Validacion Numero de Legajo
 			Bombero? NumeroLegajo = await DbFactory.CreateDbContext().Bomberos.Where(b => b.NumeroLegajo == bomberoView.NumeroLegajo).SingleOrDefaultAsync();
+			
+			if (bomberoView.NumeroLegajo == 0)
+			{
+				await message.Warning("El número de legajo no puede ser cero.");
+				return;
+			}
+
 			if (NumeroLegajo != null)
 			{
-				message.Warning("Numero de legajo ya existente.");
+				await message.Warning("Numero de legajo ya existente.");
 				return;
 			}
 
@@ -519,16 +507,16 @@
 						Email = bomberoView.Email
 					}
 				};
+
 			await BomberoService.CrearBombero(bombero);
-			message.Success("Se agrego el bombero.");
 			bomberoView = new BomberosViewModel();
 			StateHasChanged();
+			await message.Success("Se agrego el bombero.");
 			navigationManager.NavigateTo($"/bomberos", true);
 		}
 		catch (Exception ex)
 		{
-			// Manejo de excepciones (puedes mostrar un mensaje al usuario o registrar el error)
-			message.Error(ex.Message);
+			await message.Error(ex.Message);
 			Console.WriteLine($"Error: {ex.Message}");
 		}
 	}
@@ -542,10 +530,5 @@
 	private void OnFinishFailed(EditContext editContext)
 	{
 		Console.WriteLine($"Failed:{JsonSerializer.Serialize(bomberoView)}");
-	}
-
-	private void OnSelectedItemChangedHandler(Brigada value)
-	{
-		Console.WriteLine($"selected: ${value?.NombreBrigada}");
 	}
 }
