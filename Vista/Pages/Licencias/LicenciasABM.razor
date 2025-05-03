@@ -9,480 +9,548 @@
 @page "/Licencias"
 
 <style>
-    .ant-table-row > td {
-        color: black;
-        background-color: white;
-    }
+	.template {
+		width: 100%;
+		height: 100%;
+		max-width: 97%;
+		min-width: 400px;
+		max-height: 100vh;
+		border-radius: 10px;
+		box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
+		margin: 1em;
+		padding: 10px;
+		overflow: auto;
+	}
 
-    .boton_nueva {
-        background-color: #007BFF !important;
-        color: white !important;
-        border: 1px solid #007BFF !important;
-        border-radius: 5px;
-        padding: 5px 10px;
-    }
+	.ant-table {
+		width: 100%;
+		background-color: white;
+		border-radius: 8px;
+		overflow: hidden;
+	}
 
-    .ant-table-row:hover > td {
-        background-color: white !important;
-    }
+	.ant-table-title {
+		background-color: #A63333;
+		padding: 16px !important;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+	}
 
-    .notificacion {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        /* width: 100%;  */
-    }
+	.ant-table-thead .ant-table-cell {
+		background-color: #A63333 !important;
+		color: white !important;
+		font-weight: bold;
+	}
 
-    .ant-badge {
-        padding: 0 5px !important;
-        font-size: 22px !important;
-    }
+	.ant-table-cell {
+		padding: 16px !important;
+	}
 
-    .inpt-cont--lbl {
-        min-width: 170px;
-        text-align: start;
-        font-weight: bold;
-        overflow: hidden !important;
-    }
+	.filters-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		align-items: flex-end;
+		margin-bottom: 16px;
+	}
 
-    .inpt-cont {
-        min-width: 170px;
-        display: flex;
-        flex-direction: column;
-        padding: .3em 0;
-        width: 100%;
-        overflow: hidden !important;
-    }
+	.date-filter-container {
+		display: flex;
+		gap: 8px;
+		align-items: flex-end;
+	}
 
-    .inpt-cont-inline {
-        min-width: 170px;
-        display: flex;
-        align-items: flex-end;
-        gap: 1em;
-        overflow: hidden !important;
-        height: 100%;
-    }
+	.filter-group {
+		display: flex;
+		flex-direction: column;
+	}
 
-    .botonesCont {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
+	.filter-label {
+		font-weight: 500;
+		color: white;
+		margin-bottom: 4px;
+	}
 
-    .ant-table-title {
-        height: 6.5em !important;
-    }
+	.actions-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+	}
 
-    .ant-badge {
-        margin: 0 !important;
-        padding: 0 10px !important;
-        height: 100% !important;
-        width: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
+	.search-container {
+		flex-grow: 1;
+		max-width: 300px;
+	}
 
-    @@media (max-width: 960px) {
-        .ant-table-row, .ant-table-row-level-0 {
-            display: flex !important;
-            flex-direction: column !important;
-        }
+	.add-button {
+		background-color: #4CAF50 !important;
+		border-color: #438E46 !important;
+		color: white !important;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		height: 40px;
+		padding: 0 20px;
+		font-weight: 500;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
 
-        .ant-table.ant-table-bordered > .ant-table-title {
-            height: 15em !important;
-        }
+	.notification-badge {
+		margin-left: 16px;
+		cursor: pointer;
+	}
 
-        .buton-cont {
-            width: 100% !important;
-        }
+	.status-badge {
+		padding: 4px 12px;
+		border-radius: 16px;
+		font-weight: 500;
+		text-align: center;
+		display: inline-block;
+		min-width: 100px;
+	}
 
-        #ant-blazor-df7d6d62-e78b-479a-b209-8325c3889500 {
-            width: 100% !important;
-        }
+	.status-approved {
+		background-color: #E6F7E9;
+		color: #2E7D32;
+	}
 
-        .notif-cont {
-            align-items: flex-start !important;
-        }
+	.status-pending {
+		background-color: #FFF8E1;
+		color: #F57F17;
+	}
 
-        .notificacion {
-            margin-top: 15px !important;
-        }
+	.status-rejected {
+		background-color: #FFEBEE;
+		color: #C62828;
+	}
 
-        .inpt-cont-inline {
-            flex-direction: column !important;
-            gap: 0 !important;
-        }
-    }
+	.duration-badge {
+		padding: 4px 12px;
+		border-radius: 4px;
+		font-weight: 500;
+		text-align: center;
+		display: inline-block;
+		min-width: 80px;
+	}
 
-    .boton_p {
-        background-color: #f5f5f5 !important;
-        color: dimgray !important;
-        border: 1px solid dimgray !important;
-        border-radius: 5px;
-    }
+	.modal-footer {
+		margin-top: 24px;
+		display: flex;
+		justify-content: flex-end;
+		gap: 12px;
+	}
 
-    .template {
-        width: 100%;
-        height: 100%;
-        max-width: 97%;
-        min-width: 400px;
-        max-height: 100vh;
-        border-radius: 10px;
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        background: #fff;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin: 1em;
-        padding: 0;
-        overflow: auto;
-    }
+	.cancel-button {
+		background-color: #f5f5f5;
+		border: 1px solid #d9d9d9;
+	}
 
-    .ant-table-wrapper {
-        width: 100%;
-        height: 100%;
-        padding: 0 25px;
-    }
+	/* Color de fondo para filas según estado */
+	.ant-table-tbody > tr.ant-table-row.Aprobada > td {
+		background-color: rgba(46, 125, 50, 0.05) !important;
+	}
 
-    /* sacamos borde superior */
-    .ant-table.ant-table-bordered > .ant-table-title {
-        border: none !important;
-    }
+	.ant-table-tbody > tr.ant-table-row.Pendiente > td {
+		background-color: rgba(245, 127, 23, 0.05) !important;
+	}
 
-    .template::-webkit-scrollbar {
-        width: 5px !important;
-    }
+	.ant-table-tbody > tr.ant-table-row.Rechazada > td {
+		background-color: rgba(198, 40, 40, 0.05) !important;
+	}
 
-    .template::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px !important;
-    }
+	/* Responsive */
+	@@media (max-width: 768px) {
+		.filters-container {
+			flex-direction: column;
+			align-items: stretch;
+		}
 
-    .ant-table-title {
-        padding: 16px 0 !important;
-    }
+		.date-filter-container {
+			flex-direction: column;
+			align-items: stretch;
+		}
 
-    .ant-spin-container {
-        padding: 5px 0 !important;
-    }
+		.actions-container {
+			flex-direction: column;
+			align-items: stretch;
+		}
 
-    .ant-dropdown-trigger {
-        height: 32px !important;
-    }
+		.search-container {
+			max-width: 100%;
+			margin-bottom: 12px;
+		}
 
-    .ant-table-tbody > tr.ant-table-row.Aprobada > td {
-        background-color: rgb(209, 255, 207) !important;
-    }
+		.add-button {
+			width: 100%;
+			justify-content: center;
+		}
 
-    .ant-table-tbody > tr.ant-table-row.Pendiente > td {
-        background-color: rgb(255, 255, 192) !important;
-    }
-
-    .ant-table-tbody > tr.ant-table-row.Rechazada > td {
-        background-color: rgb(255, 96, 96) !important;
-    }
-
+		.notification-badge {
+			margin-left: 0;
+			align-self: flex-end;
+		}
+	}
 </style>
 
 <div class="template">
-    <Table Class="Tabla" DataSource="LicenciasActivasVM" PageSize="20" Responsive Style="border: none;width: 100%;"
-           RowClassName="@(c => c.Data.EstadoLicencia.ToString())">
-        <TitleTemplate>
-            <div class="botonesCont">
-                <div class="inpt-cont-inline">
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Desde: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="@DateTime.Now.AddDays(-14)" @bind-Value="@FechaBuscarI" />
-                    </div>
-                    <div class="inpt-cont">
-                        <label class="inpt-cont--lbl">Hasta: </label>
-                        <DatePicker TValue="DateTime" DefaultValue="@DateTime.Now" @bind-Value="@FechaBuscarF" />
-                    </div>
-                    <div class="buton-cont">
-                        <Button OnClick="@LicenciasBuscar" Style="margin-bottom: 5px;">
-                            <Icon Type="search" Theme="IconThemeType.Outline" />
-                        </Button>
-                    </div>
-                </div>
-                @*Parte del encuadre de texto del buscador  de licencias*@
-                <div class="inpt-cont-inline">
-                    <div style="display: flex; margin-bottom: 5px;" class="buton-cont">
-                        <Search Placeholder="Buscar" WrapperStyle="width: 200px;" AllowClear EnterButton="true" @bind-Value="Busqueda" OnChange="BuscarLicenciado" />
-                    </div>
-                </div>
-                <div style="display: flex;">
-                    <Button Class="boton_nueva" OnClick="()=>ShowModalAgregar()">Nueva</Button>
-                    <Dropdown Class="notif-cont" Trigger="@(new Trigger[] { Trigger.Click })" Placement="Placement.BottomRight" Arrow Style="display: flex;width: fit-content;align-items: center;">
-                        <Overlay>
-                            <Menu Style="min-width:520px;max-width:1000px;">
-                                <LicenciasAprobar />
-                            </Menu>
-                        </Overlay>
-                        <ChildContent>
-                            <div class="notificacion">
-                                <Badge Count="LicenciasPendientes.Count">
-                                    <i style="cursor: pointer;" class="fa-sharp fa-regular fa-bell"></i>
-                                </Badge>
-                            </div>
-                        </ChildContent>
-                    </Dropdown>
-                </div>
-            </div>
-        </TitleTemplate>
-        <ColumnDefinitions Context="muestra">
-            <PropertyColumn Title="Apellido y Nombre" Property="c=>c.ApellidoYNombre" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Desde" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-            <PropertyColumn Property="c=>c.Hasta" Format="dd/MM/yyyy" Sortable></PropertyColumn>
-            <PropertyColumn Title="Duración en Días" Property="c => c.DuracionEnDias" Sortable>
-                <Template>
-                    @{
-                        string color;
+	<Table DataSource="LicenciasActivasVM"
+		   PageSize="20"
+		   Responsive
+		   TItem="LicencasVm"
+		   Loading="isLoading"
+		   RowClassName="@(c => c.Data.EstadoLicencia.ToString())">
 
-                        // Determinar el color según el estado de la licencia
-                        if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
-                        {
-                            color = "#D32F2F"; // Rojo claro para estado rechazado
-                        }
-                        else if (muestra.EstadoLicencia == TipoEstadoLicencia.Aprobada)
-                        {
-                            color = "#99FF99"; // Verde claro para estado aprobado
-                        }
-                        else
-                        {
-                            color = "#FFCC99"; // Naranja claro para estado pendiente
-                        }
-                    }
-                    <span style="background-color:@color; padding: 0 24px; width: 100px; display: inline-block; text-align: center;">@muestra.DuracionEnDias</span>
-                </Template>
-            </PropertyColumn>
+		<TitleTemplate>
+			<div style="background-color: #A63333; color: white; padding: 16px; border-radius: 8px;">
+				<div class="filters-container">
+					<div class="date-filter-container">
+						<div class="filter-group">
+							<label class="filter-label">Desde:</label>
+							<DatePicker TValue="DateTime"
+										DefaultValue="@DateTime.Now.AddDays(-14)"
+										@bind-Value="@FechaBuscarI"
+										Size="InputSize.Large"
+										Style="min-width: 150px;" />
+						</div>
+						<div class="filter-group">
+							<label class="filter-label">Hasta:</label>
+							<DatePicker TValue="DateTime"
+										DefaultValue="@DateTime.Now"
+										@bind-Value="@FechaBuscarF"
+										Size="InputSize.Large"
+										Style="min-width: 150px;" />
+						</div>
+						<Button Type="ButtonType.Primary"
+								OnClick="@LicenciasBuscar"
+								Icon="search"
+								Size="ButtonSize.Large"
+								Style="margin-bottom: 0;">
+							Filtrar
+						</Button>
+					</div>
 
-            <PropertyColumn Title="Tipo"
-                            Property="@(c => c.TipoLicencia.GetDisplayName())"
-                            Sortable="true" />
+					<div class="actions-container">
+						<div class="search-container">
+							<Search Placeholder="Buscar licencias..."
+									AllowClear
+									EnterButton="true"
+									Size="InputSize.Large"
+									@bind-Value="Busqueda"
+									OnChange="BuscarLicenciado" />
+						</div>
 
-            <PropertyColumn Title="Estado" Property="c => c.EstadoLicencia" Sortable Filterable>
-                <Template>
-                    @{
-                        if (muestra.EstadoLicencia == TipoEstadoLicencia.Rechazada)
-                        {
-                            <span style="text-align: center;">@TipoEstadoLicencia.Rechazada</span>
+						<div style="display: flex; align-items: center;">
+							<Button Class="add-button"
+									OnClick="()=>ShowModalAgregar()"
+									Icon="plus">
+								Nueva Licencia
+							</Button>
 
-                        }
-                        else if (muestra.EstadoLicencia == TipoEstadoLicencia.Aprobada)
-                        {
-                            <span style="text-align: center;">@TipoEstadoLicencia.Aprobada</span>
+							<Dropdown Trigger="@(new Trigger[] { Trigger.Click })"
+									  Placement="Placement.BottomRight"
+									  Arrow
+									  Class="notification-badge">
+								<Overlay>
+									<Menu Style="min-width:520px; max-width:1000px;">
+										<LicenciasAprobar />
+									</Menu>
+								</Overlay>
+								<ChildContent>
+									<Badge Count="LicenciasPendientes.Count" Style="font-size: 14px;">
+										<Button Shape="ButtonShape.Circle" Icon="bell" Size="ButtonSize.Large" />
+									</Badge>
+								</ChildContent>
+							</Dropdown>
+						</div>
+					</div>
+				</div>
+			</div>
+		</TitleTemplate>
 
-                        }
-                        else
-                        {
-                            <span style="text-align: center;">@TipoEstadoLicencia.Pendiente</span>
-                        }
-                    }
-                </Template>
-            </PropertyColumn>
-        </ColumnDefinitions>
-    </Table>
+		<ColumnDefinitions Context="licencia">
+			<PropertyColumn Title="Apellido y Nombre"
+							Property="c=>c.ApellidoYNombre"
+							Sortable
+							Width="250px" />
+
+			<PropertyColumn Title="Desde"
+							Property="c=>c.Desde"
+							Format="dd/MM/yyyy"
+							Sortable
+							Width="130px" />
+
+			<PropertyColumn Title="Hasta"
+							Property="c=>c.Hasta"
+							Format="dd/MM/yyyy"
+							Sortable
+							Width="130px" />
+
+			<PropertyColumn Title="Duración"
+							Property="c => c.DuracionEnDias"
+							Sortable
+							Width="120px">
+				<Template>
+					@{
+						string bgColor;
+						string textColor;
+
+						if (licencia.EstadoLicencia == TipoEstadoLicencia.Rechazada)
+						{
+							bgColor = "#FFEBEE";
+							textColor = "#C62828";
+						}
+						else if (licencia.EstadoLicencia == TipoEstadoLicencia.Aprobada)
+						{
+							bgColor = "#E6F7E9";
+							textColor = "#2E7D32";
+						}
+						else
+						{
+							bgColor = "#FFF8E1";
+							textColor = "#F57F17";
+						}
+					}
+					<span class="duration-badge" style="background-color:@bgColor; color:@textColor;">
+						@licencia.DuracionEnDias días
+					</span>
+				</Template>
+			</PropertyColumn>
+
+			<PropertyColumn Title="Tipo"
+							Property="@(c => c.TipoLicencia.GetDisplayName())"
+							Sortable="true"
+							Width="200px" />
+
+			<PropertyColumn Title="Estado"
+							Property="c => c.EstadoLicencia"
+							Sortable
+							Filterable
+							Width="150px">
+				<Template>
+					@{
+						string statusClass = licencia.EstadoLicencia switch
+						{
+							TipoEstadoLicencia.Rechazada => "status-rejected",
+							TipoEstadoLicencia.Aprobada => "status-approved",
+							_ => "status-pending"
+						};
+					}
+					<span class="status-badge @statusClass">
+						@licencia.EstadoLicencia.ToString()
+					</span>
+				</Template>
+			</PropertyColumn>
+		</ColumnDefinitions>
+	</Table>
 </div>
 
-<Modal Footer="null" Title="@("Agregar la licencia")"
-       Visible="@_visibleAgregar"
-       OnOk="@HandleOkAgregar"
-       OnCancel="@HandleCancelAgregar">
+<Modal Title="@("Nueva Licencia")"
+	   Visible="@_visibleAgregar"
+	   Footer="null"
+	   Width="700"
+	   Centered
+	   MaskClosable="false"
+	   OnCancel="@HandleCancelAgregar">
 
-    <LicenciasAlta />
-    <Button Style="margin-right: 100px !important; border: 1px solid black !important" OnClick="@HandleCancelAgregar">
-        Volver
-    </Button>
+	<LicenciasAlta />
+	<div class="modal-footer">
+		<Button Class="cancel-button" OnClick="@HandleCancelAgregar">
+			Volver
+		</Button>
+	</div>
 </Modal>
-
 @code {
 
-    public class LicencasVm
-    {
-        [Required]
-        public TipoLicencia TipoLicencia { get; set; }
-        public string Descripcion { get; set; }
-        public DateTime Desde { get; set; }
-        public DateTime Hasta { get; set; }
-        public TipoEstadoLicencia EstadoLicencia { get; set; }
-        public int PersonaId { get; set; }
-        public Bombero? PersonalAfectado { get; set; }
-        public string? ApellidoYNombre { get; set; }
+	public class LicencasVm
+	{
+		[Required]
+		public TipoLicencia TipoLicencia { get; set; }
+		public string Descripcion { get; set; }
+		public DateTime Desde { get; set; }
+		public DateTime Hasta { get; set; }
+		public TipoEstadoLicencia EstadoLicencia { get; set; }
+		public int PersonaId { get; set; }
+		public Bombero? PersonalAfectado { get; set; }
+		public string? ApellidoYNombre { get; set; }
 
-        public int DuracionEnDias
-        {
-            get
-            {
-                return (Hasta - Desde).Days + 1;
-            }
-        }
-    }
+		public int DuracionEnDias
+		{
+			get
+			{
+				return (Hasta - Desde).Days + 1;
+			}
+		}
+	}
 
-    //variables Locales
-    DateTime FechaBuscarI;
-    DateTime FechaBuscarF;
-    BomberosDbContext Context { get; set; }
-    public LicencasVm LicencasVM = new();
-    List<LicencasVm> LicenciasActivasVM = new();
-    List<Licencia> LicenciasPendientes = new();
-    public bool _visibleAgregar = false;
-    string? Busqueda;
+	//variables Locales
+	DateTime FechaBuscarI;
+	DateTime FechaBuscarF;
+	BomberosDbContext Context { get; set; }
+	public LicencasVm LicencasVM = new();
+	List<LicencasVm> LicenciasActivasVM = new();
+	List<Licencia> LicenciasPendientes = new();
+	public bool _visibleAgregar = false;
+	string? Busqueda;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await Init();
-    }
+	private bool isLoading = false;
 
-    private async Task Init()
-    {
-        LicencasVM = new();
-        Context = DbFactory.CreateDbContext();
-        await LicenciasActivas();
-        await LicenciasPendiente();
-        await BorrarLicenciasDefectuosas();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		await Init();
+	}
 
-    private async Task LicenciasActivas()
-    {
-        LicenciasActivasVM.Clear();
-        var haceDosSemanas = DateTime.Today.AddDays(-14);
-        var Licencias = await Context.Licencias
-            .Include(b => b.PersonalAfectado)
-            .Where(l => l.Hasta > haceDosSemanas)
-            .ToListAsync();
+	private async Task Init()
+	{
+		LicencasVM = new();
+		Context = DbFactory.CreateDbContext();
+		await LicenciasActivas();
+		await LicenciasPendiente();
+		await BorrarLicenciasDefectuosas();
+	}
 
-        foreach (var l in Licencias)
-        {
-            LicencasVm LicVm = new()
-                {
-                    TipoLicencia = l.TipoLicencia,
-                    Descripcion = l.Descripcion,
-                    Desde = l.Desde,
-                    Hasta = l.Hasta,
-                    EstadoLicencia = l.EstadoLicencia,
-                    ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
-                };
+	private async Task LicenciasActivas()
+	{
+		LicenciasActivasVM.Clear();
+		var haceDosSemanas = DateTime.Today.AddDays(-14);
+		var Licencias = await Context.Licencias
+			.Include(b => b.PersonalAfectado)
+			.Where(l => l.Hasta > haceDosSemanas)
+			.ToListAsync();
 
-            LicenciasActivasVM.Add(LicVm);
-        }
-        StateHasChanged();
-    }
+		foreach (var l in Licencias)
+		{
+			LicencasVm LicVm = new()
+				{
+					TipoLicencia = l.TipoLicencia,
+					Descripcion = l.Descripcion,
+					Desde = l.Desde,
+					Hasta = l.Hasta,
+					EstadoLicencia = l.EstadoLicencia,
+					ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
+				};
 
-    private async Task BorrarLicenciasDefectuosas()
-    {
-        var añoMinimo = new DateTime(2000, 1, 1);
+			LicenciasActivasVM.Add(LicVm);
+		}
+		StateHasChanged();
+	}
 
-        var licenciasDefectuosas = await Context.Licencias
-            .Where(l => l.Desde < añoMinimo || l.Hasta < añoMinimo || l.Desde > l.Hasta)
-            .ToListAsync();
+	private async Task BorrarLicenciasDefectuosas()
+	{
+		var añoMinimo = new DateTime(2000, 1, 1);
 
-        if (licenciasDefectuosas.Any())
-        {
-            Context.Licencias.RemoveRange(licenciasDefectuosas);
-            await Context.SaveChangesAsync();
-            await _message.Error($"{licenciasDefectuosas.Count} licencias defectuosas han sido eliminadas.");
-        }
-    }
+		var licenciasDefectuosas = await Context.Licencias
+			.Where(l => l.Desde < añoMinimo || l.Hasta < añoMinimo || l.Desde > l.Hasta)
+			.ToListAsync();
 
-    private async Task LicenciasBuscar()
-    {
-        LicenciasActivasVM.Clear();
-        var licencias = await Context.Licencias
-            .Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
-            .Include(b => b.PersonalAfectado)
-            .ToListAsync();
+		if (licenciasDefectuosas.Any())
+		{
+			Context.Licencias.RemoveRange(licenciasDefectuosas);
+			await Context.SaveChangesAsync();
+			await _message.Error($"{licenciasDefectuosas.Count} licencias defectuosas han sido eliminadas.");
+		}
+	}
 
-        foreach (var licencia in licencias)
-        {
-            LicencasVm LicVm = new()
-                {
-                    TipoLicencia = licencia.TipoLicencia,
-                    Descripcion = licencia.Descripcion,
-                    Desde = licencia.Desde,
-                    Hasta = licencia.Hasta,
-                    EstadoLicencia = licencia.EstadoLicencia,
-                    ApellidoYNombre = licencia.PersonalAfectado?.Apellido + ", " + licencia.PersonalAfectado?.Nombre,
-                };
+	private async Task LicenciasBuscar()
+	{
+		LicenciasActivasVM.Clear();
+		var licencias = await Context.Licencias
+			.Where(l => l.Desde >= FechaBuscarI && l.Hasta <= FechaBuscarF)
+			.Include(b => b.PersonalAfectado)
+			.ToListAsync();
 
-            LicenciasActivasVM.Add(LicVm);
-        }
+		foreach (var licencia in licencias)
+		{
+			LicencasVm LicVm = new()
+				{
+					TipoLicencia = licencia.TipoLicencia,
+					Descripcion = licencia.Descripcion,
+					Desde = licencia.Desde,
+					Hasta = licencia.Hasta,
+					EstadoLicencia = licencia.EstadoLicencia,
+					ApellidoYNombre = licencia.PersonalAfectado?.Apellido + ", " + licencia.PersonalAfectado?.Nombre,
+				};
 
-        StateHasChanged();
-    }
+			LicenciasActivasVM.Add(LicVm);
+		}
 
-    private async Task LicenciasPendiente()
-    {
-        LicenciasPendientes = new();
-        var fechaActual = DateTime.Now;
+		StateHasChanged();
+	}
 
-        // Filtrar licencias pendientes
-        LicenciasPendientes = await Context.Licencias
-            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente)
-            .ToListAsync();
+	private async Task LicenciasPendiente()
+	{
+		LicenciasPendientes = new();
+		var fechaActual = DateTime.Now;
 
-        // Verificar fechas y actualizar estado
-        foreach (var licencia in LicenciasPendientes)
-        {
-            if (licencia.Desde <= fechaActual)
-            {
-                licencia.EstadoLicencia = TipoEstadoLicencia.Rechazada;
-            }
-        }
+		// Filtrar licencias pendientes
+		LicenciasPendientes = await Context.Licencias
+			.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente)
+			.ToListAsync();
 
-        // Guardar cambios en el contexto
-        await Context.SaveChangesAsync();
+		// Verificar fechas y actualizar estado
+		foreach (var licencia in LicenciasPendientes)
+		{
+			if (licencia.Desde <= fechaActual)
+			{
+				licencia.EstadoLicencia = TipoEstadoLicencia.Rechazada;
+			}
+		}
 
-        // Filtrar nuevamente las licencias pendientes que no hayan pasado su fecha de inicio
-        LicenciasPendientes = LicenciasPendientes
-            .Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente && l.Desde > fechaActual)
-            .ToList();
-    }
+		// Guardar cambios en el contexto
+		await Context.SaveChangesAsync();
 
-    // Buscar Licenciados
-    private async Task BuscarLicenciado()
-    {
-        LicenciasActivasVM.Clear();
-        var licencias = await Context.Licencias
-        .Where(l => l.PersonalAfectado.Nombre.ToLower().Contains(Busqueda.ToLower()) || l.PersonalAfectado.Apellido.ToLower().Contains(Busqueda.ToLower()))
-        .Include(b => b.PersonalAfectado).ToListAsync();
-        foreach (var l in licencias)
-        {
-            LicencasVm LicVm = new()
-                {
-                    TipoLicencia = l.TipoLicencia,
-                    Descripcion = l.Descripcion,
-                    Desde = l.Desde,
-                    Hasta = l.Hasta,
-                    EstadoLicencia = l.EstadoLicencia,
-                    ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
-                };
-            LicenciasActivasVM.Add(LicVm);
-        }
-    }
+		// Filtrar nuevamente las licencias pendientes que no hayan pasado su fecha de inicio
+		LicenciasPendientes = LicenciasPendientes
+			.Where(l => l.EstadoLicencia == TipoEstadoLicencia.Pendiente && l.Desde > fechaActual)
+			.ToList();
+	}
 
-    private async void HandleOkAgregar(MouseEventArgs e)
-    {
-        _visibleAgregar = false;
-        await Init();
-    }
+	// Buscar Licenciados
+	private async Task BuscarLicenciado()
+	{
+		LicenciasActivasVM.Clear();
+		var licencias = await Context.Licencias
+		.Where(l => l.PersonalAfectado.Nombre.ToLower().Contains(Busqueda.ToLower()) || l.PersonalAfectado.Apellido.ToLower().Contains(Busqueda.ToLower()))
+		.Include(b => b.PersonalAfectado).ToListAsync();
+		foreach (var l in licencias)
+		{
+			LicencasVm LicVm = new()
+				{
+					TipoLicencia = l.TipoLicencia,
+					Descripcion = l.Descripcion,
+					Desde = l.Desde,
+					Hasta = l.Hasta,
+					EstadoLicencia = l.EstadoLicencia,
+					ApellidoYNombre = l.PersonalAfectado?.Apellido + ", " + l.PersonalAfectado?.Nombre,
+				};
+			LicenciasActivasVM.Add(LicVm);
+		}
+	}
 
-    public async void HandleCancelAgregar(MouseEventArgs e)
-    {
-        Console.WriteLine(e);
-        _visibleAgregar = false;
-        await Init();
-    }
+	private async void HandleOkAgregar(MouseEventArgs e)
+	{
+		_visibleAgregar = false;
+		await Init();
+	}
 
-    private async void ShowModalAgregar()
-    {
-        _visibleAgregar = true;
-        await Init();
-    }
+	public async void HandleCancelAgregar(MouseEventArgs e)
+	{
+		Console.WriteLine(e);
+		_visibleAgregar = false;
+		await Init();
+	}
 
-    public void Dispose()
-    {
-        Context?.Dispose();
-    }
+	private async void ShowModalAgregar()
+	{
+		_visibleAgregar = true;
+		await Init();
+	}
+
+	public void Dispose()
+	{
+		Context?.Dispose();
+	}
 }
