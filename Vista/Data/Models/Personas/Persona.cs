@@ -16,9 +16,9 @@ namespace Vista.Data.Models.Personas
         public int PersonaId { get; set; }
 
         /// <summary>
-        /// Tipo de persona, que puede ser Bombero, Comisión Directiva o Damnificado.
+        /// Tipo de persona, que puede ser Bombero, Comisión Directiva.
         /// </summary>
-        public TipoPersona Tipo { get; set; }
+        public TipoPersonal Tipo { get; set; }
 
         /// <summary>
         /// Sexo de la persona.

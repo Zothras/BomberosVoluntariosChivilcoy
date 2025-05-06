@@ -11,6 +11,6 @@ namespace Vista.Data.Models.Salidas.Componentes
         public bool Airbag { get; set; }
 
         public int? DamnificadoId { get; set; }
-        public Damnificado? Damnificado { get; set; }
+        public Damnificado_Salida? Damnificado { get; set; }
     }
 }

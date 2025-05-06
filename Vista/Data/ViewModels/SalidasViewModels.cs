@@ -85,7 +85,7 @@ namespace Vista.Data.ViewModels
         public string? ApellidoReceptor { get; set; }
         public int LegajoReceptor { get; set; }
 
-        public List<Damnificado>? Damnificados { get; set; }
+        public List<Damnificado_Salida>? Damnificados { get; set; }
         public List<VehiculoAfectadoIncendio> VehiculosAfectadosIncendios { get; set; }
 
         //datos del seguro 

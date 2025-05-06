@@ -26,7 +26,8 @@ namespace Vista.Data
     {
         // Personas
         public DbSet<Bombero> Bomberos { get; set; }
-        public DbSet<Damnificado> Damnificados { get; set; }
+        public DbSet<Damnificado_Salida> Damnificados { get; set; }
+        public DbSet<ComisionDirectiva> ComisionDirectivas { get; set; }
 
         // Personas Assets
         public DbSet<Contacto> Contactos { get; set; }
@@ -203,8 +204,8 @@ namespace Vista.Data
 
             modelBuilder.Entity<Persona>()
                 .HasDiscriminator(p => p.Tipo)
-                .HasValue<Bombero>(TipoPersona.Bombero)
-                .HasValue<Damnificado>(TipoPersona.Damnificado);
+                .HasValue<Bombero>(TipoPersonal.Bombero)
+                .HasValue<ComisionDirectiva>(TipoPersonal.ComisionDirectiva);
 
             modelBuilder.Entity<Seguro>()
                 .HasDiscriminator(s => s.Tipo)
@@ -326,6 +327,12 @@ namespace Vista.Data
             modelBuilder
                 .Entity<Persona>()
                 .Property(p => p.Sexo)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+
+            modelBuilder
+                .Entity<ComisionDirectiva>()
+                .Property(c => c.Grado)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
@@ -558,7 +565,7 @@ namespace Vista.Data
                 .HasMaxLength(255);
 
             modelBuilder
-                .Entity<Damnificado>()
+                .Entity<Damnificado_Salida>()
                 .Property(d => d.Sexo)
                 .HasConversion<string>()
                 .HasMaxLength(255);

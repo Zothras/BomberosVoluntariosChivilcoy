@@ -19,7 +19,7 @@ namespace Vista.Data.Models.Grupos.FuerzasIntervinientes
         public FuerzaInterviniente Fuerza { get; set; } = null!;
         public string? Encargado { get; set; }
         public Vehiculo Vehiculo { get; set; } = null!;
-        public Damnificado? Damnificado { get; set; }
+        public Damnificado_Salida? Damnificado { get; set; }
         public string? Destino { get; set; }
     }
 }

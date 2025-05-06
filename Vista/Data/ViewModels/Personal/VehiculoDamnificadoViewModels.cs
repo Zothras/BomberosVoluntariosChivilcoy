@@ -23,6 +23,6 @@ namespace Vista.Data.ViewModels.Personal
         public string NumeroDePoliza { get; set; }
         public DateTime FechaDeVencimineto { get; set; }
         public int? DamnificadoId { get; set; }
-        public Damnificado? Damnificado { get; set; }
+        public Damnificado_Salida? Damnificado { get; set; }
     }
 }

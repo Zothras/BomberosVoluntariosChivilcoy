@@ -2,7 +2,7 @@
 
 namespace Vista.Data.Enums.Discriminadores
 {
-    public enum TipoPersona
+    public enum TipoPersonal
     {
         /// <summary>
         /// Representa a un bombero.
@@ -14,12 +14,6 @@ namespace Vista.Data.Enums.Discriminadores
         /// Representa a un miembro de la Comisión Directiva.
         /// </summary>
         [Display(Name = "Comisión Directiva")]
-        ComisionDirectiva = 2,
-
-        /// <summary>
-        /// Representa a una persona damnificada.
-        /// </summary>
-        [Display(Name = "Damnificado")]
-        Damnificado = 3
+        ComisionDirectiva = 2
     }
 }
