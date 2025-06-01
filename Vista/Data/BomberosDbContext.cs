@@ -234,7 +234,6 @@ namespace Vista.Data
                 .HasValue<IncendioVivienda>(TipoDeEmergencia.IncendioVivienda)
                 .HasValue<ServicioEspecialPrevencion>(TipoDeEmergencia.ServicioEspecialPrevencion)
                 .HasValue<Incendio>(TipoDeEmergencia.Incendio)
-                .HasValue<ServicioEspecial>(TipoDeEmergencia.ServicioEspecial)
                 .HasValue<IncendioAeronaves>(TipoDeEmergencia.IncendioAeronaves)
                 .HasValue<ServicioEspecialCapacitacion>(TipoDeEmergencia.ServicioEspecialCapacitacion)
                 .HasValue<ServicioEspecialColocaciónDriza>(TipoDeEmergencia.ServicioEspecialColocacionDriza)

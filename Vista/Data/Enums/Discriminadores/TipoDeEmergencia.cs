@@ -95,12 +95,6 @@ namespace Vista.Data.Enums.Discriminadores
         Incendio = 15,
 
         /// <summary>
-        /// Servicio Especial
-        /// </summary>
-        [Display(Name = "Servicio Especial")]
-        ServicioEspecial = 16,
-
-        /// <summary>
         /// Incendio Aeronaves
         /// </summary>
         [Display(Name = "Incendio Aeronaves")]
