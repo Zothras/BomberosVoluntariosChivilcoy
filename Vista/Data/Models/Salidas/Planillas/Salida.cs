@@ -13,25 +13,61 @@ namespace Vista.Data.Models.Salidas.Planillas
 
     public abstract class Salida
     {
+        /// <summary>
+        /// Identificador único de la salida.
+        /// </summary>
         public int SalidaId { get; set; }
+
+        /// <summary>
+        /// Tipo de emergencia que originó la salida.
+        /// </summary>
         public TipoDeEmergencia TipoEmergencia { get; set; }
+
+        /// <summary>
+        /// Hora de salida del cuartel.
+        /// </summary>
         public DateTime HoraSalida { get; set; }
+
+        /// <summary>
+        /// Hora de llegada al lugar del incidente o al cuartel. (Preguntar a Rossi si al incidente o al cuartel)
+        /// </summary>
         public DateTime HoraLlegada { get; set; }
+
+        /// <summary>
+        /// Número secuencial que representa el orden de la salida dentro del año actual.
+        /// Comienza en 1 con la primera salida del año y se incrementa con cada nueva salida.
+        /// Este número se reinicia al iniciar un nuevo año.
+        /// </summary>
         public int NumeroParte { get; set; }
+
+        /// <summary>
+        /// Año de la salida, utilizado para identificar el periodo al que pertenece el número de parte.
+        /// </summary>
         public int AnioNumeroParte { get; set; }
 
+        /// <summary>
+        /// Descripción del incidente o motivo de la salida.
+        /// </summary>
         [Required, StringLength(255)]
         public string Descripcion { get; set; } = null!;
 
-        //Dirección <-- Apartir de Ahora de Guarda la Dirrecion Entera (No Obligatoria por si es Rural)
-
+        /// <summary>
+        /// Dirección del lugar donde se realizó la salida. (No es obligatorio)
+        /// </summary>
         [StringLength(255)]
         public string? Direccion { get; set; }
 
         // Ubicación (Obligatoria) <-- Esto para hacer estadistica
 
+        /// <summary>
+        /// Latitud de la ubicación del incidente o lugar de la salida.
+        /// </summary>
         [Required]
         public double Latitud { get; set; }
+
+        /// <summary>
+        /// Longitud de la ubicación del incidente o lugar de la salida.
+        /// </summary>
         [Required]
         public double Longitud { get; set; }
 
