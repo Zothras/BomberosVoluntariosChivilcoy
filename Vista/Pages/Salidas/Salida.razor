@@ -1,4 +1,5 @@
 ﻿@page "/Salidas"
+@using Data.Enums.Discriminadores
 
 <style>
     .template {
@@ -122,6 +123,8 @@
 @*Servicios Utilizados*@
 @using Vista.Services
 @inject ISalidaService SalidaService
+@inject IMessageService Message
+@inject NavigationManager NavigationManager
 
 <div class="template">
     <Table TItem="SalidaViewModelTable"
@@ -133,7 +136,7 @@
         <TitleTemplate>
             <Flex Justify="FlexJustify.FlexEnd">
                 <Space>
-                    <Button Type="ButtonType.Primary" OnClick="@(() => _modalAñadirVisible = true)">
+                    <Button Type="ButtonType.Primary" OnClick="@(() => VerAñadirSalida())">
                         <Icon Type="plus" /> Nueva
                     </Button>
                 </Space>
@@ -165,8 +168,7 @@
                         </Popconfirm>
                     </SpaceItem>
                     <SpaceItem>
-                        <Button Type="@ButtonType.Primary" OnClick="()=>
-                                                                                       VerEditarSalida(context.Id)" Ghost>
+                        <Button Type="@ButtonType.Primary" OnClick="() => VerEditarSalida(context.Id)" Ghost>
                             <Icon Type="edit" />
                         </Button>
                     </SpaceItem>
@@ -177,8 +179,27 @@
     </Table>
 </div>
 
+@*Modal para Crear Salida*@
+<Modal @bind-Visible="_modalAñadirVisible" Title="Crear Salida" OkText="@("Crear")" CancelText="@("Cancelar")" OnOk="@AddSalida">
+    <Form Model="newSalida">
+        <FormItem Label="Nº Parte" Required>
+            <Input @bind-Value="@newSalida.NumeroSalida" ReadOnly="true">
+            <Suffix>
+                / @newSalida.Anio
+            </Suffix>
+            </Input>
+        </FormItem>
+        <FormItem Label="Tipo de Emergencia" Required>
+            <EnumSelect @bind-Value="@newSalida.TipoEmergencia" Placeholder="Seleccione un tipo de emergencia">
+            </EnumSelect>
+        </FormItem>
+    </Form>
+</Modal>
+
+
 @code {
     private List<SalidaViewModelTable> SalidaViewModels = new();
+    private SalidaCrearViewModel newSalida = new();
 
     // Variables de Tamaño de la Tabla
     int _pageIndex = 1;
@@ -200,6 +221,18 @@
         public double Longitud { get; set; }
     }
 
+    public class SalidaCrearViewModel
+    {
+        public int NumeroSalida { get; set; }
+        public int Anio { get; set; }
+        public TipoDeEmergencia TipoEmergencia { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerSalidas();
+    }
+
     private async Task BorrarSalida(int id)
     {
 
@@ -214,6 +247,42 @@
     {
 
     }
+
+    private async Task VerAñadirSalida()
+    {
+        _modalAñadirVisible = true;
+
+        var resultado = await SalidaService.ObtenerUltimoNumeroParteDelAnioAsync(DateTime.Now.Year);
+
+        newSalida.NumeroSalida = resultado;
+        newSalida.Anio = DateTime.Now.Year;
+    }
+
+    private async Task AddSalida()
+    {
+        if (string.IsNullOrWhiteSpace(newSalida.TipoEmergencia.ToString()))
+        {
+            await Message.Error("Debe seleccionar un tipo de emergencia.");
+            return;
+        }
+
+        if (newSalida.NumeroSalida <= 0)
+        {
+            await Message.Error("El número de parte debe ser mayor que cero.");
+            return;
+        }
+
+        if (RutasEmergencia.TryGetValue(newSalida.TipoEmergencia, out var ruta))
+        {
+            NavigationManager?.NavigateTo(ruta);
+        }
+        else
+        {
+            await Message.Error("Tipo de emergencia no válido.");
+        }
+
+    }
+
 
     private async Task ObtenerSalidas()
     {
@@ -234,4 +303,31 @@
         StateHasChanged();
     }
 
+    // Diccionario de rutas según el tipo de emergencia
+    public static readonly Dictionary<TipoDeEmergencia, string> RutasEmergencia = new()
+    {
+            { TipoDeEmergencia.Accidente, "/salidas/accidentes" },
+            { TipoDeEmergencia.FactorClimatico, "/emergencia/factor-climatico" },
+            { TipoDeEmergencia.MaterialPeligroso, "/emergencia/material-peligroso" },
+            { TipoDeEmergencia.ServicioEspecialRepresentacion, "/servicio-especial/representacion" },
+            { TipoDeEmergencia.RescateAnimal, "/emergencia/rescate-animal" },
+            { TipoDeEmergencia.RescatePersona, "/emergencia/rescate-persona" },
+            { TipoDeEmergencia.IncendioComercio, "/incendio/comercio" },
+            { TipoDeEmergencia.IncendioEstablecimientoEducativo, "/incendio/educativo" },
+            { TipoDeEmergencia.IncendioEstablecimientoPublico, "/incendio/publico" },
+            { TipoDeEmergencia.IncendioForestal, "/incendio/forestal" },
+            { TipoDeEmergencia.IncendioHospitalesYClinicas, "/incendio/hospitales-clinicas" },
+            { TipoDeEmergencia.IncendioIndustria, "/incendio/industria" },
+            { TipoDeEmergencia.IncendioVivienda, "/incendio/vivienda" },
+            { TipoDeEmergencia.ServicioEspecialPrevencion, "/servicio-especial/prevencion" },
+            { TipoDeEmergencia.Incendio, "/incendio/general" },
+            { TipoDeEmergencia.ServicioEspecial, "/servicio-especial/general" },
+            { TipoDeEmergencia.IncendioAeronaves, "/incendio/aeronaves" },
+            { TipoDeEmergencia.ServicioEspecialCapacitacion, "/servicio-especial/capacitacion" },
+            { TipoDeEmergencia.ServicioEspecialColocacionDriza, "/servicio-especial/colocacion-driza" },
+            { TipoDeEmergencia.ServicioEspecialSuministroAgua, "/servicio-especial/suministro-agua" },
+            { TipoDeEmergencia.ServicioEspecialFalsaAlarma, "/servicio-especial/falsa-alarma" },
+            { TipoDeEmergencia.ServicioEspecialRetiradoDeObito, "/servicio-especial/retirado-obito" },
+            { TipoDeEmergencia.ServicioEspecialColaboracionFuerzasSeguridad, "/servicio-especial/colaboracion-seguridad" }
+    };
 }

@@ -6,23 +6,11 @@
 
 @*Servicios Utilizados*@
 @using Vista.Services
-@inject IParteService ParteService
 @inject GeorefService GeorefService
+@inject ISalidaService SalidaService
 
 <div class="slick-contenedor @animationClass">
     <h6>Datos Principales</h6>
-    <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Numero de parte</label>
-        <Input @bind-Value="@Model.NumeroParte" ReadOnly="true">
-        <Suffix>
-            / @anio
-        </Suffix>
-        </Input>
-        @if (Model != null)
-        {
-            Model.AnioNumeroParte = anio;
-        }
-    </div>
     <div class="inpt-cont">
         <label class="inpt-cont--lbl"></label>
         @if (Model.TimeLlegada < Model.TimeSalida)
@@ -174,9 +162,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Model.NumeroParte = await GenerarNumeroParteAsync();
-        Model.AnioNumeroParte = anio;
-
         isApiAvailable = await GeorefService.CheckApiConnectionAsync();
     }
 
@@ -234,12 +219,6 @@
             esDepartamento = !string.IsNullOrEmpty(Model.PisoNumero) ||
                               !string.IsNullOrEmpty(Model.Depto);
         }
-    }
-
-    private async Task<int> GenerarNumeroParteAsync()
-    {
-        int ultimoNumeroParte = await ParteService.ObtenerUltimoNumeroParteDelAnioAsync(anio);
-        return (ultimoNumeroParte + 1);
     }
 
     private async void OnDebounceElapsed(object sender, ElapsedEventArgs e)
