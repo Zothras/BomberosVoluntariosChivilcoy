@@ -6,22 +6,47 @@ using Vista.Data.Models.Salidas.Planillas;
 using Vista.Data.ViewModels.Rescates;
 using Vista.Services;
 using AntDesign;
+using Vista.Data.Models.Vehiculos.Flota;
+using DocumentFormat.OpenXml.Office2010.Drawing;
+using System.Threading.Tasks;
 
 namespace Vista.Pages.Salidas
 {
     public partial class Rescates
     {
+        /// <summary>
+        /// ViewModel para la carga de Rescates de Personas.
+        /// </summary>
         private RescatePersonaViewModels PersonaViewModel = new();
 
-        // Variable para el Numero de Parte
+        /// <summary>
+        /// Lista con todos los Bomberos del sistema.
+        /// </summary>
+        private List<Bombero> BomberosTodos = new();
+
+        /// <summary>
+        /// Lista con todos los Moviles del sistema.
+        /// </summary>
+        private List<Movil> MovilesTodos = new();
+
+
+        /// <summary>
+        /// Numero de Salida del Año en Seleccionado.
+        /// </summary>
         [Parameter]
         public int? NumeroSalida { get; set; } = 0;
-
+        /// <summary>
+        /// Año de Salida
+        /// </summary>
         [Parameter]
         public int? AnioSalida { get; set; } = 0;
+        /// <summary>
+        /// Tipo de Rescate
+        /// </summary>
 
         [Parameter]
         public int TipoRescate { get; set; }
+
 
         //Carga de Salida
 
@@ -119,7 +144,7 @@ namespace Vista.Pages.Salidas
             Init();
         }
 
-        private void Init()
+        private async Task Init()
         {
             PersonaViewModel = new();
 
@@ -132,6 +157,10 @@ namespace Vista.Pages.Salidas
             {
                 PersonaViewModel.AnioNumeroParte = AnioSalida.Value;
             }
+
+            BomberosTodos = await BomberoService.ObtenerTodosLosBomberosAsync();
+
+            MovilesTodos = await VehiculoService.ObtenerTodosLosMoviles();
         }
 
         //Finish Failed

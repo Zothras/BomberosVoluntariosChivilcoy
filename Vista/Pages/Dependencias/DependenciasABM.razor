@@ -262,7 +262,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		bomberosTodos = await BomberoService.GetAllBomberosAsync(); // Obtiene todos los Bomberos.
+		bomberosTodos = await BomberoService.ObtenerTodosLosBomberosViewModelAsync(); // Obtiene todos los Bomberos.
 		Dependencias = await DependenciaService.ObtenerTodasLasDependenciasAsync();
 		DependenciaViewModels = await MapearDependenciasAsync(Dependencias);
 		StateHasChanged();

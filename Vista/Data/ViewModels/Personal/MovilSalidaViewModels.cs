@@ -10,12 +10,11 @@ namespace Vista.Data.ViewModels.Personal
         public DateTime? FechaFactura { get; set; }
         public string? TipoConbustible { get; set; }
         public string? CantidadLitros { get; set; }
-        public string? QuienLleno { get; set; }
+        public BomberoViweModel? QuienLleno { get; set; }
         public string? TelefonoQuienLleno { get; set; }
-        public Bombero Chofer { get; set; }
-        public int NumeroLegajo { get; set; }
-        public Movil MovilesSalida { get; set; }
-        public string NumeroMovil { get; set; }
+        public BomberoViweModel Chofer { get; set; } = null!;
+        public string NumeroMovil { get; set; } = null!;
+        public int KmSalida { get; set; }
         public int KmLlegada { get; set; }
         public string ChoferNombreCompleto { get { return Chofer.Nombre + "," + Chofer.Apellido; } }
 

@@ -19,9 +19,9 @@ namespace Vista.Services
         Task<Sancion> SancionarBombero(Sancion sancion);
         Task<Bombero> CambiarEstado(Bombero bombero);
         Task<AscensoBombero> AscenderBombero(AscensoBombero ascenso);
-        Task<List<BomberoViweModel>> GetAllBomberosAsync();
+        Task<List<BomberoViweModel>> ObtenerTodosLosBomberosViewModelAsync();
+        Task<List<Bombero>> ObtenerTodosLosBomberosAsync();
         Task<BomberoViweModel> ObtenerBomberoPorLegajoAsync(int numeroLegajo);
-        Task<List<BomberoViweModel>> ObtenerBomberosChoferes();
         Task<Bombero> ObtenerBomberoObjetoPorLegajoAsync(int numeroLegajo);
     }
 
@@ -148,7 +148,7 @@ namespace Vista.Services
             return ascenso;
         }
 
-        public async Task<List<BomberoViweModel>> GetAllBomberosAsync()
+        public async Task<List<BomberoViweModel>> ObtenerTodosLosBomberosViewModelAsync()
         {
             return await _context.Bomberos
                 .Select(b => new BomberoViweModel
@@ -165,7 +165,7 @@ namespace Vista.Services
                     Grado = b.Grado,
                     Dotacion = b.Dotacion,
                     Estado = b.Estado,
-                    Chofer = b.Chofer,
+                    EsChofer = b.Chofer,
                     VencimientoRegistro = b.VencimientoRegistro,
                     Direccion = b.Direccion,
                     Observaciones = b.Observaciones,
@@ -174,6 +174,11 @@ namespace Vista.Services
                     FechaAceptacion = b.FechaAceptacion
                 })
                 .ToListAsync();
+        }
+
+        public async Task<List<Bombero>> ObtenerTodosLosBomberosAsync()
+        {
+            return await _context.Bomberos.ToListAsync();
         }
 
         public async Task<BomberoViweModel> ObtenerBomberoPorLegajoAsync(int numeroLegajo)
@@ -195,37 +200,6 @@ namespace Vista.Services
             };
 
             return bomberoViweModel;
-        }
-
-        public async Task<List<BomberoViweModel>> ObtenerBomberosChoferes()
-        {
-            // Traemos los bomberos que son choferes desde la base de datos de forma asincrónica
-            var bomberosChoferes = await _context.Bomberos
-                .Where(c => c.Chofer)
-                .Select(c => new BomberoViweModel
-                {
-                    FechaNacimiento = c.FechaNacimiento,
-                    Sexo = c.Sexo,
-                    Nombre = c.Nombre,
-                    Apellido = c.Apellido,
-                    Documento = c.Documento,
-                    NumeroLegajo = c.NumeroLegajo,
-                    NumeroIoma = c.NumeroIoma,
-                    LugarNacimiento = c.LugarNacimiento,
-                    Grado = c.Grado,
-                    Dotacion = c.Dotacion,
-                    Estado = c.Estado,
-                    Chofer = c.Chofer,
-                    VencimientoRegistro = c.VencimientoRegistro,
-                    Direccion = c.Direccion,
-                    Observaciones = c.Observaciones,
-                    Profesion = c.Profesion,
-                    NivelEstudios = c.NivelEstudios,
-                    FechaAceptacion = c.FechaAceptacion,
-                })
-                .ToListAsync();
-
-            return bomberosChoferes;
         }
 
         public async Task<Bombero> ObtenerBomberoObjetoPorLegajoAsync(int numeroLegajo)

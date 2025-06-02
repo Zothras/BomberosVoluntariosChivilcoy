@@ -30,7 +30,7 @@ namespace Vista.Data.ViewModels.Personal
         public int? Altura { get; set; }
         public int? Peso { get; set; }
         public Brigada? Brigada { get; set; }
-        public bool Chofer { get; set; }
+        public bool EsChofer { get; set; }
         public DateTime? VencimientoRegistro { get; set; }
         public TipoSexo Sexo { get; set; }
         [StringLength(255)]

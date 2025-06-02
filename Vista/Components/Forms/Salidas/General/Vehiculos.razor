@@ -5,143 +5,126 @@
 
 @*Servicios Utilizados*@
 @using Vista.Services
-@inject IBomberoService BomberoService
-@inject IVehiculoService VehiculoService
-@inject IMessageService message
+@inject IMessageService MessageService
 
-<div class="slick-contenedor @animationClass">
-    <h6>Datos del chofer</h6>
+<Form Model="movilSalidaView">
 
-    <div class="inpt-cont-inline">
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Elija el chofer</label>
-            <Select TItem="BomberoViweModel"
-                    TItemValue="int"
-                    DataSource="@bomberoChoferesSalir"
-                    @bind-Value="@chofer"
-                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                    ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                    Placeholder="Selecione a un bombero"
-                    DefaultActiveFirstOption="false"
-                    AllowClear="true"
-                    EnableSearch>
-            </Select>
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Numero de movil</label>
-            <Select TItem="Movil"
-                    TItemValue="string"
-                    DataSource="@Moviles"
-                    @bind-Value="@NumeroMovil"
-                    LabelName="@nameof(Movil.NumeroMovil)"
-                    ValueName="@nameof(Movil.NumeroMovil)"
-                    Placeholder="Selecione el movil"
-                    DefaultActiveFirstOption="false"
-                    AllowClear="true"
-                    EnableSearch>
-            </Select>
-        </div>
-    </div>
+    <FormItem Label="Seleccione al Chofer">
+        <Select TItem="BomberoViweModel"
+                TItemValue="BomberoViweModel"
+                DataSource="@bomberoChoferesSalir"
+                @bind-Value="@movilSalidaView.Chofer"
+                LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                Placeholder="Selecione a un bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                EnableSearch>
+        </Select>
+    </FormItem>
 
-    @if (NumeroMovil is not null)
+    <FormItem Label="Numero de Movil">
+        <Select TItem="Movil"
+                TItemValue="string"
+                DataSource="@Moviles"
+                @bind-Value="@movilSalidaView.NumeroMovil"
+                LabelName="@nameof(Movil.NumeroMovil)"
+                ValueName="@nameof(Movil.NumeroMovil)"
+                Placeholder="Selecione el movil"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                EnableSearch>
+        </Select>
+    </FormItem>
+
+    @if (movilSalidaView.NumeroMovil is not null)
     {
-        Model.Kilometraje = Moviles.FirstOrDefault(m => m.NumeroMovil == NumeroMovil)?.Kilometraje ?? Model.Kilometraje;
+        movilSalidaView.KmSalida = Moviles.FirstOrDefault(m => m.NumeroMovil == movilSalidaView.NumeroMovil)?.Kilometraje ?? 0;
     }
 
-    <div class="inpt-cont-inline">
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Kilometro de salida</label>
-            <AntDesign.InputNumber @bind-Value="Model.Kilometraje" Disabled />
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Kilometro de llegada</label>
-            <AntDesign.InputNumber @bind-Value="Model.KmLlegada" />
-        </div>
-    </div>
+    <FormItem Label="Kilometraje Actual">
+        <Input @bind-Value="movilSalidaView.KmSalida" Disabled>
+            <Suffix>Km</Suffix>
+        </Input>
+    </FormItem>
 
-    <div class="inpt-cont">
-        <label class="inpt-cont--lbl">¿Cargo combustible?</label>
+    <FormItem Label="Kilometraje de Llegada">
+        <Input @bind-Value="movilSalidaView.KmLlegada" Placeholder="Ingrese el kilometraje de llegada">
+            <Suffix>Km</Suffix>
+        </Input>
+    </FormItem>
+
+    <FormItem Label="¿Cargo Combustible?">
         <Switch @bind-Checked="switchMoviles" Style="width: 10px!important;" OnChange="@OnChangeSwitch" />
-        <Modal Title="Datos de la carga de combustible"
-               Visible="@_visible"
-               OnOk="@HandleOk"
-               OnCancel="@HandleCancelMovil">
-            <Form Loading="loading" Model="@movilSalidaViewModels"
-                  LabelColSpan="8"
-                  WrapperColSpan="16"
-                  OnFinish="OnFinishModel"
-                  OnFinishFailed="OnFinishFailed"
-                  @ref="@_form1">
-                <FormItem Label="Numero de Remito">
-                    <Input @bind-Value="@movilSalidaViewModels.NumeroFactura" />
-                </FormItem>
-                <FormItem Label="Fecha de la Factura">
-                    <DatePicker TValue="DateTime?" @bind-Value="@movilSalidaViewModels.FechaFactura" />
-                </FormItem>
-                <FormItem Label="Tipo de Combustible">
-                    <Input @bind-Value="@movilSalidaViewModels.TipoConbustible" />
-                </FormItem>
-                <FormItem Label="Cantidad de Litros">
-                    <Input @bind-Value="@movilSalidaViewModels.CantidadLitros" />
-                </FormItem>
-                <FormItem Label="Quien lleno">
-                    <Select TItem="BomberoViweModel"
-                            TItemValue="string"
-                            DataSource="@bomberoChoferes"
-                            @bind-Value="@movilSalidaViewModels.QuienLleno"
-                            LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                            ValueName="@nameof(BomberoViweModel.Nombre)"
-                            Placeholder="Seleccione a un bombero"
-                            DefaultActiveFirstOption="false"
-                            AllowClear="true"
-                            EnableSearch>
-                    </Select>
-                </FormItem>
-            </Form>
-        </Modal>
-    </div>
-    <div class="inpt-cont">
-        <Button OnClick="@AgregarMovilSalida">Cargar movil</Button>
-    </div>
+    </FormItem>
 
-    @if (Model.Moviles != null && Model.Moviles.Any())
-    {
-        <div>
-            <Table Size="TableSize.Small" PageSize="4" Context="MovilesSalidasL1" DataSource="Model.Moviles" Bordered>
-                <PropertyColumn Property="c=>c.Movil.NumeroMovil" Title="Número de Móvil"></PropertyColumn>
-                <PropertyColumn Property="c=>c.Chofer.Nombre"></PropertyColumn>
-                <PropertyColumn Property="c=>c.Chofer.Apellido"></PropertyColumn>
-                <ActionColumn Title="Acciones">
-                    <Popconfirm Title="¿Quieres borrar este movil?"
-                                OnConfirm="()=> DeleteRowMovil(MovilesSalidasL1.Movil.NumeroMovil)"
-                                OkText="Si"
-                                CancelText="No">
-                        <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
-                    </Popconfirm>
-                </ActionColumn>
-            </Table>
-        </div>
-    }
-</div>
+    <Button OnClick="@AgregarMovilSalida">Cargar movil</Button>
+</Form>
+
+@*Modal para los Datos de la Carga de Combustible*@
+<Modal Title="Datos de la carga de combustible" Visible="@_visible" OnCancel="@HandleCancelMovil" OkText=@("Cargar Movil") CancelText="@("Cancelar")">
+    <Form Model="@movilSalidaView">
+        <FormItem Label="Número de Remito">
+            <Input @bind-Value="@movilSalidaView.NumeroFactura" />
+        </FormItem>
+        <FormItem Label="Fecha de la Factura">
+            <DatePicker TValue="DateTime?" @bind-Value="@movilSalidaView.FechaFactura" />
+        </FormItem>
+        <FormItem Label="Tipo de Combustible">
+            <Input @bind-Value="@movilSalidaView.TipoConbustible" />
+        </FormItem>
+        <FormItem Label="Cantidad de Litros">
+            <Input @bind-Value="@movilSalidaView.CantidadLitros" />
+        </FormItem>
+        <FormItem Label="Quien lleno">
+            <Select TItem="BomberoViweModel"
+                    TItemValue="BomberoViweModel"
+                    DataSource="@bomberoChoferes"
+                    @bind-Value="@movilSalidaView.QuienLleno"
+                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                    ValueName="@nameof(BomberoViweModel.Nombre)"
+                    Placeholder="Seleccione a un bombero"
+                    DefaultActiveFirstOption="false"
+                    AllowClear="true"
+                    EnableSearch>
+            </Select>
+        </FormItem>
+    </Form>
+</Modal>
+
+@if (Model.Moviles != null && Model.Moviles.Any())
+{
+    <div>
+        <Table Size="TableSize.Small" PageSize="4" Context="MovilesSalidasL1" DataSource="Model.Moviles" Bordered>
+            <PropertyColumn Property="c => c.Movil.NumeroMovil" Title="Número de Móvil"></PropertyColumn>
+            <PropertyColumn Property="c => c.Chofer.Nombre"></PropertyColumn>
+            <PropertyColumn Property="c => c.Chofer.Apellido"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="¿Quieres borrar este movil?"
+                            OnConfirm="()=> DeleteRowMovil(MovilesSalidasL1.Movil.NumeroMovil)"
+                            OkText="Si"
+                            CancelText="No">
+                    <i class="fa-solid fa-trash" style="color: #e90c0c;cursor: pointer;"></i>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
+}
 
 @code {
-    [Parameter] public SalidasViewModels Model { get; set; }
-    [Parameter] public string animationClass { get; set; }
+    [Parameter] public SalidasViewModels Model { get; set; } = null!;
+    [Parameter] public List<Bombero> BomberosTodos { get; set; } = null!;
+    [Parameter] public List<Movil> Moviles { get; set; } = null!;
 
-    private List<BomberoViweModel> bomberoChoferes { get; set; }
-    private List<BomberoViweModel> bomberoChoferesSalir { get; set; }
+    private List<BomberoViweModel> bomberoChoferes { get; set; } = new();
+    private List<BomberoViweModel> bomberoChoferesSalir { get; set; } = new();
+    private List<BomberoViweModel> BomberosViewModelTodos { get; set; } = null!;
 
-    private List<Movil> Moviles { get; set; }
 
-    private MovilSalidaViewModels movilSalidaViewModels = new MovilSalidaViewModels();
-
-    private int chofer;
-    private string NumeroMovil;
+    private MovilSalidaViewModels movilSalidaView = new MovilSalidaViewModels();
 
     private bool switchMoviles = false;
     private bool _visible = false;
     private bool loading = false;
-    private Form<MovilSalidaViewModels> _form1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -152,10 +135,8 @@
         }
 
         // Obtener las listas de bomberos choferes y móviles
-        bomberoChoferes = await BomberoService.ObtenerBomberosChoferes();
+        bomberoChoferes = await FiltrarBomberosChoferesAsync(BomberosViewModelTodos);
         bomberoChoferesSalir = bomberoChoferes.ToList();
-
-        Moviles = await VehiculoService.ObtenerTodosLosMoviles();
 
         // Verificar si hay móviles en el modelo
         if (Model.Moviles.Any())
@@ -168,6 +149,7 @@
             {
                 // Buscar el móvil correspondiente en la lista de todos los móviles
                 Movil? movilRem = Moviles.FirstOrDefault(m => m.NumeroMovil == movil.Movil.NumeroMovil);
+
                 // Buscar el chofer correspondiente en la lista de bomberos choferes
                 BomberoViweModel? bombero = bomberoChoferes.FirstOrDefault(b => b.NumeroLegajo == movil.Chofer.NumeroLegajo);
 
@@ -202,15 +184,16 @@
         _visible = false;
     }
 
-    private void HandleOk(MouseEventArgs e)
-    {
-        _visible = false;
-    }
-
     private void HandleCancelMovil(MouseEventArgs e)
     {
         _visible = false;
         switchMoviles = false;
+
+        movilSalidaView.NumeroFactura = null;
+        movilSalidaView.FechaFactura = null;
+        movilSalidaView.TipoConbustible = null;
+        movilSalidaView.CantidadLitros = null;
+        movilSalidaView.QuienLleno = null;
     }
 
     private void OnChangeSwitch()
@@ -218,9 +201,28 @@
         _visible = switchMoviles;
     }
 
+    private async Task<List<BomberoViweModel>> FiltrarBomberosChoferesAsync(List<BomberoViweModel> bomberos)
+    {
+        if (bomberos == null || !bomberos.Any())
+        {
+            await MessageService.ErrorAsync("No hay bomberos disponibles para filtrar.");
+            return new List<BomberoViweModel>(); // Retorna lista vacía para evitar errores
+        }
+
+        var choferes = bomberos.Where(b => b.EsChofer).ToList();
+
+        if (!choferes.Any())
+        {
+            await MessageService.WarningAsync("No se encontraron bomberos con el rol de chofer.");
+        }
+
+        return choferes;
+    }
+
+
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaViewModels)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(movilSalidaView)}");
     }
 
     private async void DeleteRowMovil(string numeroMovil)
@@ -233,7 +235,7 @@
             var chofer = movilToDelete.Chofer;
             var movil = movilToDelete.Movil;
 
-            var choferview = await BomberoService.ObtenerBomberoPorLegajoAsync(chofer.NumeroLegajo);
+            var choferview = BomberosViewModelTodos.FirstOrDefault(b => b.NumeroLegajo == movilSalidaView.Chofer.NumeroLegajo);
 
             // Eliminar el móvil de la lista
             Model.Moviles.Remove(movilToDelete);
@@ -252,22 +254,21 @@
         }
         else
         {
-            // Manejar el caso en que no se encuentra el móvil
-            Console.WriteLine($"El móvil con número {numeroMovil} no fue encontrado.");
+            await MessageService.ErrorAsync($"El móvil con número {numeroMovil} no fue encontrado.");
         }
     }
-
 
     private async Task AgregarMovilSalida()
     {
         try
         {
-            Bombero? bomberoChofer = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(chofer);
-            Movil? Movilsalida = await VehiculoService.ObtenerMovilPorNumero(NumeroMovil);
+            Bombero? bomberoChofer = BomberosTodos.FirstOrDefault(b => b.NumeroLegajo == movilSalidaView.Chofer.NumeroLegajo);
+
+            Movil? Movilsalida = Moviles.FirstOrDefault(m => m.NumeroMovil == movilSalidaView.NumeroMovil);
 
             if (bomberoChofer == null || Movilsalida == null)
             {
-                message.Error("No se encontraron los datos ingresados");
+                await MessageService.ErrorAsync("No se encontraron los datos ingresados");
                 return;
             }
 
@@ -277,39 +278,39 @@
 
             // Crea el Objeto Movil Salida
             Movil_Salida m = new()
-                {
-                    Movil = Movilsalida,
-                    CargoCombustible = switchMoviles,
-                    NumeroFactura = movilSalidaViewModels.NumeroFactura,
-                    FechaFactura = movilSalidaViewModels.FechaFactura,
-                    TipoConbustible = movilSalidaViewModels.TipoConbustible,
-                    CantidadLitros = movilSalidaViewModels.CantidadLitros,
-                    QuienLleno = movilSalidaViewModels.QuienLleno,
-                    TelefonoQuienLleno = movilSalidaViewModels.TelefonoQuienLleno,
-                    KmLlegada = Model.KmLlegada,
-                    Chofer = bomberoChofer
-                };
+            {
+                Movil = Movilsalida,
+                CargoCombustible = switchMoviles,
+                NumeroFactura = movilSalidaView.NumeroFactura,
+                FechaFactura = movilSalidaView.FechaFactura,
+                TipoConbustible = movilSalidaView.TipoConbustible,
+                CantidadLitros = movilSalidaView.CantidadLitros,
+                QuienLleno = $"{movilSalidaView.QuienLleno.Apellido}, {movilSalidaView.QuienLleno.Nombre}",
+                TelefonoQuienLleno = movilSalidaView.TelefonoQuienLleno,
+                KmLlegada = movilSalidaView.KmLlegada,
+                Chofer = bomberoChofer
+            };
 
             // Añade el MovilSalida a la Salida
             Model.Moviles.Add(m);
 
             //Limpia las casillas
-            Model.Kilometraje = 0;
-            Model.KmLlegada = 0;
+            movilSalidaView.KmSalida = 0;
+            movilSalidaView.KmLlegada = 0;
             switchMoviles = false;
-            movilSalidaViewModels.NumeroFactura = null;
-            movilSalidaViewModels.FechaFactura = null;
-            movilSalidaViewModels.TipoConbustible = null;
-            movilSalidaViewModels.CantidadLitros = null;
-            movilSalidaViewModels.QuienLleno = null;
+            movilSalidaView.NumeroFactura = null;
+            movilSalidaView.FechaFactura = null;
+            movilSalidaView.TipoConbustible = null;
+            movilSalidaView.CantidadLitros = null;
+            movilSalidaView.QuienLleno = null;
 
             StateHasChanged(); // Notifica el Cambio y Actualiza
-            message.Success("Chofer agregado correctamente");
+            await MessageService.SuccessAsync("Movil añadido Correctamente");
         }
         catch (Exception e)
         {
             StateHasChanged();
-            message.Error(e.InnerException?.Message ?? e.Message, 5);
+            await MessageService.ErrorAsync(e.InnerException?.Message ?? e.Message, 5);
         }
     }
 }

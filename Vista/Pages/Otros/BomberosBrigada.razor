@@ -196,7 +196,7 @@
 
     public async Task OnInit()
     {
-        BomberosTodos = await BomberoService.GetAllBomberosAsync();
+        BomberosTodos = await BomberoService.ObtenerTodosLosBomberosViewModelAsync();
         BrigadaBomberos = await BrigadaService.ObtenerBomberosDeBrigadaAsync(BrigadaId);
         BomberosViewModel = MapearBrigada(BrigadaBomberos);
         BomberosSeleccionados = new();

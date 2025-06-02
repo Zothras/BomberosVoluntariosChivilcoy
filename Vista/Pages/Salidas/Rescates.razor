@@ -10,6 +10,7 @@
 @using Vista.Services;
 @inject ISalidaService SalidaService
 @inject IBomberoService BomberoService
+@inject IVehiculoService VehiculoService
 @inject INavigationInterception NavigationInterception
 
 @*Componentes Generales*@
@@ -64,7 +65,7 @@
                         <span style="background: #fa8c16; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">3</span>
                         Vehículos
                     </h3>
-                    <Vehiculos Model="@PersonaViewModel" />
+                    <Vehiculos Model="@PersonaViewModel" BomberosTodos="@BomberosTodos" Moviles="@MovilesTodos" />
                 </div>
             </div>
 
