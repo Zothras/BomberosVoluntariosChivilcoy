@@ -42,12 +42,7 @@ jobs:
       
       # Combinamos build y publish en un solo paso para optimizar
       - name: Build and publish
-        run: |
-          dotnet publish ${{ env.PROJECT_PATH }} \
-            --configuration Release \
-            --output ${{ env.PUBLISH_PATH }} \
-            --no-restore \
-            --verbosity minimal
+        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PUBLISH_PATH }} --no-restore --verbosity minimal
       
       # Optimización del artefacto - excluir archivos innecesarios
       - name: Clean publish folder
