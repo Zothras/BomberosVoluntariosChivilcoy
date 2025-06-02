@@ -1,45 +1,67 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 name: Build and deploy
-
 on:
   push:
     branches:
       - master
   workflow_dispatch:
 
+env:
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_PATH: 'Vista/Vista.csproj'
+  PUBLISH_PATH: './publish'
+
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
           include-prerelease: true
-
-      - name: Cache NuGet packages
+      
+      # Cache mejorado para incluir tanto packages como obj/bin
+      - name: Cache .NET dependencies
         uses: actions/cache@v4
         with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          path: |
+            ~/.nuget/packages
+            Vista/obj
+            Vista/bin
+          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
           restore-keys: |
-            ${{ runner.os }}-nuget
-
-      - name: Build with dotnet
-        run: dotnet build Vista/Vista.csproj --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish Vista/Vista.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
-
+            ${{ runner.os }}-dotnet-
+      
+      # Restore explícito para mejor control del cache
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+      # Combinamos build y publish en un solo paso para optimizar
+      - name: Build and publish
+        run: |
+          dotnet publish ${{ env.PROJECT_PATH }} \
+            --configuration Release \
+            --output ${{ env.PUBLISH_PATH }} \
+            --no-restore \
+            --verbosity minimal
+      
+      # Optimización del artefacto - excluir archivos innecesarios
+      - name: Clean publish folder
+        run: |
+          Remove-Item -Path "${{ env.PUBLISH_PATH }}/appsettings.Development.json" -ErrorAction SilentlyContinue
+          Remove-Item -Path "${{ env.PUBLISH_PATH }}/*.pdb" -ErrorAction SilentlyContinue
+        shell: powershell
+      
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{ env.PUBLISH_PATH }}
+          retention-days: 1  # Reducir retención para ahorrar espacio
 
   deploy:
     runs-on: windows-latest
@@ -47,18 +69,18 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-
+          path: ./app
+      
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3  # Versión más reciente
         with:
           app-name: 'bomberos'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E5412DC5FC7648B698D15A1D3A7910EF }}
-          package: .
+          package: ./app
