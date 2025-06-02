@@ -1,5 +1,6 @@
 ﻿@page "/Salidas"
 @using Data.Enums.Discriminadores
+@using Data.Enums.Salidas
 
 <style>
     .template {
@@ -190,9 +191,26 @@
             </Input>
         </FormItem>
         <FormItem Label="Tipo de Emergencia" Required>
-            <EnumSelect @bind-Value="@newSalida.TipoEmergencia" Placeholder="Seleccione un tipo de emergencia">
-            </EnumSelect>
+            <EnumSelect @bind-Value="@newSalida.Categoria" Placeholder="Seleccione un tipo de emergencia" />
         </FormItem>
+        @if (newSalida.Categoria == CategoriaEmergencia.Incendio)
+        {
+            <FormItem Label="Tipo de Incendio" Required>
+                <EnumSelect @bind-Value="@newSalida.TipoIncendio" Placeholder="Seleccione un tipo de incendio" />
+            </FormItem>
+        }
+        @if (newSalida.Categoria == CategoriaEmergencia.Rescate)
+        {
+            <FormItem Label="Tipo de Rescate" Required>
+                <EnumSelect @bind-Value="@newSalida.TipoRescate" Placeholder="Seleccione un tipo de rescate" />
+            </FormItem>
+        }
+        @if (newSalida.Categoria == CategoriaEmergencia.ServicioEspecial)
+        {
+            <FormItem Label="Tipo de Servicio Especial" Required>
+                <EnumSelect @bind-Value="@newSalida.TipoServicioEspecial" Placeholder="Seleccione un tipo de servicio especial" />
+            </FormItem>
+        }
     </Form>
 </Modal>
 
@@ -225,7 +243,13 @@
     {
         public int NumeroSalida { get; set; }
         public int Anio { get; set; }
+        public CategoriaEmergencia Categoria { get; set; }
         public TipoDeEmergencia TipoEmergencia { get; set; }
+
+        // Subtipo de Emergencia (si aplica)
+        public IncendioTipo? TipoIncendio { get; set; }
+        public RescateTipo? TipoRescate { get; set; }
+        public ServicioEspecialTipo? TipoServicioEspecial { get; set; }
     }
 
     protected override async Task OnInitializedAsync()
@@ -251,16 +275,18 @@
     private async Task VerAñadirSalida()
     {
         _modalAñadirVisible = true;
+        newSalida = new();
 
-        var resultado = await SalidaService.ObtenerUltimoNumeroParteDelAnioAsync(DateTime.Now.Year);
+        newSalida.Anio = DateTime.Now.Year;
+
+        var resultado = await SalidaService.ObtenerUltimoNumeroParteDelAnioAsync(newSalida.Anio);
 
         newSalida.NumeroSalida = resultado;
-        newSalida.Anio = DateTime.Now.Year;
     }
 
     private async Task AddSalida()
     {
-        if (string.IsNullOrWhiteSpace(newSalida.TipoEmergencia.ToString()))
+        if (string.IsNullOrWhiteSpace(newSalida.Categoria.ToString()))
         {
             await Message.Error("Debe seleccionar un tipo de emergencia.");
             return;
@@ -271,6 +297,89 @@
             await Message.Error("El número de parte debe ser mayor que cero.");
             return;
         }
+
+        if (newSalida.Anio <= 0)
+        {
+            await Message.Error("El año debe ser mayor que cero.");
+            return;
+        }
+
+        // Validar que se haya seleccionado un tipo de emergencia según la categoría
+        if (newSalida.Categoria == CategoriaEmergencia.Incendio && newSalida.TipoIncendio == null)
+        {
+            await Message.Error("Debe seleccionar un tipo de incendio.");
+            return;
+        }
+        if (newSalida.Categoria == CategoriaEmergencia.Rescate && newSalida.TipoRescate == null)
+        {
+            await Message.Error("Debe seleccionar un tipo de rescate.");
+            return;
+        }
+        if (newSalida.Categoria == CategoriaEmergencia.ServicioEspecial && newSalida.TipoServicioEspecial == null)
+        {
+            await Message.Error("Debe seleccionar un tipo de servicio especial.");
+            return;
+        }
+
+        // Dar valor al tipo de emergencia según la categoría
+        switch (newSalida.Categoria)
+        {
+            case CategoriaEmergencia.Incendio:
+                newSalida.TipoEmergencia = newSalida.TipoIncendio switch
+                {
+                    IncendioTipo.Vivienda => TipoDeEmergencia.IncendioVivienda,
+                    IncendioTipo.Comercio => TipoDeEmergencia.IncendioComercio,
+                    IncendioTipo.EstablecimientoEducativo => TipoDeEmergencia.IncendioEstablecimientoEducativo,
+                    IncendioTipo.EstablecimientoPublico => TipoDeEmergencia.IncendioEstablecimientoPublico,
+                    IncendioTipo.HospitalesYClinicas => TipoDeEmergencia.IncendioHospitalesYClinicas,
+                    IncendioTipo.Industria => TipoDeEmergencia.IncendioIndustria,
+                    IncendioTipo.Forestal => TipoDeEmergencia.IncendioForestal,
+                    IncendioTipo.Aeronaves => TipoDeEmergencia.IncendioAeronaves,
+                    IncendioTipo.Otro => TipoDeEmergencia.Incendio,
+                    _ => throw new InvalidOperationException("Tipo de incendio no reconocido.")
+                };
+                break;
+
+            case CategoriaEmergencia.Rescate:
+                newSalida.TipoEmergencia = newSalida.TipoRescate switch
+                {
+                    RescateTipo.Persona => TipoDeEmergencia.RescatePersona,
+                    RescateTipo.Animal => TipoDeEmergencia.RescateAnimal,
+                    _ => throw new InvalidOperationException("Tipo de rescate no reconocido.")
+                };
+                break;
+
+            case CategoriaEmergencia.ServicioEspecial:
+                newSalida.TipoEmergencia = newSalida.TipoServicioEspecial switch
+                {
+                    ServicioEspecialTipo.Representacion => TipoDeEmergencia.ServicioEspecialRepresentacion,
+                    ServicioEspecialTipo.Prevencion => TipoDeEmergencia.ServicioEspecialPrevencion,
+                    ServicioEspecialTipo.Capacitacion => TipoDeEmergencia.ServicioEspecialCapacitacion,
+                    ServicioEspecialTipo.ColocacionDriza => TipoDeEmergencia.ServicioEspecialColocacionDriza,
+                    ServicioEspecialTipo.SuministroAgua => TipoDeEmergencia.ServicioEspecialSuministroAgua,
+                    ServicioEspecialTipo.FalsaAlarma => TipoDeEmergencia.ServicioEspecialFalsaAlarma,
+                    ServicioEspecialTipo.RetiradoDeObito => TipoDeEmergencia.ServicioEspecialRetiradoDeObito,
+                    ServicioEspecialTipo.ColaboracionFuerzasSeguridad => TipoDeEmergencia.ServicioEspecialColaboracionFuerzasSeguridad,
+                    _ => throw new InvalidOperationException("Tipo de servicio especial no reconocido.")
+                };
+                break;
+
+            case CategoriaEmergencia.Accidente:
+                newSalida.TipoEmergencia = TipoDeEmergencia.Accidente;
+                break;
+
+            case CategoriaEmergencia.MaterialPeligroso:
+                newSalida.TipoEmergencia = TipoDeEmergencia.MaterialPeligroso;
+                break;
+
+            case CategoriaEmergencia.FactorClimatico:
+                newSalida.TipoEmergencia = TipoDeEmergencia.FactorClimatico;
+                break;
+
+            default:
+                throw new InvalidOperationException("Categoría no reconocida.");
+        }
+
 
         if (RutasEmergencia.TryGetValue(newSalida.TipoEmergencia, out var ruta))
         {
