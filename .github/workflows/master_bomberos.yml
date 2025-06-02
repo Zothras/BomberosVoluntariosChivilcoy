@@ -1,6 +1,6 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# 📄 Documentación: https://github.com/Azure/webapps-deploy
 name: Build and deploy
+
 on:
   push:
     branches:
@@ -15,65 +15,55 @@ env:
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up .NET Core
+      - name: 📥 Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: 🔧 Configurar .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           include-prerelease: true
-      
-      # Cache mejorado para incluir tanto packages como obj/bin
-      - name: Cache .NET dependencies
+
+      - name: 📦 Cache de paquetes NuGet
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.nuget/packages
-            Vista/obj
-            Vista/bin
-          key: ${{ runner.os }}-dotnet-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-dotnet-
-      
-      # Restore explícito para mejor control del cache
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_PATH }}
-      
-      # Combinamos build y publish en un solo paso para optimizar
-      - name: Build and publish
-        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PUBLISH_PATH }} --no-restore --verbosity minimal
-      
-      # Optimización del artefacto - excluir archivos innecesarios
-      - name: Clean publish folder
-        run: |
-          Remove-Item -Path "${{ env.PUBLISH_PATH }}/appsettings.Development.json" -ErrorAction SilentlyContinue
-          Remove-Item -Path "${{ env.PUBLISH_PATH }}/*.pdb" -ErrorAction SilentlyContinue
-        shell: powershell
-      
-      - name: Upload artifact for deployment job
+            ${{ runner.os }}-nuget
+
+      - name: 🏗️ Compilar el proyecto
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release
+
+      - name: 🚀 Publicar el proyecto
+        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.PUBLISH_PATH }}
+
+      - name: 📤 Subir artefacto para despliegue
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
           path: ${{ env.PUBLISH_PATH }}
-          retention-days: 1  # Reducir retención para ahorrar espacio
+          retention-days: 1
 
   deploy:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'Producción'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
     steps:
-      - name: Download artifact from build job
+      - name: 📥 Descargar artefacto del trabajo de compilación
         uses: actions/download-artifact@v4
         with:
           name: .net-app
           path: ./app
-      
-      - name: Deploy to Azure Web App
+
+      - name: ☁️ Desplegar en Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3  # Versión más reciente
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'bomberos'
           slot-name: 'Production'
