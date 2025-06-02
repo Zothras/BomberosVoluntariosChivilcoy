@@ -1,8 +1,10 @@
-﻿@*@using Vista.Data.ViewModels;
+﻿@using Vista.Data.ViewModels;
 @using Vista.Data.ViewModels.Personal;
+@using Vista.Data.Models.Salidas;
+@using Vista.Data.Models.Personas;
 @using System.Linq;
 
-@inject IMessageService message
+@inject IMessageService MessageService
 
 <div class="slick-contenedor @animationClass">
     <h6>Datos del solicitante</h6>
@@ -51,13 +53,13 @@
         {
             <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
                 <label class="inpt-cont--lbl">Agregar otro</label>
-                <Button OnClick="()=>visibleDamnificados = true">
+                <Button OnClick="() => visibleDamnificados = true">
                     <i class="fa-solid fa-user-plus"></i>
                 </Button>
             </div>
             <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
                 <label class="inpt-cont--lbl">Ver damnificados</label>
-                <Button OnClick="()=>visibleVerDamnificados = true">
+                <Button OnClick="() => visibleVerDamnificados = true">
                     <i class="fa-solid fa-users-gear"></i>
                 </Button>
             </div>
@@ -76,7 +78,7 @@
                 <PropertyColumn Property="d => d.Estado"></PropertyColumn>
                 <ActionColumn Title="Acciones">
                     <Popconfirm Title="¿Quieres borrar este damnificado?"
-                                OnConfirm="@(() => deleteRowDamnificados(Damnificados.Dni))"
+                                OnConfirm="@(() => deleteRowDamnificados(Damnificados.Documento))"
                                 OkText="Si"
                                 CancelText="No"
                                 Style="display: flex; justify-content: center; align-items: center;">
@@ -133,7 +135,6 @@
     [Parameter] public SalidasViewModels Model { get; set; }
     [Parameter] public string animationClass { get; set; }
 
-
     private DamnificadoViewModels damnificado = new DamnificadoViewModels();
 
     private bool visibleDamnificados = false;
@@ -146,7 +147,7 @@
         base.OnInitialized();
         if (Model.Damnificados == null)
         {
-            Model.Damnificados = new List<Damnificado>();
+            Model.Damnificados = new List<Damnificado_Salida>();
         }
         switchValue = Model.Damnificados.Any();
     }
@@ -176,39 +177,40 @@
         visibleVerDamnificados = false;
     }
 
-    private void deleteRowDamnificados(string Dni)
+    private void deleteRowDamnificados(int DNI)
     {
-        Model.Damnificados = Model.Damnificados.Where(m => m.Dni != Dni).ToList();
+        Model.Damnificados = Model.Damnificados.Where(m => m.Documento != DNI).ToList();
     }
 
-    private void AgregarDamnificado()
+    private async Task AgregarDamnificado()
     {
         try
         {
-            Damnificado dp = new()
-                {
-                    Nombre = damnificado.Nombre,
-                    Apellido = damnificado.Apellido,
-                    Dni = damnificado.Dni,
-                    Sexo = damnificado.Sexo,
-                    LugarDeNacimiento = damnificado.LugarDeNacimiento,
-                    Edad = damnificado.Edad,
-                    Estado = damnificado.Estado,
-                };
+            Damnificado_Salida dp = new()
+            {
+                Nombre = damnificado.Nombre,
+                Apellido = damnificado.Apellido,
+                Documento = damnificado.Dni,
+                Sexo = damnificado.Sexo,
+                LugarNacimiento = damnificado.LugarDeNacimiento,
+                Edad = damnificado.Edad,
+                Estado = damnificado.Estado,
+            };
+
             Model.Damnificados.Add(dp);
             damnificado = new DamnificadoViewModels();
             visibleDamnificados = false;
+            await MessageService.SuccessAsync("Damnificado agregado correctamente");
             StateHasChanged();
-            message.Success("Damnificado agregado correctamente");
         }
         catch (Exception e)
         {
             StateHasChanged();
+
             if (e.InnerException != null)
-                message.Error(e.InnerException.Message, 5);
+                await MessageService.ErrorAsync(e.InnerException.Message, 5);
             else
-                message.Error(e.Message, 5);
+                await MessageService.ErrorAsync(e.Message, 5);
         }
     }
 }
-*@

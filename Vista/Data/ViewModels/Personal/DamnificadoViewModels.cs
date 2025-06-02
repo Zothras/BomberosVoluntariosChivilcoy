@@ -27,7 +27,7 @@ namespace Vista.Data.ViewModels.Personal
             }
         }
         [Required, StringLength(255)]
-        public string Dni { get; set; }
+        public int Dni { get; set; }
         public TipoSexo Sexo { get; set; }
         [Required, StringLength(255)]
         public string LugarDeNacimiento { get; set; }
