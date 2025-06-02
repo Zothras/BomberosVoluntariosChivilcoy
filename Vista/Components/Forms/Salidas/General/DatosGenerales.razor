@@ -9,36 +9,28 @@
 @inject GeorefService GeorefService
 @inject ISalidaService SalidaService
 
-<div class="slick-contenedor @animationClass">
-    <h6>Datos Principales</h6>
-    <div class="inpt-cont">
-        <label class="inpt-cont--lbl"></label>
-        @if (Model.TimeLlegada < Model.TimeSalida)
-        {
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Fechas (salida y llegada)</label>
-                <RangePicker TValue="DateTime[]" Disabled="new bool[] { false, true }"
-                             @bind-Value="@FechaRange" />
-            </div>
-        }
-        else
-        {
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Fecha</label>
-                <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@Model.FechaSalida" />
-            </div>
-        }
-    </div>
+<Form Model="Model">
+    @if (Model.TimeLlegada < Model.TimeSalida)
+    {
+        <FormItem Label="Fechas (salida y llegada)" Required>
+            <RangePicker TValue="DateTime[]" Disabled="new bool[] { false, true }"
+                         @bind-Value="@FechaRange" />
+        </FormItem>
+    }
+    else
+    {
+        <FormItem Label="Fecha" Required>
+            <DatePicker TValue="DateTime" Picker="@DatePickerType.Date" @bind-Value="@Model.FechaSalida" />
+        </FormItem>
+    }
 
-    <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Tipo zona</label>
+    <FormItem Label="Tipo Zona" Required>
         <EnumSelect TEnum="TipoZona" @bind-Value="@Model.TipoZona" />
-    </div>
+    </FormItem>
 
     @if (Model.TipoZona == TipoZona.Urbana)
     {
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Dirección</label>
+        <FormItem Label="Dirección" Required>
             @if (isApiAvailable)
             {
                 <Select TItem="Direccion"
@@ -56,94 +48,91 @@
             {
                 <Input @bind-Value="@Model.CalleORuta" />
             }
-        </div>
+        </FormItem>
 
-        <div class="inpt-cont-inline">
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Latitud</label>
+        <FormItem Label="Latitud">
+            @if(isApiAvailable)
+            {
                 <Input @bind-Value="@Model.Latitud" Disabled="true" />
-            </div>
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Longitud</label>
+            }
+            else
+            {
+                <Input @bind-Value="@Model.Latitud" />
+            }
+        </FormItem>
+
+        <FormItem Label="Longitud">
+            @if(isApiAvailable)
+            {
                 <Input @bind-Value="@Model.Longitud" Disabled="true" />
-            </div>
-        </div>
+            }
+            else
+            {
+                <Input @bind-Value="@Model.Longitud" />
+            }
+        </FormItem>
     }
     else
     {
-        <div class="inpt-cont-inline">
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Latitud</label>
-                <Input @bind-Value="@Model.Latitud" />
-            </div>
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Longitud</label>
-                <Input @bind-Value="@Model.Longitud" />
-            </div>
-        </div>
+        <FormItem Label="Latitud" Required>
+            <Input @bind-Value="@Model.Latitud" />
+        </FormItem>
+
+        <FormItem Label="Longitud" Required>
+            <Input @bind-Value="@Model.Longitud" />
+        </FormItem>
     }
 
     @if (Model.Latitud != 0.0 && Model.Longitud != 0.0)
     {
         <div class="map-container">
             <iframe width="300"
-                    height="300"
-                    style="border:0;"
-                    src="@GetOpenStreetMapUrl(Model.Latitud, Model.Longitud)"
-                    frameborder="0" allowfullscreen></iframe>
+                height="300"
+                style="border:0;"
+                src="@GetOpenStreetMapUrl(Model.Latitud, Model.Longitud)"
+                frameborder="0" allowfullscreen></iframe>
         </div>
     }
 
-    <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Región Cuartel</label>
-        <EnumSelect TEnum="CuartelRegionChivilcoy?" @bind-Value="@Model.CuartelRegion" DefaultActiveFirstOption="false" />
-    </div>
+    <FormItem Label="Región Cuartel" Required>
+        <EnumSelect TEnum="CuartelRegionChivilcoy" @bind-Value="@Model.CuartelRegion" DefaultActiveFirstOption="false" />
+    </FormItem>
 
-    <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Descripcion</label>
+    <FormItem Label="Descripción" Required>
         <TextArea Placeholder="Descripcion" @bind-Value="@Model.Descripcion" />
-    </div>
+    </FormItem>
 
     @if (!esSoloDireccion && MostrarOpcionDepartamento)
     {
-        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
-            <label class="inpt-cont--lbl">¿Se encuentra en un departamento?</label>
+        <FormItem Label="¿Se encuentra en un Departamento?">
             <Switch @bind-Checked="@esDepartamento" Style="width: 10px!important;" />
-        </div>
+        </FormItem>
     }
 
     @if (esDepartamento)
     {
-        <div class="inpt-cont-inline">
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Numero de Piso</label>
-                <Input @bind-Value="@Model.PisoNumero" />
-            </div>
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Departamento</label>
-                <Input @bind-Value="@Model.Depto" />
-            </div>
-        </div>
+        <FormItem Label="Número de Piso">
+            <Input @bind-Value="@Model.PisoNumero" />
+        </FormItem>
+        <FormItem Label="Número de Departamento">
+            <Input @bind-Value="@Model.Depto" />
+        </FormItem>
     }
 
-    <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
-        <label class="inpt-cont--lbl">¿Se convoca a la guardia ?</label>
+    <FormItem Label="¿Se convoca a la guardia?">
         <Switch @bind-Checked="@SeConvocoGuardia" Style="width: 10px!important;" />
-    </div>
+    </FormItem>
 
     @if (SeConvocoGuardia)
     {
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Selecione la Guardia</label>
+        <FormItem Label="Seleccióne la Guardia">
             <EnumSelect TEnum="Guardia" @bind-Value="@Model.GuardiaSelecionada" />
-        </div>
+        </FormItem>
     }
-
-</div>
+</Form>
 
 @code {
     [Parameter] public SalidasViewModels Model { get; set; }
-    [Parameter] public string animationClass { get; set; }
     [Parameter] public bool esSoloDireccion { get; set; } = false;
     [Parameter] public bool MostrarOpcionDepartamento { get; set; } = true;
 

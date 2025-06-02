@@ -1,39 +1,32 @@
 ﻿@using Vista.Data.ViewModels
 @using AntDesign
 
-<h6>Seguro del lugar</h6>
+<Form Model="Model">
+    @if (!EsObligatorio)
+    {
+        <FormItem Label="¿El lugar tiene seguro?">
+            <Switch @bind-Checked="@TieneSeguro" Style="width: 10px!important;" />
+        </FormItem>
+    }
 
-@if (!EsObligatorio)
-{
-    <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
-        <label class="inpt-cont--lbl">¿El lugar tiene seguro?</label>
-        <Switch @bind-Checked="@TieneSeguro" Style="width: 10px!important;" />
-    </div>
-}
-
-@if (EsObligatorio || TieneSeguro)
-{
-    <div class="slick-contenedor @animationClass">
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Compañía aseguradora del establecimiento</label>
+    @if (EsObligatorio || TieneSeguro)
+    {
+        <FormItem Label="Compañía aseguradora del establecimiento">
             <Input @bind-Value="@Model.CompaniaAseguradora" />
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Número de póliza</label>
+        </FormItem>
+
+        <FormItem Label="Número de póliza">
             <Input @bind-Value="@Model.NumeroPoliza" />
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Fecha de vencimiento</label>
+        </FormItem>
+
+        <FormItem Label="Fecha de Vencimiento">
             <DatePicker TValue="DateTime?" ShowTime="true" @bind-Value="@Model.FechaVencimineto" />
-        </div>
-    </div>
-}
+        </FormItem>
+    }
+</Form>
 
 @code {
     [Parameter] public SalidasViewModels Model { get; set; }
-    [Parameter] public string animationClass { get; set; }
-    
-
     [Parameter] public bool EsObligatorio { get; set; } = false;
 
     private bool TieneSeguro { get; set; }

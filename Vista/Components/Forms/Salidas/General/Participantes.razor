@@ -6,130 +6,115 @@
 
 @inject IMessageService MessageService
 
-<div class="slick-contenedor @animationClass">
-    <h6>Datos del solicitante</h6>
+<Form Model="Model">
+    <FormItem Label="Nombre del Solicitante">
+        <Input @bind-Value="@Model.NombreSolicitante" />
+    </FormItem>
 
+    <FormItem Label="Apellido del Solicitante">
+        <Input @bind-Value="@Model.ApellidoSolicitante" />
+    </FormItem>
+
+    <FormItem Label="Documento del Solicitante">
+        <Input @bind-Value="@Model.DniSolicitante" />
+    </FormItem>
+
+    <FormItem Label="Telefono del Solicitante">
+        <Input @bind-Value="@Model.TelefonoSolicitante" />
+    </FormItem>
+
+    <FormItem Label="Nómbre del Receptor">
+        <Input @bind-Value="@Model.NombreReceptor" />
+    </FormItem>
+
+    <FormItem Label="Apellido del Receptor">
+        <Input @bind-Value="@Model.ApellidoReceptor" />
+    </FormItem>
+
+    <FormItem Label="¿Hubo damnificados?">
+        <Switch Value="@switchValue" ValueChanged="@UpdateSwitchDamificados" Style="width: 10px!important;" />
+    </FormItem>
+
+    @if (switchValue)
+    {
+        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
+            <label class="inpt-cont--lbl">Agregar otro</label>
+            <Button OnClick="() => visibleDamnificados = true">
+                <i class="fa-solid fa-user-plus"></i>
+            </Button>
+        </div>
+        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
+            <label class="inpt-cont--lbl">Ver damnificados</label>
+            <Button OnClick="() => visibleVerDamnificados = true">
+                <i class="fa-solid fa-users-gear"></i>
+            </Button>
+        </div>
+    }
+</Form>
+
+<Modal Footer="null" Title="@("Damnificados")"
+       Visible="@visibleVerDamnificados"
+       OnOk="@HandleOkD"
+       OnCancel="@HandleCancelVD">
+    <div class="inpt-cont">
+        <Table Context="Damnificados" DataSource="Model.Damnificados" Bordered>
+            <PropertyColumn Property="d => d.Nombre"></PropertyColumn>
+            <PropertyColumn Property="d => d.Apellido"></PropertyColumn>
+            <PropertyColumn Property="d => d.Edad"></PropertyColumn>
+            <PropertyColumn Property="d => d.Estado"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="¿Quieres borrar este damnificado?"
+                            OnConfirm="@(() => deleteRowDamnificados(Damnificados.Documento))"
+                            OkText="Si"
+                            CancelText="No"
+                            Style="display: flex; justify-content: center; align-items: center;">
+                    <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
+                </Popconfirm>
+            </ActionColumn>
+        </Table>
+    </div>
+</Modal>
+
+<Modal Footer="null" Title="@("Datos del damnificado")"
+       Visible="@visibleDamnificados"
+       OnOk="@HandleOkD"
+       OnCancel="@HandleCancelD">
     <div class="inpt-cont-inline">
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Nombre</label>
-            <Input @bind-Value="@Model.NombreSolicitante" />
+            <Input @bind-Value="@damnificado.Nombre" />
         </div>
         <div class="inpt-cont">
             <label class="inpt-cont--lbl">Apellido</label>
-            <Input @bind-Value="@Model.ApellidoSolicitante" />
+            <Input @bind-Value="@damnificado.Apellido" />
         </div>
     </div>
     <div class="inpt-cont">
         <label class="inpt-cont--lbl">Documento</label>
-        <Input @bind-Value="@Model.DniSolicitante" />
+        <Input @bind-Value="@damnificado.Dni" />
     </div>
     <div class="inpt-cont">
-        <label class="inpt-cont--lbl">Telefono</label>
-        <Input @bind-Value="@Model.TelefonoSolicitante" />
+        <label class="inpt-cont--lbl">Lugar de nacimiento</label>
+        <Input @bind-Value="@damnificado.LugarDeNacimiento" />
     </div>
-
-    <div class="slick-contenedor @animationClass">
-        <h6>Datos del recepcionista</h6>
-        <div class="inpt-cont-inline">
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Nombre</label>
-                <Input @bind-Value="@Model.NombreReceptor" />
-            </div>
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Apellido</label>
-                <Input @bind-Value="@Model.ApellidoReceptor" />
-            </div>
-        </div>
-    </div>
-
-    <h6>Datos de damnificados</h6>
-
     <div class="inpt-cont-inline">
-        <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 80px;">
-            <label class="inpt-cont--lbl">¿Hubo damnificados?</label>
-            <Switch Value="@switchValue" ValueChanged="@UpdateSwitchDamificados" Style="width: 10px!important;" />
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Sexo</label>
+            <Input @bind-Value="@damnificado.Sexo" />
         </div>
-        @if (switchValue)
-        {
-            <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
-                <label class="inpt-cont--lbl">Agregar otro</label>
-                <Button OnClick="() => visibleDamnificados = true">
-                    <i class="fa-solid fa-user-plus"></i>
-                </Button>
-            </div>
-            <div class="inpt-cont" style="display: flex; flex-direction: column; justify-content: space-around; min-width: 90px;">
-                <label class="inpt-cont--lbl">Ver damnificados</label>
-                <Button OnClick="() => visibleVerDamnificados = true">
-                    <i class="fa-solid fa-users-gear"></i>
-                </Button>
-            </div>
-        }
+        <div class="inpt-cont">
+            <label class="inpt-cont--lbl">Edad</label>
+            <Input @bind-Value="@damnificado.Edad" />
+        </div>
     </div>
-
-    <Modal Footer="null" Title="@("Damnificados")"
-           Visible="@visibleVerDamnificados"
-           OnOk="@HandleOkD"
-           OnCancel="@HandleCancelVD">
-        <div class="inpt-cont">
-            <Table Context="Damnificados" DataSource="Model.Damnificados" Bordered>
-                <PropertyColumn Property="d => d.Nombre"></PropertyColumn>
-                <PropertyColumn Property="d => d.Apellido"></PropertyColumn>
-                <PropertyColumn Property="d => d.Edad"></PropertyColumn>
-                <PropertyColumn Property="d => d.Estado"></PropertyColumn>
-                <ActionColumn Title="Acciones">
-                    <Popconfirm Title="¿Quieres borrar este damnificado?"
-                                OnConfirm="@(() => deleteRowDamnificados(Damnificados.Documento))"
-                                OkText="Si"
-                                CancelText="No"
-                                Style="display: flex; justify-content: center; align-items: center;">
-                        <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
-                    </Popconfirm>
-                </ActionColumn>
-            </Table>
-        </div>
-    </Modal>
-
-    <Modal Footer="null" Title="@("Datos del damnificado")"
-           Visible="@visibleDamnificados"
-           OnOk="@HandleOkD"
-           OnCancel="@HandleCancelD">
-        <div class="inpt-cont-inline">
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Nombre</label>
-                <Input @bind-Value="@damnificado.Nombre" />
-            </div>
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Apellido</label>
-                <Input @bind-Value="@damnificado.Apellido" />
-            </div>
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Documento</label>
-            <Input @bind-Value="@damnificado.Dni" />
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Lugar de nacimiento</label>
-            <Input @bind-Value="@damnificado.LugarDeNacimiento" />
-        </div>
-        <div class="inpt-cont-inline">
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Sexo</label>
-                <Input @bind-Value="@damnificado.Sexo" />
-            </div>
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Edad</label>
-                <Input @bind-Value="@damnificado.Edad" />
-            </div>
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Estado</label>
-            <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
-        </div>
-        <div class="inpt-cont">
-            <Button Class="boton_p" OnClick="@AgregarDamnificado">Agregar damnificado</Button>
-        </div>
-    </Modal>
-</div>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Estado</label>
+        <EnumSelect TEnum="TipoDamnificado" @bind-Value="@damnificado.Estado" />
+    </div>
+    <div class="inpt-cont">
+        <Button Class="boton_p" OnClick="@AgregarDamnificado">Agregar damnificado</Button>
+    </div>
+</Modal>
 
 @code {
     [Parameter] public SalidasViewModels Model { get; set; }
@@ -197,8 +182,21 @@
                 Estado = damnificado.Estado,
             };
 
+            if (Model.Damnificados == null)
+            {
+                Model.Damnificados = new List<Damnificado_Salida>();
+            }
+
+            if (Model.Damnificados.Any(d => d.Documento == dp.Documento))
+            {
+                await MessageService.ErrorAsync("Ya existe un damnificado con ese documento", 5);
+                return;
+            }
+
             Model.Damnificados.Add(dp);
+
             damnificado = new DamnificadoViewModels();
+
             visibleDamnificados = false;
             await MessageService.SuccessAsync("Damnificado agregado correctamente");
             StateHasChanged();

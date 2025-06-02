@@ -222,6 +222,9 @@
     private List<SalidaViewModelTable> SalidaViewModels = new();
     private SalidaCrearViewModel newSalida = new();
 
+    // Variable del Selector del Anio
+    int _anioSeleccionado = DateTime.Now.Year;
+
     // Variables de Tamaño de la Tabla
     int _pageIndex = 1;
     int _pageSize = 5;
@@ -257,7 +260,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await ObtenerSalidas();
+        await ObtenerSalidas(_anioSeleccionado);
     }
 
     private async Task BorrarSalida(int id)
@@ -386,19 +389,21 @@
 
         if (RutasEmergencia.TryGetValue(newSalida.TipoEmergencia, out var ruta))
         {
+            // Convertimos el enum a su valor entero
+            var tipoRescateInt = (int)newSalida.TipoRescate;
+            ruta += $"/{tipoRescateInt}/{newSalida.Anio}/{newSalida.NumeroSalida}";
+
             NavigationManager?.NavigateTo(ruta);
         }
         else
         {
             await MessageService.ErrorAsync("Tipo de emergencia no válido.");
         }
-
     }
 
-
-    private async Task ObtenerSalidas()
+    private async Task ObtenerSalidas(int anio)
     {
-        var salidas = await SalidaService.ObtenerTodasLasSalidasAsync();
+        var salidas = await SalidaService.ObtenerSalidasPorAnioAsync(anio);
 
         SalidaViewModels = salidas.Select(s => new SalidaViewModelTable
         {
@@ -416,14 +421,14 @@
     }
 
     // Diccionario de rutas según el tipo de emergencia
-    public static readonly Dictionary<TipoDeEmergencia, string> RutasEmergencia = new()
+    public Dictionary<TipoDeEmergencia, string> RutasEmergencia = new()
     {
             { TipoDeEmergencia.Accidente, "/salidas/accidentes" },
             { TipoDeEmergencia.FactorClimatico, "/salidas/factores-climaticos" },
             { TipoDeEmergencia.MaterialPeligroso, "/salidas/materiales-peligrosos" },
             { TipoDeEmergencia.ServicioEspecialRepresentacion, "/salidas/serviciosRepresentacion" },
-            { TipoDeEmergencia.RescateAnimal, "/salidas/rescates-animal" },
-            { TipoDeEmergencia.RescatePersona, "/salidas/rescates-persona" },
+            { TipoDeEmergencia.RescateAnimal, "/salidas/rescate" },
+            { TipoDeEmergencia.RescatePersona, "/salidas/rescate" },
             { TipoDeEmergencia.IncendioComercio, "/salidas/incendios-comercio" },
             { TipoDeEmergencia.IncendioEstablecimientoEducativo, "/salidas/incendios-establecimientoEducativo" },
             { TipoDeEmergencia.IncendioEstablecimientoPublico, "/salidas/incendios-establecimientoPublico" },

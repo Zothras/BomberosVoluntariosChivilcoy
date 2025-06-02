@@ -24,6 +24,8 @@ namespace Vista.Services
 
         Task<List<Salida>> ObtenerTodasLasSalidasAsync();
 
+        Task<List<Salida>> ObtenerSalidasPorAnioAsync(int anio);
+
         Task<Salida?> ObtenerSalidaPorIdAsync(int id);
 
         Task<bool> BorrarSalidaAsync(int id);
@@ -147,6 +149,13 @@ namespace Vista.Services
         public async Task<List<Salida>> ObtenerTodasLasSalidasAsync()
         {
             return await _context.Salidas.ToListAsync();
+        }
+
+        public async Task<List<Salida>> ObtenerSalidasPorAnioAsync(int anio)
+        {
+            return await _context.Salidas
+                .Where(s => s.AnioNumeroParte == anio)
+                .ToListAsync();
         }
 
         public async Task<Salida?> ObtenerSalidaPorIdAsync(int id)

@@ -1,0 +1,173 @@
+﻿@inject IMessageService message
+@inject NavigationManager navigationManager
+@page "/salidas/rescate/{TipoRescate:int}/{AnioSalida:int}/{NumeroSalida:int}"
+
+@using Vista.Data.ViewModels.Personal;
+@using Vista.Data.ViewModels.Rescates;
+@using Vista.Data.Enums.Salidas;
+
+@*Servicios Utilizados*@
+@using Vista.Services;
+@inject ISalidaService SalidaService
+@inject IBomberoService BomberoService
+@inject INavigationInterception NavigationInterception
+
+@*Componentes Generales*@
+@using Vista.Components.Forms.Salidas.General;
+
+<Form Model="@PersonaViewModel"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Style="width: 100%; height: 100%; overflow: auto;">
+
+    <div style="max-width: 1400px; margin: 0 auto; padding: 2rem 1rem;">
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 2px solid #f0f0f0;">
+            <h1 style="margin: 0; color: #1890ff; font-size: 2.5rem; font-weight: 600;">
+                RESCATE PERSONA
+            </h1>
+            <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 1.1rem;">
+                Complete todos los campos requeridos para registrar la salida
+            </p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+
+            <!-- Datos Generales Section -->
+            <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #1890ff;">
+                <h3 style="margin: 0 0 1.5rem 0; color: #1890ff; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="background: #1890ff; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">1</span>
+                    Datos Generales
+                </h3>
+                <DatosGenerales Model="@PersonaViewModel" />
+            </div>
+
+            <!-- Two Column Layout for Medium Sections -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 2rem;">
+
+                <!-- Participantes Section -->
+                <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #52c41a;">
+                    <h3 style="margin: 0 0 1.5rem 0; color: #52c41a; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="background: #52c41a; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">2</span>
+                        Participantes
+                    </h3>
+                    <Participantes Model="@PersonaViewModel" />
+                </div>
+
+                <!-- Vehículos Section -->
+                <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #fa8c16;">
+                    <h3 style="margin: 0 0 1.5rem 0; color: #fa8c16; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="background: #fa8c16; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">3</span>
+                        Vehículos
+                    </h3>
+                    <Vehiculos Model="@PersonaViewModel" />
+                </div>
+            </div>
+
+            <!-- Personal Section -->
+            <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #722ed1;">
+                <h3 style="margin: 0 0 1.5rem 0; color: #722ed1; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="background: #722ed1; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">4</span>
+                    Personal
+                </h3>
+                <Personal Model="@PersonaViewModel" />
+            </div>
+
+            <!-- Tipo de Servicio Section -->
+            <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #eb2f96;">
+                <h3 style="margin: 0 0 1.5rem 0; color: #eb2f96; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="background: #eb2f96; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">5</span>
+                    Tipo de Servicio
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <!-- Tipo Servicio -->
+                    <div style="background: #fafafa; padding: 1.5rem; border-radius: 8px; border: 1px solid #e8e8e8;">
+                        <FormItem>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">
+                                Tipo Servicio Salida
+                            </label>
+                            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@PersonaViewModel.TipoServicio"
+                                        Style="width: 100%;" />
+                        </FormItem>
+                    </div>
+
+                    <!-- Tipo Lugar Rescate -->
+                    <div style="background: #fafafa; padding: 1.5rem; border-radius: 8px; border: 1px solid #e8e8e8;">
+                        <FormItem>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">
+                                Tipo Lugar de Rescate
+                            </label>
+                            <EnumSelect TEnum="TipoLugarRescatePersona" @bind-Value="@PersonaViewModel.TipoRescatePersona"
+                                        Style="width: 100%;" />
+                        </FormItem>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Section -->
+            <div style="background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%); border-radius: 12px; padding: 2rem; text-align: center; margin-top: 1rem;">
+                <FormItem WrapperColSpan="24" Style="margin: 0;">
+                    <Button HtmlType="submit"
+                            Size="ButtonSize.Large"
+                            Style="background: white; color: #1890ff; border: none; font-weight: 600; padding: 0.75rem 3rem; height: auto; font-size: 1.1rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;">
+                        <Icon Type="printer" Style="margin-right: 0.5rem;" />
+                        Imprimir Salida
+                    </Button>
+                </FormItem>
+            </div>
+        </div>
+
+        @if (_visible1 == true)
+        {
+            <ImprimirModal AnioNumeroParte="@ImprimirAnio" NumeroParte="@ImprimirNumeroParte" />
+        }
+    </div>
+</Form>
+
+<style>
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .contenedor {
+            padding: 1rem 0.5rem !important;
+        }
+
+        h1 {
+            font-size: 2rem !important;
+        }
+
+        [style*="grid-template-columns: repeat(auto-fit, minmax(500px, 1fr))"] {
+            grid-template-columns: 1fr !important;
+        }
+
+        [style*="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        [style*="padding: 2rem"] {
+            padding: 1rem !important;
+        }
+
+        h3 {
+            font-size: 1.2rem !important;
+        }
+    }
+
+    /* Hover effects */
+    [style*="box-shadow: 0 4px 12px rgba(0,0,0,0.08)"]:hover {
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }
+
+    button[style*="background: white"]:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
+    }
+</style>

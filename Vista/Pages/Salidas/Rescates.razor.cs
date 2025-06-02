@@ -1,56 +1,27 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using System.Text.Json;
 using Vista.Data.Models.Personas.Personal;
 using Vista.Data.Models.Salidas.Planillas;
 using Vista.Data.ViewModels.Rescates;
+using Vista.Services;
+using AntDesign;
 
 namespace Vista.Pages.Salidas
 {
-    public partial class RescatesPersona
+    public partial class Rescates
     {
         private RescatePersonaViewModels PersonaViewModel = new();
 
-        //Steps
+        // Variable para el Numero de Parte
+        [Parameter]
+        public int? NumeroSalida { get; set; } = 0;
 
-        public int current { get; set; } = 0;//Ubicacion del Step
-        private string animationClass = "";
+        [Parameter]
+        public int? AnioSalida { get; set; } = 0;
 
-        public class StepItem
-        {
-            public string? Title { get; set; }
-            public string? Content { get; set; }
-        }
-
-        public StepItem[] steps =
-        {
-        new StepItem {Title = " ", Content = ""}, /* Datos generales */
-        new StepItem {Title = " ", Content = ""}, /* Solicitante / Receptor / Damnificado */
-        new StepItem {Title = " ", Content = ""}, /* Vehiculos */
-        new StepItem {Title = " ", Content = ""}, /* Personal */
-        new StepItem {Title = " ", Content = ""}  /* Salida */
-        };
-
-        private void ToggleAnimationD()
-        {
-            animationClass = "slick-contenedor-D";
-        }
-
-        private void ToggleAnimationI()
-        {
-            animationClass = "slick-contenedor-I";
-        }
-
-        void OnPreClick()
-        {
-            current--;
-            ToggleAnimationI();
-        }
-
-        void OnNextClick()
-        {
-            current++;
-            ToggleAnimationD();
-        }
+        [Parameter]
+        public int TipoRescate { get; set; }
 
         //Carga de Salida
 
@@ -151,6 +122,16 @@ namespace Vista.Pages.Salidas
         private void Init()
         {
             PersonaViewModel = new();
+
+            if (NumeroSalida.HasValue && NumeroSalida > 0)
+            {
+                PersonaViewModel.NumeroParte = NumeroSalida.Value;
+            }
+
+            if (AnioSalida.HasValue && AnioSalida > 0)
+            {
+                PersonaViewModel.AnioNumeroParte = AnioSalida.Value;
+            }
         }
 
         //Finish Failed

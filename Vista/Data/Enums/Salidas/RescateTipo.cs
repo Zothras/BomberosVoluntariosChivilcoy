@@ -11,12 +11,12 @@ namespace Vista.Data.Enums.Salidas
         /// Rescate de Persona
         /// </summary>
         [Display(Name = "Persona")]
-        Persona,
+        Persona = 0,
 
         /// <summary>
         /// Rescate de Animal
         /// </summary>
         [Display(Name = "Animal")]
-        Animal
+        Animal = 1
     }
 }
