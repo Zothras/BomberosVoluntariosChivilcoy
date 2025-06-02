@@ -32,8 +32,8 @@ namespace Vista.Data.ViewModels.Personal
         [Required, StringLength(255)]
         public string LugarDeNacimiento { get; set; }
         public int Edad { get; set; }
+        public DateTime? FechaDeNacimiento { get; set; }
         public TipoDamnificado Estado { get; set; }
-
         public VehiculoDamnificadoViewModels? VehiculoDamnificado { get; set; }
 
     }
