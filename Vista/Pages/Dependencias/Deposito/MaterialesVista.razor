@@ -88,16 +88,16 @@
             await Context.SaveChangesAsync();
             await Init();
             StateHasChanged();
-            await message.Success("Alta cargada");
+            await message.SuccessAsync("Alta cargada");
         }
         catch (Exception e)
         {
             await Init();
             StateHasChanged();
             if (e.InnerException != null)
-                await message.Error(e.InnerException.Message, 5);
+                await message.ErrorAsync(e.InnerException.Message, 5);
             else
-                await message.Error(e.Message, 5);
+                await message.ErrorAsync(e.Message, 5);
         }
 
     }

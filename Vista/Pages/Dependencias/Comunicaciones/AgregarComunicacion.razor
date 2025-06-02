@@ -247,7 +247,7 @@
         {
             if (await Context.Comunicacion.SingleOrDefaultAsync(c => c.NroEquipo == ComunicacionVM.NroEquipo) != null)
             {
-                await message.Error("Número de equipo repetido");
+                await message.ErrorAsync("Número de equipo repetido");
                 return;
             }
 
@@ -305,16 +305,16 @@
             await Context.SaveChangesAsync();
             await Init();
             StateHasChanged();
-            await message.Success("Handie agregado correctamente");
+            await message.SuccessAsync("Handie agregado correctamente");
         }
         catch (Exception ex)
         {
             await Init();
             StateHasChanged();
             if (ex.InnerException != null)
-                await message.Error(ex.InnerException.Message, 5);
+                await message.ErrorAsync(ex.InnerException.Message, 5);
             else
-                await message.Error(ex.Message, 5);
+                await message.ErrorAsync(ex.Message, 5);
         }
     }
 

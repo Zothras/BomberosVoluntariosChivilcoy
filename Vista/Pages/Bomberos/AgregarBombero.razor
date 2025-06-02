@@ -457,7 +457,7 @@
 
 		imageUrl = $"data:{bomberoView.TipoImagen};base64,{bomberoView.Base64}";
 		StateHasChanged();
-		await message.Success("Foto subida correctamente.");
+		await message.SuccessAsync("Foto subida correctamente.");
 	}
 
 	private async Task AgregarFotoPorDefecto(string rutaArchivo)
@@ -491,13 +491,13 @@
 
 			if (bomberoView.NumeroLegajo == 0)
 			{
-				await message.Warning("El número de legajo no puede ser cero.");
+				await message.WarningAsync("El número de legajo no puede ser cero.");
 				return;
 			}
 
 			if (NumeroLegajo != null)
 			{
-				await message.Warning("Numero de legajo ya existente.");
+				await message.WarningAsync("Numero de legajo ya existente.");
 				return;
 			}
 
@@ -547,12 +547,12 @@
 			await BomberoService.CrearBombero(bombero);
 			bomberoView = new BomberosViewModel();
 			StateHasChanged();
-			await message.Success("Se agrego el bombero.");
+			await message.SuccessAsync("Se agrego el bombero.");
 			navigationManager.NavigateTo($"/bomberos", true);
 		}
 		catch (Exception ex)
 		{
-			await message.Error(ex.Message);
+			await message.ErrorAsync(ex.Message);
 			Console.WriteLine($"Error: {ex.Message}");
 		}
 	}

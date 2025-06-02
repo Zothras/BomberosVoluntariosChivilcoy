@@ -124,7 +124,7 @@
 @*Servicios Utilizados*@
 @using Vista.Services
 @inject ISalidaService SalidaService
-@inject IMessageService Message
+@inject IMessageService MessageService
 @inject NavigationManager NavigationManager
 
 <div class="template">
@@ -288,36 +288,36 @@
     {
         if (string.IsNullOrWhiteSpace(newSalida.Categoria.ToString()))
         {
-            await Message.Error("Debe seleccionar un tipo de emergencia.");
+            await MessageService.ErrorAsync("Debe seleccionar un tipo de emergencia.");
             return;
         }
 
         if (newSalida.NumeroSalida <= 0)
         {
-            await Message.Error("El número de parte debe ser mayor que cero.");
+            await MessageService.ErrorAsync("El número de parte debe ser mayor que cero.");
             return;
         }
 
         if (newSalida.Anio <= 0)
         {
-            await Message.Error("El año debe ser mayor que cero.");
+            await MessageService.ErrorAsync("El año debe ser mayor que cero.");
             return;
         }
 
         // Validar que se haya seleccionado un tipo de emergencia según la categoría
         if (newSalida.Categoria == CategoriaEmergencia.Incendio && newSalida.TipoIncendio == null)
         {
-            await Message.Error("Debe seleccionar un tipo de incendio.");
+            await MessageService.ErrorAsync("Debe seleccionar un tipo de incendio.");
             return;
         }
         if (newSalida.Categoria == CategoriaEmergencia.Rescate && newSalida.TipoRescate == null)
         {
-            await Message.Error("Debe seleccionar un tipo de rescate.");
+            await MessageService.ErrorAsync("Debe seleccionar un tipo de rescate.");
             return;
         }
         if (newSalida.Categoria == CategoriaEmergencia.ServicioEspecial && newSalida.TipoServicioEspecial == null)
         {
-            await Message.Error("Debe seleccionar un tipo de servicio especial.");
+            await MessageService.ErrorAsync("Debe seleccionar un tipo de servicio especial.");
             return;
         }
 
@@ -387,7 +387,7 @@
         }
         else
         {
-            await Message.Error("Tipo de emergencia no válido.");
+            await MessageService.ErrorAsync("Tipo de emergencia no válido.");
         }
 
     }

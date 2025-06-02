@@ -282,13 +282,13 @@
 	{
 		if (newDependencia.Encargado == null)
 		{
-			await MessageService.Error("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
+			await MessageService.ErrorAsync("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(newDependencia.Nombre))
 		{
-			await MessageService.Error("El nombre de la dependencia no puede estar vacío.");
+			await MessageService.ErrorAsync("El nombre de la dependencia no puede estar vacío.");
 			return;
 		}
 
@@ -296,7 +296,7 @@
 
 		if (BomberoEncargado == null)
 		{
-			await MessageService.Error("El encargado seleccionado no es válido.");
+			await MessageService.ErrorAsync("El encargado seleccionado no es válido.");
 			return;
 		}
 
@@ -310,26 +310,26 @@
 		newDependencia = new DependenciaViewModelTable();
 		_modalAñadirVisible = false;
 		await OnInitializedAsync();
-		await MessageService.Success("Dependencia añadida correctamente.");
+		await MessageService.SuccessAsync("Dependencia añadida correctamente.");
 	}
 
 	private async Task EditDependencia()
 	{
 		if (selDependencia.Encargado == null)
 		{
-			await MessageService.Error("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
+			await MessageService.ErrorAsync("No se ha seleccionado un encargado. Por favor, elija un encargado antes de continuar.");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(selDependencia.Nombre))
 		{
-			await MessageService.Error("El nombre de la dependencia no puede estar vacío.");
+			await MessageService.ErrorAsync("El nombre de la dependencia no puede estar vacío.");
 			return;
 		}
 
 		if (selDependencia.Id <= 0)
 		{
-			await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+			await MessageService.ErrorAsync("ID inválido. Por favor, proporcione un ID válido.");
 			return;
 		}
 
@@ -337,7 +337,7 @@
 
 		if (BomberoEncargado == null)
 		{
-			await MessageService.Error("El encargado seleccionado no es válido.");
+			await MessageService.ErrorAsync("El encargado seleccionado no es válido.");
 			return;
 		}
 
@@ -351,14 +351,14 @@
 		await DependenciaService.EditarDependenciaAsync(dependencia);
 		_modalEditarVisible = false;
 		await OnInitializedAsync();
-		await MessageService.Success("Dependencia editada correctamente.");
+		await MessageService.SuccessAsync("Dependencia editada correctamente.");
 	}
 
 	private async Task VerAñadirDependencia()
 	{
 		if (bomberosTodos.Count == 0)
 		{
-			await MessageService.Error("No hay bomberos disponibles para asignar como encargado.");
+			await MessageService.ErrorAsync("No hay bomberos disponibles para asignar como encargado.");
 			return;
 		}
 
@@ -370,7 +370,7 @@
 	{
 		if (id <= 0)
 		{
-			await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+			await MessageService.ErrorAsync("ID inválido. Por favor, proporcione un ID válido.");
 			return;
 		}
 
@@ -378,14 +378,14 @@
 
 		if (Dependencia == null)
 		{
-			await MessageService.Error("Error al intentar editar la dependencia: No se encontró.");
+			await MessageService.ErrorAsync("Error al intentar editar la dependencia: No se encontró.");
 			return;
 		}
 
 		var encargado = bomberosTodos.FirstOrDefault(b => b.NumeroLegajo == Dependencia.Encargado.NumeroLegajo);
 		if (encargado == null)
 		{
-			await MessageService.Error("Error al intentar editar la dependencia: No se encontró un encargado válido.");
+			await MessageService.ErrorAsync("Error al intentar editar la dependencia: No se encontró un encargado válido.");
 			return;
 		}
 
@@ -409,13 +409,13 @@
 			_modalDetallesVisible = true;
 		}
 		else
-			await MessageService.Error("Error al abrir la dependencia: No se encontró.");
+			await MessageService.ErrorAsync("Error al abrir la dependencia: No se encontró.");
 	}
 
 	private async Task BorrarDependencia(int id)
 	{
 		await DependenciaService.EliminarDependenciaAsync(id);
 		await OnInitializedAsync();
-		await MessageService.Success("Dependencia eliminada correctamente.");
+		await MessageService.SuccessAsync("Dependencia eliminada correctamente.");
 	}
 }

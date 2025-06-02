@@ -262,7 +262,7 @@
             var MaterialAsignado = await Context.Materiales.SingleOrDefaultAsync(ma => ma.MaterialId == MovimientoVM.MaterialId);
             if (MaterialAsignado == null)
             {
-                await message.Error("No se encontró el material asignado.");
+                await message.ErrorAsync("No se encontró el material asignado.");
                 return;
             }
             MovimientoMaterial movimiento = new()
@@ -283,16 +283,16 @@
             await DepositoService.CargarMovimiento(movimiento);
             await Init();
             StateHasChanged();
-            await message.Success("Movimiento cargado");
+            await message.SuccessAsync("Movimiento cargado");
         }
         catch (Exception e)
         {
             await Init();
             StateHasChanged();
             if (e.InnerException != null)
-                await message.Error(e.InnerException.Message, 5);
+                await message.ErrorAsync(e.InnerException.Message, 5);
             else
-                await message.Error(e.Message, 5);
+                await message.ErrorAsync(e.Message, 5);
 
         }
     }

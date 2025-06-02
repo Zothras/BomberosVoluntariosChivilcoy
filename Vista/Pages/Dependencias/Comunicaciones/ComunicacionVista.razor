@@ -419,16 +419,16 @@
             await Init();
             StateHasChanged();
 
-            await message.Success("Handie eliminado correctamente.");
+            await message.SuccessAsync("Handie eliminado correctamente.");
         }
         catch (Exception ex)
         {
             await Init();
             StateHasChanged();
             if (ex.InnerException != null)
-                await message.Error(ex.InnerException.Message, 5);
+                await message.ErrorAsync(ex.InnerException.Message, 5);
             else
-                await message.Error(ex.Message, 5);
+                await message.ErrorAsync(ex.Message, 5);
         }
     }
 
@@ -451,7 +451,7 @@
                 await Context.SaveChangesAsync();
                 await Init();
                 StateHasChanged();
-                await message.Success("Bombero desasignado correctamente.");
+                await message.SuccessAsync("Bombero desasignado correctamente.");
             }
             else if (movil != null)
             {
@@ -464,16 +464,16 @@
             // Forza una actualización de la interfaz de usuario
             StateHasChanged();
 
-            await message.Success("Móvil desasignado correctamente.");
+            await message.SuccessAsync("Móvil desasignado correctamente.");
         }
         catch (Exception ex)
         {
             await Init();
             StateHasChanged();
             if (ex.InnerException != null)
-                await message.Error(ex.InnerException.Message, 5);
+                await message.ErrorAsync(ex.InnerException.Message, 5);
             else
-                await message.Error(ex.Message, 5);
+                await message.ErrorAsync(ex.Message, 5);
         }
     }
 
@@ -514,15 +514,15 @@
 
             await Context.SaveChangesAsync();
             StateHasChanged();
-            await message.Success("Handie editado correctamente.");
+            await message.SuccessAsync("Handie editado correctamente.");
         }
         catch (Exception ex)
         {
             StateHasChanged();
             if (ex.InnerException != null)
-                await message.Error(ex.InnerException.Message, 5);
+                await message.ErrorAsync(ex.InnerException.Message, 5);
             else
-                await message.Error(ex.Message, 5);
+                await message.ErrorAsync(ex.Message, 5);
         }
     }
 

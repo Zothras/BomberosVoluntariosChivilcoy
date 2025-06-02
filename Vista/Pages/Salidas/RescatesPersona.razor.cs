@@ -69,7 +69,7 @@ namespace Vista.Pages.Salidas
 
                 if (numeroParteRescate != null)
                 {
-                    await message.Warning("Numero parte ya existente.");
+                    await message.WarningAsync("Numero parte ya existente.");
                     return;
                 }
 
@@ -136,9 +136,9 @@ namespace Vista.Pages.Salidas
             {
                 // Notificar al usuario
                 if (e.InnerException != null)
-                    await message.Error(e.InnerException.Message, 5);
+                    await message.ErrorAsync(e.InnerException.Message, 5);
                 else
-                    await message.Error(e.Message, 5);
+                    await message.ErrorAsync(e.Message, 5);
             }
         }
 

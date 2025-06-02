@@ -357,7 +357,7 @@
                 StateHasChanged();
                 await Init();
                 await OnClose.InvokeAsync();
-                await message.Success("Se logro editar correctamente");
+                await message.SuccessAsync("Se logro editar correctamente");
             }
         }
         catch (Exception e)
@@ -365,9 +365,9 @@
             await Init();
             StateHasChanged();
             if (e.InnerException != null)
-                await message.Error(e.InnerException.Message, 5);
+                await message.ErrorAsync(e.InnerException.Message, 5);
             else
-                await message.Error(e.Message, 5);
+                await message.ErrorAsync(e.Message, 5);
         }
     }
 
@@ -381,7 +381,7 @@
         imagenView.TipoImagen = e.File.ContentType;
         imagenView.Nombre = e.File.Name;
 
-        await message.Success("Imagen cargada");
+        await message.SuccessAsync("Imagen cargada");
         StateHasChanged();
     }
 

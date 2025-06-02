@@ -220,7 +220,7 @@
 	{
 		if (BomberoID == 0 || DependenciaID == 0)
 		{
-			await MessageService.Error("No se puede eliminar el bombero de la dependencia");
+			await MessageService.ErrorAsync("No se puede eliminar el bombero de la dependencia");
 			return;
 		}
 
@@ -228,7 +228,7 @@
 
 		if (!isBomberoInDependencia)
 		{
-			await MessageService.Error("El bombero no pertenece a la dependencia");
+			await MessageService.ErrorAsync("El bombero no pertenece a la dependencia");
 			return;
 		}
 
@@ -248,7 +248,7 @@
 				}
 			}
 
-			await MessageService.Success($"Se añadieron {BomberosSeleccionados.Count} Bomberos a la Dependencia");
+			await MessageService.SuccessAsync($"Se añadieron {BomberosSeleccionados.Count} Bomberos a la Dependencia");
 			_modalAñadirBomberosVisible = false;
 			await OnInit();
 		}
@@ -262,7 +262,7 @@
 	{
 		if (BomberosTodos == null || !BomberosTodos.Any())
 		{
-			await MessageService.Error("No hay bomberos disponibles para agregar.");
+			await MessageService.ErrorAsync("No hay bomberos disponibles para agregar.");
 			return;
 		}
 

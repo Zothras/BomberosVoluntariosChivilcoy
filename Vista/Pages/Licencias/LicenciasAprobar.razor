@@ -146,7 +146,7 @@
 
         await Init();
         StateHasChanged();
-        await message.Success("Licencia Aprobada!");
+        await message.SuccessAsync("Licencia Aprobada!");
     }
     //Elimina la licencia que esta en pendiente
     private async Task RechazarLicencia(int IdLicencia)
@@ -160,7 +160,7 @@
 
         await Init();
         StateHasChanged();
-        await message.Success("Licencia Rechazada!");
+        await message.SuccessAsync("Licencia Rechazada!");
 
     }
     public void Dispose()

@@ -404,7 +404,7 @@
             const long maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
             if (archivo.Size > maxSizeInBytes)
             {
-                await message.Error("El archivo no debe superar los 5MB");
+                await message.ErrorAsync("El archivo no debe superar los 5MB");
                 return;
             }
 
@@ -413,7 +413,7 @@
             string extension = Path.GetExtension(archivo.Name).ToLower();
             if (!allowedExtensions.Contains(extension))
             {
-                await message.Error("Solo se permiten archivos JPG, JPEG o PNG");
+                await message.ErrorAsync("Solo se permiten archivos JPG, JPEG o PNG");
                 return;
             }
 
@@ -426,7 +426,7 @@
             imagenView.Nombre = archivo.Name;
 
             // Mostrar mensaje de éxito
-            await message.Success("Imagen cargada exitosamente");
+            await message.SuccessAsync("Imagen cargada exitosamente");
 
             // Actualizar el estado del componente
             StateHasChanged();
@@ -434,7 +434,7 @@
         catch (Exception ex)
         {
             // Manejar errores y mostrar un mensaje
-            await message.Error($"Error al procesar la imagen: {ex.Message}");
+            await message.ErrorAsync($"Error al procesar la imagen: {ex.Message}");
         }
     }
 
@@ -449,12 +449,12 @@
                 VehiculoSalida? comprobante = await Context.Set<VehiculoSalida>().Where(e => e.NumeroMovil == vehiculoView.NumeroMovil).SingleOrDefaultAsync();
                 if (comprobante != null)
                 {
-                    await message.Error("Existe un vehiculo con el mismo Nº Móvil");
+                    await message.ErrorAsync("Existe un vehiculo con el mismo Nº Móvil");
                     return;
                 }
                 if (string.IsNullOrEmpty(imagenView.Base64))
                 {
-                    await message.Warning("No se ingreso una foto del vehiculo");
+                    await message.WarningAsync("No se ingreso una foto del vehiculo");
                 }
                 // Se crea una embarcación ya que VehiculoSalida es abstracta
                 Embarcacion vehiculo = new Embarcacion()
@@ -493,7 +493,7 @@
                     await VehiculoService.AgregarVehiculo(vehiculo);
                 }
 
-                await message.Success("Se agrego el movil");
+                await message.SuccessAsync("Se agrego el movil");
 
                 StateHasChanged();
 
@@ -509,13 +509,13 @@
 
             if (e.InnerException != null)
             {
-                await message.Error("Información de movil ausente u ocurrio un error inesperado");
+                await message.ErrorAsync("Información de movil ausente u ocurrio un error inesperado");
                 Console.WriteLine(e.InnerException.Message);
             }
 
             else
             {
-                await message.Error(("Error inesperado: " + e.Message), 5);
+                await message.ErrorAsync(("Error inesperado: " + e.Message), 5);
                 Console.WriteLine(e.Message);
             }
         }

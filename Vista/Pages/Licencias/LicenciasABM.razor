@@ -450,7 +450,7 @@
 		{
 			Context.Licencias.RemoveRange(licenciasDefectuosas);
 			await Context.SaveChangesAsync();
-			await _message.Error($"{licenciasDefectuosas.Count} licencias defectuosas han sido eliminadas.");
+			await _message.ErrorAsync($"{licenciasDefectuosas.Count} licencias defectuosas han sido eliminadas.");
 		}
 	}
 

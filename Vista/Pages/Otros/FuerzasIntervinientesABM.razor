@@ -238,7 +238,7 @@
 	{
 		if (string.IsNullOrWhiteSpace(nuevaFuerza.Nombre))
 		{
-			await MessageService.Error("El campo 'Nombre' no puede estar vacío.");
+			await MessageService.ErrorAsync("El campo 'Nombre' no puede estar vacío.");
 			return;
 		}
 
@@ -251,7 +251,7 @@
 		nuevaFuerza = new FuerzaViewModelTable();
 		_modalAñadirVisible = false;
 		await OnInitializedAsync();
-		await MessageService.Success("Fuerza añadida correctamente.");
+		await MessageService.SuccessAsync("Fuerza añadida correctamente.");
 	}
 
 
@@ -259,13 +259,13 @@
 	{
 		if (selFuerza.Id <= 0)
 		{
-			await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+			await MessageService.ErrorAsync("ID inválido. Por favor, proporcione un ID válido.");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(selFuerza.Nombre))
 		{
-			await MessageService.Error("El campo 'Nombre' no puede estar vacío.");
+			await MessageService.ErrorAsync("El campo 'Nombre' no puede estar vacío.");
 			return;
 		}
 
@@ -279,14 +279,14 @@
 		selFuerza = new FuerzaViewModelTable();
 		_modalEditarVisible = false;
 		await OnInitializedAsync();
-		await MessageService.Success("Fuerza editada correctamente.");
+		await MessageService.SuccessAsync("Fuerza editada correctamente.");
 	}
 
 	private async Task VerEditarFuerza(int id)
 	{
 		if (id <= 0)
 		{
-			await MessageService.Error("ID inválido. Por favor, proporcione un ID válido.");
+			await MessageService.ErrorAsync("ID inválido. Por favor, proporcione un ID válido.");
 			return;
 		}
 
@@ -294,7 +294,7 @@
 
 		if (Fuerza == null)
 		{
-			await MessageService.Error("Error al intentar editar la fuerza: No se encontró.");
+			await MessageService.ErrorAsync("Error al intentar editar la fuerza: No se encontró.");
 			return;
 		}
 
@@ -311,6 +311,6 @@
 	{
 		await FuerzaIntervinienteService.EliminarFuerzaAsync(id);
 		await OnInitializedAsync();
-		await MessageService.Success("Fuerza eliminada correctamente.");
+		await MessageService.SuccessAsync("Fuerza eliminada correctamente.");
 	}
 }

@@ -235,7 +235,7 @@
                 }
             }
 
-            await MessageService.Success($"Se añadieron {BomberosSeleccionados.Count} Bomberos a la Brigada");
+            await MessageService.SuccessAsync($"Se añadieron {BomberosSeleccionados.Count} Bomberos a la Brigada");
             _modalAñadirBomberosVisible = false;
             await OnInit();
         }
