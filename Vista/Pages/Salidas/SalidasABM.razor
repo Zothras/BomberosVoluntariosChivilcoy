@@ -135,13 +135,16 @@
            Title="Salidas"
            Responsive>
         <TitleTemplate>
-            <Flex Justify="FlexJustify.FlexEnd">
-                <Space>
-                    <Button Type="ButtonType.Primary" OnClick="@(() => VerAñadirSalida())">
+            <GridRow>
+                <GridCol Span="12">
+                    <Title Level="3" Style="color: white;">Salidas</Title>
+                </GridCol>
+                <GridCol Span="12" Style="text-align: right;">
+                    <Button Type="ButtonType.Primary" OnClick="() => VerAñadirSalida()">
                         <Icon Type="plus" /> Nueva
                     </Button>
-                </Space>
-            </Flex>
+                </GridCol>
+            </GridRow>
         </TitleTemplate>
         <ColumnDefinitions>
 
