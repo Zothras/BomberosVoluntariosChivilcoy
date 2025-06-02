@@ -119,7 +119,7 @@
 </Modal>
 
 @code {
-    [Parameter] public SalidasViewModels Model { get; set; }
+    [Parameter] public SalidasViewModels Model { get; set; } = null!;
 
     private DamnificadoViewModels damnificado = new DamnificadoViewModels();
 
@@ -163,9 +163,22 @@
         visibleVerDamnificados = false;
     }
 
-    private void deleteRowDamnificados(int DNI)
+    private async Task deleteRowDamnificados(int DNI)
     {
+        if (Model.Damnificados == null || !Model.Damnificados.Any())
+        {
+            await MessageService.ErrorAsync("No hay damnificados registrados.");
+            return;
+        }
+
+        if (!Model.Damnificados.Any(m => m.Documento == DNI))
+        {
+            await MessageService.ErrorAsync($"No se encontró un damnificado con el DNI {DNI}.");
+            return;
+        }
+
         Model.Damnificados = Model.Damnificados.Where(m => m.Documento != DNI).ToList();
+        await MessageService.SuccessAsync($"Damnificado con DNI {DNI} eliminado correctamente.");
     }
 
     private async Task AgregarDamnificado()
