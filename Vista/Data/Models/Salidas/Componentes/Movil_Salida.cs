@@ -70,7 +70,7 @@ namespace Vista.Data.Models.Salidas.Componentes
         /// Relación con el bombero (chofer) que condujo el vehículo. Utiliza el identificador `PersonaId` como clave foránea.
         /// </summary>
         [ForeignKey(nameof(PersonaId))]
-        public Bombero? Chofer { get; set; }
+        public Bombero Chofer { get; set; } = null!;
 
         /// <summary>
         /// Identificador del vehículo móvil asociado a esta salida.

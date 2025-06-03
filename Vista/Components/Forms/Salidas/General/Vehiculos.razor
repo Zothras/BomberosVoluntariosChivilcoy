@@ -241,7 +241,7 @@
             Model.Moviles.Remove(movilToDelete);
 
             // Añadir el chofer nuevamente a la lista de choferes disponibles
-            if (chofer != null)
+            if (chofer != null && choferview != null)
             {
                 bomberoChoferesSalir.Add(choferview);
             }
@@ -276,7 +276,9 @@
             bomberoChoferesSalir.RemoveAll(b => b.NumeroLegajo == bomberoChofer.NumeroLegajo);
             Moviles.RemoveAll(m => m.NumeroMovil == Movilsalida.NumeroMovil);
 
-            // Crea el Objeto Movil Salida
+            string? QuienLleno = movilSalidaView.QuienLleno != null? $"{movilSalidaView.QuienLleno.Apellido}, {movilSalidaView.QuienLleno.Nombre}" : null;
+            
+            // Crear el Objeto Movil Salida
             Movil_Salida m = new()
             {
                 Movil = Movilsalida,
@@ -285,7 +287,7 @@
                 FechaFactura = movilSalidaView.FechaFactura,
                 TipoConbustible = movilSalidaView.TipoConbustible,
                 CantidadLitros = movilSalidaView.CantidadLitros,
-                QuienLleno = $"{movilSalidaView.QuienLleno.Apellido}, {movilSalidaView.QuienLleno.Nombre}",
+                QuienLleno = QuienLleno,
                 TelefonoQuienLleno = movilSalidaView.TelefonoQuienLleno,
                 KmLlegada = movilSalidaView.KmLlegada,
                 Chofer = bomberoChofer
