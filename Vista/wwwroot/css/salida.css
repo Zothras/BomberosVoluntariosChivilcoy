@@ -1,14 +1,4 @@
-﻿/* Contenedor para el mapa */
-.map-container {
-	width: 300px;
-	height: 300px;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	overflow: hidden;
-	margin: 20px auto;
-}
-
-/* Estilo del botón personalizado */
+﻿/* Estilo del botón personalizado */
 .boton_p {
 	background-color: #732D2D !important;
 	color: white !important;

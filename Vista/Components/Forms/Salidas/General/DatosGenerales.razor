@@ -9,6 +9,25 @@
 @inject IGeorefService GeorefService
 @inject ISalidaService SalidaService
 
+<style>
+/* Contenedor para el mapa */
+.map-container {
+    width: 300px;
+    height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 20px auto;
+}
+
+@@media screen and (max-width: 450px) {
+    .map-container {
+        width: 100%;
+        height: auto;
+    }
+}
+</style>
+
 <Form Model="Model">
     @if (Model.TimeLlegada < Model.TimeSalida)
     {
