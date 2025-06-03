@@ -7,7 +7,30 @@ using Vista.Data.ViewModels.APIResponse;
 
 namespace Vista.Services
 {
-    public class GeorefService
+    /// <summary>
+    /// Interfaz para el servicio que interactúa con la API de Georef.
+    /// </summary>
+    public interface IGeorefService
+    {
+        /// <summary>
+        /// Valida la conexión a la API de Georef.
+        /// </summary>
+        /// <returns>
+        /// Un <see cref="Task{TResult}"/> que representa la operación asíncrona. El valor resultante es <c>true</c> si la conexión es exitosa; de lo contrario, <c>false</c>.
+        /// </returns>
+        Task<bool> CheckApiConnectionAsync();
+
+        /// <summary>
+        /// Obtiene sugerencias de direcciones a partir del nombre de una calle.
+        /// </summary>
+        /// <param name="calle">Nombre o parte del nombre de la calle a buscar.</param>
+        /// <returns>
+        /// Una lista de objetos <see cref="Direccion"/> con las coincidencias encontradas. Si no hay conexión o falla la búsqueda, se devuelve una lista vacía.
+        /// </returns>
+        Task<List<Direccion>> GetStreetSuggestionsAsync(string calle);
+    }
+
+    public class GeorefService : IGeorefService
     {
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
