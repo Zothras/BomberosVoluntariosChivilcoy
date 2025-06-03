@@ -23,7 +23,7 @@
       OnFinishFailed="OnFinishFailed"
       Style="width: 100%; height: 100%; overflow: auto;">
 
-    <div style="max-width: 1400px; margin: 0 auto; padding: 2rem 1rem;">
+    <div style="max-width: 1800px; margin: 0 auto; padding: 2rem 1rem;">
 
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 2px solid #f0f0f0;">
@@ -36,86 +36,88 @@
         </div>
 
         <!-- Main Content Grid -->
-        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+        <div class="main-grid">
 
-            <!-- Datos Generales Section -->
-            <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #1890ff;">
-                <h3 style="margin: 0 0 1.5rem 0; color: #1890ff; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="background: #1890ff; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">1</span>
+            <!-- Datos Generales Section - Siempre arriba completo -->
+            <div class="section-card datos-generales">
+                <h3 class="section-title">
+                    <span class="section-number" style="background: #1890ff;">1</span>
                     Datos Generales
                 </h3>
                 <DatosGenerales Model="@PersonaViewModel" />
             </div>
 
-            <!-- Two Column Layout for Medium Sections -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 2rem;">
-
+            <!-- Grid de 2 columnas para secciones medianas -->
+            <div class="two-column-grid">
                 <!-- Participantes Section -->
-                <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #52c41a;">
-                    <h3 style="margin: 0 0 1.5rem 0; color: #52c41a; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="background: #52c41a; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">2</span>
+                <div class="section-card participantes">
+                    <h3 class="section-title">
+                        <span class="section-number" style="background: #52c41a;">2</span>
                         Participantes
                     </h3>
                     <Participantes Model="@PersonaViewModel" />
                 </div>
 
                 <!-- Vehículos Section -->
-                <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #fa8c16;">
-                    <h3 style="margin: 0 0 1.5rem 0; color: #fa8c16; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="background: #fa8c16; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">3</span>
+                <div class="section-card vehiculos">
+                    <h3 class="section-title">
+                        <span class="section-number" style="background: #fa8c16;">3</span>
                         Vehículos
                     </h3>
                     <Vehiculos Model="@PersonaViewModel" BomberosTodos="@BomberosTodos" Moviles="@MovilesTodos" />
                 </div>
             </div>
 
-            <!-- Personal Section -->
-            <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #722ed1;">
-                <h3 style="margin: 0 0 1.5rem 0; color: #722ed1; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="background: #722ed1; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">4</span>
-                    Personal
-                </h3>
-                <Personal Model="@PersonaViewModel" />
-            </div>
+            <!-- Grid de 2 columnas para Personal y Tipo de Servicio -->
+            <div class="two-column-grid">
+                <!-- Personal Section -->
+                <div class="section-card personal">
+                    <h3 class="section-title">
+                        <span class="section-number" style="background: #722ed1;">4</span>
+                        Personal
+                    </h3>
+                    <Personal Model="@PersonaViewModel" />
+                </div>
 
-            <!-- Tipo de Servicio Section -->
-            <div style="background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 2rem; border-left: 4px solid #eb2f96;">
-                <h3 style="margin: 0 0 1.5rem 0; color: #eb2f96; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="background: #eb2f96; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">5</span>
-                    Tipo de Servicio
-                </h3>
+                <!-- Tipo de Servicio Section -->
+                <div class="section-card tipo-servicio">
+                    <h3 class="section-title">
+                        <span class="section-number" style="background: #eb2f96;">5</span>
+                        Tipo de Servicio
+                    </h3>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <!-- Tipo Servicio -->
-                    <div style="background: #fafafa; padding: 1.5rem; border-radius: 8px; border: 1px solid #e8e8e8;">
-                        <FormItem>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">
-                                Tipo Servicio Salida
-                            </label>
-                            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@PersonaViewModel.TipoServicio"
-                                        Style="width: 100%;" />
-                        </FormItem>
-                    </div>
+                    <div class="service-type-grid">
+                        <!-- Tipo Servicio -->
+                        <div class="form-group-card">
+                            <FormItem>
+                                <label class="form-label">
+                                    Tipo Servicio Salida
+                                </label>
+                                <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@PersonaViewModel.TipoServicio"
+                                            Style="width: 100%;" />
+                            </FormItem>
+                        </div>
 
-                    <!-- Tipo Lugar Rescate -->
-                    <div style="background: #fafafa; padding: 1.5rem; border-radius: 8px; border: 1px solid #e8e8e8;">
-                        <FormItem>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">
-                                Tipo Lugar de Rescate
-                            </label>
-                            <EnumSelect TEnum="TipoLugarRescatePersona" @bind-Value="@PersonaViewModel.TipoRescatePersona"
-                                        Style="width: 100%;" />
-                        </FormItem>
+                        <!-- Tipo Lugar Rescate -->
+                        <div class="form-group-card">
+                            <FormItem>
+                                <label class="form-label">
+                                    Tipo Lugar de Rescate
+                                </label>
+                                <EnumSelect TEnum="TipoLugarRescatePersona" @bind-Value="@PersonaViewModel.TipoRescatePersona"
+                                            Style="width: 100%;" />
+                            </FormItem>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Submit Section -->
-            <div style="background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%); border-radius: 12px; padding: 2rem; text-align: center; margin-top: 1rem;">
+            <div class="submit-section">
                 <FormItem WrapperColSpan="24" Style="margin: 0;">
                     <Button HtmlType="submit"
                             Size="ButtonSize.Large"
-                            Style="background: white; color: #1890ff; border: none; font-weight: 600; padding: 0.75rem 3rem; height: auto; font-size: 1.1rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;">
+                            class="submit-button">
                         <Icon Type="printer" Style="margin-right: 0.5rem;" />
                         Imprimir Salida
                     </Button>
@@ -131,44 +133,263 @@
 </Form>
 
 <style>
-    /* Responsive adjustments */
-    @@media (max-width: 768px) {
-        .contenedor {
-            padding: 1rem 0.5rem !important;
+    /* Grid principal */
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* Grid de dos columnas */
+    .two-column-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    /* Estilos base para las tarjetas de sección */
+    .section-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+
+        .section-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+    /* Colores de borde específicos */
+    .datos-generales {
+        border-left: 4px solid #1890ff;
+    }
+
+    .participantes {
+        border-left: 4px solid #52c41a;
+    }
+
+    .vehiculos {
+        border-left: 4px solid #fa8c16;
+    }
+
+    .personal {
+        border-left: 4px solid #722ed1;
+    }
+
+    .tipo-servicio {
+        border-left: 4px solid #eb2f96;
+    }
+
+    /* Títulos de sección */
+    .section-title {
+        margin: 0 0 1.5rem 0;
+        font-size: 1.4rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .datos-generales .section-title {
+        color: #1890ff;
+    }
+
+    .participantes .section-title {
+        color: #52c41a;
+    }
+
+    .vehiculos .section-title {
+        color: #fa8c16;
+    }
+
+    .personal .section-title {
+        color: #722ed1;
+    }
+
+    .tipo-servicio .section-title {
+        color: #eb2f96;
+    }
+
+    .section-number {
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    /* Grid para tipos de servicio */
+    .service-type-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-group-card {
+        background: #fafafa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e8e8e8;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Sección de submit */
+    .submit-section {
+        background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .submit-button {
+        background: white !important;
+        color: #1890ff !important;
+        border: none !important;
+        font-weight: 600 !important;
+        padding: 0.75rem 3rem !important;
+        height: auto !important;
+        font-size: 1.1rem !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        transition: all 0.3s ease !important;
+    }
+
+        .submit-button:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
+        }
+
+    /* Responsive Design */
+
+    /* Tablets grandes y pantallas medianas (1200px - 1599px) */
+    @@media (max-width: 1599px) and (min-width: 1200px) {
+        .main-grid {
+            max-width: 1400px;
+        }
+    }
+
+    /* Tablets y pantallas pequeñas de PC (768px - 1199px) */
+    @@media (max-width: 1199px) {
+        .two-column-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .service-type-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .section-card {
+            padding: 1.5rem;
+        }
+    }
+
+    /* Tablets verticales (768px - 991px) */
+    @@media (max-width: 991px) {
+        .main-grid {
+            padding: 1rem 0.5rem;
         }
 
         h1 {
             font-size: 2rem !important;
         }
 
-        [style*="grid-template-columns: repeat(auto-fit, minmax(500px, 1fr))"] {
-            grid-template-columns: 1fr !important;
-        }
-
-        [style*="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"] {
-            grid-template-columns: 1fr !important;
+        .section-title {
+            font-size: 1.3rem !important;
         }
     }
 
-    @@media (max-width: 480px) {
-        [style*="padding: 2rem"] {
+    /* Móviles (hasta 767px) */
+    @@media (max-width: 767px) {
+        .main-grid {
+            padding: 1rem 0.5rem;
+            gap: 1.5rem;
+        }
+
+        .section-card {
             padding: 1rem !important;
         }
 
-        h3 {
+        h1 {
+            font-size: 1.8rem !important;
+        }
+
+        .section-title {
             font-size: 1.2rem !important;
+        }
+
+        .submit-section {
+            padding: 1.5rem !important;
+        }
+
+        .submit-button {
+            padding: 0.6rem 2rem !important;
+            font-size: 1rem !important;
         }
     }
 
-    /* Hover effects */
-    [style*="box-shadow: 0 4px 12px rgba(0,0,0,0.08)"]:hover {
-        box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
-        transform: translateY(-2px);
-        transition: all 0.3s ease;
+    /* Móviles pequeños (hasta 480px) */
+    @@media (max-width: 480px) {
+        .main-grid {
+            padding: 0.5rem 0.25rem;
+        }
+
+        .section-card {
+            padding: 0.75rem !important;
+        }
+
+        .form-group-card {
+            padding: 1rem !important;
+        }
+
+        h1 {
+            font-size: 1.6rem !important;
+        }
+
+        .section-title {
+            font-size: 1.1rem !important;
+        }
     }
 
-    button[style*="background: white"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
+    /* Pantallas muy grandes (1600px+) */
+    @@media (min-width: 1600px) {
+        .main-grid {
+            gap: 2.5rem;
+        }
+
+        .two-column-grid {
+            gap: 2.5rem;
+        }
+
+        .section-card {
+            padding: 2.5rem;
+        }
+    }
+
+    /* Para pantallas ultrawide, podemos hacer un grid de 3 columnas en algunas secciones */
+    @@media (min-width: 1800px) {
+        .service-type-grid {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        /* Opcional: para pantallas muy anchas, podemos hacer que algunas secciones ocupen 3 columnas */
+        .ultra-wide-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
     }
 </style>
