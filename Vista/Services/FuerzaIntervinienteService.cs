@@ -27,12 +27,17 @@ namespace Vista.Services
 
         public async Task<List<FuerzaInterviniente>> ObtenerTodasLasFuerzasAsync()
         {
-            return await _context.Fuerzas.ToListAsync();
+            return await _context.Fuerzas
+                .OrderBy(f => f.NombreFuerza) // Ordena por nombre
+                .AsNoTracking() // Evita el seguimiento de EF Core
+                .ToListAsync();
         }
 
         public async Task<FuerzaInterviniente?> ObtenerFuerzaPorIdAsync(int id)
         {
-            return await _context.Fuerzas.FindAsync(id);
+            return await _context.Fuerzas
+                .AsNoTracking() // Optimiza la consulta
+                .FirstOrDefaultAsync(f => f.Id == id);
         }
 
         public async Task AgregarFuerzaAsync(FuerzaInterviniente fuerza)
@@ -43,13 +48,9 @@ namespace Vista.Services
 
         public async Task EditarFuerzaAsync(FuerzaInterviniente fuerza)
         {
-            var fuerzaExistente = await _context.Fuerzas.FindAsync(fuerza.Id);
-
-            if (fuerzaExistente != null)
-            {
-                fuerzaExistente.NombreFuerza = fuerza.NombreFuerza;
-                await _context.SaveChangesAsync();
-            }
+            _context.Fuerzas.Attach(fuerza);
+            _context.Entry(fuerza).Property(f => f.NombreFuerza).IsModified = true;
+            await _context.SaveChangesAsync();
         }
 
         public async Task EliminarFuerzaAsync(int id)
