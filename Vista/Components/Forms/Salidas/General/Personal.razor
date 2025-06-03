@@ -1,193 +1,155 @@
 ﻿@using Vista.Data.ViewModels
 @using Vista.Data.ViewModels.Personal
 @using Vista.Data.Models.Vehiculos.Flota
+@using Vista.Data.Models.Personas.Personal
 
-@*Servicio Utilizados*@
-@using Vista.Services
-@inject IBomberoService BomberoService
+@*Servicios Utilizados*@
+@inject IMessageService MessageService
 
-<style>
-    .centrado {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .button-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #4CAF50;
-        border: 1px solid #4CAF50;
-        padding-right: 0;
-    }
-
-        .button-wrapper .ant-btn {
-            background-color: #4CAF50;
-            border-color: #4CAF50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-right: 0;
-            margin-right: 8px; /* Espacio entre el texto y el botón interno */
-        }
-
-            .button-wrapper .ant-btn:last-child {
-                margin-right: 0; /* Elimina el margen derecho del último botón */
-            }
-
-        .button-wrapper .ant-btn-icon-only {
-            margin-left: 8px; /* Espacio entre el texto y el botón interno */
-        }
-
-</style>
-
-<div class="slick-contenedor @animationClass">
-    <h6>Cuerpo Participante</h6>
-    @if (Model.Moviles != null && Model.Moviles.Any())
-    {
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Elija el movil</label>
-                <Select TItem="Movil"
-                        TItemValue="Movil"
-                        DataSource="@MovilesParaAsignar"
-                        @bind-Value="@MovilParaAsignar"
-                        LabelName="@nameof(Movil.NumeroMovil)"
-                        Placeholder="Seleccione un movil"
-                        DefaultActiveFirstOption="false"
-                        AllowClear="true"
-                        EnableSearch="true">
-                </Select>
-            </div>
-    }
-
-
-    @if (BotonSolo)
-    {
-            <div class="inpt-cont">
-                <label class="inpt-cont--lbl">Elija el bombero</label>
-                <Select TItem="BomberoViweModel"
-                        TItemValue="int"
-                        DataSource="@bomberosSalirTodos"
-                        @bind-Value="@BomberoCuerpo"
-                        LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                        ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
-                        Placeholder="Seleccione un bombero"
-                        DefaultActiveFirstOption="false"
-                        AllowClear="true" EnableSearch>
-                </Select>
-            </div>
-    }
-
+@if (Model.Moviles != null && Model.Moviles.Any())
+{
     <div class="inpt-cont">
-        <div class="centrado">
-            @if (BotonSolo)
-            {
-                    <div class="button-wrapper">
-                        <Button @onclick="() => AgregarCuerpoParticipante()"
-                                Type="ButtonType.Primary"
-                                class="ant-btn"
-                                style="background-color: #4CAF50; border-color: #4CAF50;">
-
-                            Cargar al cuerpo
-                        </Button>
-
-                        <!-- Botón interno a la derecha del texto -->
-                        <Button @onclick="CambiarBotonGrupo"
-                                Type="ButtonType.Primary"
-                                icon="user-add"
-                                class="ant-btn ant-btn-icon-only"
-                                style="background-color: #4CAF50; border-color: #4CAF50;">
-                        </Button>
-                    </div>
-            }
-            else
-            {
-                    <div class="button-wrapper">
-                        <Button @onclick="AgregarTodosACuerpoParticipante"
-                                Type="ButtonType.Primary"
-                                class="ant-btn"
-                                style="background-color: #4CAF50; border-color: #4CAF50;">
-                            Cargar todos al cuerpo
-                        </Button>
-
-                        <!-- Botón interno a la derecha del texto -->
-                        <Button @onclick="CambiarBotonSolo"
-                                Type="ButtonType.Primary"
-                                icon="usergroup-add"
-                                class="ant-btn ant-btn-icon-only"
-                                style="background-color: #4CAF50; border-color: #4CAF50;">
-                        </Button>
-                    </div>
-            }
-        </div>
+        <label class="inpt-cont--lbl">Elija el movil</label>
+        <Select TItem="Movil"
+                TItemValue="Movil"
+                DataSource="@MovilesParaAsignar"
+                @bind-Value="@MovilParaAsignar"
+                LabelName="@nameof(Movil.NumeroMovil)"
+                Placeholder="Seleccione un movil"
+                DefaultActiveFirstOption="false"
+                AllowClear="true"
+                EnableSearch="true">
+        </Select>
     </div>
+}
 
+
+@if (BotonSolo)
+{
     <div class="inpt-cont">
-        <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" @bind-SelectedRows="_selectedRows" Bordered>
-            <ColumnDefinitions Context="row">
-                <Selection />
-                <PropertyColumn Property="c => c.NumeroLegajo" Title="Legajo" DefaultSortOrder="@SortDirection.Descending"
-                                SorterCompare="@((a,b)=> a - b)"></PropertyColumn>
-                <PropertyColumn Property="c => c.ApellidoYNombre" Title="Apellido y Nombre" Sortable="true" DefaultSortOrder="@SortDirection.Ascending"></PropertyColumn>
-                <PropertyColumn Property="@(c => c.MovilAsignado != null ? c.MovilAsignado.NumeroMovil : "Cuartel")" Title="Asignación"></PropertyColumn>
-                <ActionColumn Title="Acciones">
-                    <Popconfirm Title="¿Quieres eliminar este bombero?" OnConfirm="() => deleteRow(row.NumeroLegajo)" OkText="Si" CancelText="No">
-                        <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
-                    </Popconfirm>
-                </ActionColumn>
-            </ColumnDefinitions>
-        </Table>
+        <label class="inpt-cont--lbl">Elija el bombero</label>
+        <Select TItem="BomberoViweModel"
+                TItemValue="int"
+                DataSource="@bomberosSalirTodos"
+                @bind-Value="@BomberoCuerpo"
+                LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                ValueName="@nameof(BomberoViweModel.NumeroLegajo)"
+                Placeholder="Seleccione un bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true" EnableSearch>
+        </Select>
     </div>
+}
 
-    @if (MostrarBoton)
-    {
-            <div class="inpt-cont">
-                <Button @onclick="EliminarSeleccionados"
-                        Danger
-                        icon="delete"
-                        style="background-color: #e90c0c; border-color: #e90c0c;">
-                    Borrar Seleccionados
+<div class="inpt-cont">
+    <div class="centrado">
+        @if (BotonSolo)
+        {
+            <div class="button-wrapper">
+                <Button @onclick="() => AgregarCuerpoParticipante()"
+                        Type="ButtonType.Primary"
+                        class="ant-btn"
+                        style="background-color: #4CAF50; border-color: #4CAF50;">
+
+                    Cargar al cuerpo
+                </Button>
+
+                <!-- Botón interno a la derecha del texto -->
+                <Button @onclick="CambiarBotonGrupo"
+                        Type="ButtonType.Primary"
+                        icon="user-add"
+                        class="ant-btn ant-btn-icon-only"
+                        style="background-color: #4CAF50; border-color: #4CAF50;">
                 </Button>
             </div>
-    }
+        }
+        else
+        {
+            <div class="button-wrapper">
+                <Button @onclick="AgregarTodosACuerpoParticipante"
+                        Type="ButtonType.Primary"
+                        class="ant-btn"
+                        style="background-color: #4CAF50; border-color: #4CAF50;">
+                    Cargar todos al cuerpo
+                </Button>
 
-    <div class="inpt-cont-inline">
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Encargado</label>
-            <Select TItem="BomberoViweModel"
-                    TItemValue="BomberoViweModel"
-                    DataSource="@bomberosTodos"
-                    Value="@EncargadoSeleccionado"
-                    ValueChanged="@EncargadoSeleccionadoChanged"
-                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                    Placeholder="Seleccione  a un  bombero"
-                    DefaultActiveFirstOption="false"
-                    AllowClear="true" EnableSearch>
-            </Select>
-        </div>
-        <div class="inpt-cont">
-            <label class="inpt-cont--lbl">Lleno la planilla</label>
-            <Select TItem="BomberoViweModel"
-                    TItemValue="BomberoViweModel"
-                    DataSource="@bomberosTodos"
-                    Value="@PlanillaSeleccionado"
-                    ValueChanged="@PlanillaSeleccionadoChanged"
-                    LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
-                    Placeholder="Seleccione un bombero"
-                    DefaultActiveFirstOption="false"
-                    AllowClear="true" EnableSearch>
-            </Select>
-        </div>
+                <!-- Botón interno a la derecha del texto -->
+                <Button @onclick="CambiarBotonSolo"
+                        Type="ButtonType.Primary"
+                        icon="usergroup-add"
+                        class="ant-btn ant-btn-icon-only"
+                        style="background-color: #4CAF50; border-color: #4CAF50;">
+                </Button>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="inpt-cont">
+    <Table Context="bomberosSalida1" Size="TableSize.Small" PageSize="4" DataSource="bomberosSalida" @bind-SelectedRows="_selectedRows" Bordered>
+        <ColumnDefinitions Context="row">
+            <Selection />
+            <PropertyColumn Property="c => c.NumeroLegajo" Title="Legajo" DefaultSortOrder="@SortDirection.Descending"
+                            SorterCompare="@((a, b) => a - b)"></PropertyColumn>
+            <PropertyColumn Property="c => c.ApellidoYNombre" Title="Apellido y Nombre" Sortable="true" DefaultSortOrder="@SortDirection.Ascending"></PropertyColumn>
+            <PropertyColumn Property="@(c => c.MovilAsignado != null ? c.MovilAsignado.NumeroMovil : "Cuartel")" Title="Asignación"></PropertyColumn>
+            <ActionColumn Title="Acciones">
+                <Popconfirm Title="¿Quieres eliminar este bombero?" OnConfirm="() => deleteRow(row.NumeroLegajo)" OkText="Si" CancelText="No">
+                    <i class="fa-solid fa-trash" style="color: #e90c0c; cursor: pointer;"></i>
+                </Popconfirm>
+            </ActionColumn>
+        </ColumnDefinitions>
+    </Table>
+</div>
+
+@if (MostrarBoton)
+{
+    <div class="inpt-cont">
+        <Button @onclick="EliminarSeleccionados"
+                Danger
+                icon="delete"
+                style="background-color: #e90c0c; border-color: #e90c0c;">
+            Borrar Seleccionados
+        </Button>
+    </div>
+}
+
+<div class="inpt-cont-inline">
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Encargado</label>
+        <Select TItem="BomberoViweModel"
+                TItemValue="BomberoViweModel"
+                DataSource="@bomberosTodosView"
+                Value="@EncargadoSeleccionado"
+                ValueChanged="@EncargadoSeleccionadoChanged"
+                LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                Placeholder="Seleccione  a un  bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true" EnableSearch>
+        </Select>
+    </div>
+    <div class="inpt-cont">
+        <label class="inpt-cont--lbl">Lleno la planilla</label>
+        <Select TItem="BomberoViweModel"
+                TItemValue="BomberoViweModel"
+                DataSource="@bomberosTodosView"
+                Value="@PlanillaSeleccionado"
+                ValueChanged="@PlanillaSeleccionadoChanged"
+                LabelName="@nameof(BomberoViweModel.ApellidoYNombre)"
+                Placeholder="Seleccione un bombero"
+                DefaultActiveFirstOption="false"
+                AllowClear="true" EnableSearch>
+        </Select>
     </div>
 </div>
 
 @code {
-    [Parameter] public SalidasViewModels? Model { get; set; }
-    [Parameter] public string? animationClass { get; set; }
+        [Parameter] public SalidasViewModels Model { get; set; } = null!;
+        [Parameter] public List<Bombero> BomberosTodos { get; set; } = null!;
+
 
     private IEnumerable<BomberoSalidaViewModels> _selectedRows = new List<BomberoSalidaViewModels>(); //Bomberos Seleccionados
-    private List<BomberoViweModel> bomberosTodos = new(); //Lista con todos los bomberos
+    private List<BomberoViweModel> bomberosTodosView = new(); //Lista con todos los bomberos
     private List<BomberoViweModel> bomberosSalirTodos = new(); //Lista con todos los bomberos para salida
     private List<BomberoSalidaViewModels> bomberosSalida = new(); //Lista con los bomberos de la salida
     private int BomberoCuerpo; //ID del Bombero a añadir a la salida
@@ -203,8 +165,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        bomberosTodos = await BomberoService.ObtenerTodosLosBomberosViewModelAsync(); // Obtiene todos los Bomberos.
-        bomberosSalirTodos = bomberosTodos.ToList(); // Copia el contenido de la Lista bomberosTodos a una nueva lista.
+        bomberosTodosView = await MapBomberosViewModelAsync(BomberosTodos); // Mapea los bomberos a la vista modelo.
+        bomberosSalirTodos = bomberosTodosView.ToList(); // Copia el contenido de la Lista bomberosTodos a una nueva lista.
 
         if (Model.Moviles != null && Model.Moviles.Any())
         {
@@ -213,12 +175,12 @@
 
         if (Model.LegajoEncargado != default)
         {
-            EncargadoSeleccionado = await BomberoService.ObtenerBomberoPorLegajoAsync(Model.LegajoEncargado);
+            EncargadoSeleccionado = bomberosTodosView.FirstOrDefault(b => b.NumeroLegajo == Model.LegajoEncargado);
         }
 
         if (Model.LegajoLLenoPlanilla != default)
         {
-            PlanillaSeleccionado = await BomberoService.ObtenerBomberoPorLegajoAsync(Model.LegajoLLenoPlanilla);
+            PlanillaSeleccionado = bomberosTodosView.FirstOrDefault(b => b.NumeroLegajo == Model.LegajoLLenoPlanilla);
         }
 
         if (Model.CuerpoParticipante != null)
@@ -227,18 +189,18 @@
 
             foreach (var participante in Model.CuerpoParticipante)
             {
-                BomberoViweModel? bombero = bomberosTodos
+                BomberoViweModel? bombero = bomberosTodosView
                     .FirstOrDefault(b => b.NumeroLegajo == participante.Bombero.NumeroLegajo);
 
                 if (bombero != null)
                 {
                     BomberoSalidaViewModels bomberoSalidaViewModel = new()
-                        {
-                            NumeroLegajo = bombero.NumeroLegajo,
-                            Nombre = bombero.Nombre,
-                            Apellido = bombero.Apellido,
-                            MovilAsignado = participante.MovilAsignado
-                        };
+                    {
+                        NumeroLegajo = bombero.NumeroLegajo,
+                        Nombre = bombero.Nombre,
+                        Apellido = bombero.Apellido,
+                        MovilAsignado = participante.MovilAsignado
+                    };
 
                     bomberosToRemove.Add(bombero);
                     bomberosSalida.Add(bomberoSalidaViewModel);
@@ -292,12 +254,12 @@
 
             // Crea el nuevo objeto de salida del bombero
             var nuevoBomberoSalida = new BomberoSalidaViewModels
-                {
-                    MovilAsignado = MovilParaAsignar,
-                    Nombre = bomberoSeleccionado.Nombre,
-                    Apellido = bomberoSeleccionado.Apellido,
-                    NumeroLegajo = bomberoSeleccionado.NumeroLegajo
-                };
+            {
+                MovilAsignado = MovilParaAsignar,
+                Nombre = bomberoSeleccionado.Nombre,
+                Apellido = bomberoSeleccionado.Apellido,
+                NumeroLegajo = bomberoSeleccionado.NumeroLegajo
+            };
 
             // Añade el nuevo bombero a la lista de salidas
             bomberosSalida.Add(nuevoBomberoSalida);
@@ -309,13 +271,18 @@
             }
 
             // Solicita el objeto Bombero y Crea el objeto BomberoSalida
-            var bombero = await BomberoService.ObtenerBomberoObjetoPorLegajoAsync(bomberoSeleccionado.NumeroLegajo);
+            var bombero = BomberosTodos.FirstOrDefault(b => b.NumeroLegajo == bomberoSeleccionado.NumeroLegajo);
 
+            if (bombero == null)
+            {
+                await MessageService.ErrorAsync($"No se encontró el bombero con legajo {bomberoSeleccionado.NumeroLegajo}.");
+                return;
+            }
             var bomSalida = new BomberoSalida
-                {
-                    MovilAsignado = nuevoBomberoSalida.MovilAsignado,
-                    Bombero = bombero
-                };
+            {
+                MovilAsignado = nuevoBomberoSalida.MovilAsignado,
+                Bombero = bombero
+            };
 
             // Añade el bombero a la lista de CuerpoParticipante
             Model.CuerpoParticipante.Add(bomSalida);
@@ -346,16 +313,21 @@
     {
         // Encuentra el bombero con el número de legajo especificado en la lista del componente
         var bomberoToRemove = bomberosSalida.FirstOrDefault(b => b.NumeroLegajo == numlegajo);
+
         if (bomberoToRemove != null)
         {
             // Encuentra el bombero con el número de legajo especificado en la lista del Model
             var bomberoToRemoveModel = Model.CuerpoParticipante.FirstOrDefault(b => b.Bombero.NumeroLegajo == numlegajo);
+
             if (bomberoToRemoveModel != null)
             {
                 Model.CuerpoParticipante.Remove(bomberoToRemoveModel);
             }
+
             bomberosSalida.Remove(bomberoToRemove);
-            bomberosSalirTodos.Add(await BomberoService.ObtenerBomberoPorLegajoAsync(bomberoToRemove.NumeroLegajo));
+
+            // Añade el bombero de vuelta a la lista de bomberos disponibles para salir
+            bomberosSalirTodos.Add(bomberosTodosView.FirstOrDefault(b => b.NumeroLegajo == bomberoToRemove.NumeroLegajo));
         }
     }
 
@@ -369,5 +341,39 @@
     {
         PlanillaSeleccionado = value;
         UpdateModel();
+    }
+
+    private async Task<List<BomberoViweModel>> MapBomberosViewModelAsync(List<Bombero> bomberos)
+    {
+        if (bomberos == null || !bomberos.Any())
+        {
+            await MessageService.ErrorAsync("No hay bomberos disponibles para mapear.");
+            return new List<BomberoViweModel>();
+        }
+
+        var bomberosViewModel = bomberos.Select(b => new BomberoViweModel
+        {
+            Id = b.PersonaId,
+            FechaNacimiento = b.FechaNacimiento,
+            Sexo = b.Sexo,
+            Nombre = b.Nombre,
+            Apellido = b.Apellido,
+            Documento = b.Documento,
+            NumeroLegajo = b.NumeroLegajo,
+            NumeroIoma = b.NumeroIoma,
+            LugarNacimiento = b.LugarNacimiento,
+            Grado = b.Grado,
+            Dotacion = b.Dotacion,
+            Estado = b.Estado,
+            EsChofer = b.Chofer,
+            VencimientoRegistro = b.VencimientoRegistro,
+            Direccion = b.Direccion,
+            Observaciones = b.Observaciones,
+            Profesion = b.Profesion,
+            NivelEstudios = b.NivelEstudios,
+            FechaAceptacion = b.FechaAceptacion,
+        }).ToList();
+
+        return bomberosViewModel;
     }
 }

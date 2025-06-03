@@ -134,6 +134,9 @@
             Model.Moviles = new List<Movil_Salida>();
         }
 
+        // Mapeamos los bomberos a su ViewModel
+        BomberosViewModelTodos = await MapBomberosViewModelAsync(BomberosTodos);
+
         // Obtener las listas de bomberos choferes y móviles
         bomberoChoferes = await FiltrarBomberosChoferesAsync(BomberosViewModelTodos);
         bomberoChoferesSalir = bomberoChoferes.ToList();
@@ -314,5 +317,39 @@
             StateHasChanged();
             await MessageService.ErrorAsync(e.InnerException?.Message ?? e.Message, 5);
         }
+    }
+
+    private async Task<List<BomberoViweModel>> MapBomberosViewModelAsync(List<Bombero> bomberos)
+    {
+        if (bomberos == null || !bomberos.Any())
+        {
+            await MessageService.ErrorAsync("No hay bomberos disponibles para mapear.");
+            return new List<BomberoViweModel>();
+        }
+
+        var bomberosViewModel = bomberos.Select(b => new BomberoViweModel
+        {
+            Id = b.PersonaId,
+            FechaNacimiento = b.FechaNacimiento,
+            Sexo = b.Sexo,
+            Nombre = b.Nombre,
+            Apellido = b.Apellido,
+            Documento = b.Documento,
+            NumeroLegajo = b.NumeroLegajo,
+            NumeroIoma = b.NumeroIoma,
+            LugarNacimiento = b.LugarNacimiento,
+            Grado = b.Grado,
+            Dotacion = b.Dotacion,
+            Estado = b.Estado,
+            EsChofer = b.Chofer,
+            VencimientoRegistro = b.VencimientoRegistro,
+            Direccion = b.Direccion,
+            Observaciones = b.Observaciones,
+            Profesion = b.Profesion,
+            NivelEstudios = b.NivelEstudios,
+            FechaAceptacion = b.FechaAceptacion,
+        }).ToList();
+
+        return bomberosViewModel;
     }
 }
