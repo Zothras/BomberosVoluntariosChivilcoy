@@ -37,9 +37,9 @@ builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<ISalidaService, SalidaService>();
 builder.Services.AddScoped<IDependenciaService, DependenciaService>();
 builder.Services.AddScoped<IFuerzaIntervinienteService, FuerzaIntervinienteService>();
-builder.Services.AddScoped<IGeorefService, GeorefService>();
 
 // Servicios HttpClient
+builder.Services.AddHttpClient<IGeorefService, GeorefService>();
 
 // Configurar la localización
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");

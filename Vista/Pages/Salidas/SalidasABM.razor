@@ -386,13 +386,9 @@
                 throw new InvalidOperationException("Categoría no reconocida.");
         }
 
-
         if (RutasEmergencia.TryGetValue(newSalida.TipoEmergencia, out var ruta))
         {
-            // Convertimos el enum a su valor entero
-            var tipoRescateInt = (int)newSalida.TipoRescate;
-            ruta += $"/{tipoRescateInt}/{newSalida.Anio}/{newSalida.NumeroSalida}";
-
+            ruta += $"/{newSalida.Anio}/{newSalida.NumeroSalida}";
             NavigationManager?.NavigateTo(ruta);
         }
         else
@@ -427,8 +423,8 @@
             { TipoDeEmergencia.FactorClimatico, "/salidas/factores-climaticos" },
             { TipoDeEmergencia.MaterialPeligroso, "/salidas/materiales-peligrosos" },
             { TipoDeEmergencia.ServicioEspecialRepresentacion, "/salidas/serviciosRepresentacion" },
-            { TipoDeEmergencia.RescateAnimal, "/salidas/rescate" },
-            { TipoDeEmergencia.RescatePersona, "/salidas/rescate" },
+            { TipoDeEmergencia.RescateAnimal, "/salidas/rescate/2" },
+            { TipoDeEmergencia.RescatePersona, "/salidas/rescate/1" },
             { TipoDeEmergencia.IncendioComercio, "/salidas/incendios-comercio" },
             { TipoDeEmergencia.IncendioEstablecimientoEducativo, "/salidas/incendios-establecimientoEducativo" },
             { TipoDeEmergencia.IncendioEstablecimientoPublico, "/salidas/incendios-establecimientoPublico" },
