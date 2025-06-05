@@ -134,6 +134,7 @@
 		   @bind-PageIndex="_pageIndex"
 		   @bind-PageSize="_pageSize"
 		   Title="Fuerzas Intervinientes"
+		   PaginationPosition="bottomRight"
 		   Responsive>
 		<TitleTemplate>
 			<GridRow>
@@ -148,7 +149,7 @@
 			</GridRow>
 		</TitleTemplate>
 		<ColumnDefinitions>
-			<PropertyColumn Title="Nombre" Property="d=>d.Nombre" Sortable />
+			<PropertyColumn Title="Nombre" Property="d => d.Nombre" Align="ColumnAlign.Center"  Sortable />
 
 			<ActionColumn Title="Acciones" Align=ColumnAlign.Center>
 				<Space>
