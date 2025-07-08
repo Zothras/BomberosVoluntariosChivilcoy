@@ -227,27 +227,27 @@
                     <Avatar Size="AvatarSize.Large" Src="@CargarImage(context)" />
                 </Column>
                 <PropertyColumn Property="@(c => $"{c.Apellido}, {c.Nombre}")" Title="Apellido y Nombre" Sortable />
-                <PropertyColumn Title="Legajo" Property="c=>c.NumeroLegajo" Sortable
+                <PropertyColumn Title="Legajo" Property="c => c.NumeroLegajo" Sortable
                                 DefaultSortOrder="@SortDirection.Descending"
-                                SorterCompare="@((a,b)=> a - b)" />
+                                SorterCompare="@((a, b) => a - b)" />
 
                 <PropertyColumn Title="Jerarquía"
                                 Property="@(c => c.Grado.GetDisplayName())"
                                 Sortable="true" />
 
                 <PropertyColumn Title="Estado"
-                                Property="@(c=>c.Estado.GetDisplayName())"
+                                Property="@(c => c.Estado.GetDisplayName())"
                                 Sortable />
 
                 <ActionColumn Title="Acciones" Align=ColumnAlign.Center>
                     <Space>
                         <SpaceItem>
-                            <Button Type="ButtonType.Primary" OnClick="()=>DetalleBombero(context.PersonaId)">
+                            <Button Type="ButtonType.Primary" OnClick="() => DetalleBombero(context.PersonaId)">
                                 <Icon Type="eye" /> Detalles
                             </Button>
                         </SpaceItem>
                         <SpaceItem>
-                            <Button Type="default" OnClick="()=>EditarBombero(context.PersonaId)">
+                            <Button Type="default" OnClick="() => EditarBombero(context.PersonaId)">
                                 <Icon Type="edit" /> Editar
                             </Button>
                         </SpaceItem>
@@ -284,7 +284,7 @@
 
 @{
     RenderFragment footer = @<Template>
-        <Button OnClick="@CloseModals" @key="@( "back" )">Cerrar</Button>
+        <Button OnClick="@CloseModals" @key="@("back")">Cerrar</Button>
     </Template>;
 }
 
@@ -349,8 +349,8 @@
     {
         using var db = await DbFactory.CreateDbContextAsync();
 
-        search(searchString, Estado);
         SinFiltrar = await db.Bomberos.Include(b => b.Imagen).ToListAsync();
+        search(searchString, Estado);
 
         EscalafonJerarquicoFilter = new TableFilter<EscalafonJerarquico>[Enum.GetValues(typeof(EscalafonJerarquico)).Length];
         int i = 0;
