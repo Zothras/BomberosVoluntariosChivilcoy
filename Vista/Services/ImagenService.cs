@@ -20,7 +20,7 @@ namespace Vista.Services
 
         public async Task<ImagenResultado?> ObtenerImagenAsync(int id)
         {
-            var imagen = await _context.Imagenes.FindAsync(id);
+            var imagen = await _context.Imagen.FindAsync(id);
             if (imagen == null)
                 return null;
 
