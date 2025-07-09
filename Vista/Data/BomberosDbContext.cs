@@ -40,7 +40,7 @@ namespace Vista.Data
         public DbSet<Vehiculo_Personal> VehiculosPersonales { get; set; }
 
         // Imagenes
-
+        public DbSet<Imagen> Imagenes { get; set; }
         public DbSet<Imagen_Personal> ImagenesBomberos { get; set; }
         public DbSet<Imagen_VehiculoSalida> ImagenesVehiculo { get; set; }
 

@@ -39,6 +39,7 @@ builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<ISalidaService, SalidaService>();
 builder.Services.AddScoped<IDependenciaService, DependenciaService>();
 builder.Services.AddScoped<IFuerzaIntervinienteService, FuerzaIntervinienteService>();
+builder.Services.AddScoped<IImagenService, ImagenService>();
 
 // Registrar el mapper
 builder.Services.AddMapster(); // Configura IMapper automáticamente
@@ -76,6 +77,9 @@ if (!app.Environment.IsDevelopment())
 
 //Localizacion AntDesign
 LocaleProvider.SetLocale("es-Es");
+
+// Habilitar controllers (Es necesario para que el controlador de imágenes funcione)
+app.MapControllers();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
