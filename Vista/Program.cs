@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using AntDesign;
 using Microsoft.Extensions.Options;
+using Mapster;
+using MapsterMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,9 @@ builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<ISalidaService, SalidaService>();
 builder.Services.AddScoped<IDependenciaService, DependenciaService>();
 builder.Services.AddScoped<IFuerzaIntervinienteService, FuerzaIntervinienteService>();
+
+// Registrar el mapper
+builder.Services.AddMapster(); // Configura IMapper automáticamente
 
 // Servicios HttpClient
 builder.Services.AddHttpClient<IGeorefService, GeorefService>();
