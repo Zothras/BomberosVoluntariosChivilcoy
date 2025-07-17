@@ -75,7 +75,7 @@
         using (Context = DbFactory.CreateDbContext())
         {
             vehiculos = await Context.Set<VehiculoSalida>()
-                .OrderBy(m => Convert.ToInt32(m.NumeroMovil))
+                .OrderBy(m => m.NumeroMovil)
                 .ToListAsync();
         }
     }
