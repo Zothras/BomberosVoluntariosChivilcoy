@@ -138,10 +138,10 @@ namespace Vista.Pages.Salidas
             }
         }
 
-        //Inicio
-        protected override void OnInitialized()
+        // Inicio
+        protected override async Task OnInitializedAsync()
         {
-            Init();
+            await Init();
         }
 
         private async Task Init()
