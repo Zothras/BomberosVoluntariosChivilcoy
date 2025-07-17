@@ -8,23 +8,28 @@
 <div class="container">
     <Content Style="padding: 16px;">
         <Card Bordered="false"
-              Style="width: 100%; border-radius: 12px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); background: #ffffff;">
-            <div class="header-container">
-                <span class="title">UNIDADES</span>
+              Style="width: 100%; border-radius: 16px; box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1); background: #ffffff;">
+            <div class="header-container" style="=display: flex; justify-content: space-between; align-items: center; padding: 16px;">
+                <div>
+                    <h2 style="margin-bottom: 0;">🚒 UNIDADES</h2>
+                    <p style="margin-top: 4px; color: #666;">@vehiculos?.Count(v => v.Estado == TipoEstadoMovil.Activo) unidades activas</p>
+                </div>
                 <Space>
                     <Button Type="default"
                             OnClick="@(() => navigationManager.NavigateTo("/unidades/unidades-baja"))"
-                            Style="background: #d32f2f; color: white; border-radius: 8px; font-size: 14px;">
-                        Unidades de Baja
+                            Style="background: #d32f2f; color: white; border-radius: 8px; font-weight: 600;">
+                        🗑️ Unidades de Baja
                     </Button>
                     <Button Type="ButtonType.Primary"
                             OnClick="@(() => AgregarVisible = true)"
-                            Style="border-radius: 8px; font-size: 14px;">
-                        <Icon Type="plus" /> Nueva
+                            Style="border-radius: 8px; font-weight: 600;">
+                        <Icon Type="plus" /> Nueva Unidad
                     </Button>
                 </Space>
             </div>
+            <Divider Style="margin: 0; border-color: #e0e0e0;" />
 
+            <div style="="margin-top: 24px"></div>
             @if (vehiculos is not null)
             {
                 <div class="vehicles-grid">
