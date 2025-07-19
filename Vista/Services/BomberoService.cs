@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -13,7 +14,7 @@ namespace Vista.Services
 {
     public interface IBomberoService
     {
-        Task<Bombero> CrearBombero(Bombero bombero);
+        Task CrearBombero(Bombero bombero);
         Task<bool> BorrarBombero(Bombero bombero);
         Task<Bombero> EditarBombero(Bombero bombero);
         Task<Sancion> SancionarBombero(Sancion sancion);
@@ -34,7 +35,7 @@ namespace Vista.Services
             _context = context;
         }
 
-        public async Task<Bombero> CrearBombero(Bombero bombero)
+        public async Task CrearBombero(Bombero bombero)
         {
             // Asumiendo que Id es la clave primaria
             if (await _context.Bomberos.AnyAsync(b => b.PersonaId == bombero.PersonaId))
@@ -42,9 +43,15 @@ namespace Vista.Services
                 throw new InvalidOperationException("Ya existe un bombero con este ID.");
             }
 
+            bool legajoExistente = await _context.Bomberos.AnyAsync(b => b.NumeroLegajo == bombero.NumeroLegajo);
+
+            if (legajoExistente)
+            {
+                throw new Exception("Número de legajo ya existente.");
+            }
+
             _context.Bomberos.Add(bombero);
             await _context.SaveChangesAsync();
-            return bombero;
         }
 
         public async Task<Bombero> EditarBombero(Bombero bombero)
