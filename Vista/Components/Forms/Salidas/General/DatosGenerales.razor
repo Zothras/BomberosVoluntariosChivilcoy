@@ -43,6 +43,14 @@
         </FormItem>
     }
 
+    <FormItem Label="Hora de Salida" Required>
+        <TimePicker @bind-Value="@Model.TimeSalida" Format="HH:mm" />
+    </FormItem>
+
+    <FormItem Label="Hora de Llegada" Required>
+        <TimePicker @bind-Value="@Model.TimeLlegada" Format="HH:mm" />
+    </FormItem>
+
     <FormItem Label="Tipo Zona" Required>
         <EnumSelect TEnum="TipoZona" @bind-Value="@Model.TipoZona" />
     </FormItem>
