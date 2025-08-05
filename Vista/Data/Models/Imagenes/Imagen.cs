@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Vista.Data.Enums.Discriminadores;
 
 namespace Vista.Data.Models.Imagenes
@@ -10,6 +11,9 @@ namespace Vista.Data.Models.Imagenes
         /// </summary>
         public int ImagenId { get; set; }
 
+        /// <summary>
+        /// Discriminador para el tipo de imagen (Personal, Vehiculo, etc).
+        /// </summary>
         public TipoImagen Tipo { get; set; }
 
         /// <summary>
@@ -19,9 +23,10 @@ namespace Vista.Data.Models.Imagenes
         public string NombreImagen { get; set; } = null!;
 
         /// <summary>
-        /// Contenido de la imagen en formato Base64. Campo obligatorio.
+        /// Datos de la imagen en formato binario.
         /// </summary>
-        public string Base64Imagen { get; set; } = null!;
+        [Required]
+        public byte[] DatosImagen { get; set; } = null!;
 
         /// <summary>
         /// Tipo o formato de la imagen (por ejemplo, JPEG, PNG). 
@@ -29,5 +34,15 @@ namespace Vista.Data.Models.Imagenes
         /// </summary>
         [Required, StringLength(255)]
         public string TipoImagen { get; set; } = null!;
+
+        /// <summary>
+        /// Base64 de la imagen. Este campo no se almacena en la base de datos,
+        /// </summary>
+        [NotMapped]
+        public string Base64Imagen
+        {
+            get => Convert.ToBase64String(DatosImagen);
+            set => DatosImagen = Convert.FromBase64String(value);
+        }
     }
 }
