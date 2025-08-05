@@ -27,9 +27,19 @@
 
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 2px solid #f0f0f0;">
-            <h1 style="margin: 0; color: #1890ff; font-size: 2.5rem; font-weight: 600;">
-                RESCATE PERSONA
-            </h1>
+            @if (TipoRescate == 1)
+            {
+                <h1 style="margin: 0; color: #1890ff; font-size: 2.5rem; font-weight: 600;">
+                    RESCATE PERSONA
+                </h1>
+            }
+            else if (TipoRescate == 2)
+            {
+                <h1 style="margin: 0; color: #1890ff; font-size: 2.5rem; font-weight: 600;">
+                    RESCATE ANIMAL
+                </h1>
+            }
+
             <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 1.1rem;">
                 Complete todos los campos requeridos para registrar la salida
             </p>
@@ -44,7 +54,7 @@
                     <span class="section-number" style="background: #1890ff;">1</span>
                     Datos Generales
                 </h3>
-                <DatosGenerales Model="@PersonaViewModel" />
+                <DatosGenerales Model="@PersonaViewModel" OnCompleted="@((bool done) => _parte1Completa = done)" />
             </div>
 
             <!-- Grid de 2 columnas para secciones medianas -->
@@ -53,9 +63,9 @@
                 <div class="section-card participantes">
                     <h3 class="section-title">
                         <span class="section-number" style="background: #52c41a;">2</span>
-                        Participantes
+                        Datos telefónicos
                     </h3>
-                    <Participantes Model="@PersonaViewModel" />
+                    <Participantes Model="@PersonaViewModel" OnCompleted="@((bool done) => _parte2Completa = done)" isUnlocked="@_parte1Completa"/>
                 </div>
 
                 <!-- Vehículos Section -->
@@ -76,7 +86,7 @@
                         <span class="section-number" style="background: #722ed1;">4</span>
                         Personal
                     </h3>
-                    <Personal Model="@PersonaViewModel" BomberosTodos="@BomberosTodos"/>
+                    <Personal Model="@PersonaViewModel" BomberosTodos="@BomberosTodos" />
                 </div>
 
                 <!-- Tipo de Servicio Section -->

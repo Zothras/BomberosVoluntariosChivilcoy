@@ -164,6 +164,7 @@
     [Parameter, EditorRequired] public required SalidasViewModels Model { get; set; }
     [Parameter] public bool esSoloDireccion { get; set; } = false;
     [Parameter] public bool MostrarOpcionDepartamento { get; set; } = true;
+    [Parameter] public EventCallback<bool> OnCompleted { get; set; } // Evento para notificar que se ha completado el formulario
 
     private bool isApiAvailable;
     private int anio = DateTime.Now.Year;
@@ -171,11 +172,28 @@
     private bool esDepartamento;
     private bool SeConvocoGuardia;
 
+    // Variable del Formulario utilizada para la validación
+    private EditContext editContext;
+
     private List<Direccion> direcciones = new();
 
     protected override async Task OnInitializedAsync()
     {
         isApiAvailable = await GeorefService.CheckApiConnectionAsync();
+    }
+
+    private async Task ValidateForm()
+    {
+        var esValido = editContext.Validate();
+
+        if (esValido)
+        {
+            await OnCompleted.InvokeAsync(true); // Invoca el evento OnCompleted si el formulario es válido
+        }
+        else
+        {
+            await OnCompleted.InvokeAsync(false); // Invoca el evento OnCompleted si el formulario no es válido
+        }
     }
 
     private void OnStreetSelected(Direccion selectedStreet)
