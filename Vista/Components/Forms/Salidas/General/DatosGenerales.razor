@@ -28,7 +28,7 @@
     }
 </style>
 
-<Form Model="Model">
+<Form Model="Model" OnFieldChanged="@ValidateForm">
     @if (Model.TimeLlegada < Model.TimeSalida)
     {
         <FormItem Label="Fechas (salida y llegada)" Required>
@@ -80,25 +80,11 @@
         </FormItem>
 
         <FormItem Label="Latitud">
-            @if (isApiAvailable)
-            {
-                <Input @bind-Value="@Model.Latitud" Disabled="true" />
-            }
-            else
-            {
-                <Input @bind-Value="@Model.Latitud" />
-            }
+            <Input @bind-Value="@Model.Latitud" Disabled="@isApiAvailable" />
         </FormItem>
 
         <FormItem Label="Longitud">
-            @if (isApiAvailable)
-            {
-                <Input @bind-Value="@Model.Longitud" Disabled="true" />
-            }
-            else
-            {
-                <Input @bind-Value="@Model.Longitud" />
-            }
+            <Input @bind-Value="@Model.Longitud" Disabled="@isApiAvailable" />
         </FormItem>
     }
     else
@@ -171,10 +157,6 @@
     private bool _loading = false; // Variable para controlar el estado de carga
     private bool esDepartamento;
     private bool SeConvocoGuardia;
-
-    // Variable del Formulario utilizada para la validación
-    private EditContext editContext;
-
     private List<Direccion> direcciones = new();
 
     protected override async Task OnInitializedAsync()
@@ -184,16 +166,18 @@
 
     private async Task ValidateForm()
     {
-        var esValido = editContext.Validate();
+        var esValido = true;
 
-        if (esValido)
+        if (Model.FechaSalida == default ||
+            Model.TimeSalida == default ||
+            Model.TimeLlegada == default ||
+            string.IsNullOrWhiteSpace(Model.Descripcion) ||
+            Model.Latitud == 0.0 || Model.Longitud == 0.0)
         {
-            await OnCompleted.InvokeAsync(true); // Invoca el evento OnCompleted si el formulario es válido
+            esValido = false;
         }
-        else
-        {
-            await OnCompleted.InvokeAsync(false); // Invoca el evento OnCompleted si el formulario no es válido
-        }
+
+        await OnCompleted.InvokeAsync(esValido);
     }
 
     private void OnStreetSelected(Direccion selectedStreet)
