@@ -65,59 +65,68 @@
                         <span class="section-number" style="background: #52c41a;">2</span>
                         Datos telefónicos
                     </h3>
-                    <Participantes Model="@PersonaViewModel" OnCompleted="@((bool done) => _parte2Completa = done)" isUnlocked="@_parte1Completa"/>
+                    <Participantes Model="@PersonaViewModel" OnCompleted="@((bool done) => _parte2Completa = done)" isUnlocked="@_parte1Completa" />
                 </div>
 
+                <!-- Nueva Sección Damnificados -->
+                <div class="section-card damnificados">
+                    <h3 class="section-title">
+                        <span class="section-number" style="background: #13c2c2;">3</span>
+                        Damnificados
+                    </h3>
+                    <Damnificados Model="@PersonaViewModel" />
+                </div>
+            </div>
+
+            <!-- Grid de 2 columnas para Vehículos y Personal -->
+            <div class="two-column-grid">
                 <!-- Vehículos Section -->
                 <div class="section-card vehiculos">
                     <h3 class="section-title">
-                        <span class="section-number" style="background: #fa8c16;">3</span>
+                        <span class="section-number" style="background: #fa8c16;">4</span>
                         Vehículos
                     </h3>
                     <Vehiculos Model="@PersonaViewModel" BomberosTodos="@BomberosTodos" Moviles="@MovilesTodos" />
                 </div>
-            </div>
 
-            <!-- Grid de 2 columnas para Personal y Tipo de Servicio -->
-            <div class="two-column-grid">
                 <!-- Personal Section -->
                 <div class="section-card personal">
                     <h3 class="section-title">
-                        <span class="section-number" style="background: #722ed1;">4</span>
+                        <span class="section-number" style="background: #722ed1;">5</span>
                         Personal
                     </h3>
                     <Personal Model="@PersonaViewModel" BomberosTodos="@BomberosTodos" />
                 </div>
+            </div>
 
-                <!-- Tipo de Servicio Section -->
-                <div class="section-card tipo-servicio">
-                    <h3 class="section-title">
-                        <span class="section-number" style="background: #eb2f96;">5</span>
-                        Tipo de Servicio
-                    </h3>
+            <!-- Tipo de Servicio Section - Ancho completo -->
+            <div class="section-card tipo-servicio">
+                <h3 class="section-title">
+                    <span class="section-number" style="background: #eb2f96;">6</span>
+                    Tipo de Servicio
+                </h3>
 
-                    <div class="service-type-grid">
-                        <!-- Tipo Servicio -->
-                        <div class="form-group-card">
-                            <FormItem>
-                                <label class="form-label">
-                                    Tipo Servicio Salida
-                                </label>
-                                <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@PersonaViewModel.TipoServicio"
-                                            Style="width: 100%;" />
-                            </FormItem>
-                        </div>
+                <div class="service-type-grid">
+                    <!-- Tipo Servicio -->
+                    <div class="form-group-card">
+                        <FormItem>
+                            <label class="form-label">
+                                Tipo Servicio Salida
+                            </label>
+                            <EnumSelect TEnum="TipoServicioSalida" @bind-Value="@PersonaViewModel.TipoServicio"
+                                        Style="width: 100%;" />
+                        </FormItem>
+                    </div>
 
-                        <!-- Tipo Lugar Rescate -->
-                        <div class="form-group-card">
-                            <FormItem>
-                                <label class="form-label">
-                                    Tipo Lugar de Rescate
-                                </label>
-                                <EnumSelect TEnum="TipoLugarRescatePersona" @bind-Value="@PersonaViewModel.TipoRescatePersona"
-                                            Style="width: 100%;" />
-                            </FormItem>
-                        </div>
+                    <!-- Tipo Lugar Rescate -->
+                    <div class="form-group-card">
+                        <FormItem>
+                            <label class="form-label">
+                                Tipo Lugar de Rescate
+                            </label>
+                            <EnumSelect TEnum="TipoLugarRescatePersona" @bind-Value="@PersonaViewModel.TipoRescatePersona"
+                                        Style="width: 100%;" />
+                        </FormItem>
                     </div>
                 </div>
             </div>
@@ -180,6 +189,10 @@
         border-left: 4px solid #52c41a;
     }
 
+    .damnificados {
+        border-left: 4px solid #13c2c2;
+    }
+
     .vehiculos {
         border-left: 4px solid #fa8c16;
     }
@@ -208,6 +221,10 @@
 
     .participantes .section-title {
         color: #52c41a;
+    }
+
+    .damnificados .section-title {
+        color: #13c2c2;
     }
 
     .vehiculos .section-title {
