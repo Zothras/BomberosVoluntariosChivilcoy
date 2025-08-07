@@ -115,9 +115,25 @@
     transition: box-shadow 0.3s, transform 0.3s;
 }
 
+button.btn-volver-unidades
+{
+    background: #2fd33f !important;
+    color: white !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+button.btn-volver-unidades:hover {
+    background: #1f9d2f !important;
+    color: white !important;
+    transform: scale(1.13);
+    transition: transform 0.2s ease-in-out;
+}
+button.btn-volver-unidades:hover .anticon {
+    animation:bounce 0.5s;
+}
 
 /* Animación de rebote para botones Ant Design en UnidadesVista */
-button.ant-btn-default:hover,
 button.ant-btn-primary:hover .anticon {
     animation: bounce 0.5s;
 }
