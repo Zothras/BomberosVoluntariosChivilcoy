@@ -65,8 +65,8 @@
 }
 
 /* Estilos para cada ítem dentro de la cuadrícula de vehículos (tarjetas) */
-.vehicles-grid > * {
-    /* grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); */ /* Esta línea parece un duplicado o error, se comenta */
+.vehicles-grid > *{
+   
     transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     border-radius: 12px;
@@ -108,55 +108,44 @@
         grid-template-columns: 1fr;
     }
 }
-
-/* Estilos de botones Ant Design usados en UnidadesVista */
-button.ant-btn-primary, button.ant-btn-default {
-    box-shadow: 0 2px 8px rgba(211,47,47,0.10); /* Ajuste del box-shadow, aplicado globalmente a estos botones */
-    transition: box-shadow 0.2s, transform 0.2s;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-button.ant-btn-primary {
-    background: #1890ff;
-    border-color: #1890ff;
-}
-
-button.ant-btn-primary:hover {
-    background: #40a9ff;
-    border-color: #40a9ff;
-    box-shadow: 0 6px 18px rgba(24,144,255,0.18);
-    transform: translateY(-2px) scale(1.04);
-}
-
-button.ant-btn-default {
-    background: #a16060;
-    color: white;
-}
-
-button.ant-btn-default:hover {
-    background: #b71c1c;
-    box-shadow: 0 6px 18px rgba(211,47,47,0.18);
-    transform: translateY(-2px) scale(1.04);
-}
-
 /* Card principal Ant Design en UnidadesVista */
 .ant-card {
-    box-shadow: 0 4px 32px rgba(211,47,47,0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 32px rgba(0, 255, 21, 0.1), 0 1.5px 8px rgba(0,0,0,0.04);
     border-radius: 18px !important;
     transition: box-shadow 0.3s, transform 0.3s;
 }
 
-.ant-card:hover {
-    box-shadow: 0 8px 48px rgba(211,47,47,0.18), 0 3px 16px rgba(0,0,0,0.08);
-    transform: translateY(-4px) scale(1.01);
+button.btn-volver-unidades
+{
+    background: #2fd33f !important;
+    color: white !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+
+button.btn-volver-unidades:hover {
+    background: #1f9d2f !important;
+    color: white !important;
+    transform: scale(1.13);
+    transition: transform 0.2s ease-in-out;
+}
+button.btn-volver-unidades:hover .anticon {
+    animation:bounce 0.5s;
 }
 
 /* Animación de rebote para botones Ant Design en UnidadesVista */
-button.ant-btn-default:hover::before,
 button.ant-btn-primary:hover .anticon {
     animation: bounce 0.5s;
 }
+button.ant-btn-primary:hover {
+    transform: scale(1.13);
+    transition: transform 0.2s ease-in-out;
+}
+
+button.ant-btn-primary {
+    transition: transform 0.2s ease-in-out;
+}
+
 
 @keyframes bounce {
     0% { transform: translateY(0);}
@@ -260,9 +249,7 @@ button.ant-btn-primary:hover .anticon {
 
 .botones-grid button:hover {
     background-color: #7b4545 !important; /* Un tono más oscuro del rojo original */
-    transform: scale(1.05); /* Ligeramente más grande */
     box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Sombra para profundidad */
-    animation: bounce 0.5s; /* Reutiliza la animación definida en UnidadesVista */
 }
 
 /*
@@ -271,13 +258,7 @@ button.ant-btn-primary:hover .anticon {
  * Este bloque contiene estilos generales para la página de unidades bajas
  * =============================================================================
  */
- .container-baja {
-    /*Se utiliza el codigo del inicial ya que se pidio que sea parecido a UnidadesVista*/
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
- }
+
  
 .Boton-Baja {
     background: #43a047 !important;
