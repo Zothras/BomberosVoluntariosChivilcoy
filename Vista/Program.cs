@@ -8,6 +8,7 @@ using System.Globalization;
 using AntDesign;
 using Microsoft.Extensions.Options;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration["ConnectionString"];
@@ -42,7 +43,7 @@ builder.Services.AddScoped<IImagenService, ImagenService>();
 // Servicios HttpClient
 builder.Services.AddHttpClient<IGeorefService, GeorefService>();
 
-// Configurar la localización
+// Configurar la localizaciï¿½n
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
@@ -73,14 +74,14 @@ if (!app.Environment.IsDevelopment())
 //Localizacion AntDesign
 LocaleProvider.SetLocale("es-Es");
 
-// Habilitar controllers (Es necesario para que el controlador de imágenes funcione)
+// Habilitar controllers (Es necesario para que el controlador de imï¿½genes funcione)
 app.MapControllers();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Añadir el middleware de localización
+// Aï¿½adir el middleware de localizaciï¿½n
 var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>()?.Value;
 
 if (localizationOptions != null)
@@ -90,7 +91,7 @@ if (localizationOptions != null)
 else
 {
     // Manejar el caso en que localizationOptions sea null
-    Console.WriteLine("Error: RequestLocalizationOptions no está configurado correctamente.");
+    Console.WriteLine("Error: RequestLocalizationOptions no estï¿½ configurado correctamente.");
 }
 
 app.MapBlazorHub();

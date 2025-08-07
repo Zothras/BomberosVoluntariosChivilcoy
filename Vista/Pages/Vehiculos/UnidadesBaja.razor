@@ -10,15 +10,15 @@
     <Content Style="padding: 16px;">
         <Card Bordered="false"
                   Style="width: 100%; border-radius: 16px; box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1); background: #ffffff;">
-                <div class="header-container-baja" style="display: flex; justify-content: space-between; align-items: center;"> <div>
-                    <h2 style="margin-bottom: 0;"><i class="fa-regular fa-thumbs-down"></i> <i class="fa-solid fa-truck"></i> UNIDADES</h2>
+                <div class="header-container" style="display: flex; justify-content: space-between; align-items: center;"> <div>
+                    <h2 style="margin-bottom: 0;"><Icon Type="Car"/>UNIDADES</h2>
                     <p style="margin-top: 4px; color: #666;">@vehiculos?.Count(v => v.Estado == TipoEstadoMovil.Inactivo) unidades de baja</p>
                 </div>
                 <Space>
-                    <Button class="Boton-Baja"
+                    <Button class="btn-volver-unidades"
                             OnClick="@(() => navigationManager.NavigateTo("/unidades"))"
                             Style="border-radius: 8px; font-size: 14px; ">
-                        <i class="fa-regular fa-circle-right"></i> Volver a Unidades activas
+                        <Icon Type="folder-open"/>Volver a Unidades activas
                     </Button>
                 </Space>
                 </div>
