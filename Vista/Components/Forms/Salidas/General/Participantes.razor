@@ -3,33 +3,73 @@
 @using Vista.Data.Models.Salidas;
 @using Vista.Data.Models.Personas;
 @using System.Linq;
-
 @inject IMessageService MessageService
 
 <Form Model="Model">
-    <FormItem Label="Nombre del Solicitante" Required>
-        <Input @bind-Value="@Model.NombreSolicitante" Disabled="@(!isUnlocked)" />
-    </FormItem>
+    @*Sección Solicitante*@
+    <div style="margin-bottom: 24px;">
+        <div style="border-bottom: 2px solid #52c41a; padding-bottom: 8px; margin-bottom: 16px;">
+            <h4 style="color: #52c41a; margin: 0; font-weight: 600;">Datos del Solicitante</h4>
+        </div>
 
-    <FormItem Label="Apellido del Solicitante" Required>
-        <Input @bind-Value="@Model.ApellidoSolicitante" Disabled="@(!isUnlocked)" />
-    </FormItem>
+        <Row Gutter="16">
+            <Col Span="12">
+                <FormItem Label="Nombre" Required>
+                    <Input @bind-Value="@Model.NombreSolicitante"
+                           Disabled="@(!isUnlocked)"
+                           Placeholder="Ingrese el nombre" />
+                </FormItem>
+            </Col>
+            <AntDesign.Col Span="12">
+                <FormItem Label="Apellido" Required>
+                    <Input @bind-Value="@Model.ApellidoSolicitante"
+                           Disabled="@(!isUnlocked)"
+                           Placeholder="Ingrese el apellido" />
+                </FormItem>
+            </AntDesign.Col>
+        </Row>
 
-    <FormItem Label="Documento del Solicitante">
-        <Input @bind-Value="@Model.DniSolicitante" Disabled="@(!isUnlocked)" />
-    </FormItem>
+        <Row Gutter="16">
+            <Col Span="12">
+                <FormItem Label="Documento">
+                    <Input @bind-Value="@Model.DniSolicitante"
+                           Disabled="@(!isUnlocked)"
+                           Placeholder="Número de documento" />
+                </FormItem>
+            </Col>
+            <Col Span="12">
+                <FormItem Label="Teléfono" Required>
+                    <Input @bind-Value="@Model.TelefonoSolicitante"
+                           Disabled="@(!isUnlocked)"
+                           Placeholder="Número de teléfono" />
+                </FormItem>
+            </Col>
+        </Row>
+    </div>
 
-    <FormItem Label="Telefono del Solicitante" Required>
-        <Input @bind-Value="@Model.TelefonoSolicitante" Disabled="@(!isUnlocked)" />
-    </FormItem>
+    @*Sección Receptor*@
+    <div style="margin-bottom: 24px;">
+        <div style="border-bottom: 2px solid #52c41a; padding-bottom: 8px; margin-bottom: 16px;">
+            <h4 style="color: #52c41a; margin: 0; font-weight: 600;">Datos del Receptor</h4>
+        </div>
 
-    <FormItem Label="Nómbre del Receptor" Required>
-        <Input @bind-Value="@Model.NombreReceptor" Disabled="@(!isUnlocked)" />
-    </FormItem>
-
-    <FormItem Label="Apellido del Receptor" Required>
-        <Input @bind-Value="@Model.ApellidoReceptor" Disabled="@(!isUnlocked)" />
-    </FormItem>
+        <Row Gutter="16">
+            <Col Span="12">
+                <FormItem Label="Nombre" Required>
+                    <Input @bind-Value="@Model.NombreReceptor"
+                           Disabled="@(!isUnlocked)"
+                           Placeholder="Ingrese el nombre" />
+                </FormItem>
+            </Col>
+            <Col Span="12">
+                <FormItem Label="Apellido" Required>
+                    <Input @bind-Value="@Model.ApellidoReceptor"
+                           Disabled="@(!isUnlocked)"
+                           Placeholder="Ingrese el apellido" />
+                </FormItem>
+            </Col>
+        </Row>
+    </div>
 </Form>
 
 @code {
@@ -43,7 +83,6 @@
     private async Task ValidateForm()
     {
         var esValido = editContext.Validate();
-
         if (esValido)
         {
             await OnCompleted.InvokeAsync(true); // Invoca el evento OnCompleted si el formulario es válido
