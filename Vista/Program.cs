@@ -74,14 +74,14 @@ if (!app.Environment.IsDevelopment())
 //Localizacion AntDesign
 LocaleProvider.SetLocale("es-Es");
 
-// Habilitar controllers (Es necesario para que el controlador de im�genes funcione)
+// Habilitar controllers (Es necesario para que el controlador de imágenes funcione)
 app.MapControllers();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// A�adir el middleware de localizaci�n
+// Añadir el middleware de localización
 var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>()?.Value;
 
 if (localizationOptions != null)
@@ -91,7 +91,7 @@ if (localizationOptions != null)
 else
 {
     // Manejar el caso en que localizationOptions sea null
-    Console.WriteLine("Error: RequestLocalizationOptions no est� configurado correctamente.");
+    Console.WriteLine("Error: RequestLocalizationOptions no está configurado correctamente.");
 }
 
 app.MapBlazorHub();
